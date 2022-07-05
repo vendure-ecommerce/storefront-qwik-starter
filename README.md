@@ -1,6 +1,6 @@
 # Qwik storefront-qwik-starter ⚡️
 
-- Blank Qwik starter app.
+- Starter with built-in routing, powered by Qwik City
 - Vite.js tooling.
 - Express.js server.
 - Prettier code formatter.
@@ -58,7 +58,7 @@ npm run serve
 
 Then visit [http://localhost:8080/](http://localhost:8080/)
 
---------------------
+---
 
 ## Related
 

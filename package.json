@@ -1,11 +1,11 @@
 {
 	"name": "storefront-qwik-starter",
-	"description": "Blank Qwik starter app. Vite.js tooling. Express.js server. Prettier code formatter. Tailwind CSS framework.",
+	"description": "Starter with built-in routing, powered by Qwik City Vite.js tooling. Express.js server. Prettier code formatter. Tailwind CSS framework.",
 	"scripts": {
 		"build": "npm run typecheck && npm run build.client && npm run build.ssr",
 		"build.client": "vite build",
 		"build.ssr": "vite build --ssr src/entry.express.tsx",
-		"dev": "vite --port 3001",
+		"dev": "vite",
 		"dev.debug": "node --inspect-brk node_modules/vite/bin/vite.js --mode ssr",
 		"dev.ssr": "node --inspect node_modules/vite/bin/vite.js --mode ssr",
 		"fmt": "prettier --write .",
@@ -17,6 +17,7 @@
 	},
 	"devDependencies": {
 		"@builder.io/qwik": "0.0.34",
+		"@builder.io/qwik-city": "0.0.13",
 		"@types/eslint": "8.4.2",
 		"@types/express": "4.17.13",
 		"@types/node": "latest",
@@ -29,6 +30,7 @@
 		"node-fetch": "2.6.7",
 		"postcss": "8.4.14",
 		"prettier": "2.6.2",
+		"sass": "^1.53.0",
 		"tailwindcss": "3.0.24",
 		"typescript": "4.7.2",
 		"vite": "2.9.9"
@@ -38,8 +40,5 @@
 	},
 	"homepage": "https://qwik.builder.io/",
 	"license": "",
-	"private": true,
-	"dependencies": {
-		"sass": "^1.53.0"
-	}
+	"private": true
 }

@@ -1,6 +1,6 @@
 import { component$, Host } from '@builder.io/qwik';
-import { headerData as data } from './mock-data';
-import { SearchBar } from './SearchBar';
+import { headerData as data } from '../../mock-data';
+import { SearchBar } from '../search-bar/search-bar';
 
 export const Header = component$(() => {
 	const isScrollingUp = true;
