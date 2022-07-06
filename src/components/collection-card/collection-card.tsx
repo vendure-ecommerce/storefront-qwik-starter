@@ -1,14 +1,8 @@
 import { component$, Host } from '@builder.io/qwik';
+import { ICollection } from '../../types';
 
 interface IProps {
 	collection: ICollection;
-}
-
-interface ICollection {
-	id: string;
-	slug: string;
-	name: string;
-	featuredAsset: { id: string; preview: string };
 }
 
 export const CollectionCard = component$(({ collection }: IProps) => {

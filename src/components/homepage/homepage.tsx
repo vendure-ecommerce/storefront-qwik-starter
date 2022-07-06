@@ -5,7 +5,9 @@ import {
 	useScopedStyles$,
 	useStore,
 } from '@builder.io/qwik';
-import { collections } from '../../mock-data';
+import { getCollectionsQuery } from '../../graphql/queries';
+import { ICollection } from '../../types';
+import { sendQuery } from '../../utils/api';
 import { CollectionCard } from '../collection-card/collection-card';
 import styles from './homepage.scss?inline';
 
@@ -13,13 +15,13 @@ export const headerImage =
 	'https://readonlydemo.vendure.io/assets/preview/5b/jakob-owens-274337-unsplash__preview.jpg';
 
 export const Homepage = component$(() => {
-	const store = useStore<{ list: null | string[] }>({ list: null });
+	const state = useStore<{ collections: ICollection[] }>({ collections: [] });
 	useScopedStyles$(styles);
 	useMount$(async () => {
-		// const data = await fetch('https://swapi.dev/api/people/1/?format=json');
-		// const json = data.json();
-
-		store.list = ['aaa'];
+		const data = await sendQuery<{ collections: { items: ICollection[] } }>(
+			getCollectionsQuery
+		);
+		state.collections = [...data.collections.items];
 	});
 
 	return (
@@ -111,9 +113,14 @@ export const Homepage = component$(() => {
 					<div className='-my-2'>
 						<div className='box-content py-2 px-2 relative overflow-x-auto xl:overflow-visible'>
 							<div className='grid justify-items-center grid-cols-2 md:grid-cols-3 gap-y-8 gap-x-8 sm:px-6 lg:px-8 xl:relative xl:px-0 xl:space-x-0 xl:gap-x-8'>
-								{collections.map((collection) => (
-									<CollectionCard key={collection.id} collection={collection} />
-								))}
+								{state.collections.map((collection) =>
+									!!collection.featuredAsset ? (
+										<CollectionCard
+											key={collection.id}
+											collection={collection}
+										/>
+									) : null
+								)}
 							</div>
 						</div>
 					</div>

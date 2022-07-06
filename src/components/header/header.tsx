@@ -1,11 +1,23 @@
-import { component$, Host } from '@builder.io/qwik';
-import { headerData as data } from '../../mock-data';
+import { component$, Host, useMount$, useStore } from '@builder.io/qwik';
+import { getCollectionsQuery } from '../../graphql/queries';
+import { ICollection } from '../../types';
+import { sendQuery } from '../../utils/api';
 import { SearchBar } from '../search-bar/search-bar';
 
 export const Header = component$(() => {
 	const isScrollingUp = true;
 	const isSignedIn = false;
 	const cartQuantity = 0;
+	const state = useStore<{ collections: ICollection[] }>({ collections: [] });
+	useMount$(async () => {
+		const data = await sendQuery<{ collections: { items: ICollection[] } }>(
+			getCollectionsQuery
+		);
+		state.collections = data.collections.items.filter(
+			(item) =>
+				item.parent?.name === '__root_collection__' && !!item.featuredAsset
+		);
+	});
 	return (
 		<Host>
 			<header
@@ -51,7 +63,7 @@ export const Header = component$(() => {
 						</a>
 					</h1>
 					<div className='flex space-x-4 hidden sm:block'>
-						{data.collections.map((collection) => (
+						{state.collections.map((collection) => (
 							<a
 								className='text-sm md:text-base text-gray-200 hover:text-white'
 								href={'/collections/' + collection.slug}

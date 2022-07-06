@@ -1,5 +1,7 @@
-import { component$, Host } from '@builder.io/qwik';
-import { footerCollections as collections } from '../../mock-data';
+import { component$, Host, useMount$, useStore } from '@builder.io/qwik';
+import { getCollectionsQuery } from '../../graphql/queries';
+import { ICollection } from '../../types';
+import { sendQuery } from '../../utils/api';
 
 export const navigation = {
 	support: [
@@ -17,6 +19,16 @@ export const navigation = {
 };
 
 export const Footer = component$(() => {
+	const state = useStore<{ collections: ICollection[] }>({ collections: [] });
+	useMount$(async () => {
+		const data = await sendQuery<{ collections: { items: ICollection[] } }>(
+			getCollectionsQuery
+		);
+		state.collections = data.collections.items.filter(
+			(item) =>
+				item.parent?.name === '__root_collection__' && !!item.featuredAsset
+		);
+	});
 	return (
 		<Host>
 			<footer
@@ -35,7 +47,7 @@ export const Footer = component$(() => {
 										Shop
 									</h3>
 									<ul role='list' className='mt-4 space-y-4'>
-										{collections.map((collection) => (
+										{state.collections.map((collection) => (
 											<li key={collection.id}>
 												<a
 													className='text-base text-gray-500 hover:text-gray-600'
