@@ -1,6 +1,6 @@
 import { App } from './components/app/app';
 
-import './global.scss';
+import './global.css';
 
 export const Root = () => {
 	return (

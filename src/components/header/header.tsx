@@ -1,28 +1,28 @@
-import { component$, Host, useMount$, useStore } from '@builder.io/qwik';
-import { getCollectionsQuery } from '../../graphql/queries';
-import { ICollection } from '../../types';
-import { sendQuery } from '../../utils/api';
+import { component$, Host, useContext, useStore } from '@builder.io/qwik';
+import { COLLECTIONS } from '../../constants';
 import { SearchBar } from '../search-bar/search-bar';
 
+export interface State {
+	isScrollingUp: boolean;
+	isSignedIn: boolean;
+	cartQuantity: number;
+}
+
 export const Header = component$(() => {
-	const isScrollingUp = true;
-	const isSignedIn = false;
-	const cartQuantity = 0;
-	const state = useStore<{ collections: ICollection[] }>({ collections: [] });
-	useMount$(async () => {
-		const data = await sendQuery<{ collections: { items: ICollection[] } }>(
-			getCollectionsQuery
-		);
-		state.collections = data.collections.items.filter(
-			(item) =>
-				item.parent?.name === '__root_collection__' && !!item.featuredAsset
-		);
+	const collections = useContext(COLLECTIONS).collections.filter(
+		(item) =>
+			item.parent?.name === '__root_collection__' && !!item.featuredAsset
+	);
+	const state: State = useStore<State>({
+		isScrollingUp: true,
+		isSignedIn: false,
+		cartQuantity: 0,
 	});
 	return (
 		<Host>
 			<header
 				class={`bg-gradient-to-r from-zinc-700 to-gray-900 shadow-lg transform shadow-xl ${
-					isScrollingUp ? 'sticky top-0 z-10 animate-dropIn' : ''
+					state.isScrollingUp ? 'sticky top-0 z-10 animate-dropIn' : ''
 				}`}
 			>
 				<div className='bg-zinc-100 text-gray-600 shadow-inner text-center text-sm py-2 px-2 xl:px-0'>
@@ -41,12 +41,12 @@ export const Header = component$(() => {
 						</div>
 						<div>
 							<a
-								href={isSignedIn ? '/account' : '/sign-in'}
+								href={state.isSignedIn ? '/account' : '/sign-in'}
 								className='flex space-x-1'
 							>
 								{/* <UserIcon className='w-4 h-4'></UserIcon> */}
 								userIcon
-								<span>{isSignedIn ? 'My Account' : 'Sign In'}</span>
+								<span>{state.isSignedIn ? 'My Account' : 'Sign In'}</span>
 							</a>
 						</div>
 					</div>
@@ -55,7 +55,7 @@ export const Header = component$(() => {
 					<h1 className='text-white w-10'>
 						<a href='/'>
 							<img
-								src='/cube-logo-small.webp'
+								src='public/cube-logo-small.webp'
 								width={40}
 								height={31}
 								alt='Vendure logo'
@@ -63,7 +63,7 @@ export const Header = component$(() => {
 						</a>
 					</h1>
 					<div className='flex space-x-4 hidden sm:block'>
-						{state.collections.map((collection) => (
+						{collections.map((collection) => (
 							<a
 								className='text-sm md:text-base text-gray-200 hover:text-white'
 								href={'/collections/' + collection.slug}
@@ -84,9 +84,9 @@ export const Header = component$(() => {
 						>
 							{/* <ShoppingBagIcon></ShoppingBagIcon> */}
 							ShoppingBagIcon
-							{cartQuantity ? (
+							{state.cartQuantity ? (
 								<div className='absolute rounded-full -top-2 -right-2 bg-primary-600 w-6 h-6'>
-									{cartQuantity}
+									{state.cartQuantity}
 								</div>
 							) : (
 								''
