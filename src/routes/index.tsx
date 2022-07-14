@@ -1,21 +1,12 @@
-import { component$, Host, useContextProvider, useServerMount$, useStore } from '@builder.io/qwik';
+import { component$, Host, useContext } from '@builder.io/qwik';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import { COLLECTIONS } from '~/constants';
-import { getCollectionsQuery } from '~/graphql/queries';
-import { ICollection } from '~/types';
-import { sendQuery } from '~/utils/api';
 
 export const headerImage =
   'https://readonlydemo.vendure.io/assets/preview/5b/jakob-owens-274337-unsplash__preview.jpg';
 
 export default component$(() => {
-  const state = useStore<{ collections: ICollection[] }>({ collections: [] });
-  useServerMount$(async () => {
-    const data = await sendQuery<{ collections: { items: ICollection[] } }>(getCollectionsQuery);
-    state.collections = data.collections.items;
-  });
-  useContextProvider(COLLECTIONS, state);
-
+  const collections = useContext(COLLECTIONS).collections;
   return (
     <Host>
       <div className="relative">
@@ -84,7 +75,7 @@ export default component$(() => {
           <div className="-my-2">
             <div className="box-content py-2 px-2 relative overflow-x-auto xl:overflow-visible">
               <div className="grid justify-items-center grid-cols-2 md:grid-cols-3 gap-y-8 gap-x-8 sm:px-6 lg:px-8 xl:relative xl:px-0 xl:space-x-0 xl:gap-x-8">
-                {state.collections.map((collection) =>
+                {collections.map((collection) =>
                   !!collection.featuredAsset ? (
                     <CollectionCard key={collection.id} collection={collection} />
                   ) : null

@@ -1,4 +1,5 @@
-import { component$, Host } from '@builder.io/qwik';
+import { component$, Host, useContext } from '@builder.io/qwik';
+import { COLLECTIONS } from '~/constants';
 
 export const navigation = {
   support: [
@@ -16,9 +17,9 @@ export const navigation = {
 };
 export default component$(
   () => {
-    // const collections = useContext(COLLECTIONS).collections.filter(
-    //   (item) => item.parent?.name === '__root_collection__' && !!item.featuredAsset
-    // );
+    const collections = useContext(COLLECTIONS).collections.filter(
+      (item) => item.parent?.name === '__root_collection__' && !!item.featuredAsset
+    );
     return (
       <Host>
         <footer className="mt-24 border-t bg-gray-50" aria-labelledby="footer-heading">
@@ -34,7 +35,7 @@ export default component$(
                       Shop
                     </h3>
                     <ul role="list" className="mt-4 space-y-4">
-                      {/* {collections.map((collection) => (
+                      {collections.map((collection) => (
                         <li key={collection.id}>
                           <a
                             className="text-base text-gray-500 hover:text-gray-600"
@@ -44,7 +45,7 @@ export default component$(
                             {collection.name}
                           </a>
                         </li>
-                      ))} */}
+                      ))}
                     </ul>
                   </div>
                   <div className="mt-12 md:mt-0">

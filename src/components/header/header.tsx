@@ -1,4 +1,5 @@
-import { component$, Host, useStore } from '@builder.io/qwik';
+import { component$, Host, useContext, useDocument, useStore } from '@builder.io/qwik';
+import { COLLECTIONS } from '~/constants';
 import SearchBar from '../search-bar/SearchBar';
 
 export interface State {
@@ -9,14 +10,15 @@ export interface State {
 
 export default component$(
   () => {
-    // const collections = useContext(COLLECTIONS).collections.filter(
-    //   (item) => item.parent?.name === '__root_collection__' && !!item.featuredAsset
-    // );
+    const collections = useContext(COLLECTIONS).collections.filter(
+      (item) => item.parent?.name === '__root_collection__' && !!item.featuredAsset
+    );
     const state: State = useStore<State>({
       isScrollingUp: true,
       isSignedIn: false,
       cartQuantity: 0,
     });
+    const doc = useDocument();
     return (
       <Host>
         <header
@@ -66,11 +68,16 @@ export default component$(
           <div className="max-w-6xl mx-auto p-4 flex items-center space-x-4">
             <h1 className="text-white w-10">
               <a href="/">
-                <img src="./cube-logo-small.webp" width={40} height={31} alt="Vendure logo" />
+                <img
+                  src={`${doc.location.origin}/cube-logo-small.webp`}
+                  width={40}
+                  height={31}
+                  alt="Vendure logo"
+                />
               </a>
             </h1>
             <div className="flex space-x-4 hidden sm:block">
-              {/* {collections.map((collection) => (
+              {collections.map((collection) => (
                 <a
                   className="text-sm md:text-base text-gray-200 hover:text-white"
                   href={'/collections/' + collection.slug}
@@ -78,7 +85,7 @@ export default component$(
                 >
                   {collection.name}
                 </a>
-              ))} */}
+              ))}
             </div>
             <div className="flex-1 md:pr-8">
               <SearchBar />
@@ -123,6 +130,3 @@ export default component$(
     tagName: 'header',
   }
 );
-function useContext(COLLECTIONS: any) {
-  throw new Error('Function not implemented.');
-}
