@@ -1,34 +1,14 @@
-import { App } from './components/app/app';
+import { Html } from '@builder.io/qwik-city';
+import { Head } from './components/head/head';
+import { Body } from './components/body/body';
 
 import './global.css';
 
-export const Root = () => {
-	return (
-		<html lang='en'>
-			<head>
-				<Head />
-			</head>
-			<body>
-				<App />
-			</body>
-		</html>
-	);
+export default () => {
+  return (
+    <Html lang="en">
+      <Head />
+      <Body />
+    </Html>
+  );
 };
-
-const Head = () => (
-	<>
-		<meta charSet='utf-8' />
-
-		<title>QwikCity Example</title>
-		<meta name='viewport' content='width=device-width' />
-
-		<link
-			rel='apple-touch-icon'
-			sizes='180x180'
-			href='/favicons/apple-touch-icon.png'
-		/>
-		<link rel='icon' href='/favicons/favicon.svg' type='image/svg+xml' />
-
-		<meta property='og:locale' content='en_US' />
-	</>
-);
