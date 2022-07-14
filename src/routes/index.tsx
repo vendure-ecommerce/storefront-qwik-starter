@@ -1,5 +1,5 @@
 import { component$, Host, useContextProvider, useServerMount$, useStore } from '@builder.io/qwik';
-import CollectionCard from '~/components/collection-card/collection-card';
+import CollectionCard from '~/components/collection-card/CollectionCard';
 import { COLLECTIONS } from '~/constants';
 import { getCollectionsQuery } from '~/graphql/queries';
 import { ICollection } from '~/types';

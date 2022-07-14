@@ -1,5 +1,5 @@
 import { component$, Host, useStore } from '@builder.io/qwik';
-import SearchBar from '../search-bar/search-bar';
+import SearchBar from '../search-bar/SearchBar';
 
 export interface State {
   isScrollingUp: boolean;

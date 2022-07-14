@@ -1,7 +1,7 @@
 import { component$ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
-import CollectionCard from '~/components/collection-card/collection-card';
+import CollectionCard from '~/components/collection-card/CollectionCard';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
 
