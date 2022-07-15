@@ -1,20 +1,27 @@
-import { component$, useServerMount$, useStore } from '@builder.io/qwik';
+import { component$, useServerMount$, useStore, useWatch$ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import Price from '~/components/products/Price';
 import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import TopReviews from '~/components/top-reviews/TopReviews';
+import { addItemToOrderMutation } from '~/graphql/mutations';
 import { getProductQuery } from '~/graphql/queries';
-import { Product } from '~/types';
-import { getRandomInt } from '~/utils';
+import { ActiveOrder, Product } from '~/types';
 import { sendQuery } from '~/utils/api';
 
 export default component$(() => {
 	const location = useLocation();
-	const state = useStore<{ product: Product; loading: boolean }>({
+	const state = useStore<{
+		product: Product;
+		quantity: number;
+		loading: boolean;
+		addItemToOrderError: string;
+	}>({
 		product: {} as Product,
+		quantity: 0,
 		loading: true,
+		addItemToOrderError: '',
 	});
 
 	useServerMount$(async () => {
@@ -24,13 +31,23 @@ export default component$(() => {
 		(state.loading = false), (state.product = product);
 	});
 
+	useWatch$(async (track) => {
+		track(state, 'quantity');
+		if (state.quantity !== 0) {
+			const { addItemToOrder: order } = await sendQuery<{
+				addItemToOrder: ActiveOrder;
+			}>(addItemToOrderMutation(state.product.id, state.quantity));
+			if (!!order.errorCode) {
+				state.addItemToOrderError = order.errorCode;
+			}
+		}
+	});
+
 	const findVariantById = (id: string) => state.product.variants.find((v) => v.id === id);
 	const selectedVariantId = () => state.product.variants[0].id;
 	const selectedVariant = () => findVariantById(state.product.variants[0].id);
 	const featuredAsset = () => findVariantById(state.product.variants[0].id)?.featuredAsset;
 
-	const qtyInCart = getRandomInt(3);
-	const addItemToOrderError = Math.random() > 0.5 ? 'error message' : '';
 	return !!state.loading ? (
 		<></>
 	) : (
@@ -119,24 +136,23 @@ export default component$(() => {
 						)}
 
 						<div className="mt-10 flex flex-col sm:flex-row sm:items-center">
-							<p className="text-3xl text-gray-900 mr-4">
-								<Price
-									priceWithTax={selectedVariant()?.priceWithTax}
-									currencyCode={selectedVariant()?.currencyCode}
-								></Price>
-							</p>
+							<Price
+								priceWithTax={selectedVariant()?.priceWithTax}
+								currencyCode={selectedVariant()?.currencyCode}
+							></Price>
 							<div className="flex sm:flex-col1 align-baseline">
 								<button
 									class={`max-w-xs flex-1 ${
-										qtyInCart === 0
+										state.quantity === 0
 											? 'bg-primary-600 hover:bg-primary-700'
 											: 'bg-green-600 active:bg-green-700 hover:bg-green-700'
 									}
 														 transition-colors border border-transparent rounded-md py-3 px-8 flex items-center
 															justify-center text-base font-medium text-white focus:outline-none
 															focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full`}
+									onClick$={() => (state.quantity += 1)}
 								>
-									{qtyInCart ? (
+									{state.quantity ? (
 										<span className="flex items-center">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -148,7 +164,7 @@ export default component$(() => {
 											>
 												<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
 											</svg>
-											{qtyInCart} in cart
+											{state.quantity} in cart
 										</span>
 									) : (
 										`Add to cart`
@@ -182,9 +198,9 @@ export default component$(() => {
 							<span className="text-gray-500">{selectedVariant()?.sku}</span>
 							<StockLevelLabel stockLevel={selectedVariant()?.stockLevel} />
 						</div>
-						{addItemToOrderError && (
+						{!!state.addItemToOrderError && (
 							<div className="mt-4">
-								<Alert message={addItemToOrderError} />
+								<Alert message={state.addItemToOrderError} />
 							</div>
 						)}
 

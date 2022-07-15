@@ -111,4 +111,5 @@ export type ActiveOrder = {
 	shippingAddress: ShippingAddress;
 	shippingLines: any[];
 	lines: Line[];
+	errorCode?: string;
 };
