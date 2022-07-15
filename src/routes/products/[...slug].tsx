@@ -29,7 +29,6 @@ export default component$(() => {
 	const selectedVariant = () => findVariantById(state.product.variants[0].id);
 	const featuredAsset = () => findVariantById(state.product.variants[0].id)?.featuredAsset;
 
-	const transition = { state: 'ok' };
 	const qtyInCart = getRandomInt(3);
 	const addItemToOrderError = Math.random() > 0.5 ? 'error message' : '';
 	return !!state.loading ? (
@@ -89,128 +88,119 @@ export default component$(() => {
 
 							<div className="text-base text-gray-700">{state.product.description}</div>
 						</div>
-						<form method="post" action="/api/active-order">
-							<input type="hidden" name="action" value="addItemToOrder" />
-							{1 < state.product.variants.length ? (
-								<div className="mt-4">
-									<label htmlFor="option" className="block text-sm font-medium text-gray-700">
-										Select option
-									</label>
-									<select
-										className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
-										id="productVariant"
-										value={selectedVariantId()}
-										name="variantId"
-										onChange$={(e) => {
-											// setSelectedVariantId(e.target.value);
-											// const variant = findVariantById(e.target.value);
-											// if (variant) {
-											//   setFeaturedAsset(variant!.featuredAsset);
-											// }
-										}}
-									>
-										{state.product.variants.map((variant) => (
-											<option key={variant.id} value={variant.id}>
-												{variant.name}
-											</option>
-										))}
-									</select>
-								</div>
-							) : (
-								<input type="hidden" name="variantId" value={selectedVariantId()}></input>
-							)}
+						<input type="hidden" name="action" value="addItemToOrder" />
+						{1 < state.product.variants.length ? (
+							<div className="mt-4">
+								<label htmlFor="option" className="block text-sm font-medium text-gray-700">
+									Select option
+								</label>
+								<select
+									className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
+									id="productVariant"
+									value={selectedVariantId()}
+									name="variantId"
+									onChange$={(e) => {
+										// setSelectedVariantId(e.target.value);
+										// const variant = findVariantById(e.target.value);
+										// if (variant) {
+										//   setFeaturedAsset(variant!.featuredAsset);
+										// }
+									}}
+								>
+									{state.product.variants.map((variant) => (
+										<option key={variant.id} value={variant.id}>
+											{variant.name}
+										</option>
+									))}
+								</select>
+							</div>
+						) : (
+							<input type="hidden" name="variantId" value={selectedVariantId()}></input>
+						)}
 
-							<div className="mt-10 flex flex-col sm:flex-row sm:items-center">
-								<p className="text-3xl text-gray-900 mr-4">
-									<Price
-										priceWithTax={selectedVariant()?.priceWithTax}
-										currencyCode={selectedVariant()?.currencyCode}
-									></Price>
-								</p>
-								<div className="flex sm:flex-col1 align-baseline">
-									<button
-										type="submit"
-										class={`max-w-xs flex-1 ${
-											transition.state !== 'idle'
-												? 'bg-gray-400'
-												: qtyInCart === 0
-												? 'bg-primary-600 hover:bg-primary-700'
-												: 'bg-green-600 active:bg-green-700 hover:bg-green-700'
-										}
+						<div className="mt-10 flex flex-col sm:flex-row sm:items-center">
+							<p className="text-3xl text-gray-900 mr-4">
+								<Price
+									priceWithTax={selectedVariant()?.priceWithTax}
+									currencyCode={selectedVariant()?.currencyCode}
+								></Price>
+							</p>
+							<div className="flex sm:flex-col1 align-baseline">
+								<button
+									class={`max-w-xs flex-1 ${
+										qtyInCart === 0
+											? 'bg-primary-600 hover:bg-primary-700'
+											: 'bg-green-600 active:bg-green-700 hover:bg-green-700'
+									}
 														 transition-colors border border-transparent rounded-md py-3 px-8 flex items-center
 															justify-center text-base font-medium text-white focus:outline-none
 															focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full`}
-										disabled={transition.state !== 'idle'}
-									>
-										{qtyInCart ? (
-											<span className="flex items-center">
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													className="w-5 h-5 mr-1"
-													fill="none"
-													viewBox="0 0 24 24"
-													stroke="currentColor"
-													stroke-width="2"
-												>
-													<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-												</svg>
-												{qtyInCart} in cart
-											</span>
-										) : (
-											`Add to cart`
-										)}
-									</button>
+								>
+									{qtyInCart ? (
+										<span className="flex items-center">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="w-5 h-5 mr-1"
+												fill="none"
+												viewBox="0 0 24 24"
+												stroke="currentColor"
+												stroke-width="2"
+											>
+												<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+											</svg>
+											{qtyInCart} in cart
+										</span>
+									) : (
+										`Add to cart`
+									)}
+								</button>
 
-									<button
-										type="button"
-										className="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500"
+								<button
+									type="button"
+									className="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										aria-hidden="true"
+										className="h-6 w-6 flex-shrink-0"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+										stroke-width="2"
 									>
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											aria-hidden="true"
-											className="h-6 w-6 flex-shrink-0"
-											fill="none"
-											viewBox="0 0 24 24"
-											stroke="currentColor"
-											stroke-width="2"
-										>
-											<path
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-											/>
-										</svg>
-										<span className="sr-only">Add to favorites</span>
-									</button>
-								</div>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+										/>
+									</svg>
+									<span className="sr-only">Add to favorites</span>
+								</button>
 							</div>
-							<div className="mt-2 flex items-center space-x-2">
-								<span className="text-gray-500">{selectedVariant()?.sku}</span>
-								<StockLevelLabel stockLevel={selectedVariant()?.stockLevel} />
+						</div>
+						<div className="mt-2 flex items-center space-x-2">
+							<span className="text-gray-500">{selectedVariant()?.sku}</span>
+							<StockLevelLabel stockLevel={selectedVariant()?.stockLevel} />
+						</div>
+						{addItemToOrderError && (
+							<div className="mt-4">
+								<Alert message={addItemToOrderError} />
 							</div>
-							{addItemToOrderError && (
-								<div className="mt-4">
-									<Alert message={addItemToOrderError} />
-								</div>
-							)}
+						)}
 
-							<section className="mt-12 pt-12 border-t text-xs">
-								<h3 className="text-gray-600 font-bold mb-2">Shipping & Returns</h3>
-								<div className="text-gray-500 space-y-1">
-									<p>
-										Standard shipping: 3 - 5 working days. Express shipping: 1 - 3 working days.
-									</p>
-									<p>
-										Shipping costs depend on delivery address and will be calculated during
-										checkout.
-									</p>
-									<p>
-										Returns are subject to terms. Please see the{' '}
-										<span className="underline">returns page</span> for further information.
-									</p>
-								</div>
-							</section>
-						</form>
+						<section className="mt-12 pt-12 border-t text-xs">
+							<h3 className="text-gray-600 font-bold mb-2">Shipping & Returns</h3>
+							<div className="text-gray-500 space-y-1">
+								<p>Standard shipping: 3 - 5 working days. Express shipping: 1 - 3 working days.</p>
+								<p>
+									Shipping costs depend on delivery address and will be calculated during checkout.
+								</p>
+								<p>
+									Returns are subject to terms. Please see the{' '}
+									<span className="underline">returns page</span> for further information.
+								</p>
+							</div>
+						</section>
 					</div>
 				</div>
 			</div>
