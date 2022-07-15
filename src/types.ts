@@ -51,7 +51,7 @@ export type Variant = {
 	id: string;
 	name: string;
 	priceWithTax: number;
-	currencycode: string;
+	currencyCode: string;
 	sku: string;
 	stockLevel: string;
 	featuredAsset?: any;

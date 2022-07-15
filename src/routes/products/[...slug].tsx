@@ -1,113 +1,47 @@
-import { component$, useStore } from '@builder.io/qwik';
+import { component$, useServerMount$, useStore } from '@builder.io/qwik';
+import { useLocation } from '@builder.io/qwik-city';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import Price from '~/components/products/Price';
 import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import TopReviews from '~/components/top-reviews/TopReviews';
+import { getProductQuery } from '~/graphql/queries';
+import { Product } from '~/types';
 import { getRandomInt } from '~/utils';
-
-export const product = {
-	id: '54',
-	name: 'Modern Cafe Chair',
-	description:
-		'You sit comfortably thanks to the restful flexibility of the seat. Lightweight and easy to move around, yet stable enough even for the liveliest, young family members.',
-	collections: [
-		{
-			id: '5',
-			slug: 'home-garden',
-			name: 'Home & Garden',
-			breadcrumbs: [
-				{ id: '1', name: '__root_collection__', slug: '__root_collection__' },
-				{ id: '5', name: 'Home & Garden', slug: 'home-garden' },
-			],
-		},
-		{
-			id: '6',
-			slug: 'furniture',
-			name: 'Furniture',
-			breadcrumbs: [
-				{ id: '1', name: '__root_collection__', slug: '__root_collection__' },
-				{ id: '5', name: 'Home & Garden', slug: 'home-garden' },
-				{ id: '6', name: 'Furniture', slug: 'furniture' },
-			],
-		},
-	],
-	facetValues: [
-		{
-			facet: { id: '1', code: 'category', name: 'category' },
-			id: '30',
-			code: 'home-garden',
-			name: 'Home & Garden',
-		},
-		{
-			facet: { id: '1', code: 'category', name: 'category' },
-			id: '34',
-			code: 'furniture',
-			name: 'Furniture',
-		},
-	],
-	featuredAsset: {
-		id: '54',
-		preview:
-			'https://readonlydemo.vendure.io/assets/preview/b1/jean-philippe-delberghe-1400011-unsplash__preview.jpg',
-	},
-	assets: [
-		{
-			id: '54',
-			preview:
-				'https://readonlydemo.vendure.io/assets/preview/b1/jean-philippe-delberghe-1400011-unsplash__preview.jpg',
-		},
-	],
-	variants: [
-		{
-			id: '86',
-			name: 'Modern Cafe Chair mustard',
-			priceWithTax: 12000,
-			currencyCode: 'USD',
-			sku: '404.038.96',
-			stockLevel: 'IN_STOCK',
-			featuredAsset: null,
-		},
-		{
-			id: '87',
-			name: 'Modern Cafe Chair mint',
-			priceWithTax: 12000,
-			currencyCode: 'USD',
-			sku: '404.038.96',
-			stockLevel: 'IN_STOCK',
-			featuredAsset: null,
-		},
-		{
-			id: '88',
-			name: 'Modern Cafe Chair pearl',
-			priceWithTax: 12000,
-			currencyCode: 'USD',
-			sku: '404.038.96',
-			stockLevel: 'IN_STOCK',
-			featuredAsset: null,
-		},
-	],
-};
+import { sendQuery } from '~/utils/api';
 
 export default component$(() => {
-	const findVariantById = (id: string) => product.variants.find((v) => v.id === id);
-
-	const state = useStore({
-		selectedVariantId: product.variants[0].id,
-		selectedVariant: findVariantById(product.variants[0].id),
-		featuredAsset: findVariantById(product.variants[0].id)?.featuredAsset,
+	const location = useLocation();
+	const state = useStore<{ product: Product; loading: boolean }>({
+		product: {} as Product,
+		loading: true,
 	});
+
+	useServerMount$(async () => {
+		const { product } = await sendQuery<{ product: Product }>(
+			getProductQuery(location.params.slug)
+		);
+		(state.loading = false), (state.product = product);
+	});
+
+	const findVariantById = (id: string) => state.product.variants.find((v) => v.id === id);
+	const selectedVariantId = () => state.product.variants[0].id;
+	const selectedVariant = () => findVariantById(state.product.variants[0].id);
+	const featuredAsset = () => findVariantById(state.product.variants[0].id)?.featuredAsset;
+
 	const transition = { state: 'ok' };
 	const qtyInCart = getRandomInt(3);
 	const addItemToOrderError = Math.random() > 0.5 ? 'error message' : '';
-	return (
+	return !!state.loading ? (
+		<></>
+	) : (
 		<div>
 			<div className="max-w-6xl mx-auto px-4">
 				<h2 className="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
-					{product.name}
+					{state.product.name}
 				</h2>
 				<Breadcrumbs
-					items={product.collections[product.collections.length - 1]?.breadcrumbs ?? []}
+					items={state.product.collections[state.product.collections.length - 1]?.breadcrumbs ?? []}
 				></Breadcrumbs>
 				<div className="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start mt-4 md:mt-12">
 					{/* Image gallery */}
@@ -115,25 +49,21 @@ export default component$(() => {
 						<span className="rounded-md overflow-hidden">
 							<div className="w-full h-full object-center object-cover rounded-lg">
 								<img
-									src={
-										/*state.featuredAsset?.preview || */ product.featuredAsset?.preview + '?w=800'
-									}
-									alt={product.name}
+									src={featuredAsset()?.preview || state.product.featuredAsset?.preview + '?w=800'}
+									alt={state.product.name}
 									className="w-full h-full object-center object-cover rounded-lg"
 								/>
 							</div>
 						</span>
 
 						{
-							product.assets.length > 1 &&
+							state.product.assets.length > 1 &&
 								// <ScrollableContainer>
-								product.assets.map((asset) => (
+								state.product.assets.map((asset) => (
 									<div
-										//   ${state.featuredAsset?.id == asset.id
-										//     ? 'outline outline-2 outline-primary outline-offset-[-2px]'
-										//     : ''
-										// }
-										className={`basis-1/3 md:basis-1/4 flex-shrink-0 select-none touch-pan-x rounded-lg`}
+										className={`basis-1/3 md:basis-1/4 flex-shrink-0 select-none touch-pan-x rounded-lg ${
+											featuredAsset()?.id == asset.id
+										} ? 'outline outline-2 outline-primary outline-offset-[-2px]': ''`}
 										onClick$={() => {
 											// setFeaturedAsset(asset);
 										}}
@@ -157,11 +87,11 @@ export default component$(() => {
 						<div className="">
 							<h3 className="sr-only">Description</h3>
 
-							<div className="text-base text-gray-700">{product.description}</div>
+							<div className="text-base text-gray-700">{state.product.description}</div>
 						</div>
 						<form method="post" action="/api/active-order">
 							<input type="hidden" name="action" value="addItemToOrder" />
-							{1 < product.variants.length ? (
+							{1 < state.product.variants.length ? (
 								<div className="mt-4">
 									<label htmlFor="option" className="block text-sm font-medium text-gray-700">
 										Select option
@@ -169,7 +99,7 @@ export default component$(() => {
 									<select
 										className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
 										id="productVariant"
-										value={state.selectedVariantId}
+										value={selectedVariantId()}
 										name="variantId"
 										onChange$={(e) => {
 											// setSelectedVariantId(e.target.value);
@@ -179,7 +109,7 @@ export default component$(() => {
 											// }
 										}}
 									>
-										{product.variants.map((variant) => (
+										{state.product.variants.map((variant) => (
 											<option key={variant.id} value={variant.id}>
 												{variant.name}
 											</option>
@@ -187,14 +117,14 @@ export default component$(() => {
 									</select>
 								</div>
 							) : (
-								<input type="hidden" name="variantId" value={state.selectedVariantId}></input>
+								<input type="hidden" name="variantId" value={selectedVariantId()}></input>
 							)}
 
 							<div className="mt-10 flex flex-col sm:flex-row sm:items-center">
 								<p className="text-3xl text-gray-900 mr-4">
 									<Price
-										priceWithTax={state.selectedVariant?.priceWithTax}
-										currencyCode={state.selectedVariant?.currencyCode}
+										priceWithTax={selectedVariant()?.priceWithTax}
+										currencyCode={selectedVariant()?.currencyCode}
 									></Price>
 								</p>
 								<div className="flex sm:flex-col1 align-baseline">
@@ -207,9 +137,9 @@ export default component$(() => {
 												? 'bg-primary-600 hover:bg-primary-700'
 												: 'bg-green-600 active:bg-green-700 hover:bg-green-700'
 										}
-                                 transition-colors border border-transparent rounded-md py-3 px-8 flex items-center
-                                  justify-center text-base font-medium text-white focus:outline-none
-                                  focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full`}
+														 transition-colors border border-transparent rounded-md py-3 px-8 flex items-center
+															justify-center text-base font-medium text-white focus:outline-none
+															focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full`}
 										disabled={transition.state !== 'idle'}
 									>
 										{qtyInCart ? (
@@ -255,8 +185,8 @@ export default component$(() => {
 								</div>
 							</div>
 							<div className="mt-2 flex items-center space-x-2">
-								<span className="text-gray-500">{state.selectedVariant?.sku}</span>
-								<StockLevelLabel stockLevel={state.selectedVariant?.stockLevel} />
+								<span className="text-gray-500">{selectedVariant()?.sku}</span>
+								<StockLevelLabel stockLevel={selectedVariant()?.stockLevel} />
 							</div>
 							{addItemToOrderError && (
 								<div className="mt-4">

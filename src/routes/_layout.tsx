@@ -16,8 +16,10 @@ import Header from '../components/header/header';
 export default component$(() => {
 	const state = useStore<{ collections: Collection[] }>({ collections: [] });
 	useServerMount$(async () => {
-		const data = await sendQuery<{ collections: { items: Collection[] } }>(getCollectionsQuery());
-		state.collections = data.collections.items;
+		const { collections } = await sendQuery<{ collections: { items: Collection[] } }>(
+			getCollectionsQuery()
+		);
+		state.collections = collections.items;
 	});
 	useContextProvider(COLLECTIONS, state);
 
