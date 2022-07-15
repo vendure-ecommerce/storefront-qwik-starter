@@ -105,7 +105,7 @@ export default component$(() => {
 						<div className="">
 							<h3 className="sr-only">Description</h3>
 
-							<div className="text-base text-gray-700">{state.product.description}</div>
+							<div className="text-base text-gray-700" innerHTML={state.product.description} />
 						</div>
 						<input type="hidden" name="action" value="addItemToOrder" />
 						{1 < state.product.variants.length ? (
