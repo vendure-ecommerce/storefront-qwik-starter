@@ -1,25 +1,23 @@
 import { component$ } from '@builder.io/qwik';
 
-export default component$(({ priceWithTax, currencyCode }: any) => {
-	// if (priceWithTax == null || !currencyCode) {
-	//   return <></>;
-	// }
-	// if (typeof priceWithTax === 'number') {
-	//   return <>{formatPrice(priceWithTax, currencyCode)}</>;
-	// }
-	// if ('value' in priceWithTax) {
-	//   return <>{formatPrice(priceWithTax.value, currencyCode)}</>;
-	// }
-	// if (priceWithTax.min === priceWithTax.max) {
-	//   return <>{formatPrice(priceWithTax.min, currencyCode)}</>;
-	// }
-	// return (
-	//   <>
-	//     {formatPrice(priceWithTax.min, currencyCode)} - {formatPrice(priceWithTax.max, currencyCode)}
-	//   </>
-	// );
-
-	return <p className="text-3xl text-gray-900 mr-4">{formatPrice(priceWithTax, currencyCode)}</p>;
+export default component$(({ priceWithTax, currencyCode, className }: any) => {
+	if (priceWithTax == null || !currencyCode) {
+		return <div></div>;
+	}
+	if (typeof priceWithTax === 'number') {
+		return <div className={className}>{formatPrice(priceWithTax, currencyCode)}</div>;
+	}
+	if ('value' in priceWithTax) {
+		return <div className={className}>{formatPrice(priceWithTax.value, currencyCode)}</div>;
+	}
+	if (priceWithTax.min === priceWithTax.max) {
+		return <div className={className}>{formatPrice(priceWithTax.min, currencyCode)}</div>;
+	}
+	return (
+		<div className={className}>
+			{formatPrice(priceWithTax.min, currencyCode)} - {formatPrice(priceWithTax.max, currencyCode)}
+		</div>
+	);
 });
 
 export function formatPrice(value: number, currency: any) {

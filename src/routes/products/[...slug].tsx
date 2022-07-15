@@ -139,6 +139,7 @@ export default component$(() => {
 							<Price
 								priceWithTax={selectedVariant()?.priceWithTax}
 								currencyCode={selectedVariant()?.currencyCode}
+								className={'text-3xl text-gray-900 mr-4'}
 							></Price>
 							<div className="flex sm:flex-col1 align-baseline">
 								<button
