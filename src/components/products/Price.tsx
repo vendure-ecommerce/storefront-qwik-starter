@@ -1,4 +1,5 @@
 import { component$ } from '@builder.io/qwik';
+import { formatPrice } from '~/utils';
 
 export default component$(({ priceWithTax, currencyCode, className }: any) => {
 	if (priceWithTax == null || !currencyCode) {
@@ -19,10 +20,3 @@ export default component$(({ priceWithTax, currencyCode, className }: any) => {
 		</div>
 	);
 });
-
-export function formatPrice(value: number, currency: any) {
-	return new Intl.NumberFormat('en-US', {
-		style: 'currency',
-		currency,
-	}).format(value / 100);
-}

@@ -1,4 +1,4 @@
-import { component$, useServerMount$, useStore, useWatch$ } from '@builder.io/qwik';
+import { component$, mutable, useServerMount$, useStore, useWatch$ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
@@ -14,11 +14,13 @@ export default component$(() => {
 	const location = useLocation();
 	const state = useStore<{
 		product: Product;
+		selectedVariantId: string;
 		quantity: number;
 		loading: boolean;
 		addItemToOrderError: string;
 	}>({
 		product: {} as Product,
+		selectedVariantId: '',
 		quantity: 0,
 		loading: true,
 		addItemToOrderError: '',
@@ -28,7 +30,9 @@ export default component$(() => {
 		const { product } = await sendQuery<{ product: Product }>(
 			getProductQuery(location.params.slug)
 		);
-		(state.loading = false), (state.product = product);
+		state.product = product;
+		state.selectedVariantId = product.variants[0].id;
+		state.loading = false;
 	});
 
 	useWatch$(async (track) => {
@@ -44,10 +48,8 @@ export default component$(() => {
 	});
 
 	const findVariantById = (id: string) => state.product.variants.find((v) => v.id === id);
-	const selectedVariantId = () => state.product.variants[0].id;
-	const selectedVariant = () => findVariantById(state.product.variants[0].id);
+	const selectedVariant = () => findVariantById(state.selectedVariantId);
 	const featuredAsset = () => findVariantById(state.product.variants[0].id)?.featuredAsset;
-
 	return !!state.loading ? (
 		<></>
 	) : (
@@ -114,15 +116,9 @@ export default component$(() => {
 								<select
 									className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
 									id="productVariant"
-									value={selectedVariantId()}
+									value={state.selectedVariantId}
 									name="variantId"
-									onChange$={(e) => {
-										// setSelectedVariantId(e.target.value);
-										// const variant = findVariantById(e.target.value);
-										// if (variant) {
-										//   setFeaturedAsset(variant!.featuredAsset);
-										// }
-									}}
+									onChange$={(e: any) => (state.selectedVariantId = e.target.value)}
 								>
 									{state.product.variants.map((variant) => (
 										<option key={variant.id} value={variant.id}>
@@ -132,13 +128,13 @@ export default component$(() => {
 								</select>
 							</div>
 						) : (
-							<input type="hidden" name="variantId" value={selectedVariantId()}></input>
+							<input type="hidden" name="variantId" value={state.selectedVariantId}></input>
 						)}
 
 						<div className="mt-10 flex flex-col sm:flex-row sm:items-center">
 							<Price
-								priceWithTax={selectedVariant()?.priceWithTax}
-								currencyCode={selectedVariant()?.currencyCode}
+								priceWithTax={mutable(selectedVariant()?.priceWithTax)}
+								currencyCode={mutable(selectedVariant()?.currencyCode)}
 								className={'text-3xl text-gray-900 mr-4'}
 							></Price>
 							<div className="flex sm:flex-col1 align-baseline">
@@ -197,7 +193,7 @@ export default component$(() => {
 						</div>
 						<div className="mt-2 flex items-center space-x-2">
 							<span className="text-gray-500">{selectedVariant()?.sku}</span>
-							<StockLevelLabel stockLevel={selectedVariant()?.stockLevel} />
+							<StockLevelLabel stockLevel={mutable(selectedVariant()?.stockLevel)} />
 						</div>
 						{!!state.addItemToOrderError && (
 							<div className="mt-4">
