@@ -38,7 +38,9 @@ export default component$(() => {
 
 	useServerMount$(async () => {
 		const { product } = await sendQuery<{ product: Product }>(
-			getProductQuery(location.params.slug)
+			getProductQuery({
+				slug: location.params.slug,
+			})
 		);
 		state.product = product;
 		state.selectedVariantId = product.variants[0].id;

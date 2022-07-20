@@ -1,4 +1,5 @@
-export const getCollectionsQuery = () => `
+export const getCollectionsQuery = (): { query: string } => ({
+	query: `
   query collections {
     collections {
       items {
@@ -15,11 +16,14 @@ export const getCollectionsQuery = () => `
       }
     }
   }
-`;
+`,
+});
 
-export const getCollectionQuery = (slug: string) => `
-  query collection($id: ID) {
-    collection(slug: "${slug}", id: $id) {
+export const getCollectionQuery = (slug: string) => ({
+	variables: { slug },
+	query: `
+  query collection($slug: String, $id: ID) {
+    collection(slug: $slug, id: $id) {
       id
       name
       slug
@@ -39,11 +43,16 @@ export const getCollectionQuery = (slug: string) => `
       }
     }
   }
-`;
+`,
+});
 
-export const searchQuery = (input: string) => `
-  query search($input: Int) {
-    search(input: { collectionSlug: "${input}", skip: $input }) {
+export const searchQuery = (slug: string) => ({
+	variables: {
+		input: { collectionSlug: slug },
+	},
+	query: `
+  query search($input: SearchInput!) {
+    search(input: $input) {
       totalItems
       items {
         ...ListedProduct
@@ -81,11 +90,16 @@ export const searchQuery = (input: string) => `
       }
     }
   }  
-`;
+`,
+});
 
-export const getProductQuery = (slug: string) => `
-  query product($id: ID) {
-    product(slug: "${slug}", id: $id) {
+export const getProductQuery = (variables: {
+	slug: string;
+}): { variables: typeof variables; query: string } => ({
+	variables,
+	query: `
+  query product($slug: String, $id: ID) {
+    product(slug: $slug, id: $id) {
       ...DetailedProduct
     }
   }
@@ -135,9 +149,11 @@ export const getProductQuery = (slug: string) => `
       }
     }
   }
-`;
+`,
+});
 
-export const getActiveOrderQuery = () => `
+export const getActiveOrderQuery = (): { query: string } => ({
+	query: `
   query activeOrder {
     activeOrder {
       ...OrderDetail
@@ -206,4 +222,5 @@ export const getActiveOrderQuery = () => `
       }
     }
   }
-`;
+`,
+});

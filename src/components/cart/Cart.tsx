@@ -1,4 +1,6 @@
 import { component$, PropFunction } from '@builder.io/qwik';
+import { removeOrderLineQuery } from '~/graphql/mutations';
+import { sendQuery } from '~/utils/api';
 
 export default component$<{ showCart: boolean; onToggleCart$: PropFunction<() => void> }>(
 	({ showCart = false, onToggleCart$ }) => {
@@ -94,6 +96,7 @@ export default component$<{ showCart: boolean; onToggleCart$: PropFunction<() =>
 																	name="removeItem"
 																	value="11"
 																	class="font-medium text-primary-600 hover:text-primary-500"
+																	onClick$={() => sendQuery(removeOrderLineQuery('67'))}
 																>
 																	Remove
 																</button>
