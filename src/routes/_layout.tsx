@@ -6,7 +6,7 @@ import {
 	useServerMount$,
 	useStore,
 } from '@builder.io/qwik';
-import { COLLECTIONS } from '~/constants';
+import { ACTIVE_ORDER, COLLECTIONS } from '~/constants';
 import { getCollectionsQuery } from '~/graphql/queries';
 import { Collection } from '~/types';
 import { sendQuery } from '~/utils/api';
@@ -22,6 +22,7 @@ export default component$(() => {
 		state.collections = collections.items;
 	});
 	useContextProvider(COLLECTIONS, state);
+	useContextProvider(ACTIVE_ORDER, {});
 
 	return (
 		<Host>

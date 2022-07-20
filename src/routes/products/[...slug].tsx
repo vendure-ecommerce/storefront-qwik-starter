@@ -1,10 +1,18 @@
-import { component$, mutable, useServerMount$, useStore, useWatch$ } from '@builder.io/qwik';
+import {
+	component$,
+	mutable,
+	useContext,
+	useServerMount$,
+	useStore,
+	useWatch$,
+} from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import Price from '~/components/products/Price';
 import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import TopReviews from '~/components/top-reviews/TopReviews';
+import { ACTIVE_ORDER } from '~/constants';
 import { addItemToOrderMutation } from '~/graphql/mutations';
 import { getProductQuery } from '~/graphql/queries';
 import { ActiveOrder, Product } from '~/types';
@@ -18,12 +26,14 @@ export default component$(() => {
 		quantity: number;
 		loading: boolean;
 		addItemToOrderError: string;
+		activeOrder?: ActiveOrder;
 	}>({
 		product: {} as Product,
 		selectedVariantId: '',
 		quantity: 0,
 		loading: true,
 		addItemToOrderError: '',
+		activeOrder: useContext(ACTIVE_ORDER).activeOrder,
 	});
 
 	useServerMount$(async () => {
@@ -40,10 +50,11 @@ export default component$(() => {
 		if (state.quantity !== 0) {
 			const { addItemToOrder: order } = await sendQuery<{
 				addItemToOrder: ActiveOrder;
-			}>(addItemToOrderMutation(state.product.id, state.quantity));
+			}>(addItemToOrderMutation(state.selectedVariantId, state.quantity));
 			if (!!order.errorCode) {
 				state.addItemToOrderError = order.errorCode;
 			}
+			state.activeOrder = order;
 		}
 	});
 
