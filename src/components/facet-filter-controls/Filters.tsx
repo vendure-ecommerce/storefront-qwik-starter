@@ -222,7 +222,6 @@ export default component$<{ showMenu: boolean; onToggleMenu$: PropFunction<() =>
 						</div>
 					</div>
 				</form>
-				{!!showMenu ? 'yes' : 'no'}
 				{!!showMenu ? <FiltersMobile onToggleMenu$={onToggleMenu$} /> : <></>}
 			</>
 		);

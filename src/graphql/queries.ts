@@ -17,6 +17,72 @@ export const getCollectionsQuery = () => `
   }
 `;
 
+export const getCollectionQuery = (slug: string) => `
+  query collection($id: ID) {
+    collection(slug: "${slug}", id: $id) {
+      id
+      name
+      slug
+      breadcrumbs {
+        id
+        name
+        slug
+      }
+      children {
+        id
+        name
+        slug
+        featuredAsset {
+          id
+          preview
+        }
+      }
+    }
+  }
+`;
+
+export const searchQuery = (input: string) => `
+  query search($input: Int) {
+    search(input: { collectionSlug: "${input}", skip: $input }) {
+      totalItems
+      items {
+        ...ListedProduct
+      }
+      facetValues {
+        count
+        facetValue {
+          id
+          name
+          facet {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+
+  fragment ListedProduct on SearchResult {
+    productId
+    productName
+    slug
+    productAsset {
+      id
+      preview
+    }
+    currencyCode
+    priceWithTax {
+      ... on PriceRange {
+        min
+        max
+      }
+      ... on SinglePrice {
+        value
+      }
+    }
+  }  
+`;
+
 export const getProductQuery = (slug: string) => `
   query product($id: ID) {
     product(slug: "${slug}", id: $id) {

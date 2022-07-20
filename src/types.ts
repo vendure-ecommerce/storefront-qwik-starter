@@ -22,6 +22,7 @@ export type Collection = {
 	breadcrumbs?: Breadcrumb[];
 	parent?: { name: '__root_collection__' };
 	featuredAsset?: { id: string; preview: string };
+	children: any[];
 };
 
 export type Facet = {
@@ -112,4 +113,36 @@ export type ActiveOrder = {
 	shippingLines: any[];
 	lines: Line[];
 	errorCode?: string;
+};
+
+// search
+
+export type ProductAsset = {
+	id: string;
+	preview: string;
+};
+
+export type PriceWithTax = {
+	value: number;
+};
+
+export type Item = {
+	productId: string;
+	productName: string;
+	slug: string;
+	productAsset: ProductAsset;
+	currencyCode: string;
+	priceWithTax: PriceWithTax;
+};
+
+export type FacetValue2 = {
+	id: string;
+	name: string;
+	facet: Facet;
+};
+
+export type Search = {
+	totalItems: number;
+	items: Item[];
+	facetValues: FacetValue[];
 };
