@@ -6,7 +6,8 @@ import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
 import { getCollectionQuery, searchQuery } from '~/graphql/queries';
-import { Collection, Search } from '~/types';
+import { Collection, Item, Search } from '~/types';
+import { withUniqueId } from '~/utils';
 import { sendQuery } from '~/utils/api';
 
 export default component$(() => {
@@ -14,11 +15,12 @@ export default component$(() => {
 	const state = useStore<{
 		loading: boolean;
 		showMenu: boolean;
-		search?: Search;
+		items: Item[];
 		collection?: Collection;
 	}>({
 		loading: true,
 		showMenu: false,
+		items: [],
 	});
 
 	useServerMount$(async () => {
@@ -27,7 +29,7 @@ export default component$(() => {
 			getCollectionQuery(params.slug)
 		);
 		state.collection = collection;
-		state.search = search;
+		state.items = withUniqueId(search.items);
 		state.loading = false;
 	});
 
@@ -72,7 +74,7 @@ export default component$(() => {
 				/>
 				<div className="sm:col-span-5 lg:col-span-4">
 					<div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-						{(state.search?.items || []).map((item) => (
+						{state.items.map((item) => (
 							<ProductCard key={item.productId} {...item}></ProductCard>
 						))}
 					</div>
