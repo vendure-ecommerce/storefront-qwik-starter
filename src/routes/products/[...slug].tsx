@@ -12,7 +12,7 @@ import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import Price from '~/components/products/Price';
 import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import TopReviews from '~/components/top-reviews/TopReviews';
-import { ACTIVE_ORDER } from '~/constants';
+import { APP_STATE } from '~/constants';
 import { addItemToOrderMutation } from '~/graphql/mutations';
 import { getProductQuery } from '~/graphql/queries';
 import { ActiveOrder, Product } from '~/types';
@@ -26,15 +26,14 @@ export default component$(() => {
 		quantity: number;
 		loading: boolean;
 		addItemToOrderError: string;
-		activeOrder?: ActiveOrder;
 	}>({
 		product: {} as Product,
 		selectedVariantId: '',
 		quantity: 0,
 		loading: true,
 		addItemToOrderError: '',
-		activeOrder: useContext(ACTIVE_ORDER).activeOrder,
 	});
+	const appState = useContext(APP_STATE);
 
 	useServerMount$(async () => {
 		const { product } = await sendQuery<{ product: Product }>(
@@ -56,7 +55,7 @@ export default component$(() => {
 			if (!!order.errorCode) {
 				state.addItemToOrderError = order.errorCode;
 			}
-			state.activeOrder = order;
+			appState.activeOrder = order;
 		}
 	});
 

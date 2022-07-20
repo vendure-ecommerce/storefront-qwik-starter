@@ -1,9 +1,16 @@
-import { component$, PropFunction } from '@builder.io/qwik';
-import { removeOrderLineQuery } from '~/graphql/mutations';
-import { sendQuery } from '~/utils/api';
+import { component$, PropFunction, useContext } from '@builder.io/qwik';
+import { useLocation } from '@builder.io/qwik-city';
+import { APP_STATE } from '~/constants';
+import { CurrencyCode } from '~/types';
+import CartContents from '../cart-contents/CartContents';
+import Price from '../products/Price';
 
 export default component$<{ showCart: boolean; onToggleCart$: PropFunction<() => void> }>(
 	({ showCart = false, onToggleCart$ }) => {
+		const location = useLocation();
+		const { activeOrder } = useContext(APP_STATE);
+		const currencyCode = activeOrder?.currencyCode || CurrencyCode.Usd;
+		const editable = !location.pathname.startsWith('/checkout');
 		return !!showCart ? (
 			<div
 				class="fixed inset-0 overflow-hidden z-20"
@@ -51,178 +58,49 @@ export default component$<{ showCart: boolean; onToggleCart$: PropFunction<() =>
 											</button>
 										</div>
 									</div>
-									<div class="mt-8">
-										<div class="flow-root">
-											<ul role="list" class="-my-6 divide-y divide-gray-200">
-												<li class="py-6 flex">
-													<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
-														<img
-															src="https://readonlydemo.vendure.io/assets/preview/71/derick-david-409858-unsplash__preview.jpg?preset=thumb"
-															alt="Laptop 13 inch 8GB"
-															class="w-full h-full object-center object-cover"
-														/>
-													</div>
-													<div class="ml-4 flex-1 flex flex-col">
-														<div>
-															<div class="flex justify-between text-base font-medium text-gray-900">
-																<h3>
-																	<a href="/products/laptop">Laptop 13 inch 8GB</a>
-																</h3>
-																<p class="ml-4">$3,117.60</p>
-															</div>
-														</div>
-														<div class="flex-1 flex items-center text-sm">
-															<form method="get" action="/">
-																<label class="mr-2">Quantity</label>
-																<select
-																	id="quantity-11"
-																	name="quantity-11"
-																	class="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-																>
-																	<option value="1">1</option>
-																	<option value="2">2</option>
-																	<option value="3">3</option>
-																	<option value="4">4</option>
-																	<option value="5">5</option>
-																	<option value="6">6</option>
-																	<option value="7">7</option>
-																	<option value="8">8</option>
-																</select>
-															</form>
-															<div class="flex-1"></div>
-															<div class="flex">
-																<button
-																	type="submit"
-																	name="removeItem"
-																	value="11"
-																	class="font-medium text-primary-600 hover:text-primary-500"
-																	onClick$={() => sendQuery(removeOrderLineQuery('67'))}
-																>
-																	Remove
-																</button>
-															</div>
-														</div>
-													</div>
-												</li>
-												<li class="py-6 flex">
-													<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
-														<img
-															src="https://readonlydemo.vendure.io/assets/preview/71/derick-david-409858-unsplash__preview.jpg?preset=thumb"
-															alt="Laptop 15 inch 8GB"
-															class="w-full h-full object-center object-cover"
-														/>
-													</div>
-													<div class="ml-4 flex-1 flex flex-col">
-														<div>
-															<div class="flex justify-between text-base font-medium text-gray-900">
-																<h3>
-																	<a href="/products/laptop">Laptop 15 inch 8GB</a>
-																</h3>
-																<p class="ml-4">$1,678.80</p>
-															</div>
-														</div>
-														<div class="flex-1 flex items-center text-sm">
-															<form method="get" action="/">
-																<label class="mr-2">Quantity</label>
-																<select
-																	id="quantity-12"
-																	name="quantity-12"
-																	class="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-																>
-																	<option value="1">1</option>
-																	<option value="2">2</option>
-																	<option value="3">3</option>
-																	<option value="4">4</option>
-																	<option value="5">5</option>
-																	<option value="6">6</option>
-																	<option value="7">7</option>
-																	<option value="8">8</option>
-																</select>
-															</form>
-															<div class="flex-1"></div>
-															<div class="flex">
-																<button
-																	type="submit"
-																	name="removeItem"
-																	value="12"
-																	class="font-medium text-primary-600 hover:text-primary-500"
-																>
-																	Remove
-																</button>
-															</div>
-														</div>
-													</div>
-												</li>
-												<li class="py-6 flex">
-													<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
-														<img
-															src="https://readonlydemo.vendure.io/assets/preview/b8/kelly-sikkema-685291-unsplash__preview.jpg?preset=thumb"
-															alt="Tablet 32GB"
-															class="w-full h-full object-center object-cover"
-														/>
-													</div>
-													<div class="ml-4 flex-1 flex flex-col">
-														<div>
-															<div class="flex justify-between text-base font-medium text-gray-900">
-																<h3>
-																	<a href="/products/tablet">Tablet 32GB</a>
-																</h3>
-																<p class="ml-4">$394.80</p>
-															</div>
-														</div>
-														<div class="flex-1 flex items-center text-sm">
-															<form method="get" action="/">
-																<label class="mr-2">Quantity</label>
-																<select
-																	id="quantity-14"
-																	name="quantity-14"
-																	class="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-																>
-																	<option value="1">1</option>
-																	<option value="2">2</option>
-																	<option value="3">3</option>
-																	<option value="4">4</option>
-																	<option value="5">5</option>
-																	<option value="6">6</option>
-																	<option value="7">7</option>
-																	<option value="8">8</option>
-																</select>
-															</form>
-															<div class="flex-1"></div>
-															<div class="flex">
-																<button
-																	type="submit"
-																	name="removeItem"
-																	value="14"
-																	class="font-medium text-primary-600 hover:text-primary-500"
-																>
-																	Remove
-																</button>
-															</div>
-														</div>
-													</div>
-												</li>
-											</ul>
+									<div className="mt-8">
+										{!!activeOrder && activeOrder.totalQuantity ? (
+											<CartContents
+												orderLines={activeOrder?.lines ?? []}
+												currencyCode={currencyCode!}
+												editable={editable}
+												removeItem={() => {}}
+												adjustOrderLine={() => {}}
+											/>
+										) : (
+											<div className="flex items-center justify-center h-48 text-xl text-gray-400">
+												Your cart is empty
+											</div>
+										)}
+									</div>
+								</div>
+								{activeOrder?.totalQuantity && editable && (
+									<div className="border-t border-gray-200 py-6 px-4 sm:px-6">
+										<div className="flex justify-between text-base font-medium text-gray-900">
+											<p>Subtotal</p>
+											<p>
+												{currencyCode && (
+													<Price
+														priceWithTax={activeOrder?.subTotalWithTax ?? 0}
+														currencyCode={currencyCode}
+													/>
+												)}
+											</p>
+										</div>
+										<p className="mt-0.5 text-sm text-gray-500">
+											Shipping will be calculated at checkout.
+										</p>
+										<div className="mt-6">
+											<a
+												href="/checkout"
+												onClick$={onToggleCart$}
+												className="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700"
+											>
+												Checkout
+											</a>
 										</div>
 									</div>
-								</div>
-								<div class="border-t border-gray-200 py-6 px-4 sm:px-6">
-									<div class="flex justify-between text-base font-medium text-gray-900">
-										<p>Subtotal</p>
-										<p>$5,191.20</p>
-									</div>
-									<p class="mt-0.5 text-sm text-gray-500">
-										Shipping will be calculated at checkout.
-									</p>
-									<div class="mt-6">
-										<a
-											class="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700"
-											href="/checkout"
-										>
-											Checkout
-										</a>
-									</div>
-								</div>
+								)}
 							</div>
 						</div>
 					</div>

@@ -1,24 +1,17 @@
 import { component$, Host, mutable, useContext, useDocument, useStore } from '@builder.io/qwik';
-import { COLLECTIONS } from '~/constants';
+import { APP_STATE } from '~/constants';
 import Cart from '../cart/Cart';
 import SearchBar from '../search-bar/SearchBar';
 
-export interface State {
-	isScrollingUp: boolean;
-	isSignedIn: boolean;
-	quantity: number;
-}
-
-export default component$(
-	() => {
-		const collections = useContext(COLLECTIONS).collections.filter(
+export default component$<{ totalQuantity: number }>(
+	({ totalQuantity }) => {
+		const collections = useContext(APP_STATE).collections.filter(
 			(item) => item.parent?.name === '__root_collection__' && !!item.featuredAsset
 		);
 		const isScrollingUp = true;
 		const isSignedIn = false;
 		const doc = useDocument();
 		const state = useStore<{ showCart: boolean }>({ showCart: false });
-		const totalQuantity = 2;
 		return (
 			<Host>
 				<header

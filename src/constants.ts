@@ -1,5 +1,6 @@
 import { createContext } from '@builder.io/qwik';
 import { ActiveOrder, Collection } from './types';
 
-export const COLLECTIONS = createContext<{ collections: Collection[] }>('collections');
-export const ACTIVE_ORDER = createContext<{ activeOrder?: ActiveOrder }>('activeOrder');
+export const APP_STATE = createContext<{ collections: Collection[]; activeOrder: ActiveOrder }>(
+	'app_state'
+);

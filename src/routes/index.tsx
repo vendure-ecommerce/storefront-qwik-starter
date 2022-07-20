@@ -1,12 +1,12 @@
 import { component$, Host, useContext } from '@builder.io/qwik';
 import CollectionCard from '~/components/collection-card/CollectionCard';
-import { COLLECTIONS } from '~/constants';
+import { APP_STATE } from '~/constants';
 
 export const headerImage =
 	'https://readonlydemo.vendure.io/assets/preview/5b/jakob-owens-274337-unsplash__preview.jpg';
 
 export default component$(() => {
-	const collections = useContext(COLLECTIONS).collections;
+	const collections = useContext(APP_STATE).collections;
 	return (
 		<Host>
 			<div className="relative">

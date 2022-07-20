@@ -1,4 +1,5 @@
-export const getCollectionsQuery = (): { query: string } => ({
+export const getCollectionsQuery = () => ({
+	variables: {},
 	query: `
   query collections {
     collections {
@@ -93,9 +94,7 @@ export const searchQuery = (slug: string) => ({
 `,
 });
 
-export const getProductQuery = (variables: {
-	slug: string;
-}): { variables: typeof variables; query: string } => ({
+export const getProductQuery = (variables: { slug: string }) => ({
 	variables,
 	query: `
   query product($slug: String, $id: ID) {
@@ -152,7 +151,8 @@ export const getProductQuery = (variables: {
 `,
 });
 
-export const getActiveOrderQuery = (): { query: string } => ({
+export const getActiveOrderQuery = () => ({
+	variables: {},
 	query: `
   query activeOrder {
     activeOrder {
