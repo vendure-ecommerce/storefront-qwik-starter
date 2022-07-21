@@ -27,11 +27,19 @@ export default component$(() => {
 
 					<p className="mt-4 text-2xl text-white">
 						A headless commerce storefront starter kit built with{' '}
-						<a href="https://www.vendure.io" className="text-blue-300 hover:text-blue-500">
+						<a
+							href="https://www.vendure.io"
+							target="_blank"
+							className="text-blue-300 hover:text-blue-500"
+						>
 							Vendure
 						</a>{' '}
 						&{' '}
-						<a href="https://qwik.builder.io/" className="text-red-300 hover:text-red-500">
+						<a
+							href="https://qwik.builder.io/"
+							target="_blank"
+							className="text-red-300 hover:text-red-500"
+						>
 							Qwik
 						</a>
 					</p>
@@ -51,7 +59,11 @@ export default component$(() => {
 							/>
 						</svg>
 						<span>Read more:</span>
-						<a className="text-primary-200 hover:text-primary-400" href="https://t.co/fC1WeDISH0">
+						<a
+							className="text-primary-200 hover:text-primary-400"
+							target="_blank"
+							href="https://t.co/fC1WeDISH0"
+						>
 							Lightning Fast Headless Commerce with Vendure and Qwik
 						</a>
 					</p>

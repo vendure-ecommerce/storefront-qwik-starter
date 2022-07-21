@@ -120,6 +120,7 @@ export default component$(
 						<div className="mt-8 border-t pt-8">
 							<a
 								className="flex items-center space-x-4 font-medium text-gray-500 hover:text-gray-700"
+								target="_blank"
 								href="https://github.com/vendure-ecommerce/storefront-qwik-starter"
 							>
 								<svg fill="currentColor" viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
