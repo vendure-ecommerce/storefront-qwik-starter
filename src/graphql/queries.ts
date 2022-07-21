@@ -224,3 +224,18 @@ export const getActiveOrderQuery = () => ({
   }
 `,
 });
+
+// customer
+
+export const getActiveCustomerQuery = () => ({
+	variables: {},
+	query: `
+    query activeCustomer {
+        activeCustomer {
+            id
+            firstName
+            lastName
+        }
+    }
+`,
+});

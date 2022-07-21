@@ -15,7 +15,7 @@ import TopReviews from '~/components/top-reviews/TopReviews';
 import { APP_STATE } from '~/constants';
 import { addItemToOrderMutation } from '~/graphql/mutations';
 import { getProductQuery } from '~/graphql/queries';
-import { ActiveOrder, Product } from '~/types';
+import { ActiveOrder, Product, Variant } from '~/types';
 import { sendQuery } from '~/utils/api';
 
 export default component$(() => {
@@ -23,13 +23,13 @@ export default component$(() => {
 	const state = useStore<{
 		product: Product;
 		selectedVariantId: string;
-		quantity: number;
+		quantity: Record<string, number>;
 		loading: boolean;
 		addItemToOrderError: string;
 	}>({
 		product: {} as Product,
 		selectedVariantId: '',
-		quantity: 0,
+		quantity: {},
 		loading: true,
 		addItemToOrderError: '',
 	});
@@ -43,15 +43,16 @@ export default component$(() => {
 		);
 		state.product = product;
 		state.selectedVariantId = product.variants[0].id;
+		product.variants.forEach((variant: Variant) => (state.quantity[variant.id] = 0));
 		state.loading = false;
 	});
 
 	useWatch$(async (track) => {
 		track(state, 'quantity');
-		if (state.quantity !== 0) {
+		if (state.quantity[state.selectedVariantId] !== 0) {
 			const { addItemToOrder: order } = await sendQuery<{
 				addItemToOrder: ActiveOrder;
-			}>(addItemToOrderMutation(state.selectedVariantId, state.quantity));
+			}>(addItemToOrderMutation(state.selectedVariantId, 1));
 			if (!!order.errorCode) {
 				state.addItemToOrderError = order.errorCode;
 			}
@@ -142,7 +143,6 @@ export default component$(() => {
 						) : (
 							<input type="hidden" name="variantId" value={state.selectedVariantId}></input>
 						)}
-
 						<div className="mt-10 flex flex-col sm:flex-row sm:items-center">
 							<Price
 								priceWithTax={mutable(selectedVariant()?.priceWithTax)}
@@ -152,16 +152,21 @@ export default component$(() => {
 							<div className="flex sm:flex-col1 align-baseline">
 								<button
 									class={`max-w-xs flex-1 ${
-										state.quantity === 0
+										state.quantity[state.selectedVariantId] === 0
 											? 'bg-primary-600 hover:bg-primary-700'
 											: 'bg-green-600 active:bg-green-700 hover:bg-green-700'
 									}
 														 transition-colors border border-transparent rounded-md py-3 px-8 flex items-center
 															justify-center text-base font-medium text-white focus:outline-none
 															focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full`}
-									onClick$={() => (state.quantity += 1)}
+									onClick$={() => {
+										const newQty: Record<string, number> = {};
+										newQty[state.selectedVariantId] = state.quantity[state.selectedVariantId] + 1;
+										console.log(newQty);
+										state.quantity = { ...state.quantity, ...newQty };
+									}}
 								>
-									{state.quantity ? (
+									{state.quantity[state.selectedVariantId] ? (
 										<span className="flex items-center">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -173,7 +178,7 @@ export default component$(() => {
 											>
 												<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
 											</svg>
-											{state.quantity} in cart
+											{state.quantity[state.selectedVariantId]} in cart
 										</span>
 									) : (
 										`Add to cart`
