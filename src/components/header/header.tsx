@@ -25,7 +25,7 @@ export default component$<{ totalQuantity: number }>(
 								<p className="hidden sm:block">
 									Exclusive: Get your own{' '}
 									<a
-										href="https://github.com/vendure-ecommerce/storefront-remix-starter"
+										href="https://github.com/vendure-ecommerce/storefront-qwik-starter"
 										target="_blank"
 										className="underline"
 									>

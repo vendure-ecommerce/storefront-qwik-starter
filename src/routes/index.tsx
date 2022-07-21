@@ -31,8 +31,8 @@ export default component$(() => {
 							Vendure
 						</a>{' '}
 						&{' '}
-						<a href="~/routes/__cart/index" className="text-red-300 hover:text-red-500">
-							Remix
+						<a href="https://qwik.builder.io/" className="text-red-300 hover:text-red-500">
+							Qwik
 						</a>
 					</p>
 					<p className="mt-4 text-gray-300 space-x-1 flex">
@@ -51,11 +51,8 @@ export default component$(() => {
 							/>
 						</svg>
 						<span>Read more:</span>
-						<a
-							className="text-primary-200 hover:text-primary-400"
-							href="https://www.vendure.io/blog/2022/05/lightning-fast-headless-commerce-with-vendure-and-remix"
-						>
-							Lightning Fast Headless Commerce with Vendure and Remix
+						<a className="text-primary-200 hover:text-primary-400" href="https://t.co/fC1WeDISH0">
+							Lightning Fast Headless Commerce with Vendure and Qwik
 						</a>
 					</p>
 				</div>
