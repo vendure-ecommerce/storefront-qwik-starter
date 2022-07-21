@@ -5,9 +5,8 @@ import CollectionCard from '~/components/collection-card/CollectionCard';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
-import { getCollectionQuery, searchQuery } from '~/graphql/queries';
+import { getCollectionQuery, searchQueryWithCollectionSlug } from '~/graphql/queries';
 import { Collection, Item, Search } from '~/types';
-import { withUniqueId } from '~/utils';
 import { sendQuery } from '~/utils/api';
 
 export default component$(() => {
@@ -24,12 +23,14 @@ export default component$(() => {
 	});
 
 	useServerMount$(async () => {
-		const { search } = await sendQuery<{ search: Search }>(searchQuery(params.slug));
+		const { search } = await sendQuery<{ search: Search }>(
+			searchQueryWithCollectionSlug(params.slug)
+		);
 		const { collection } = await sendQuery<{ collection: Collection }>(
 			getCollectionQuery(params.slug)
 		);
 		state.collection = collection;
-		state.items = withUniqueId(search.items);
+		state.items = search.items;
 		state.loading = false;
 	});
 

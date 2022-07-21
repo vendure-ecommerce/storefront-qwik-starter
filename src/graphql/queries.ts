@@ -47,9 +47,14 @@ export const getCollectionQuery = (slug: string) => ({
 `,
 });
 
-export const searchQuery = (slug: string) => ({
+export const searchQueryWithCollectionSlug = (collectionSlug: string) =>
+	searchQuery(collectionSlug);
+
+export const searchQueryWithTerm = (term: string) => searchQuery(undefined, term);
+
+const searchQuery = (collectionSlug: string | undefined, term?: string) => ({
 	variables: {
-		input: { collectionSlug: slug },
+		input: { groupByProduct: true, term, facetValueIds: [], collectionSlug },
 	},
 	query: `
   query search($input: SearchInput!) {

@@ -7,10 +7,3 @@ export function formatPrice(value: number, currency: any) {
 		currency,
 	}).format(value / 100);
 }
-
-export const withUniqueId = (list: Item[]): Item[] => {
-	const result: Item[] = [];
-	const ids = new Set(list.map((el) => el.productId));
-	ids.forEach((id: string) => result.push(list.find((el) => el.productId === id)!));
-	return result;
-};
