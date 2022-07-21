@@ -136,16 +136,42 @@ export type Item = {
 	priceWithTax: PriceWithTax;
 };
 
-export type FacetValue2 = {
+export type FilterFacetValueDetail = {
 	id: string;
 	name: string;
 	facet: Facet;
 };
 
+export type FilterFacetValue = {
+	count: number;
+	facetValue: FilterFacetValueDetail;
+};
+
 export type Search = {
 	totalItems: number;
 	items: Item[];
-	facetValues: FacetValue[];
+	facetValues: FilterFacetValue[];
+};
+
+export type FacetWithValues = {
+	id: string;
+	name: string;
+	open: boolean;
+	values: Array<{
+		id: string;
+		name: string;
+		selected: boolean;
+	}>;
+};
+
+export type Review = {
+	id: number;
+	title: string;
+	rating: number;
+	content: string;
+	author: string;
+	date: string;
+	datetime: string;
 };
 
 export enum CurrencyCode {

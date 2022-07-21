@@ -75,9 +75,7 @@ export default component$(() => {
 				className="pt-24 sm:pt-32 xl:max-w-7xl xl:mx-auto xl:px-8"
 			>
 				<div className="px-4 sm:px-6 lg:px-8 xl:px-0">
-					<h2 id="category-heading" className="text-2xl font-light tracking-tight text-gray-900">
-						Shop by Category
-					</h2>
+					<h2 className="text-2xl font-light tracking-tight text-gray-900">Shop by Category</h2>
 				</div>
 
 				<div className="mt-4 flow-root">

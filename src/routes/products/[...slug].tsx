@@ -9,6 +9,8 @@ import {
 import { useLocation } from '@builder.io/qwik-city';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
+import CheckIcon from '~/components/icons/CheckIcon';
+import HeartIcon from '~/components/icons/HeartIcon';
 import Price from '~/components/products/Price';
 import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import TopReviews from '~/components/top-reviews/TopReviews';
@@ -128,7 +130,6 @@ export default component$(() => {
 								</label>
 								<select
 									className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
-									id="productVariant"
 									value={state.selectedVariantId}
 									name="variantId"
 									onChange$={(e: any) => (state.selectedVariantId = e.target.value)}
@@ -162,22 +163,12 @@ export default component$(() => {
 									onClick$={() => {
 										const newQty: Record<string, number> = {};
 										newQty[state.selectedVariantId] = state.quantity[state.selectedVariantId] + 1;
-										console.log(newQty);
 										state.quantity = { ...state.quantity, ...newQty };
 									}}
 								>
 									{state.quantity[state.selectedVariantId] ? (
 										<span className="flex items-center">
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												className="w-5 h-5 mr-1"
-												fill="none"
-												viewBox="0 0 24 24"
-												stroke="currentColor"
-												stroke-width="2"
-											>
-												<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-											</svg>
+											<CheckIcon />
 											{state.quantity[state.selectedVariantId]} in cart
 										</span>
 									) : (
@@ -189,21 +180,7 @@ export default component$(() => {
 									type="button"
 									className="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500"
 								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										aria-hidden="true"
-										className="h-6 w-6 flex-shrink-0"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor"
-										stroke-width="2"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-										/>
-									</svg>
+									<HeartIcon />
 									<span className="sr-only">Add to favorites</span>
 								</button>
 							</div>

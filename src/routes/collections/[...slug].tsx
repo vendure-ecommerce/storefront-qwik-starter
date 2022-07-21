@@ -6,7 +6,8 @@ import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
 import { getCollectionQuery, searchQueryWithCollectionSlug } from '~/graphql/queries';
-import { Collection, Item, Search } from '~/types';
+import { Collection, FacetWithValues, Search } from '~/types';
+import { groupFacetValues } from '~/utils';
 import { sendQuery } from '~/utils/api';
 
 export default component$(() => {
@@ -14,23 +15,23 @@ export default component$(() => {
 	const state = useStore<{
 		loading: boolean;
 		showMenu: boolean;
-		items: Item[];
+		search: Search;
 		collection?: Collection;
 	}>({
 		loading: true,
 		showMenu: false,
-		items: [],
+		search: {} as Search,
 	});
 
 	useServerMount$(async () => {
-		const { search } = await sendQuery<{ search: Search }>(
+		const { search } = await sendQuery<{ search: Search; facetValues: any }>(
 			searchQueryWithCollectionSlug(params.slug)
 		);
 		const { collection } = await sendQuery<{ collection: Collection }>(
 			getCollectionQuery(params.slug)
 		);
 		state.collection = collection;
-		state.items = search.items;
+		state.search = search;
 		state.loading = false;
 	});
 
@@ -66,16 +67,14 @@ export default component$(() => {
 			<div className="mt-6 grid sm:grid-cols-5 gap-x-4">
 				<Filters
 					showMenu={mutable(state.showMenu)}
+					facetsWithValues={mutable(groupFacetValues(state.search))}
 					onToggleMenu$={async () => {
 						state.showMenu = !state.showMenu;
 					}}
-					// facetFilterTracker={facetValuesTracker.current}
-					// mobileFiltersOpen={mobileFiltersOpen}
-					// setMobileFiltersOpen={setMobileFiltersOpen}
 				/>
 				<div className="sm:col-span-5 lg:col-span-4">
 					<div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-						{state.items.map((item) => (
+						{state.search.items.map((item) => (
 							<ProductCard key={item.productId} {...item}></ProductCard>
 						))}
 					</div>

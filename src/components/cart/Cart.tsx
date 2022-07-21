@@ -3,6 +3,7 @@ import { useLocation } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import { CurrencyCode } from '~/types';
 import CartContents from '../cart-contents/CartContents';
+import CloseIcon from '../icons/CloseIcon';
 import Price from '../products/Price';
 
 export default component$<{ showCart: boolean; onToggleCart$: PropFunction<() => void> }>(
@@ -14,7 +15,6 @@ export default component$<{ showCart: boolean; onToggleCart$: PropFunction<() =>
 		return !!showCart ? (
 			<div
 				class="fixed inset-0 overflow-hidden z-20"
-				id="headlessui-dialog-8"
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby="headlessui-dialog-title-12"
@@ -22,7 +22,6 @@ export default component$<{ showCart: boolean; onToggleCart$: PropFunction<() =>
 				<div class="absolute inset-0 overflow-hidden">
 					<div
 						class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity opacity-100"
-						id="headlessui-dialog-overlay-10"
 						aria-hidden="true"
 					></div>
 					<div class="fixed inset-y-0 right-0 pl-10 max-w-full flex">
@@ -30,9 +29,7 @@ export default component$<{ showCart: boolean; onToggleCart$: PropFunction<() =>
 							<div class="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
 								<div class="flex-1 py-6 overflow-y-auto px-4 sm:px-6">
 									<div class="flex items-start justify-between">
-										<h2 class="text-lg font-medium text-gray-900" id="headlessui-dialog-title-12">
-											Shopping cart
-										</h2>
+										<h2 class="text-lg font-medium text-gray-900">Shopping cart</h2>
 										<div class="ml-3 h-7 flex items-center">
 											<button
 												type="button"
@@ -40,21 +37,7 @@ export default component$<{ showCart: boolean; onToggleCart$: PropFunction<() =>
 												onClick$={onToggleCart$}
 											>
 												<span class="sr-only">Close panel</span>
-												<svg
-													xmlns="http://www.w3.org/2000/svg"
-													fill="none"
-													viewBox="0 0 24 24"
-													stroke-width="2"
-													stroke="currentColor"
-													aria-hidden="true"
-													class="h-6 w-6"
-												>
-													<path
-														stroke-linecap="round"
-														stroke-linejoin="round"
-														d="M6 18L18 6M6 6l12 12"
-													></path>
-												</svg>
+												<CloseIcon />
 											</button>
 										</div>
 									</div>

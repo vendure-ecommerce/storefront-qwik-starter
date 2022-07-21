@@ -11,7 +11,7 @@ import { APP_STATE } from '~/constants';
 import { getActiveOrderQuery, getCollectionsQuery } from '~/graphql/queries';
 import { ActiveOrder, Collection } from '~/types';
 import { sendQuery } from '~/utils/api';
-import Footer from '../components/footer/footer';
+import Footer from '../components/footer/Footer';
 import Header from '../components/header/header';
 
 export default component$(() => {

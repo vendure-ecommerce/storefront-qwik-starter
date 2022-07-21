@@ -2,11 +2,11 @@ import { component$, Host, useContext } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
+import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
 import { APP_STATE } from '~/constants';
 
 export default component$(() => {
 	const { activeOrder } = useContext(APP_STATE);
-	console.log('a', activeOrder);
 	const steps = [
 		{ name: 'Shipping', state: 'shipping' },
 		{ name: 'Payment', state: 'payment' },
@@ -43,18 +43,7 @@ export default component$(() => {
 										<span>{step.name}</span>
 									)}
 
-									{stepIdx !== steps.length - 1 ? (
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											class="w-5 h-5 text-gray-300 ml-4"
-											fill="none"
-											viewBox="0 0 24 24"
-											stroke="currentColor"
-											stroke-width="2"
-										>
-											<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-										</svg>
-									) : null}
+									{stepIdx !== steps.length - 1 ? <ChevronRightIcon /> : null}
 								</li>
 							))}
 						</ol>

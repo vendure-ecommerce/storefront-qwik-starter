@@ -5,23 +5,23 @@ import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
 import { APP_STATE } from '~/constants';
 import { searchQueryWithTerm } from '~/graphql/queries';
-import { Item, Search } from '~/types';
+import { Search } from '~/types';
+import { groupFacetValues } from '~/utils';
 import { sendQuery } from '~/utils/api';
 
 export default component$(() => {
 	const collections = useContext(APP_STATE).collections;
-	const state = useStore<{ loading: boolean; showMenu: boolean; items: Item[] }>({
+	const state = useStore<{ loading: boolean; showMenu: boolean; search: Search }>({
 		loading: true,
 		showMenu: false,
-		items: [],
+		search: {} as Search,
 	});
 	const { query } = useLocation();
 	const term = query.q;
 
 	useServerMount$(async () => {
 		const { search } = await sendQuery<{ search: Search }>(searchQueryWithTerm(term));
-		console.log('ss', search, term);
-		state.items = search.items;
+		state.search = search;
 		state.loading = false;
 	});
 
@@ -46,16 +46,14 @@ export default component$(() => {
 				<div className="mt-6 grid sm:grid-cols-5 gap-x-4">
 					<Filters
 						showMenu={mutable(state.showMenu)}
+						facetsWithValues={mutable(groupFacetValues(state.search))}
 						onToggleMenu$={async () => {
 							state.showMenu = !state.showMenu;
 						}}
-						// facetFilterTracker={facetValuesTracker.current}
-						// mobileFiltersOpen={mobileFiltersOpen}
-						// setMobileFiltersOpen={setMobileFiltersOpen}
 					/>
 					<div className="sm:col-span-5 lg:col-span-4">
 						<div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-							{state.items.map((item) => (
+							{state.search.items.map((item) => (
 								<ProductCard key={item.productId} {...item}></ProductCard>
 							))}
 						</div>
