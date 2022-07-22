@@ -18,9 +18,12 @@ export default component$(() => {
 	});
 	const { query } = useLocation();
 	const term = query.q;
+	const facetValueIds = !!query.fvid ? [query.fvid] : [];
 
 	useServerMount$(async () => {
-		const { search } = await sendQuery<{ search: Search }>(searchQueryWithTerm(term));
+		const { search } = await sendQuery<{ search: Search }>(
+			searchQueryWithTerm(term, facetValueIds)
+		);
 		state.search = search;
 		state.loading = false;
 	});

@@ -50,11 +50,16 @@ export const getCollectionQuery = (slug: string) => ({
 export const searchQueryWithCollectionSlug = (collectionSlug: string) =>
 	searchQuery(collectionSlug);
 
-export const searchQueryWithTerm = (term: string) => searchQuery(undefined, term);
+export const searchQueryWithTerm = (term: string, facetValueIds: string[]) =>
+	searchQuery(undefined, term, facetValueIds);
 
-const searchQuery = (collectionSlug: string | undefined, term?: string) => ({
+const searchQuery = (
+	collectionSlug: string | undefined,
+	term?: string,
+	facetValueIds?: string[]
+) => ({
 	variables: {
-		input: { groupByProduct: true, term, facetValueIds: [], collectionSlug },
+		input: { groupByProduct: true, term, facetValueIds: facetValueIds, collectionSlug },
 	},
 	query: `
   query search($input: SearchInput!) {
