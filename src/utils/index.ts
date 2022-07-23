@@ -29,7 +29,7 @@ export const groupFacetValues = (search: Search): FacetWithValues[] => {
 			facetMap.set(facet.id, {
 				id: facet.id,
 				name: facet.name,
-				open: false,
+				open: true,
 				values: [{ id, name, selected }],
 			});
 		}
