@@ -1,5 +1,4 @@
 import { component$, Host, mutable, useContext, useServerMount$, useStore } from '@builder.io/qwik';
-import { useLocation } from '@builder.io/qwik-city';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
@@ -16,9 +15,9 @@ export default component$(() => {
 		showMenu: false,
 		search: {} as Search,
 	});
-	const { query } = useLocation();
-	const term = query.q;
-	const facetValueIds = !!query.fvid ? [query.fvid] : [];
+	// const { query } = useLocation();
+	const term = ''; //query.q;
+	const facetValueIds: string[] = []; //!!query.fvid ? [query.fvid] : [];
 
 	useServerMount$(async () => {
 		const { search } = await sendQuery<{ search: Search }>(
