@@ -10,17 +10,13 @@ import {
 } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
 import { getActiveOrderQuery, getCollectionsQuery } from '~/graphql/queries';
-import { ActiveOrder, Collection } from '~/types';
+import { ActiveOrder, AppState, Collection } from '~/types';
 import { execute } from '~/utils/api';
 import Footer from '../components/footer/Footer';
 import Header from '../components/header/header';
 
 export default component$(() => {
-	const state = useStore<{
-		collections: Collection[];
-		activeOrder: ActiveOrder;
-		showCart: boolean;
-	}>({
+	const state = useStore<AppState>({
 		collections: [],
 		activeOrder: {} as ActiveOrder,
 		showCart: false,

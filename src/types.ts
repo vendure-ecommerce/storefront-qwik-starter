@@ -1,3 +1,10 @@
+export type AppState = {
+	collections: Collection[];
+	activeOrder: ActiveOrder;
+	showCart: boolean;
+	customer?: ActiveCustomer;
+};
+
 export type Product = {
 	id: string;
 	name: string;
@@ -172,6 +179,12 @@ export type Review = {
 	author: string;
 	date: string;
 	datetime: string;
+};
+
+export type ActiveCustomer = {
+	firstName: string;
+	id: string;
+	lastName: string;
 };
 
 export enum CurrencyCode {

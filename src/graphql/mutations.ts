@@ -234,3 +234,33 @@ export const adjustOrderLineMutation = (orderLineId: string, quantity: number) =
   }
 `,
 });
+
+export const loginMutation = (email: string, password: string, rememberMe: boolean) => ({
+	variables: { email, password, rememberMe },
+	query: `
+  mutation login($email: String!, $password: String!, $rememberMe: Boolean) {
+    login(username: $email, password: $password, rememberMe: $rememberMe) {
+      __typename
+      ... on CurrentUser {
+          id
+          identifier
+      }
+      ... on ErrorResult {
+          errorCode
+          message
+      }
+    }
+  }
+`,
+});
+
+export const logoutMutation = () => ({
+	variables: {},
+	query: `
+  mutation logout {
+    logout {
+      success
+    }
+  }
+`,
+});

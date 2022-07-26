@@ -7,7 +7,7 @@ export default component$(() => {
 			viewBox="0 0 20 20"
 			fill="currentColor"
 			aria-hidden="true"
-			class="w-4 h-4 mt-1"
+			class="w-5 h-5 mt-1"
 		>
 			<path
 				fill-rule="evenodd"

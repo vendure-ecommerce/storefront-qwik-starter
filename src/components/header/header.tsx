@@ -37,10 +37,13 @@ export default component$<{ totalQuantity: number }>(
 								</p>
 							</div>
 							<div>
-								<Link href={isSignedIn ? '/account' : '/sign-in'} className="flex space-x-1">
+								<a
+									href={!!appState.customer?.id ? '/account' : '/sign-in'}
+									className="flex space-x-1"
+								>
 									<UserIcon />
-									<span className="mt-1">{isSignedIn ? 'My Account' : 'Sign In'}</span>
-								</Link>
+									<span className="mt-1">{!!appState.customer?.id ? 'My Account' : 'Sign In'}</span>
+								</a>
 							</div>
 						</div>
 					</div>
