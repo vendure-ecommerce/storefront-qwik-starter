@@ -15,5 +15,5 @@ app.use(
 
 app.listen(8080, () => {
 	/* eslint-disable */
-	console.log(`http://localhost:8080/`);
+	console.info(`http://localhost:8080/`);
 });

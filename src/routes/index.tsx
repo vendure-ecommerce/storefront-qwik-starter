@@ -91,16 +91,6 @@ export default component$(() => {
 						</div>
 					</div>
 				</div>
-
-				<div className="mt-6 px-4 sm:hidden">
-					<a
-						href="~/routes/__cart/index#"
-						className="block text-sm font-semibold text-primary-600 hover:text-primary-500"
-					>
-						Browse all categories
-						<span aria-hidden="true"> &rarr;</span>
-					</a>
-				</div>
 			</section>
 		</Host>
 	);

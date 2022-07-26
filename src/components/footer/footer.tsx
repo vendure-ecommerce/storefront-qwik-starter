@@ -1,4 +1,5 @@
 import { component$, Host, useContext } from '@builder.io/qwik';
+import { Link } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import GitIcon from '../icons/GitIcon';
 
@@ -36,13 +37,13 @@ export default component$(
 										<ul role="list" className="mt-4 space-y-4">
 											{collections.map((collection) => (
 												<li key={collection.id}>
-													<a
+													<Link
 														className="text-base text-gray-500 hover:text-gray-600"
 														href={'/collections/' + collection.slug}
 														key={collection.id}
 													>
 														{collection.name}
-													</a>
+													</Link>
 												</li>
 											))}
 										</ul>
@@ -54,12 +55,12 @@ export default component$(
 										<ul role="list" className="mt-4 space-y-4">
 											{navigation.support.map((item) => (
 												<li key={item.name}>
-													<a
+													<Link
 														href={item.href}
 														className="text-base text-gray-500 hover:text-gray-600"
 													>
 														{item.name}
-													</a>
+													</Link>
 												</li>
 											))}
 										</ul>
@@ -73,12 +74,12 @@ export default component$(
 										<ul role="list" className="mt-4 space-y-4">
 											{navigation.company.map((item) => (
 												<li key={item.name}>
-													<a
+													<Link
 														href={item.href}
 														className="text-base text-gray-500 hover:text-gray-600"
 													>
 														{item.name}
-													</a>
+													</Link>
 												</li>
 											))}
 										</ul>
@@ -106,7 +107,7 @@ export default component$(
 									<div className="mt-3 rounded-md sm:mt-0 sm:ml-3 sm:flex-shrink-0">
 										<button
 											type="submit"
-											className="w-full subscribe-bg-primary-500 border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-primary-500"
+											className="w-full border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-primary-500"
 										>
 											Subscribe
 										</button>

@@ -1,12 +1,15 @@
-let authTokenSessionKey = '';
+import { AUTH_TOKEN } from '~/constants';
+import { isClientSide } from '.';
+import { localStorageGetItem, localStorageSetItem } from './local-storage';
 
-export const sendQuery = async <T>(body: {
+export const execute = async <T>(body: {
 	query: string;
 	variables: Record<string, any>;
 }): Promise<T> => {
 	let headers: Record<string, string> = { 'Content-Type': 'application/json' };
-	if (!!authTokenSessionKey) {
-		headers = { ...headers, Authorization: `Bearer ${authTokenSessionKey}` };
+
+	if (isClientSide()) {
+		headers = { ...headers, Authorization: `Bearer ${localStorageGetItem(AUTH_TOKEN)}` };
 	}
 	const options = {
 		method: 'POST',
@@ -15,9 +18,11 @@ export const sendQuery = async <T>(body: {
 	};
 
 	const response = await fetch('https://demo.vendure.io/shop-api', options);
-	const responsetoken = response.headers.get('vendure-auth-token');
-	if (!!responsetoken) {
-		authTokenSessionKey = responsetoken;
+	if (isClientSide()) {
+		const responsetoken = response.headers.get('vendure-auth-token');
+		if (!!responsetoken) {
+			localStorageSetItem(AUTH_TOKEN, responsetoken);
+		}
 	}
 	const json = await response.json();
 	return json.data;

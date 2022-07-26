@@ -1,4 +1,4 @@
-import { component$, mutable, useServerMount$, useStore } from '@builder.io/qwik';
+import { component$, mutable, useMount$, useStore } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CollectionCard from '~/components/collection-card/CollectionCard';
@@ -6,9 +6,9 @@ import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
 import { getCollectionQuery, searchQueryWithCollectionSlug } from '~/graphql/queries';
-import { Collection, FacetWithValues, Search } from '~/types';
+import { Collection, Search } from '~/types';
 import { groupFacetValues } from '~/utils';
-import { sendQuery } from '~/utils/api';
+import { execute } from '~/utils/api';
 
 export default component$(() => {
 	const { params } = useLocation();
@@ -23,11 +23,11 @@ export default component$(() => {
 		search: {} as Search,
 	});
 
-	useServerMount$(async () => {
-		const { search } = await sendQuery<{ search: Search; facetValues: any }>(
+	useMount$(async () => {
+		const { search } = await execute<{ search: Search; facetValues: any }>(
 			searchQueryWithCollectionSlug(params.slug)
 		);
-		const { collection } = await sendQuery<{ collection: Collection }>(
+		const { collection } = await execute<{ collection: Collection }>(
 			getCollectionQuery(params.slug)
 		);
 		state.collection = collection;

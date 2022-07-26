@@ -15,7 +15,6 @@ export default component$<{
 	return (
 		<>
 			<div class="hidden lg:block">
-				<input type="hidden" name="q" value="" />
 				{state.facetsWithValues.map((facet) => (
 					<div class="border-b border-gray-200 py-6">
 						<h3 class="-my-3 flow-root">
@@ -76,12 +75,7 @@ export default component$<{
 									<CloseIcon />
 								</button>
 							</div>
-							<form
-								method="get"
-								action="/collections/computers"
-								class="mt-4 border-t border-gray-200"
-							>
-								<input type="hidden" name="q" value="" />
+							<form class="mt-4 border-t border-gray-200">
 								{state.facetsWithValues.map((facet) => (
 									<div class="border-t border-gray-200 px-4 py-6">
 										<h3 class="-mx-2 -my-3 flow-root">

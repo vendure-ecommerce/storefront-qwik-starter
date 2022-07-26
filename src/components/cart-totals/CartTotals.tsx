@@ -1,4 +1,4 @@
-import { component$ } from '@builder.io/qwik';
+import { component$, mutable } from '@builder.io/qwik';
 import { ActiveOrder } from '~/types';
 import Price from '../products/Price';
 
@@ -8,7 +8,7 @@ export default component$<{ order: ActiveOrder }>(({ order }) => {
 			<div className="flex items-center justify-between">
 				<dt className="text-sm">Subtotal</dt>
 				<Price
-					priceWithTax={order?.subTotalWithTax}
+					priceWithTax={mutable(order?.subTotalWithTax)}
 					currencyCode={order?.currencyCode}
 					className={'text-sm font-medium text-gray-900'}
 				></Price>
@@ -17,7 +17,7 @@ export default component$<{ order: ActiveOrder }>(({ order }) => {
 				<dt className="text-sm">Shipping</dt>
 
 				<Price
-					priceWithTax={order?.shippingWithTax ?? 0}
+					priceWithTax={mutable(order?.shippingWithTax ?? 0)}
 					currencyCode={order?.currencyCode}
 					className={'text-sm font-medium text-gray-900'}
 				></Price>
@@ -25,7 +25,7 @@ export default component$<{ order: ActiveOrder }>(({ order }) => {
 			<div className="flex items-center justify-between border-t border-gray-200 pt-6">
 				<dt className="text-base font-medium">Total</dt>
 				<Price
-					priceWithTax={order?.totalWithTax}
+					priceWithTax={mutable(order?.totalWithTax)}
 					currencyCode={order?.currencyCode}
 					className={'text-base font-medium text-gray-900'}
 				></Price>

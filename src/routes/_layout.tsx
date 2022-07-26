@@ -3,6 +3,7 @@ import {
 	Host,
 	mutable,
 	Slot,
+	useClientEffect$,
 	useContextProvider,
 	useServerMount$,
 	useStore,
@@ -10,21 +11,28 @@ import {
 import { APP_STATE } from '~/constants';
 import { getActiveOrderQuery, getCollectionsQuery } from '~/graphql/queries';
 import { ActiveOrder, Collection } from '~/types';
-import { sendQuery } from '~/utils/api';
+import { execute } from '~/utils/api';
 import Footer from '../components/footer/Footer';
 import Header from '../components/header/header';
 
 export default component$(() => {
-	const state = useStore<{ collections: Collection[]; activeOrder: ActiveOrder }>({
+	const state = useStore<{
+		collections: Collection[];
+		activeOrder: ActiveOrder;
+		showCart: boolean;
+	}>({
 		collections: [],
 		activeOrder: {} as ActiveOrder,
+		showCart: false,
 	});
 	useServerMount$(async () => {
-		const { collections } = await sendQuery<{ collections: { items: Collection[] } }>(
+		const { collections } = await execute<{ collections: { items: Collection[] } }>(
 			getCollectionsQuery()
 		);
 		state.collections = collections.items;
-		const { activeOrder } = await sendQuery<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
+	});
+	useClientEffect$(async () => {
+		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
 		state.activeOrder = activeOrder;
 	});
 	useContextProvider(APP_STATE, state);

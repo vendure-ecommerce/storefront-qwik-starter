@@ -79,7 +79,7 @@ export const addItemToOrderMutation = (productVariantId: string, quantity: numbe
 `,
 });
 
-export const removeOrderLineQuery = (orderLineId: string) => ({
+export const removeOrderLineMutation = (orderLineId: string) => ({
 	variables: { orderLineId },
 	query: `
   mutation removeOrderLine($orderLineId: ID!) {
@@ -151,6 +151,84 @@ export const removeOrderLineQuery = (orderLineId: string) => ({
           id
           slug
         }
+      }
+    }
+  }
+`,
+});
+
+export const adjustOrderLineMutation = (orderLineId: string, quantity: number) => ({
+	variables: { orderLineId, quantity },
+	query: `
+  mutation adjustOrderLine($orderLineId: ID!, $quantity: Int!) {
+    adjustOrderLine(orderLineId: $orderLineId, quantity: $quantity) {
+      ...OrderDetail
+      ... on ErrorResult {
+          errorCode
+          message
+      }
+    }
+  }
+  
+  fragment OrderDetail on Order {
+    __typename
+    id
+    code
+    active
+    createdAt
+    state
+    currencyCode
+    totalQuantity
+    subTotal
+    subTotalWithTax
+    taxSummary {
+      description
+      taxRate
+      taxTotal
+    }
+    shippingWithTax
+    totalWithTax
+    customer {
+      id
+      firstName
+      lastName
+      emailAddress
+    }
+    shippingAddress {
+      fullName
+      streetLine1
+      streetLine2
+      company
+      city
+      province
+      postalCode
+      countryCode
+      phoneNumber
+    }
+    shippingLines {
+      shippingMethod {
+          id
+          name
+      }
+      priceWithTax
+    }
+    lines {
+      id
+      unitPriceWithTax
+      linePriceWithTax
+      quantity
+      featuredAsset {
+          id
+          preview
+      }
+      productVariant {
+          id
+          name
+          price
+          product {
+              id
+              slug
+          }
       }
     }
   }

@@ -1,4 +1,5 @@
-import { component$, Host, mutable, useContext, useDocument, useStore } from '@builder.io/qwik';
+import { component$, Host, useContext, useDocument } from '@builder.io/qwik';
+import { Link } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import Cart from '../cart/Cart';
 import ShoppingBagIcon from '../icons/ShoppingBagIcon';
@@ -7,13 +8,13 @@ import SearchBar from '../search-bar/SearchBar';
 
 export default component$<{ totalQuantity: number }>(
 	({ totalQuantity }) => {
+		const appState = useContext(APP_STATE);
 		const collections = useContext(APP_STATE).collections.filter(
 			(item) => item.parent?.name === '__root_collection__' && !!item.featuredAsset
 		);
 		const isScrollingUp = true;
 		const isSignedIn = false;
 		const doc = useDocument();
-		const state = useStore<{ showCart: boolean }>({ showCart: false });
 		return (
 			<Host>
 				<header
@@ -36,33 +37,33 @@ export default component$<{ totalQuantity: number }>(
 								</p>
 							</div>
 							<div>
-								<a href={isSignedIn ? '/account' : '/sign-in'} className="flex space-x-1">
+								<Link href={isSignedIn ? '/account' : '/sign-in'} className="flex space-x-1">
 									<UserIcon />
 									<span className="mt-1">{isSignedIn ? 'My Account' : 'Sign In'}</span>
-								</a>
+								</Link>
 							</div>
 						</div>
 					</div>
 					<div className="max-w-6xl mx-auto p-4 flex items-center space-x-4">
 						<h1 className="text-white w-10">
-							<a href="/">
+							<Link href="/">
 								<img
 									src={`${doc.location.origin}/cube-logo-small.webp`}
 									width={40}
 									height={31}
 									alt="Vendure logo"
 								/>
-							</a>
+							</Link>
 						</h1>
 						<div className="flex space-x-4 hidden sm:block">
 							{collections.map((collection) => (
-								<a
+								<Link
 									className="text-sm md:text-base text-gray-200 hover:text-white"
 									href={'/collections/' + collection.slug}
 									key={collection.id}
 								>
 									{collection.name}
-								</a>
+								</Link>
 							))}
 						</div>
 						<div className="flex-1 md:pr-8">
@@ -72,9 +73,7 @@ export default component$<{ totalQuantity: number }>(
 							<button
 								className="relative w-9 h-9 bg-white bg-opacity-20 rounded text-white p-1"
 								aria-label="Open cart tray"
-								onClick$={() => {
-									state.showCart = !state.showCart;
-								}}
+								onClick$={() => (appState.showCart = !appState.showCart)}
 							>
 								<ShoppingBagIcon />
 								{totalQuantity ? (
@@ -88,12 +87,7 @@ export default component$<{ totalQuantity: number }>(
 						</div>
 					</div>
 				</header>
-				<Cart
-					showCart={mutable(state.showCart)}
-					onToggleCart$={async () => {
-						state.showCart = !state.showCart;
-					}}
-				/>
+				<Cart />
 			</Host>
 		);
 	},

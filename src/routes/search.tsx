@@ -6,7 +6,7 @@ import { APP_STATE } from '~/constants';
 import { searchQueryWithTerm } from '~/graphql/queries';
 import { Search } from '~/types';
 import { groupFacetValues } from '~/utils';
-import { sendQuery } from '~/utils/api';
+import { execute } from '~/utils/api';
 
 export default component$(() => {
 	const collections = useContext(APP_STATE).collections;
@@ -20,9 +20,7 @@ export default component$(() => {
 	const facetValueIds: string[] = []; //!!query.fvid ? [query.fvid] : [];
 
 	useServerMount$(async () => {
-		const { search } = await sendQuery<{ search: Search }>(
-			searchQueryWithTerm(term, facetValueIds)
-		);
+		const { search } = await execute<{ search: Search }>(searchQueryWithTerm(term, facetValueIds));
 		state.search = search;
 		state.loading = false;
 	});

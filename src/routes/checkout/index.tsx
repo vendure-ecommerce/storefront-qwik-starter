@@ -1,4 +1,4 @@
-import { component$, Host, useContext } from '@builder.io/qwik';
+import { component$, Host, mutable, useContext, useMount$ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
@@ -6,12 +6,14 @@ import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
 import { APP_STATE } from '~/constants';
 
 export default component$(() => {
-	const { activeOrder } = useContext(APP_STATE);
+	const appState = useContext(APP_STATE);
 	const steps = [
 		{ name: 'Shipping', state: 'shipping' },
 		{ name: 'Payment', state: 'payment' },
 		{ name: 'Confirmation', state: 'confirmation' },
 	];
+
+	useMount$(() => (appState.showCart = false));
 
 	const location = useLocation();
 	let state = 'shipping';
@@ -57,13 +59,11 @@ export default component$(() => {
 								<h2 className="text-lg font-medium text-gray-900 mb-4">Order summary</h2>
 
 								<CartContents
-									orderLines={activeOrder?.lines ?? []}
-									currencyCode={activeOrder?.currencyCode!}
-									editable={state === 'shipping'}
-									// removeItem={removeItem}
-									// adjustOrderLine={adjustOrderLine}
+									rows={mutable(appState.activeOrder?.lines ?? [])}
+									currencyCode={mutable(appState.activeOrder?.currencyCode!)}
+									editable={mutable(state === 'shipping')}
 								></CartContents>
-								<CartTotals order={activeOrder}></CartTotals>
+								<CartTotals order={appState.activeOrder}></CartTotals>
 							</div>
 						)}
 					</div>

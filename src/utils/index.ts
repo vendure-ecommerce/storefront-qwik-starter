@@ -36,3 +36,11 @@ export const groupFacetValues = (search: Search): FacetWithValues[] => {
 	}
 	return Array.from(facetMap.values());
 };
+
+export const isClientSide = () => typeof window !== 'undefined';
+
+export const scrollToTop = () => {
+	if (isClientSide()) {
+		window.scrollTo(0, 0);
+	}
+};
