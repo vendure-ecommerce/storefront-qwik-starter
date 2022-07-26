@@ -38,7 +38,7 @@ export default component$(() => {
 	});
 	const appState = useContext(APP_STATE);
 
-	const calculateQuantities = $(function myFunc(product: Product) {
+	const calculateQuantities = $(function (product: Product) {
 		state.quantity = {};
 		(product.variants || []).forEach((variant: Variant) => {
 			const orderLine = (appState.activeOrder?.lines || []).find(

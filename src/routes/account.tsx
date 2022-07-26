@@ -13,7 +13,7 @@ export default component$(() => {
 		appState.customer = data.activeCustomer;
 	});
 
-	const logout = $(async function myFunc() {
+	const logout = $(async function () {
 		await execute(logoutMutation());
 		window.location.href = '/';
 	});

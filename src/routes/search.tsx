@@ -1,26 +1,22 @@
-import { component$, Host, mutable, useContext, useServerMount$, useStore } from '@builder.io/qwik';
+import { component$, Host, mutable, useClientEffect$, useStore } from '@builder.io/qwik';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
-import { APP_STATE } from '~/constants';
 import { searchQueryWithTerm } from '~/graphql/queries';
 import { Search } from '~/types';
 import { groupFacetValues } from '~/utils';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
-	const collections = useContext(APP_STATE).collections;
-	const state = useStore<{ loading: boolean; showMenu: boolean; search: Search }>({
+	const state = useStore<{ loading: boolean; showMenu: boolean; search: Search; term: string }>({
 		loading: true,
 		showMenu: false,
 		search: {} as Search,
+		term: '',
 	});
-	// const { query } = useLocation();
-	const term = ''; //query.q;
-	const facetValueIds: string[] = []; //!!query.fvid ? [query.fvid] : [];
 
-	useServerMount$(async () => {
-		const { search } = await execute<{ search: Search }>(searchQueryWithTerm(term, facetValueIds));
+	useClientEffect$(async () => {
+		const { search } = await execute<{ search: Search }>(searchQueryWithTerm(state.term, []));
 		state.search = search;
 		state.loading = false;
 	});
@@ -32,7 +28,7 @@ export default component$(() => {
 			<div className="max-w-6xl mx-auto px-4">
 				<div className="flex justify-between items-center">
 					<h2 className="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
-						{term ? `Results for "${term}"` : 'All results'}
+						{state.term ? `Results for "${state.term}"` : 'All results'}
 					</h2>
 
 					<FiltersButton
