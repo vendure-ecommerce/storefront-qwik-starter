@@ -6,7 +6,6 @@ export default component$<{ forcedClassName?: string }>(({ forcedClassName }) =>
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 20 20"
 			fill="currentColor"
-			aria-hidden="true"
 			class={forcedClassName || 'h-5 w-5 text-primary-600'}
 		>
 			<path

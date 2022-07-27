@@ -9,6 +9,7 @@ export default component$(() => {
 	const appState = useContext(APP_STATE);
 
 	useClientEffect$(async () => {
+		window.scrollTo(0, 0);
 		const data = await execute<{ activeCustomer: ActiveCustomer }>(getActiveCustomerQuery());
 		appState.customer = data.activeCustomer;
 	});

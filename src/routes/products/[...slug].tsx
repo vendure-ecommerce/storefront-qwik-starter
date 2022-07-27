@@ -2,6 +2,7 @@ import {
 	$,
 	component$,
 	mutable,
+	useClientEffect$,
 	useContext,
 	useMount$,
 	useStore,
@@ -61,6 +62,10 @@ export default component$(() => {
 		state.loading = false;
 	});
 
+	useClientEffect$(async () => {
+		window.scrollTo(0, 0);
+	});
+
 	useWatch$(async (track) => {
 		track(appState, 'activeOrder');
 		calculateQuantities(state.product);
@@ -102,9 +107,7 @@ export default component$(() => {
 						</div>
 						{1 < state.product.variants.length ? (
 							<div className="mt-4">
-								<label htmlFor="option" className="block text-sm font-medium text-gray-700">
-									Select option
-								</label>
+								<label className="block text-sm font-medium text-gray-700">Select option</label>
 								<select
 									className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
 									value={state.selectedVariantId}

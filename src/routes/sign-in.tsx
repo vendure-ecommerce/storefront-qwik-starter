@@ -39,9 +39,7 @@ export default component$(() => {
 						</div>
 						<div className="space-y-6">
 							<div>
-								<label htmlFor="email" className="block text-sm font-medium text-gray-700">
-									Email address
-								</label>
+								<label className="block text-sm font-medium text-gray-700">Email address</label>
 								<div className="mt-1">
 									<input
 										type="email"
@@ -55,9 +53,7 @@ export default component$(() => {
 							</div>
 
 							<div>
-								<label htmlFor="password" className="block text-sm font-medium text-gray-700">
-									Password
-								</label>
+								<label className="block text-sm font-medium text-gray-700">Password</label>
 								<div className="mt-1">
 									<input
 										type="password"
@@ -76,9 +72,7 @@ export default component$(() => {
 										disabled
 										className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
 									/>
-									<label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-900">
-										Remember me
-									</label>
+									<label className="ml-2 block text-sm text-gray-900">Remember me</label>
 								</div>
 
 								<div className="text-sm">

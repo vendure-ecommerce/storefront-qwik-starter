@@ -1,4 +1,4 @@
-import { component$, mutable, useContext, useMount$, useStore } from '@builder.io/qwik';
+import { component$, mutable, useClientEffect$, useContext, useStore } from '@builder.io/qwik';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
 import Confirmation from '~/components/confirmation/Confirmation';
@@ -16,7 +16,10 @@ export default component$(() => {
 		{ name: 'Confirmation', state: 'CONFIRMATION' },
 	];
 
-	useMount$(() => (appState.showCart = false));
+	useClientEffect$(async () => {
+		window.scrollTo(0, 0);
+		appState.showCart = false;
+	});
 
 	return (
 		<div className="bg-gray-50">
@@ -28,15 +31,12 @@ export default component$(() => {
 				<h2 className="sr-only">Checkout</h2>
 				<nav className="hidden sm:block pb-8 mb-8 border-b">
 					<ol className="flex space-x-4 justify-center">
-						{steps.map((step, stepIdx) => (
+						{steps.map((step, index) => (
 							<li key={step.name} className="flex items-center">
-								{step.state === state.step ? (
-									<span className="text-primary-600">{step.name}</span>
-								) : (
-									<span>{step.name}</span>
-								)}
-
-								{stepIdx !== steps.length - 1 ? <ChevronRightIcon /> : null}
+								<span className={`${step.state === state.step ? 'text-primary-600' : ''}`}>
+									{step.name}
+								</span>
+								{index !== steps.length - 1 ? <ChevronRightIcon /> : null}
 							</li>
 						))}
 					</ol>

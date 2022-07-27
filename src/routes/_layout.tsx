@@ -31,6 +31,7 @@ export default component$(() => {
 	});
 
 	useClientEffect$(async () => {
+		window.scrollTo(0, 0);
 		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
 		state.activeOrder = activeOrder;
 	});

@@ -33,6 +33,7 @@ export default component$(() => {
 	);
 
 	useClientEffect$(async () => {
+		window.scrollTo(0, 0);
 		const { search } = await executeQuery(term, activeFacetValueIds);
 		state.search = search;
 		state.facedValues = groupFacetValues(state.search, activeFacetValueIds);

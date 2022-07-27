@@ -1,5 +1,4 @@
 import { component$, useContext } from '@builder.io/qwik';
-import { Link } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import GitIcon from '../icons/GitIcon';
 
@@ -34,13 +33,13 @@ export default component$(() => {
 								<ul className="mt-4 space-y-4">
 									{collections.map((collection) => (
 										<li key={collection.id}>
-											<Link
+											<a
 												className="text-base text-gray-500 hover:text-gray-600"
 												href={'/collections/' + collection.slug}
 												key={collection.id}
 											>
 												{collection.name}
-											</Link>
+											</a>
 										</li>
 									))}
 								</ul>
@@ -52,12 +51,9 @@ export default component$(() => {
 								<ul className="mt-4 space-y-4">
 									{navigation.support.map((item) => (
 										<li key={item.name}>
-											<Link
-												href={item.href}
-												className="text-base text-gray-500 hover:text-gray-600"
-											>
+											<a href={item.href} className="text-base text-gray-500 hover:text-gray-600">
 												{item.name}
-											</Link>
+											</a>
 										</li>
 									))}
 								</ul>
@@ -71,12 +67,9 @@ export default component$(() => {
 								<ul className="mt-4 space-y-4">
 									{navigation.company.map((item) => (
 										<li key={item.name}>
-											<Link
-												href={item.href}
-												className="text-base text-gray-500 hover:text-gray-600"
-											>
+											<a href={item.href} className="text-base text-gray-500 hover:text-gray-600">
 												{item.name}
-											</Link>
+											</a>
 										</li>
 									))}
 								</ul>
@@ -91,9 +84,7 @@ export default component$(() => {
 							Be the first to know about exclusive offers & deals.
 						</p>
 						<form className="mt-4 sm:flex sm:max-w-md">
-							<label htmlFor="email-address" className="sr-only">
-								Email address
-							</label>
+							<label className="sr-only">Email address</label>
 							<input
 								type="email"
 								autoComplete="email"
@@ -105,6 +96,7 @@ export default component$(() => {
 								<button
 									type="submit"
 									className="w-full border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-primary-500"
+									onClick$={() => {}}
 								>
 									Subscribe
 								</button>

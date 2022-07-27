@@ -19,9 +19,7 @@ export default component$<{ onForward$: PropFunction<() => void> }>(({ onForward
 				<form>
 					<input type="hidden" name="action" value="setOrderCustomer" />
 					<div className="mt-4">
-						<label htmlFor="emailAddress" className="block text-sm font-medium text-gray-700">
-							Email address
-						</label>
+						<label className="block text-sm font-medium text-gray-700">Email address</label>
 						<div className="mt-1">
 							<input
 								type="email"
@@ -33,9 +31,7 @@ export default component$<{ onForward$: PropFunction<() => void> }>(({ onForward
 					</div>
 					<div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
 						<div>
-							<label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-								First name
-							</label>
+							<label className="block text-sm font-medium text-gray-700">First name</label>
 							<div className="mt-1">
 								<input
 									type="text"
@@ -47,9 +43,7 @@ export default component$<{ onForward$: PropFunction<() => void> }>(({ onForward
 						</div>
 
 						<div>
-							<label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-								Last name
-							</label>
+							<label className="block text-sm font-medium text-gray-700">Last name</label>
 							<div className="mt-1">
 								<input
 									type="text"

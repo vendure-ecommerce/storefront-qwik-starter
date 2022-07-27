@@ -1,4 +1,4 @@
-import { $, component$, mutable, useMount$, useStore } from '@builder.io/qwik';
+import { $, component$, mutable, useClientEffect$, useMount$, useStore } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CollectionCard from '~/components/collection-card/CollectionCard';
@@ -45,6 +45,10 @@ export default component$(() => {
 			state.facedValues = groupFacetValues(state.search, activeFacetValueIds);
 		}
 		state.loading = false;
+	});
+
+	useClientEffect$(async () => {
+		window.scrollTo(0, 0);
 	});
 
 	const onFilterChange = $(async (id: string) => {
