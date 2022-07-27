@@ -249,3 +249,8 @@ export const getActiveCustomerQuery = () => ({
     }
 `,
 });
+
+export const nextOrderStatesQuery = () => ({
+	variables: {},
+	query: `query nextOrderStates { nextOrderStates }`,
+});

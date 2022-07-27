@@ -265,7 +265,91 @@ export const logoutMutation = () => ({
 `,
 });
 
-export const setOrderShippingMethod = (shippingMethodId: string) => ({
+export const setCustomerForOrderdMutation = (
+	input = {
+		emailAddress: 'test@test.it',
+		firstName: 'Jhon',
+		lastName: 'Doe',
+	}
+) => ({
+	variables: { input },
+	query: `
+  mutation setCustomerForOrder($input: CreateCustomerInput!) {
+    setCustomerForOrder(input: $input) {
+      ...OrderDetail
+      ... on ErrorResult {
+          errorCode
+          message
+      }
+    }
+  }
+
+  fragment OrderDetail on Order {
+    __typename
+    id
+    code
+    active
+    createdAt
+    state
+    currencyCode
+    totalQuantity
+    subTotal
+    subTotalWithTax
+    taxSummary {
+      description
+      taxRate
+      taxTotal
+    }
+    shippingWithTax
+    totalWithTax
+    customer {
+      id
+      firstName
+      lastName
+      emailAddress
+    }
+    shippingAddress {
+      fullName
+      streetLine1
+      streetLine2
+      company
+      city
+      province
+      postalCode
+      countryCode
+      phoneNumber
+    }
+    shippingLines {
+      shippingMethod {
+        id
+        name
+      }
+      priceWithTax
+    }
+    lines {
+      id
+      unitPriceWithTax
+      linePriceWithTax
+      quantity
+      featuredAsset {
+        id
+        preview
+      }
+      productVariant {
+        id
+        name
+        price
+        product {
+          id
+          slug
+      }
+      }
+    }
+  }
+`,
+});
+
+export const setOrderShippingMethodMutation = (shippingMethodId: string) => ({
 	variables: { shippingMethodId },
 	query: `
   mutation setOrderShippingMethod($shippingMethodId: ID!) {
@@ -336,6 +420,164 @@ export const setOrderShippingMethod = (shippingMethodId: string) => ({
         product {
             id
             slug
+        }
+      }
+    }
+  }
+`,
+});
+
+export const transitionOrderToStateMutation = (state = 'ArrangingPayment') => ({
+	variables: { state },
+	query: `
+  mutation transitionOrderToState($state: String!) {
+    transitionOrderToState(state: $state) {
+        ...OrderDetail
+        ... on ErrorResult {
+            errorCode
+            message
+        }
+    }
+  }
+
+  fragment OrderDetail on Order {
+    __typename
+    id
+    code
+    active
+    createdAt
+    state
+    currencyCode
+    totalQuantity
+    subTotal
+    subTotalWithTax
+    taxSummary {
+      description
+      taxRate
+      taxTotal
+    }
+    shippingWithTax
+    totalWithTax
+    customer {
+      id
+      firstName
+      lastName
+      emailAddress
+    }
+    shippingAddress {
+      fullName
+      streetLine1
+      streetLine2
+      company
+      city
+      province
+      postalCode
+      countryCode
+      phoneNumber
+    }
+    shippingLines {
+      shippingMethod {
+        id
+        name
+      }
+      priceWithTax
+    }
+    lines {
+      id
+      unitPriceWithTax
+      linePriceWithTax
+      quantity
+      featuredAsset {
+        id
+        preview
+      }
+      productVariant {
+        id
+        name
+        price
+        product {
+          id
+          slug
+        }
+      }
+    }
+  } 
+`,
+});
+
+export const addPaymentToOrderMutation = (
+	input = { method: 'standard-payment', metadata: {} }
+) => ({
+	variables: { input },
+	query: `
+  mutation addPaymentToOrder($input: PaymentInput!) {
+    addPaymentToOrder(input: $input) {
+      ...OrderDetail
+      ... on ErrorResult {
+        errorCode
+        message
+      }
+    }
+  }
+  
+  fragment OrderDetail on Order {
+    __typename
+    id
+    code
+    active
+    createdAt
+    state
+    currencyCode
+    totalQuantity
+    subTotal
+    subTotalWithTax
+    taxSummary {
+      description
+      taxRate
+      taxTotal
+    }
+    shippingWithTax
+    totalWithTax
+    customer {
+      id
+      firstName
+      lastName
+      emailAddress
+    }
+    shippingAddress {
+      fullName
+      streetLine1
+      streetLine2
+      company
+      city
+      province
+      postalCode
+      countryCode
+      phoneNumber
+    }
+    shippingLines {
+      shippingMethod {
+        id
+        name
+      }
+      priceWithTax
+    }
+    lines {
+      id
+      unitPriceWithTax
+      linePriceWithTax
+      quantity
+      featuredAsset {
+        id
+        preview
+      }
+      productVariant {
+        id
+        name
+        price
+        product {
+          id
+          slug
         }
       }
     }

@@ -6,6 +6,12 @@ import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
 import Payment from '~/components/payment/Payment';
 import Shipping from '~/components/shipping/Shipping';
 import { APP_STATE } from '~/constants';
+import {
+	addPaymentToOrderMutation,
+	setCustomerForOrderdMutation,
+	transitionOrderToStateMutation,
+} from '~/graphql/mutations';
+import { execute } from '~/utils/api';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
@@ -21,7 +27,7 @@ export default component$(() => {
 		appState.showCart = false;
 	});
 
-	return (
+	return appState.activeOrder?.id ? (
 		<div className="bg-gray-50">
 			<div
 				className={`${
@@ -46,12 +52,15 @@ export default component$(() => {
 						{state.step === 'SHIPPING' ? (
 							<Shipping
 								onForward$={async () => {
+									const data = await execute(setCustomerForOrderdMutation());
 									state.step = 'PAYMENT';
 								}}
 							/>
 						) : state.step === 'PAYMENT' ? (
 							<Payment
 								onForward$={async () => {
+									await execute(transitionOrderToStateMutation());
+									await execute(addPaymentToOrderMutation());
 									state.step = 'CONFIRMATION';
 								}}
 							/>
@@ -81,5 +90,7 @@ export default component$(() => {
 				</div>
 			</div>
 		</div>
+	) : (
+		<></>
 	);
 });
