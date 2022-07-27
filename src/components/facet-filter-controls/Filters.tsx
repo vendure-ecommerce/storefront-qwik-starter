@@ -8,21 +8,20 @@ export default component$<{
 	showMenu: boolean;
 	facetsWithValues: FacetWithValues[];
 	onToggleMenu$: PropFunction<() => void>;
-}>(({ showMenu = false, facetsWithValues: _facetsWithValues, onToggleMenu$ }) => {
+	onFilterChange$: PropFunction<(id: string) => void>;
+}>(({ showMenu = false, facetsWithValues: _facetsWithValues, onToggleMenu$, onFilterChange$ }) => {
 	const state = useStore<{ facetsWithValues: FacetWithValues[] }>({
 		facetsWithValues: _facetsWithValues,
 	});
 	return (
 		<>
 			<div class="hidden lg:block">
-				{state.facetsWithValues.map((facet) => (
+				{state.facetsWithValues.map((facet: FacetWithValues) => (
 					<div class="border-b border-gray-200 py-6">
 						<h3 class="-my-3 flow-root">
 							<button
 								class="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500"
 								type="button"
-								aria-expanded="true"
-								aria-controls="headlessui-disclosure-panel-2"
 							>
 								<span class="font-medium text-gray-900 uppercase">{facet.name}</span>
 								<span
@@ -46,9 +45,10 @@ export default component$<{
 									{facet.values.map((value) => (
 										<div class="flex items-center">
 											<input
-												type="checkbox"
 												class="h-4 w-4 border-gray-300 rounded text-primary-600 focus:ring-primary-500"
-												value={value.id}
+												type="checkbox"
+												checked={value.selected}
+												onClick$={() => onFilterChange$(value.id)}
 											/>
 											<label class="ml-3 text-sm text-gray-600">{value.name}</label>
 										</div>
@@ -60,7 +60,7 @@ export default component$<{
 				))}
 			</div>
 			{!!showMenu && (
-				<div class="relative z-40 lg:hidden" role="dialog" aria-modal="true">
+				<div class="relative z-40 lg:hidden">
 					<div class="fixed inset-0 bg-black bg-opacity-25 opacity-100"></div>
 					<div class="fixed inset-0 flex z-40">
 						<div class="ml-auto relative max-w-xs w-full h-full bg-white shadow-xl py-4 pb-12 flex flex-col overflow-y-auto translate-x-0">
@@ -82,8 +82,6 @@ export default component$<{
 											<button
 												class="px-2 py-3 bg-white w-full flex items-center justify-between text-gray-400 hover:text-gray-500"
 												type="button"
-												aria-expanded="true"
-												aria-controls="headlessui-disclosure-panel-9"
 											>
 												<span class="font-medium text-gray-900 uppercase">{facet.name}</span>
 												<span
@@ -109,9 +107,10 @@ export default component$<{
 													{facet.values.map((value) => (
 														<div class="flex items-center">
 															<input
-																type="checkbox"
 																class="h-4 w-4 border-gray-300 rounded text-primary-600 focus:ring-primary-500"
-																value={value.id}
+																type="checkbox"
+																checked={value.selected}
+																onClick$={() => onFilterChange$(value.id)}
 															/>
 															<label class="ml-3 min-w-0 flex-1 text-gray-500">{value.name}</label>
 														</div>

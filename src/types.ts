@@ -185,6 +185,7 @@ export type ActiveCustomer = {
 	firstName: string;
 	id: string;
 	lastName: string;
+	emailAddress?: string;
 };
 
 export enum CurrencyCode {

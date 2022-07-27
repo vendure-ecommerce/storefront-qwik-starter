@@ -1,4 +1,4 @@
-import { component$, Host, useContext } from '@builder.io/qwik';
+import { component$, useContext } from '@builder.io/qwik';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import { APP_STATE } from '~/constants';
 
@@ -8,16 +8,16 @@ export const headerImage =
 export default component$(() => {
 	const collections = useContext(APP_STATE).collections;
 	return (
-		<Host>
+		<>
 			<div className="relative">
 				{/* Decorative image and overlay */}
-				<div aria-hidden="true" className="absolute inset-0 overflow-hidden">
+				<div className="absolute inset-0 overflow-hidden">
 					{headerImage && (
 						<img className="absolute inset-0 w-full" src={headerImage + '?w=800'} alt="header" />
 					)}
 					<div className="absolute inset-0 bg-gradient-to-br from-zinc-400 to-black mix-blend-darken" />
 				</div>
-				<div aria-hidden="true" className="absolute inset-0 bg-gray-900 opacity-50" />
+				<div className="absolute inset-0 bg-gray-900 opacity-50" />
 				<div className="relative max-w-3xl mx-auto py-32 px-6 flex flex-col items-center text-center sm:py-64 lg:px-0">
 					<div className="relative bg-zinc-800 bg-opacity-0 rounded-lg p-0">
 						<h1 className="text-6xl text-transparent bg-clip-text font-extrabold tracking-normal lg:text-6xl bg-gradient-to-r from-yellow-600 via-red-500 to-blue-600">
@@ -70,10 +70,7 @@ export default component$(() => {
 				</div>
 			</div>
 
-			<section
-				aria-labelledby="category-heading"
-				className="pt-24 sm:pt-32 xl:max-w-7xl xl:mx-auto xl:px-8"
-			>
+			<section className="pt-24 sm:pt-32 xl:max-w-7xl xl:mx-auto xl:px-8">
 				<div className="px-4 sm:px-6 lg:px-8 xl:px-0">
 					<h2 className="text-2xl font-light tracking-tight text-gray-900">Shop by Category</h2>
 				</div>
@@ -92,6 +89,6 @@ export default component$(() => {
 					</div>
 				</div>
 			</section>
-		</Host>
+		</>
 	);
 });

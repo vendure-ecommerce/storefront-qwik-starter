@@ -8,7 +8,6 @@ export default component$<{ rating: number; review: Review }>(({ review, rating 
 			class={`${
 				review.rating > rating ? 'text-yellow-400' : 'text-gray-200'
 			} h-5 w-5 flex-shrink-0`}
-			aria-hidden="true"
 			fill="currentColor"
 			viewBox="0 0 24 24"
 			stroke="currentColor"

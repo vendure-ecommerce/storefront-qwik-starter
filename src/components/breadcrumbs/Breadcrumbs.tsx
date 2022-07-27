@@ -5,8 +5,8 @@ import SlashIcon from '../icons/SlashIcon';
 
 export default component$<{ items: { name: string; slug: string; id: string }[] }>(({ items }) => {
 	return (
-		<nav className="flex" aria-label="Breadcrumb">
-			<ol role="list" className="flex items-center space-x-1 md:space-x-4">
+		<nav className="flex">
+			<ol className="flex items-center space-x-1 md:space-x-4">
 				<li>
 					<div>
 						<Link href="/" className="text-gray-400 hover:text-gray-500">

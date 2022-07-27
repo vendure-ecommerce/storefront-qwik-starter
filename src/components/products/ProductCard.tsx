@@ -16,7 +16,7 @@ export default component$(
 				<Price
 					priceWithTax={mutable(priceWithTax)}
 					currencyCode={currencyCode}
-					className={'text-sm font-medium text-gray-900'}
+					forcedClassName="text-sm font-medium text-gray-900"
 				/>
 			</Link>
 		);

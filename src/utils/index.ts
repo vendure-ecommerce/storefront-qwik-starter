@@ -8,8 +8,10 @@ export function formatPrice(value: number, currency: any) {
 	}).format(value / 100);
 }
 
-export const groupFacetValues = (search: Search): FacetWithValues[] => {
-	const activeFacetValueIds: string[] = [];
+export const groupFacetValues = (
+	search: Search,
+	activeFacetValueIds: string[]
+): FacetWithValues[] => {
 	if (!search) {
 		return [];
 	}
@@ -22,7 +24,7 @@ export const groupFacetValues = (search: Search): FacetWithValues[] => {
 			continue;
 		}
 		const facetFromMap = facetMap.get(facet.id);
-		const selected = activeFacetValueIds.includes(id);
+		const selected = (activeFacetValueIds || []).includes(id);
 		if (facetFromMap) {
 			facetFromMap.values.push({ id, name, selected });
 		} else {
@@ -36,6 +38,32 @@ export const groupFacetValues = (search: Search): FacetWithValues[] => {
 	}
 	return Array.from(facetMap.values());
 };
+
+export const enableDisableFacetValues = (_facedValues: FacetWithValues[], id: string) => {
+	const facetValueIds: string[] = [];
+	const facedValues = _facedValues.map((facet) => {
+		facet.values = facet.values.map((value) => {
+			if (value.id === id) {
+				value.selected = !value.selected;
+				if (value.selected) {
+					facetValueIds.push(value.id);
+				}
+			} else {
+				value.selected = false;
+			}
+			return value;
+		});
+		return facet;
+	});
+	return { facedValues, facetValueIds };
+};
+
+export const changeUrlParamsWithoutRefresh = (term: string, facetValueIds: string[]) =>
+	window.history.pushState(
+		'',
+		'',
+		`${window.location.origin}${window.location.pathname}?q=${term}&f=${facetValueIds.join('-')}`
+	);
 
 export const isClientSide = () => typeof window !== 'undefined';
 

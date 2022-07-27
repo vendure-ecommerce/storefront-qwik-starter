@@ -1,4 +1,4 @@
-import { component$, Host, useContext, useDocument } from '@builder.io/qwik';
+import { component$, useContext, useDocument } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import Cart from '../cart/Cart';
@@ -13,10 +13,9 @@ export default component$<{ totalQuantity: number }>(
 			(item) => item.parent?.name === '__root_collection__' && !!item.featuredAsset
 		);
 		const isScrollingUp = true;
-		const isSignedIn = false;
 		const doc = useDocument();
 		return (
-			<Host>
+			<>
 				<header
 					class={`bg-gradient-to-r from-zinc-700 to-gray-900 shadow-lg transform shadow-xl ${
 						isScrollingUp ? 'sticky top-0 z-10 animate-dropIn' : ''
@@ -75,7 +74,6 @@ export default component$<{ totalQuantity: number }>(
 						<div className="">
 							<button
 								className="relative w-9 h-9 bg-white bg-opacity-20 rounded text-white p-1"
-								aria-label="Open cart tray"
 								onClick$={() => (appState.showCart = !appState.showCart)}
 							>
 								<ShoppingBagIcon />
@@ -91,7 +89,7 @@ export default component$<{ totalQuantity: number }>(
 					</div>
 				</header>
 				<Cart />
-			</Host>
+			</>
 		);
 	},
 	{

@@ -7,6 +7,7 @@ import {
 	useContextProvider,
 	useServerMount$,
 	useStore,
+	useUserContext,
 } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
 import { getActiveOrderQuery, getCollectionsQuery } from '~/graphql/queries';
@@ -21,17 +22,21 @@ export default component$(() => {
 		activeOrder: {} as ActiveOrder,
 		showCart: false,
 	});
+	useContextProvider(APP_STATE, state);
+
+	useUserContext;
+
 	useServerMount$(async () => {
 		const { collections } = await execute<{ collections: { items: Collection[] } }>(
 			getCollectionsQuery()
 		);
 		state.collections = collections.items;
 	});
+
 	useClientEffect$(async () => {
 		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
 		state.activeOrder = activeOrder;
 	});
-	useContextProvider(APP_STATE, state);
 
 	return (
 		<Host>

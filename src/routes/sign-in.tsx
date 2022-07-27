@@ -9,7 +9,7 @@ export default component$(() => {
 	const email = 'test@vendure.io';
 	const password = 'test';
 	const remembreMe = false;
-	const login = $(async function () {
+	const login = $(async () => {
 		await execute<{ login: ActiveCustomer }>(loginMutation(email, password, remembreMe));
 		window.location.href = '/account';
 	});

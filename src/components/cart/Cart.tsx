@@ -12,17 +12,9 @@ export default component$(() => {
 	const currencyCode = appState.activeOrder?.currencyCode || CurrencyCode.Usd;
 	const editable = !location.pathname.startsWith('/checkout');
 	return !!appState.showCart ? (
-		<div
-			class="fixed inset-0 overflow-hidden z-20"
-			role="dialog"
-			aria-modal="true"
-			aria-labelledby="headlessui-dialog-title-12"
-		>
+		<div class="fixed inset-0 overflow-hidden z-20">
 			<div class="absolute inset-0 overflow-hidden">
-				<div
-					class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity opacity-100"
-					aria-hidden="true"
-				></div>
+				<div class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity opacity-100"></div>
 				<div class="fixed inset-y-0 right-0 pl-10 max-w-full flex">
 					<div class="w-screen max-w-md translate-x-0">
 						<div class="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">

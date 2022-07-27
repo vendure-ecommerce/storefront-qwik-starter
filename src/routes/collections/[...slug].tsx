@@ -1,13 +1,17 @@
-import { component$, mutable, useMount$, useStore } from '@builder.io/qwik';
+import { $, component$, mutable, useMount$, useStore } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
-import { getCollectionQuery, searchQueryWithCollectionSlug } from '~/graphql/queries';
-import { Collection, Search } from '~/types';
-import { groupFacetValues } from '~/utils';
+import {
+	getCollectionQuery,
+	searchQueryWithCollectionSlug,
+	searchQueryWithTerm,
+} from '~/graphql/queries';
+import { Collection, FacetWithValues, Search } from '~/types';
+import { changeUrlParamsWithoutRefresh, enableDisableFacetValues, groupFacetValues } from '~/utils';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
@@ -17,39 +21,58 @@ export default component$(() => {
 		showMenu: boolean;
 		search: Search;
 		collection?: Collection;
+		facedValues: FacetWithValues[];
 	}>({
 		loading: true,
 		showMenu: false,
 		search: {} as Search,
+		facedValues: [],
 	});
 
+	const { query } = useLocation();
+	const activeFacetValueIds: string[] = !!query.f ? [query.f] : [];
+
 	useMount$(async () => {
-		const { search } = await execute<{ search: Search; facetValues: any }>(
-			searchQueryWithCollectionSlug(params.slug)
-		);
+		const { search } = !!activeFacetValueIds.length
+			? await execute<{ search: Search }>(searchQueryWithTerm('', activeFacetValueIds))
+			: await execute<{ search: Search }>(searchQueryWithCollectionSlug(params.slug));
 		const { collection } = await execute<{ collection: Collection }>(
 			getCollectionQuery(params.slug)
 		);
 		state.collection = collection;
 		state.search = search;
+		if (!state.facedValues.length) {
+			state.facedValues = groupFacetValues(state.search, activeFacetValueIds);
+		}
 		state.loading = false;
+	});
+
+	const onFilterChange = $(async (id: string) => {
+		const { facedValues, facetValueIds } = enableDisableFacetValues(state.facedValues, id);
+		state.facedValues = facedValues;
+		changeUrlParamsWithoutRefresh('', facetValueIds);
+
+		const { search } = !!facetValueIds.length
+			? await execute<{ search: Search }>(searchQueryWithTerm('', facetValueIds))
+			: await execute<{ search: Search }>(searchQueryWithCollectionSlug(params.slug));
+		state.search = search;
 	});
 
 	return !!state.loading ? (
 		<></>
 	) : (
-		<div className="max-w-6xl mx-auto px-4">
+		<div className="max-w-6xl mx-auto px-4 py-10">
 			<div className="flex justify-between items-center">
 				<h2 className="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
 					{state.collection?.name}
 				</h2>
-
-				<FiltersButton
-					filterCount={1}
-					onToggleMenu$={async () => {
-						state.showMenu = !state.showMenu;
-					}}
-				/>
+				{!!state.facedValues.length && (
+					<FiltersButton
+						onToggleMenu$={async () => {
+							state.showMenu = !state.showMenu;
+						}}
+					/>
+				)}
 			</div>
 			<Breadcrumbs items={mutable(state.collection?.breadcrumbs || [])}></Breadcrumbs>
 			{state.collection?.children?.length ? (
@@ -65,17 +88,27 @@ export default component$(() => {
 				''
 			)}
 			<div className="mt-6 grid sm:grid-cols-5 gap-x-4">
-				<Filters
-					showMenu={mutable(state.showMenu)}
-					facetsWithValues={mutable(groupFacetValues(state.search))}
-					onToggleMenu$={async () => {
-						state.showMenu = !state.showMenu;
-					}}
-				/>
+				{!!state.facedValues.length && (
+					<Filters
+						showMenu={mutable(state.showMenu)}
+						facetsWithValues={mutable(state.facedValues)}
+						onToggleMenu$={async () => {
+							state.showMenu = !state.showMenu;
+						}}
+						onFilterChange$={onFilterChange}
+					/>
+				)}
 				<div className="sm:col-span-5 lg:col-span-4">
 					<div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
 						{state.search.items.map((item) => (
-							<ProductCard key={item.productId} {...item}></ProductCard>
+							<ProductCard
+								key={item.productId}
+								productAsset={mutable(item.productAsset)}
+								productName={mutable(item.productName)}
+								slug={mutable(item.slug)}
+								priceWithTax={mutable(item.priceWithTax)}
+								currencyCode={mutable(item.currencyCode)}
+							></ProductCard>
 						))}
 					</div>
 				</div>

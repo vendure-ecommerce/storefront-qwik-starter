@@ -38,7 +38,7 @@ export default component$(() => {
 	});
 	const appState = useContext(APP_STATE);
 
-	const calculateQuantities = $(function (product: Product) {
+	const calculateQuantities = $((product: Product) => {
 		state.quantity = {};
 		(product.variants || []).forEach((variant: Variant) => {
 			const orderLine = (appState.activeOrder?.lines || []).find(
@@ -73,7 +73,7 @@ export default component$(() => {
 		<></>
 	) : (
 		<div>
-			<div className="max-w-6xl mx-auto px-4">
+			<div className="max-w-6xl mx-auto px-4 py-10">
 				<h2 className="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
 					{state.product.name}
 				</h2>
@@ -128,7 +128,7 @@ export default component$(() => {
 							<Price
 								priceWithTax={mutable(selectedVariant()?.priceWithTax)}
 								currencyCode={mutable(selectedVariant()?.currencyCode)}
-								className={'text-3xl text-gray-900 mr-4'}
+								forcedClassName="text-3xl text-gray-900 mr-4"
 							></Price>
 							<div className="flex sm:flex-col1 align-baseline">
 								<button
