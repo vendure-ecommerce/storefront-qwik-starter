@@ -83,7 +83,7 @@ export default component$(() => {
 						<p className="mt-4 text-base text-gray-500">
 							Be the first to know about exclusive offers & deals.
 						</p>
-						<form className="mt-4 sm:flex sm:max-w-md">
+						<div className="mt-4 sm:flex sm:max-w-md">
 							<label className="sr-only">Email address</label>
 							<input
 								type="email"
@@ -94,14 +94,13 @@ export default component$(() => {
 							/>
 							<div className="mt-3 rounded-md sm:mt-0 sm:ml-3 sm:flex-shrink-0">
 								<button
-									type="submit"
 									className="w-full border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-primary-500"
 									onClick$={() => {}}
 								>
 									Subscribe
 								</button>
 							</div>
-						</form>
+						</div>
 					</div>
 				</div>
 				<div className="mt-8 border-t pt-8">
