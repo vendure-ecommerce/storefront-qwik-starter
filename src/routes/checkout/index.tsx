@@ -1,4 +1,4 @@
-import { component$, mutable, useContext, useStore } from '@builder.io/qwik';
+import { component$, mutable, useContext, useMount$, useStore } from '@builder.io/qwik';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
 import Confirmation from '~/components/confirmation/Confirmation';
@@ -15,6 +15,8 @@ export default component$(() => {
 		{ name: 'Payment', state: 'PAYMENT' },
 		{ name: 'Confirmation', state: 'CONFIRMATION' },
 	];
+
+	useMount$(() => (appState.showCart = false));
 
 	return (
 		<div className="bg-gray-50">

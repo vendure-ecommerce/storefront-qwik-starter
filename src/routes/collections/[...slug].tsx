@@ -23,11 +23,13 @@ export default component$(() => {
 		search: Search;
 		collection?: Collection;
 		facedValues: FacetWithValues[];
+		facetValueIds: string[];
 	}>({
 		loading: true,
 		showMenu: false,
 		search: {} as Search,
 		facedValues: [],
+		facetValueIds: [],
 	});
 
 	useMount$(async () => {
@@ -46,12 +48,18 @@ export default component$(() => {
 	});
 
 	const onFilterChange = $(async (id: string) => {
-		const { facedValues, facetValueIds } = enableDisableFacetValues(state.facedValues, id);
+		const { facedValues, facetValueIds } = enableDisableFacetValues(
+			state.facedValues,
+			state.facetValueIds.includes(id)
+				? state.facetValueIds.filter((f) => f !== id)
+				: [...state.facetValueIds, id]
+		);
 		state.facedValues = facedValues;
+		state.facetValueIds = facetValueIds;
 		changeUrlParamsWithoutRefresh('', facetValueIds);
 
 		const { search } = !!facetValueIds.length
-			? await execute<{ search: Search }>(searchQueryWithTerm('', facetValueIds))
+			? await execute<{ search: Search }>(searchQueryWithTerm('', state.facetValueIds))
 			: await execute<{ search: Search }>(searchQueryWithCollectionSlug(params.slug));
 		state.search = search;
 	});

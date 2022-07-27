@@ -40,7 +40,12 @@ export default component$(() => {
 	});
 
 	const onFilterChange = $(async (id: string) => {
-		const { facedValues, facetValueIds } = enableDisableFacetValues(state.facedValues, id);
+		const { facedValues, facetValueIds } = enableDisableFacetValues(
+			state.facedValues,
+			state.facetValueIds.includes(id)
+				? state.facetValueIds.filter((f) => f !== id)
+				: [...state.facetValueIds, id]
+		);
 		state.facedValues = facedValues;
 		state.facetValueIds = facetValueIds;
 		changeUrlParamsWithoutRefresh(term, facetValueIds);

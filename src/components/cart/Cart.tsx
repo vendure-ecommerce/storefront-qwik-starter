@@ -36,8 +36,8 @@ export default component$(() => {
 									{!!appState.activeOrder && appState.activeOrder.totalQuantity ? (
 										<CartContents
 											rows={mutable(appState.activeOrder?.lines ?? [])}
-											currencyCode={currencyCode!}
-											editable={editable}
+											currencyCode={mutable(currencyCode!)}
+											editable={mutable(editable)}
 										/>
 									) : (
 										<div className="flex items-center justify-center h-48 text-xl text-gray-400">

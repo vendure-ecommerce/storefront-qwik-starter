@@ -39,15 +39,13 @@ export const groupFacetValues = (
 	return Array.from(facetMap.values());
 };
 
-export const enableDisableFacetValues = (_facedValues: FacetWithValues[], id: string) => {
+export const enableDisableFacetValues = (_facedValues: FacetWithValues[], ids: string[]) => {
 	const facetValueIds: string[] = [];
 	const facedValues = _facedValues.map((facet) => {
 		facet.values = facet.values.map((value) => {
-			if (value.id === id) {
-				value.selected = !value.selected;
-				if (value.selected) {
-					facetValueIds.push(value.id);
-				}
+			if (ids.includes(value.id)) {
+				facetValueIds.push(value.id);
+				value.selected = true;
 			} else {
 				value.selected = false;
 			}
