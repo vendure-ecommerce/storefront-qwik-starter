@@ -9,7 +9,7 @@ export default component$<{ order: ActiveOrder }>(({ order }) => {
 				<dt className="text-sm">Subtotal</dt>
 				<Price
 					priceWithTax={mutable(order?.subTotalWithTax)}
-					currencyCode={order?.currencyCode}
+					currencyCode={mutable(order?.currencyCode)}
 					forcedClassName="text-sm font-medium text-gray-900"
 				></Price>
 			</div>
@@ -18,7 +18,7 @@ export default component$<{ order: ActiveOrder }>(({ order }) => {
 
 				<Price
 					priceWithTax={mutable(order?.shippingWithTax ?? 0)}
-					currencyCode={order?.currencyCode}
+					currencyCode={mutable(order?.currencyCode)}
 					forcedClassName="text-sm font-medium text-gray-900"
 				></Price>
 			</div>
@@ -26,7 +26,7 @@ export default component$<{ order: ActiveOrder }>(({ order }) => {
 				<dt className="text-base font-medium">Total</dt>
 				<Price
 					priceWithTax={mutable(order?.totalWithTax)}
-					currencyCode={order?.currencyCode}
+					currencyCode={mutable(order?.currencyCode)}
 					forcedClassName="text-base font-medium text-gray-900"
 				></Price>
 			</div>

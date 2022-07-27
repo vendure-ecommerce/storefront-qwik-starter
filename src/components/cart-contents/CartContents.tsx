@@ -36,7 +36,7 @@ export default component$<{
 									</h3>
 									<Price
 										priceWithTax={mutable(line.linePriceWithTax)}
-										currencyCode={currencyCode}
+										currencyCode={mutable(currencyCode)}
 										forcedClassName="ml-4"
 									></Price>
 								</div>

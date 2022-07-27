@@ -54,7 +54,7 @@ export default component$(() => {
 											{currencyCode && (
 												<Price
 													priceWithTax={mutable(appState.activeOrder?.subTotalWithTax ?? 0)}
-													currencyCode={currencyCode}
+													currencyCode={mutable(currencyCode)}
 												/>
 											)}
 										</p>

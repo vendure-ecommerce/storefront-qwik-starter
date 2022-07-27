@@ -7,7 +7,6 @@ import {
 	useContextProvider,
 	useServerMount$,
 	useStore,
-	useUserContext,
 } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
 import { getActiveOrderQuery, getCollectionsQuery } from '~/graphql/queries';
@@ -23,8 +22,6 @@ export default component$(() => {
 		showCart: false,
 	});
 	useContextProvider(APP_STATE, state);
-
-	useUserContext;
 
 	useServerMount$(async () => {
 		const { collections } = await execute<{ collections: { items: Collection[] } }>(

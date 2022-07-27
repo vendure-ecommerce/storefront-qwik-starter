@@ -15,7 +15,7 @@ export default component$(
 				<div className="text-sm text-gray-700">{productName}</div>
 				<Price
 					priceWithTax={mutable(priceWithTax)}
-					currencyCode={currencyCode}
+					currencyCode={mutable(currencyCode)}
 					forcedClassName="text-sm font-medium text-gray-900"
 				/>
 			</Link>

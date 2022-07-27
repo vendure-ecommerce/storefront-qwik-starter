@@ -22,8 +22,8 @@ export default component$<{ onForward$: PropFunction<() => void> }>(({ onForward
 				<div className="mb-6">
 					<CartContents
 						rows={mutable(appState.activeOrder?.lines ?? [])}
-						currencyCode={currencyCode!}
-						editable={editable}
+						currencyCode={mutable(currencyCode!)}
+						editable={mutable(editable)}
 					/>
 				</div>
 				<CartTotals order={mutable(appState.activeOrder)}></CartTotals>

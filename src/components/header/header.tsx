@@ -1,5 +1,4 @@
 import { component$, useContext, useDocument } from '@builder.io/qwik';
-import { Link } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import Cart from '../cart/Cart';
 import ShoppingBagIcon from '../icons/ShoppingBagIcon';
@@ -48,24 +47,24 @@ export default component$<{ totalQuantity: number }>(
 					</div>
 					<div className="max-w-6xl mx-auto p-4 flex items-center space-x-4">
 						<h1 className="text-white w-10">
-							<Link href="/">
+							<a href="/">
 								<img
 									src={`${doc.location.origin}/cube-logo-small.webp`}
 									width={40}
 									height={31}
 									alt="Vendure logo"
 								/>
-							</Link>
+							</a>
 						</h1>
 						<div className="flex space-x-4 hidden sm:block">
 							{collections.map((collection) => (
-								<Link
+								<a
 									className="text-sm md:text-base text-gray-200 hover:text-white"
 									href={'/collections/' + collection.slug}
 									key={collection.id}
 								>
 									{collection.name}
-								</Link>
+								</a>
 							))}
 						</div>
 						<div className="flex-1 md:pr-8">

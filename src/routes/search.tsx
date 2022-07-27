@@ -14,11 +14,13 @@ export default component$(() => {
 		showMenu: boolean;
 		search: Search;
 		facedValues: FacetWithValues[];
+		facetValueIds: string[];
 	}>({
 		loading: true,
 		showMenu: false,
 		search: {} as Search,
 		facedValues: [],
+		facetValueIds: [],
 	});
 
 	const { query } = useLocation();
@@ -40,9 +42,10 @@ export default component$(() => {
 	const onFilterChange = $(async (id: string) => {
 		const { facedValues, facetValueIds } = enableDisableFacetValues(state.facedValues, id);
 		state.facedValues = facedValues;
+		state.facetValueIds = facetValueIds;
 		changeUrlParamsWithoutRefresh(term, facetValueIds);
 
-		const { search } = await await executeQuery(term, facetValueIds);
+		const { search } = await await executeQuery(term, state.facetValueIds);
 		state.search = search;
 	});
 

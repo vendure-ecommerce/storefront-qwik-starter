@@ -15,7 +15,8 @@ import { changeUrlParamsWithoutRefresh, enableDisableFacetValues, groupFacetValu
 import { execute } from '~/utils/api';
 
 export default component$(() => {
-	const { params } = useLocation();
+	const { params, query } = useLocation();
+	const activeFacetValueIds: string[] = !!query.f ? [query.f] : [];
 	const state = useStore<{
 		loading: boolean;
 		showMenu: boolean;
@@ -28,9 +29,6 @@ export default component$(() => {
 		search: {} as Search,
 		facedValues: [],
 	});
-
-	const { query } = useLocation();
-	const activeFacetValueIds: string[] = !!query.f ? [query.f] : [];
 
 	useMount$(async () => {
 		const { search } = !!activeFacetValueIds.length

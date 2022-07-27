@@ -17,7 +17,7 @@ export type Product = {
 	variants: Variant[];
 };
 
-export type Breadcrumb = {
+type Breadcrumb = {
 	id: string;
 	name: string;
 	slug: string;
@@ -33,25 +33,25 @@ export type Collection = {
 	children: any[];
 };
 
-export type Facet = {
+type Facet = {
 	id: string;
 	code: string;
 	name: string;
 };
 
-export type FacetValue = {
+type FacetValue = {
 	facet: Facet;
 	id: string;
 	code: string;
 	name: string;
 };
 
-export type FeaturedAsset = {
+type FeaturedAsset = {
 	id: string;
 	preview: string;
 };
 
-export type Asset = {
+type Asset = {
 	id: string;
 	preview: string;
 };
@@ -68,13 +68,13 @@ export type Variant = {
 
 // activeOrder
 
-export type TaxSummary = {
+type TaxSummary = {
 	description: string;
 	taxRate: number;
 	taxTotal: number;
 };
 
-export type ShippingAddress = {
+type ShippingAddress = {
 	fullName?: any;
 	streetLine1?: any;
 	streetLine2?: any;
@@ -86,7 +86,7 @@ export type ShippingAddress = {
 	phoneNumber?: any;
 };
 
-export type ProductVariant = {
+type ProductVariant = {
 	id: string;
 	name: string;
 	price: number;
@@ -118,23 +118,28 @@ export type ActiveOrder = {
 	totalWithTax: number;
 	customer?: any;
 	shippingAddress: ShippingAddress;
-	shippingLines: any[];
+	shippingLines: ShippingLine[];
 	lines: Line[];
 	errorCode?: string;
 };
 
+type ShippingLine = {
+	priceWithTax: 1000;
+	shippingMethod: { id: string; name: string };
+};
+
 // search
 
-export type ProductAsset = {
+type ProductAsset = {
 	id: string;
 	preview: string;
 };
 
-export type PriceWithTax = {
+type PriceWithTax = {
 	value: number;
 };
 
-export type Item = {
+type Item = {
 	productId: string;
 	productName: string;
 	slug: string;
@@ -143,13 +148,13 @@ export type Item = {
 	priceWithTax: PriceWithTax;
 };
 
-export type FilterFacetValueDetail = {
+type FilterFacetValueDetail = {
 	id: string;
 	name: string;
 	facet: Facet;
 };
 
-export type FilterFacetValue = {
+type FilterFacetValue = {
 	count: number;
 	facetValue: FilterFacetValueDetail;
 };
