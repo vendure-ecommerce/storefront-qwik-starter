@@ -1,3 +1,4 @@
+import fetch from 'isomorphic-fetch';
 import { AUTH_TOKEN } from '~/constants';
 import { isClientSide } from '.';
 import { localStorageGetItem, localStorageSetItem } from './local-storage';
@@ -24,6 +25,6 @@ export const execute = async <T>(body: {
 			localStorageSetItem(AUTH_TOKEN, responsetoken);
 		}
 	}
-	const json = await response.json();
+	const json: any = await response.json();
 	return json.data;
 };
