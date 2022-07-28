@@ -2,9 +2,10 @@
 	"name": "storefront-qwik-starter",
 	"description": "File based routing and MDX support Vite.js tooling. Express.js server. Prettier code formatter. Tailwind CSS framework.",
 	"scripts": {
-		"build": "npm run typecheck && npm run build.client && npm run build.ssr",
+		"build": "npm run typecheck && npm run build.client && npm run build.cf",
 		"build.client": "vite build",
 		"build.ssr": "vite build --ssr src/entry.express.tsx",
+		"build.cf": "vite build --ssr src/entry.cloudflare.tsx",
 		"dev": "npm run dev.ssr",
 		"dev.client": "vite",
 		"dev.debug": "node --inspect-brk node_modules/vite/bin/vite.js --mode ssr",
@@ -12,7 +13,8 @@
 		"fmt": "prettier --write .",
 		"fmt.check": "prettier --check .",
 		"lint": "eslint \"src/**/*.ts*\"",
-		"serve": "node server/entry.express.js",
+		"serve": "node server/entry.express.mjs",
+		"serve.cf": "wrangler pages dev ./dist",
 		"start": "npm run dev",
 		"typecheck": "tsc --incremental --noEmit",
 		"prepare": "husky install"
@@ -37,7 +39,8 @@
 		"tailwindcss": "3.1.6",
 		"typescript": "4.7.4",
 		"vite": "3.0.3",
-		"vite-tsconfig-paths": "3.5.0"
+		"vite-tsconfig-paths": "3.5.0",
+		"wrangler": "beta"
 	},
 	"engines": {
 		"node": ">=14"
@@ -45,6 +48,7 @@
 	"homepage": "https://qwik.builder.io/",
 	"license": "",
 	"private": true,
+	"type": "module",
 	"dependencies": {
 		"isomorphic-fetch": "^3.0.0"
 	}
