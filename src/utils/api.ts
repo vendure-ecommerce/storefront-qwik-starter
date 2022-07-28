@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-fetch';
 import { AUTH_TOKEN } from '~/constants';
 import { isClientSide } from '.';
 import { localStorageGetItem, localStorageSetItem } from './local-storage';
