@@ -1,4 +1,4 @@
-import { render } from './entry.ssr';
+import render from './entry.ssr';
 
 /**
  * Cloudflare Pages Request Handler
@@ -25,9 +25,9 @@ export const onRequest: any = async ({ request, next, waitUntil }: any) => {
 		}
 
 		// Generate Qwik SSR HTML
-		const result = await render({
+		const result: any = await render({
 			url: request.url,
-		});
+		} as any);
 
 		// Create HTTP Response
 		const response = new Response(result.html, {
