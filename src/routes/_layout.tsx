@@ -34,11 +34,18 @@ export default component$(() => {
 		window.scrollTo(0, 0);
 		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
 		state.activeOrder = activeOrder;
+		console.log('av', activeOrder);
 	});
 
 	return (
 		<Host>
-			<Header totalQuantity={mutable(state.activeOrder?.totalQuantity || 0)} />
+			<Header
+				totalQuantity={mutable(
+					!!state.activeOrder?.totalQuantity && state.activeOrder?.state !== 'PaymentAuthorized'
+						? state.activeOrder?.totalQuantity
+						: 0
+				)}
+			/>
 			<main>
 				<Slot />
 			</main>

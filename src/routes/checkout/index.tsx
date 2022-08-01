@@ -11,6 +11,7 @@ import {
 	setCustomerForOrderdMutation,
 	transitionOrderToStateMutation,
 } from '~/graphql/mutations';
+import { ActiveOrder } from '~/types';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
@@ -60,7 +61,10 @@ export default component$(() => {
 							<Payment
 								onForward$={async () => {
 									await execute(transitionOrderToStateMutation());
-									await execute(addPaymentToOrderMutation());
+									const { addPaymentToOrder: activeOrder } = await execute<{
+										addPaymentToOrder: ActiveOrder;
+									}>(addPaymentToOrderMutation());
+									appState.activeOrder = activeOrder;
 									state.step = 'CONFIRMATION';
 								}}
 							/>
