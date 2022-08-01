@@ -70,3 +70,25 @@ export const scrollToTop = () => {
 		window.scrollTo(0, 0);
 	}
 };
+
+export const setCookie = (name: string, value: string, days: number) => {
+	let expires = '';
+	if (days) {
+		const date = new Date();
+		date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+		expires = '; expires=' + date.toUTCString();
+	}
+	document.cookie = name + '=' + (value || '') + expires + '; Secure; SameSite=Strict; path=/';
+};
+
+export const getCookie = (name: string) => {
+	var keyValues = document.cookie.split(';');
+	let result = null;
+	keyValues.forEach((item) => {
+		const [key, value] = item.split('=');
+		if (key === name) {
+			result = value;
+		}
+	});
+	return result;
+};

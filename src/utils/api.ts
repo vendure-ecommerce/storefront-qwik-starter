@@ -1,6 +1,5 @@
 import { AUTH_TOKEN } from '~/constants';
-import { isClientSide } from '.';
-import { localStorageGetItem, localStorageSetItem } from './local-storage';
+import { getCookie, isClientSide, setCookie } from '.';
 
 export const execute = async <T>(body: {
 	query: string;
@@ -9,7 +8,8 @@ export const execute = async <T>(body: {
 	let headers: Record<string, string> = { 'Content-Type': 'application/json' };
 
 	if (isClientSide()) {
-		headers = { ...headers, Authorization: `Bearer ${localStorageGetItem(AUTH_TOKEN)}` };
+		const token = getCookie(AUTH_TOKEN);
+		headers = { ...headers, Authorization: `Bearer ${token}` };
 	}
 	const options = {
 		method: 'POST',
@@ -21,7 +21,7 @@ export const execute = async <T>(body: {
 	if (isClientSide()) {
 		const responsetoken = response.headers.get('vendure-auth-token');
 		if (!!responsetoken) {
-			localStorageSetItem(AUTH_TOKEN, responsetoken);
+			setCookie(AUTH_TOKEN, responsetoken, 365);
 		}
 	}
 	const json: any = await response.json();
