@@ -10,6 +10,8 @@ export default component$(
 					className="rounded-xl flex-grow object-cover aspect-[7/8]"
 					alt=""
 					src={productAsset?.preview + '?w=300&h=400'}
+					width="300"
+					height="400"
 				/>
 				<div className="h-2" />
 				<div className="text-sm text-gray-700">{productName}</div>

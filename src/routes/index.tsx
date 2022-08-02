@@ -13,7 +13,12 @@ export default component$(() => {
 				{/* Decorative image and overlay */}
 				<div className="absolute inset-0 overflow-hidden">
 					{headerImage && (
-						<img className="absolute inset-0 w-full" src={headerImage + '?w=800'} alt="header" />
+						<img
+							className="absolute inset-0 w-full"
+							src={headerImage + '?w=800'}
+							alt="header"
+							width="800"
+						/>
 					)}
 					<div className="absolute inset-0 bg-gradient-to-br from-zinc-400 to-black mix-blend-darken" />
 				</div>

@@ -11,7 +11,11 @@ export default component$(({ collection }: IProps) => {
 			<div className="max-w-[300px] relative rounded-lg overflow-hidden hover:opacity-75 xl:w-auto">
 				<span className="">
 					<div className="w-full h-full object-center object-cover">
-						<img src={collection.featuredAsset?.preview + '?w=300&h=300'} />
+						<img
+							src={collection.featuredAsset?.preview + '?w=300&h=300'}
+							width="300"
+							height="300"
+						/>
 					</div>
 				</span>
 				<span className="absolute w-full bottom-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50" />

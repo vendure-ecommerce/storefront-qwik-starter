@@ -11,23 +11,18 @@ export const Head = component$(
 		return (
 			<>
 				<meta charSet="utf-8" />
-
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<title>Vendure Qwik Storefront</title>
-
 				<link rel="canonical" href={loc.href} />
-
 				{head.meta.map((m) => (
 					<meta {...m} />
 				))}
-
 				{head.links.map((l) => (
 					<link {...l} />
 				))}
-
 				{head.styles.map((s) => (
 					<style {...s.props} dangerouslySetInnerHTML={s.style} />
 				))}
-
 				<Social />
 				<Analytics loc={loc} />
 			</>

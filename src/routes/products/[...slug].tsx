@@ -94,6 +94,7 @@ export default component$(() => {
 									src={state.product.featuredAsset.preview + '?w=800'}
 									alt={state.product.name}
 									className="w-full h-full object-center object-cover rounded-lg"
+									width="800"
 								/>
 							</div>
 						</span>
