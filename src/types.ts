@@ -60,7 +60,7 @@ export type Variant = {
 	id: string;
 	name: string;
 	priceWithTax: number;
-	currencyCode: string;
+	currencyCode: CurrencyCode;
 	sku: string;
 	stockLevel: string;
 	featuredAsset?: any;
@@ -144,7 +144,7 @@ type Item = {
 	productName: string;
 	slug: string;
 	productAsset: ProductAsset;
-	currencyCode: string;
+	currencyCode: CurrencyCode;
 	priceWithTax: PriceWithTax;
 };
 
@@ -193,319 +193,318 @@ export type ActiveCustomer = {
 	emailAddress?: string;
 };
 
-export enum CurrencyCode {
+export type CurrencyCode =
 	/** United Arab Emirates dirham */
-	Aed = 'AED',
+	| 'AED'
 	/** Afghan afghani */
-	Afn = 'AFN',
+	| 'AFN'
 	/** Albanian lek */
-	All = 'ALL',
+	| 'ALL'
 	/** Armenian dram */
-	Amd = 'AMD',
+	| 'AMD'
 	/** Netherlands Antillean guilder */
-	Ang = 'ANG',
+	| 'ANG'
 	/** Angolan kwanza */
-	Aoa = 'AOA',
+	| 'AOA'
 	/** Argentine peso */
-	Ars = 'ARS',
+	| 'ARS'
 	/** Australian dollar */
-	Aud = 'AUD',
+	| 'AUD'
 	/** Aruban florin */
-	Awg = 'AWG',
+	| 'AWG'
 	/** Azerbaijani manat */
-	Azn = 'AZN',
+	| 'AZN'
 	/** Bosnia and Herzegovina convertible mark */
-	Bam = 'BAM',
+	| 'BAM'
 	/** Barbados dollar */
-	Bbd = 'BBD',
+	| 'BBD'
 	/** Bangladeshi taka */
-	Bdt = 'BDT',
+	| 'BDT'
 	/** Bulgarian lev */
-	Bgn = 'BGN',
+	| 'BGN'
 	/** Bahraini dinar */
-	Bhd = 'BHD',
+	| 'BHD'
 	/** Burundian franc */
-	Bif = 'BIF',
+	| 'BIF'
 	/** Bermudian dollar */
-	Bmd = 'BMD',
+	| 'BMD'
 	/** Brunei dollar */
-	Bnd = 'BND',
+	| 'BND'
 	/** Boliviano */
-	Bob = 'BOB',
+	| 'BOB'
 	/** Brazilian real */
-	Brl = 'BRL',
+	| 'BRL'
 	/** Bahamian dollar */
-	Bsd = 'BSD',
+	| 'BSD'
 	/** Bhutanese ngultrum */
-	Btn = 'BTN',
+	| 'BTN'
 	/** Botswana pula */
-	Bwp = 'BWP',
+	| 'BWP'
 	/** Belarusian ruble */
-	Byn = 'BYN',
+	| 'BYN'
 	/** Belize dollar */
-	Bzd = 'BZD',
+	| 'BZD'
 	/** Canadian dollar */
-	Cad = 'CAD',
+	| 'CAD'
 	/** Congolese franc */
-	Cdf = 'CDF',
+	| 'CDF'
 	/** Swiss franc */
-	Chf = 'CHF',
+	| 'CHF'
 	/** Chilean peso */
-	Clp = 'CLP',
+	| 'CLP'
 	/** Renminbi (Chinese) yuan */
-	Cny = 'CNY',
+	| 'CNY'
 	/** Colombian peso */
-	Cop = 'COP',
+	| 'COP'
 	/** Costa Rican colon */
-	Crc = 'CRC',
+	| 'CRC'
 	/** Cuban convertible peso */
-	Cuc = 'CUC',
+	| 'CUC'
 	/** Cuban peso */
-	Cup = 'CUP',
+	| 'CUP'
 	/** Cape Verde escudo */
-	Cve = 'CVE',
+	| 'CVE'
 	/** Czech koruna */
-	Czk = 'CZK',
+	| 'CZK'
 	/** Djiboutian franc */
-	Djf = 'DJF',
+	| 'DJF'
 	/** Danish krone */
-	Dkk = 'DKK',
+	| 'DKK'
 	/** Dominican peso */
-	Dop = 'DOP',
+	| 'DOP'
 	/** Algerian dinar */
-	Dzd = 'DZD',
+	| 'DZD'
 	/** Egyptian pound */
-	Egp = 'EGP',
+	| 'EGP'
 	/** Eritrean nakfa */
-	Ern = 'ERN',
+	| 'ERN'
 	/** Ethiopian birr */
-	Etb = 'ETB',
+	| 'ETB'
 	/** Euro */
-	Eur = 'EUR',
+	| 'EUR'
 	/** Fiji dollar */
-	Fjd = 'FJD',
+	| 'FJD'
 	/** Falkland Islands pound */
-	Fkp = 'FKP',
+	| 'FKP'
 	/** Pound sterling */
-	Gbp = 'GBP',
+	| 'GBP'
 	/** Georgian lari */
-	Gel = 'GEL',
+	| 'GEL'
 	/** Ghanaian cedi */
-	Ghs = 'GHS',
+	| 'GHS'
 	/** Gibraltar pound */
-	Gip = 'GIP',
+	| 'GIP'
 	/** Gambian dalasi */
-	Gmd = 'GMD',
+	| 'GMD'
 	/** Guinean franc */
-	Gnf = 'GNF',
+	| 'GNF'
 	/** Guatemalan quetzal */
-	Gtq = 'GTQ',
+	| 'GTQ'
 	/** Guyanese dollar */
-	Gyd = 'GYD',
+	| 'GYD'
 	/** Hong Kong dollar */
-	Hkd = 'HKD',
+	| 'HKD'
 	/** Honduran lempira */
-	Hnl = 'HNL',
+	| 'HNL'
 	/** Croatian kuna */
-	Hrk = 'HRK',
+	| 'HRK'
 	/** Haitian gourde */
-	Htg = 'HTG',
+	| 'HTG'
 	/** Hungarian forint */
-	Huf = 'HUF',
+	| 'HUF'
 	/** Indonesian rupiah */
-	Idr = 'IDR',
+	| 'IDR'
 	/** Israeli new shekel */
-	Ils = 'ILS',
+	| 'ILS'
 	/** Indian rupee */
-	Inr = 'INR',
+	| 'INR'
 	/** Iraqi dinar */
-	Iqd = 'IQD',
+	| 'IQD'
 	/** Iranian rial */
-	Irr = 'IRR',
+	| 'IRR'
 	/** Icelandic króna */
-	Isk = 'ISK',
+	| 'ISK'
 	/** Jamaican dollar */
-	Jmd = 'JMD',
+	| 'JMD'
 	/** Jordanian dinar */
-	Jod = 'JOD',
+	| 'JOD'
 	/** Japanese yen */
-	Jpy = 'JPY',
+	| 'JPY'
 	/** Kenyan shilling */
-	Kes = 'KES',
+	| 'KES'
 	/** Kyrgyzstani som */
-	Kgs = 'KGS',
+	| 'KGS'
 	/** Cambodian riel */
-	Khr = 'KHR',
+	| 'KHR'
 	/** Comoro franc */
-	Kmf = 'KMF',
+	| 'KMF'
 	/** North Korean won */
-	Kpw = 'KPW',
+	| 'KPW'
 	/** South Korean won */
-	Krw = 'KRW',
+	| 'KRW'
 	/** Kuwaiti dinar */
-	Kwd = 'KWD',
+	| 'KWD'
 	/** Cayman Islands dollar */
-	Kyd = 'KYD',
+	| 'KYD'
 	/** Kazakhstani tenge */
-	Kzt = 'KZT',
+	| 'KZT'
 	/** Lao kip */
-	Lak = 'LAK',
+	| 'LAK'
 	/** Lebanese pound */
-	Lbp = 'LBP',
+	| 'LBP'
 	/** Sri Lankan rupee */
-	Lkr = 'LKR',
+	| 'LKR'
 	/** Liberian dollar */
-	Lrd = 'LRD',
+	| 'LRD'
 	/** Lesotho loti */
-	Lsl = 'LSL',
+	| 'LSL'
 	/** Libyan dinar */
-	Lyd = 'LYD',
+	| 'LYD'
 	/** Moroccan dirham */
-	Mad = 'MAD',
+	| 'MAD'
 	/** Moldovan leu */
-	Mdl = 'MDL',
+	| 'MDL'
 	/** Malagasy ariary */
-	Mga = 'MGA',
+	| 'MGA'
 	/** Macedonian denar */
-	Mkd = 'MKD',
+	| 'MKD'
 	/** Myanmar kyat */
-	Mmk = 'MMK',
+	| 'MMK'
 	/** Mongolian tögrög */
-	Mnt = 'MNT',
+	| 'MNT'
 	/** Macanese pataca */
-	Mop = 'MOP',
+	| 'MOP'
 	/** Mauritanian ouguiya */
-	Mru = 'MRU',
+	| 'MRU'
 	/** Mauritian rupee */
-	Mur = 'MUR',
+	| 'MUR'
 	/** Maldivian rufiyaa */
-	Mvr = 'MVR',
+	| 'MVR'
 	/** Malawian kwacha */
-	Mwk = 'MWK',
+	| 'MWK'
 	/** Mexican peso */
-	Mxn = 'MXN',
+	| 'MXN'
 	/** Malaysian ringgit */
-	Myr = 'MYR',
+	| 'MYR'
 	/** Mozambican metical */
-	Mzn = 'MZN',
+	| 'MZN'
 	/** Namibian dollar */
-	Nad = 'NAD',
+	| 'NAD'
 	/** Nigerian naira */
-	Ngn = 'NGN',
+	| 'NGN'
 	/** Nicaraguan córdoba */
-	Nio = 'NIO',
+	| 'NIO'
 	/** Norwegian krone */
-	Nok = 'NOK',
+	| 'NOK'
 	/** Nepalese rupee */
-	Npr = 'NPR',
+	| 'NPR'
 	/** New Zealand dollar */
-	Nzd = 'NZD',
+	| 'NZD'
 	/** Omani rial */
-	Omr = 'OMR',
+	| 'OMR'
 	/** Panamanian balboa */
-	Pab = 'PAB',
+	| 'PAB'
 	/** Peruvian sol */
-	Pen = 'PEN',
+	| 'PEN'
 	/** Papua New Guinean kina */
-	Pgk = 'PGK',
+	| 'PGK'
 	/** Philippine peso */
-	Php = 'PHP',
+	| 'PHP'
 	/** Pakistani rupee */
-	Pkr = 'PKR',
+	| 'PKR'
 	/** Polish złoty */
-	Pln = 'PLN',
+	| 'PLN'
 	/** Paraguayan guaraní */
-	Pyg = 'PYG',
+	| 'PYG'
 	/** Qatari riyal */
-	Qar = 'QAR',
+	| 'QAR'
 	/** Romanian leu */
-	Ron = 'RON',
+	| 'RON'
 	/** Serbian dinar */
-	Rsd = 'RSD',
+	| 'RSD'
 	/** Russian ruble */
-	Rub = 'RUB',
+	| 'RUB'
 	/** Rwandan franc */
-	Rwf = 'RWF',
+	| 'RWF'
 	/** Saudi riyal */
-	Sar = 'SAR',
+	| 'SAR'
 	/** Solomon Islands dollar */
-	Sbd = 'SBD',
+	| 'SBD'
 	/** Seychelles rupee */
-	Scr = 'SCR',
+	| 'SCR'
 	/** Sudanese pound */
-	Sdg = 'SDG',
+	| 'SDG'
 	/** Swedish krona/kronor */
-	Sek = 'SEK',
+	| 'SEK'
 	/** Singapore dollar */
-	Sgd = 'SGD',
+	| 'SGD'
 	/** Saint Helena pound */
-	Shp = 'SHP',
+	| 'SHP'
 	/** Sierra Leonean leone */
-	Sll = 'SLL',
+	| 'SLL'
 	/** Somali shilling */
-	Sos = 'SOS',
+	| 'SOS'
 	/** Surinamese dollar */
-	Srd = 'SRD',
+	| 'SRD'
 	/** South Sudanese pound */
-	Ssp = 'SSP',
+	| 'SSP'
 	/** São Tomé and Príncipe dobra */
-	Stn = 'STN',
+	| 'STN'
 	/** Salvadoran colón */
-	Svc = 'SVC',
+	| 'SVC'
 	/** Syrian pound */
-	Syp = 'SYP',
+	| 'SYP'
 	/** Swazi lilangeni */
-	Szl = 'SZL',
+	| 'SZL'
 	/** Thai baht */
-	Thb = 'THB',
+	| 'THB'
 	/** Tajikistani somoni */
-	Tjs = 'TJS',
+	| 'TJS'
 	/** Turkmenistan manat */
-	Tmt = 'TMT',
+	| 'TMT'
 	/** Tunisian dinar */
-	Tnd = 'TND',
+	| 'TND'
 	/** Tongan paʻanga */
-	Top = 'TOP',
+	| 'TOP'
 	/** Turkish lira */
-	Try = 'TRY',
+	| 'TRY'
 	/** Trinidad and Tobago dollar */
-	Ttd = 'TTD',
+	| 'TTD'
 	/** New Taiwan dollar */
-	Twd = 'TWD',
+	| 'TWD'
 	/** Tanzanian shilling */
-	Tzs = 'TZS',
+	| 'TZS'
 	/** Ukrainian hryvnia */
-	Uah = 'UAH',
+	| 'UAH'
 	/** Ugandan shilling */
-	Ugx = 'UGX',
+	| 'UGX'
 	/** United States dollar */
-	Usd = 'USD',
+	| 'USD'
 	/** Uruguayan peso */
-	Uyu = 'UYU',
+	| 'UYU'
 	/** Uzbekistan som */
-	Uzs = 'UZS',
+	| 'UZS'
 	/** Venezuelan bolívar soberano */
-	Ves = 'VES',
+	| 'VES'
 	/** Vietnamese đồng */
-	Vnd = 'VND',
+	| 'VND'
 	/** Vanuatu vatu */
-	Vuv = 'VUV',
+	| 'VUV'
 	/** Samoan tala */
-	Wst = 'WST',
+	| 'WST'
 	/** CFA franc BEAC */
-	Xaf = 'XAF',
+	| 'XAF'
 	/** East Caribbean dollar */
-	Xcd = 'XCD',
+	| 'XCD'
 	/** CFA franc BCEAO */
-	Xof = 'XOF',
+	| 'XOF'
 	/** CFP franc (franc Pacifique) */
-	Xpf = 'XPF',
+	| 'XPF'
 	/** Yemeni rial */
-	Yer = 'YER',
+	| 'YER'
 	/** South African rand */
-	Zar = 'ZAR',
+	| 'ZAR'
 	/** Zambian kwacha */
-	Zmw = 'ZMW',
+	| 'ZMW'
 	/** Zimbabwean dollar */
-	Zwl = 'ZWL',
-}
+	| 'ZWL';

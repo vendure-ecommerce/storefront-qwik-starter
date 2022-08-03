@@ -1,7 +1,6 @@
 import { component$, mutable, useContext } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
-import { CurrencyCode } from '~/types';
 import CartContents from '../cart-contents/CartContents';
 import CloseIcon from '../icons/CloseIcon';
 import Price from '../products/Price';
@@ -9,9 +8,9 @@ import Price from '../products/Price';
 export default component$(() => {
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
-	const currencyCode = appState.activeOrder?.currencyCode || CurrencyCode.Usd;
+	const currencyCode = appState.activeOrder?.currencyCode || 'USD';
 	const editable = !location.pathname.startsWith('/checkout');
-	return !!appState.showCart ? (
+	return appState.showCart ? (
 		<div class="fixed inset-0 overflow-hidden z-20">
 			<div class="absolute inset-0 overflow-hidden">
 				<div class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity opacity-100"></div>
