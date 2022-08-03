@@ -1,13 +1,12 @@
 import { component$, mutable, PropFunction, useContext } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
-import { CurrencyCode } from '~/types';
 import CartContents from '../cart-contents/CartContents';
 import CartTotals from '../cart-totals/CartTotals';
 import CheckCircleIcon from '../icons/CheckCircleIcon';
 
 export default component$<{ onForward$: PropFunction<() => void> }>(({ onForward$ }) => {
 	const appState = useContext(APP_STATE);
-	const currencyCode = appState.activeOrder?.currencyCode || CurrencyCode.Usd;
+	const currencyCode = appState.activeOrder?.currencyCode || 'USD';
 	const editable = !location.pathname.startsWith('/checkout');
 	return (
 		<div>
