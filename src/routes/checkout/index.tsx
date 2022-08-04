@@ -81,7 +81,7 @@ export default component$(() => {
 
 							<CartContents
 								currencyCode={appState.activeOrder.currencyCode || 'USD'}
-								// editable={state.step === 'SHIPPING'}
+								// isEditable={state.step === 'SHIPPING'}
 							></CartContents>
 							<CartTotals />
 						</div>

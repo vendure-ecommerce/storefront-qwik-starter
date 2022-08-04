@@ -9,7 +9,7 @@ export default component$(() => {
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
 	const currencyCode = appState.activeOrder?.currencyCode || 'USD';
-	const editable = !location.pathname.startsWith('/checkout');
+	const isEditable = !location.pathname.startsWith('/checkout');
 	return appState.showCart ? (
 		<div class="fixed inset-0 overflow-hidden z-20">
 			<div class="absolute inset-0 overflow-hidden">
@@ -41,7 +41,7 @@ export default component$(() => {
 									)}
 								</div>
 							</div>
-							{appState.activeOrder?.totalQuantity && editable && (
+							{appState.activeOrder?.totalQuantity && isEditable && (
 								<div className="border-t border-gray-200 py-6 px-4 sm:px-6">
 									<div className="flex justify-between text-base font-medium text-gray-900">
 										<p>Subtotal</p>
