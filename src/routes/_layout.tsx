@@ -1,7 +1,6 @@
 import {
 	component$,
 	Host,
-	mutable,
 	Slot,
 	useClientEffect$,
 	useContextProvider,
@@ -38,13 +37,7 @@ export default component$(() => {
 
 	return (
 		<Host>
-			<Header
-				totalQuantity={mutable(
-					!!state.activeOrder?.totalQuantity && state.activeOrder?.state !== 'PaymentAuthorized'
-						? state.activeOrder?.totalQuantity
-						: 0
-				)}
-			/>
+			<Header />
 			<main>
 				<Slot />
 			</main>

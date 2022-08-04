@@ -1,18 +1,19 @@
 import { component$, mutable, useContext } from '@builder.io/qwik';
-import { Link } from '@builder.io/qwik-city';
+import { Link, useLocation } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import { adjustOrderLineMutation, removeOrderLineMutation } from '~/graphql/mutations';
-import { ActiveOrder, CurrencyCode, Line } from '~/types';
+import { ActiveOrder, CurrencyCode } from '~/types';
 import { execute } from '~/utils/api';
 import Price from '../products/Price';
 
 export default component$<{
-	rows: Line[];
 	currencyCode: CurrencyCode;
-	editable: boolean;
-}>(({ rows, currencyCode, editable }) => {
+}>(({ currencyCode }) => {
+	const location = useLocation();
 	const appState = useContext(APP_STATE);
-	const isEditable = editable !== false;
+	const rows = appState.activeOrder?.lines || [];
+	const isEditable = !location.pathname.startsWith('/checkout');
+
 	return (
 		<div className="flow-root">
 			<ul className="-my-6 divide-y divide-gray-200">
@@ -36,13 +37,13 @@ export default component$<{
 									</h3>
 									<Price
 										priceWithTax={mutable(line.linePriceWithTax)}
-										currencyCode={mutable(currencyCode)}
+										currencyCode={currencyCode}
 										forcedClassName="ml-4"
 									></Price>
 								</div>
 							</div>
 							<div className="flex-1 flex items-center text-sm">
-								{editable ? (
+								{isEditable ? (
 									<form>
 										<label htmlFor={`quantity-${line.id}`} className="mr-2">
 											Quantity

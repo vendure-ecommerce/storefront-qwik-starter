@@ -1,7 +1,6 @@
 import {
 	$,
 	component$,
-	mutable,
 	useClientEffect$,
 	useContext,
 	useMount$,
@@ -74,7 +73,7 @@ export default component$(() => {
 	const findVariantById = (id: string) => state.product.variants.find((v) => v.id === id);
 	const selectedVariant = () => findVariantById(state.selectedVariantId);
 
-	return !!state.loading ? (
+	return state.loading ? (
 		<></>
 	) : (
 		<div>
@@ -130,8 +129,8 @@ export default component$(() => {
 						)}
 						<div className="mt-10 flex flex-col sm:flex-row sm:items-center">
 							<Price
-								priceWithTax={mutable(selectedVariant()?.priceWithTax)}
-								currencyCode={mutable(selectedVariant()?.currencyCode)}
+								priceWithTax={selectedVariant()?.priceWithTax}
+								currencyCode={selectedVariant()?.currencyCode}
 								forcedClassName="text-3xl text-gray-900 mr-4"
 							></Price>
 							<div className="flex sm:flex-col1 align-baseline">
@@ -150,7 +149,7 @@ export default component$(() => {
 											const { addItemToOrder: order } = await execute<{
 												addItemToOrder: ActiveOrder;
 											}>(addItemToOrderMutation(state.selectedVariantId, 1));
-											if (!!order.errorCode) {
+											if (order.errorCode) {
 												state.addItemToOrderError = order.errorCode;
 											} else {
 												appState.activeOrder = order;
@@ -179,7 +178,7 @@ export default component$(() => {
 						</div>
 						<div className="mt-2 flex items-center space-x-2">
 							<span className="text-gray-500">{selectedVariant()?.sku}</span>
-							<StockLevelLabel stockLevel={mutable(selectedVariant()?.stockLevel)} />
+							<StockLevelLabel stockLevel={selectedVariant()?.stockLevel} />
 						</div>
 						{!!state.addItemToOrderError && (
 							<div className="mt-4">

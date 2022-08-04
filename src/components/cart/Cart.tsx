@@ -1,15 +1,15 @@
-import { component$, mutable, useContext } from '@builder.io/qwik';
+import { component$, useContext } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import CartContents from '../cart-contents/CartContents';
+import CartPrice from '../cart-totals/CartPrice';
 import CloseIcon from '../icons/CloseIcon';
-import Price from '../products/Price';
 
 export default component$(() => {
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
 	const currencyCode = appState.activeOrder?.currencyCode || 'USD';
-	const editable = !location.pathname.startsWith('/checkout');
+	const isEditable = !location.pathname.startsWith('/checkout');
 	return appState.showCart ? (
 		<div class="fixed inset-0 overflow-hidden z-20">
 			<div class="absolute inset-0 overflow-hidden">
@@ -33,11 +33,7 @@ export default component$(() => {
 								</div>
 								<div className="mt-8">
 									{!!appState.activeOrder && appState.activeOrder.totalQuantity ? (
-										<CartContents
-											rows={mutable(appState.activeOrder?.lines ?? [])}
-											currencyCode={mutable(currencyCode!)}
-											editable={mutable(editable)}
-										/>
+										<CartContents currencyCode={currencyCode!} />
 									) : (
 										<div className="flex items-center justify-center h-48 text-xl text-gray-400">
 											Your cart is empty
@@ -45,18 +41,11 @@ export default component$(() => {
 									)}
 								</div>
 							</div>
-							{appState.activeOrder?.totalQuantity && editable && (
+							{appState.activeOrder?.totalQuantity && isEditable && (
 								<div className="border-t border-gray-200 py-6 px-4 sm:px-6">
 									<div className="flex justify-between text-base font-medium text-gray-900">
 										<p>Subtotal</p>
-										<p>
-											{currencyCode && (
-												<Price
-													priceWithTax={mutable(appState.activeOrder?.subTotalWithTax ?? 0)}
-													currencyCode={mutable(currencyCode)}
-												/>
-											)}
-										</p>
+										<p>{currencyCode && <CartPrice field={'subTotalWithTax'} />}</p>
 									</div>
 									<p className="mt-0.5 text-sm text-gray-500">
 										Shipping will be calculated at checkout.

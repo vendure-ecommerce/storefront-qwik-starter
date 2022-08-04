@@ -1,4 +1,4 @@
-import { component$, mutable } from '@builder.io/qwik';
+import { component$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import Price from './Price';
 
@@ -12,12 +12,14 @@ export default component$(
 					src={productAsset?.preview + '?w=300&h=400'}
 					width="300"
 					height="400"
+					loading="lazy"
+					decoding="async"
 				/>
 				<div className="h-2" />
 				<div className="text-sm text-gray-700">{productName}</div>
 				<Price
-					priceWithTax={mutable(priceWithTax)}
-					currencyCode={mutable(currencyCode)}
+					priceWithTax={priceWithTax}
+					currencyCode={currencyCode}
 					forcedClassName="text-sm font-medium text-gray-900"
 				/>
 			</Link>
