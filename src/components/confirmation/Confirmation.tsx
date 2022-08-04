@@ -19,13 +19,9 @@ export default component$<{ onForward$: PropFunction<() => void> }>(() => {
 			</p>
 			<div className="mt-12">
 				<div className="mb-6">
-					<CartContents
-						rows={appState.activeOrder?.lines ?? []}
-						currencyCode={currencyCode}
-						editable={editable}
-					/>
+					<CartContents currencyCode={currencyCode} editable={editable} />
 				</div>
-				<CartTotals order={appState.activeOrder}></CartTotals>
+				<CartTotals />
 			</div>
 		</div>
 	);

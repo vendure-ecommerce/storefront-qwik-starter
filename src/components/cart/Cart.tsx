@@ -1,4 +1,4 @@
-import { component$, useContext } from '@builder.io/qwik';
+import { component$, mutable, useContext } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import CartContents from '../cart-contents/CartContents';
@@ -33,11 +33,7 @@ export default component$(() => {
 								</div>
 								<div className="mt-8">
 									{!!appState.activeOrder && appState.activeOrder.totalQuantity ? (
-										<CartContents
-											rows={appState.activeOrder?.lines ?? []}
-											currencyCode={currencyCode!}
-											editable={editable}
-										/>
+										<CartContents currencyCode={currencyCode!} editable={editable} />
 									) : (
 										<div className="flex items-center justify-center h-48 text-xl text-gray-400">
 											Your cart is empty
@@ -52,7 +48,7 @@ export default component$(() => {
 										<p>
 											{currencyCode && (
 												<Price
-													priceWithTax={appState.activeOrder?.subTotalWithTax ?? 0}
+													priceWithTax={mutable(appState.activeOrder?.subTotalWithTax ?? 0)}
 													currencyCode={currencyCode}
 												/>
 											)}

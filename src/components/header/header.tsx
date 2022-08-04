@@ -5,12 +5,16 @@ import ShoppingBagIcon from '../icons/ShoppingBagIcon';
 import UserIcon from '../icons/UserIcon';
 import SearchBar from '../search-bar/SearchBar';
 
-export default component$<{ totalQuantity: number }>(
-	({ totalQuantity }) => {
+export default component$(
+	() => {
 		const appState = useContext(APP_STATE);
 		const collections = useContext(APP_STATE).collections.filter(
 			(item) => item.parent?.name === '__root_collection__' && !!item.featuredAsset
 		);
+		const totalQuantity =
+			appState.activeOrder?.state !== 'PaymentAuthorized'
+				? appState.activeOrder?.totalQuantity || 0
+				: 0;
 		const isScrollingUp = true;
 		const doc = useDocument();
 		return (

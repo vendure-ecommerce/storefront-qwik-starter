@@ -1,17 +1,17 @@
-import { component$, useContext } from '@builder.io/qwik';
+import { component$, mutable, useContext } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import { adjustOrderLineMutation, removeOrderLineMutation } from '~/graphql/mutations';
-import { ActiveOrder, CurrencyCode, Line } from '~/types';
+import { ActiveOrder, CurrencyCode } from '~/types';
 import { execute } from '~/utils/api';
 import Price from '../products/Price';
 
 export default component$<{
-	rows: Line[];
 	currencyCode: CurrencyCode;
 	editable: boolean;
-}>(({ rows, currencyCode, editable }) => {
+}>(({ currencyCode, editable }) => {
 	const appState = useContext(APP_STATE);
+	const rows = appState.activeOrder?.lines || [];
 	const isEditable = editable !== false;
 	return (
 		<div className="flow-root">
@@ -35,7 +35,7 @@ export default component$<{
 										</Link>
 									</h3>
 									<Price
-										priceWithTax={line.linePriceWithTax}
+										priceWithTax={mutable(line.linePriceWithTax)}
 										currencyCode={currencyCode}
 										forcedClassName="ml-4"
 									></Price>

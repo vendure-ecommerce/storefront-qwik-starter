@@ -80,11 +80,10 @@ export default component$(() => {
 							<h2 className="text-lg font-medium text-gray-900 mb-4">Order summary</h2>
 
 							<CartContents
-								rows={appState.activeOrder?.lines ?? []}
 								currencyCode={appState.activeOrder.currencyCode || 'USD'}
 								editable={state.step === 'SHIPPING'}
 							></CartContents>
-							<CartTotals order={appState.activeOrder}></CartTotals>
+							<CartTotals />
 						</div>
 					)}
 				</div>
