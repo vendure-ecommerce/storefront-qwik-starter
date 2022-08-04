@@ -1,4 +1,4 @@
-import { $, component$, mutable, useClientEffect$, useMount$, useStore } from '@builder.io/qwik';
+import { $, component$, useClientEffect$, useMount$, useStore } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CollectionCard from '~/components/collection-card/CollectionCard';
@@ -16,7 +16,7 @@ import { execute } from '~/utils/api';
 
 export default component$(() => {
 	const { params, query } = useLocation();
-	const activeFacetValueIds: string[] = !!query.f ? [query.f] : [];
+	const activeFacetValueIds: string[] = query.f ? [query.f] : [];
 	const state = useStore<{
 		loading: boolean;
 		showMenu: boolean;
@@ -33,7 +33,7 @@ export default component$(() => {
 	});
 
 	useMount$(async () => {
-		const { search } = !!activeFacetValueIds.length
+		const { search } = activeFacetValueIds.length
 			? await execute<{ search: Search }>(searchQueryWithTerm('', activeFacetValueIds))
 			: await execute<{ search: Search }>(searchQueryWithCollectionSlug(params.slug));
 		const { collection } = await execute<{ collection: Collection }>(
@@ -62,13 +62,13 @@ export default component$(() => {
 		state.facetValueIds = facetValueIds;
 		changeUrlParamsWithoutRefresh('', facetValueIds);
 
-		const { search } = !!facetValueIds.length
+		const { search } = facetValueIds.length
 			? await execute<{ search: Search }>(searchQueryWithTerm('', state.facetValueIds))
 			: await execute<{ search: Search }>(searchQueryWithCollectionSlug(params.slug));
 		state.search = search;
 	});
 
-	return !!state.loading ? (
+	return state.loading ? (
 		<></>
 	) : (
 		<div className="max-w-6xl mx-auto px-4 py-10">
@@ -84,7 +84,7 @@ export default component$(() => {
 					/>
 				)}
 			</div>
-			<Breadcrumbs items={mutable(state.collection?.breadcrumbs || [])}></Breadcrumbs>
+			<Breadcrumbs items={state.collection?.breadcrumbs || []}></Breadcrumbs>
 			{state.collection?.children?.length ? (
 				<div className="max-w-2xl mx-auto py-16 sm:py-16 lg:max-w-none border-b mb-16">
 					<h2 className="text-2xl font-light text-gray-900">Collections</h2>
@@ -100,8 +100,8 @@ export default component$(() => {
 			<div className="mt-6 grid sm:grid-cols-5 gap-x-4">
 				{!!state.facedValues.length && (
 					<Filters
-						showMenu={mutable(state.showMenu)}
-						facetsWithValues={mutable(state.facedValues)}
+						showMenu={state.showMenu}
+						facetsWithValues={state.facedValues}
 						onToggleMenu$={async () => {
 							state.showMenu = !state.showMenu;
 						}}
@@ -113,11 +113,11 @@ export default component$(() => {
 						{state.search.items.map((item) => (
 							<ProductCard
 								key={item.productId}
-								productAsset={mutable(item.productAsset)}
-								productName={mutable(item.productName)}
-								slug={mutable(item.slug)}
-								priceWithTax={mutable(item.priceWithTax)}
-								currencyCode={mutable(item.currencyCode)}
+								productAsset={item.productAsset}
+								productName={item.productName}
+								slug={item.slug}
+								priceWithTax={item.priceWithTax}
+								currencyCode={item.currencyCode}
 							></ProductCard>
 						))}
 					</div>

@@ -1,4 +1,4 @@
-import { $, component$, mutable, useClientEffect$, useStore } from '@builder.io/qwik';
+import { $, component$, useClientEffect$, useStore } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
@@ -25,7 +25,7 @@ export default component$(() => {
 
 	const { query } = useLocation();
 	const term = query.q;
-	const activeFacetValueIds: string[] = !!query.f ? [query.f] : [];
+	const activeFacetValueIds: string[] = query.f ? [query.f] : [];
 
 	const executeQuery = $(
 		async (term: string, activeFacetValueIds: string[]) =>
@@ -55,7 +55,7 @@ export default component$(() => {
 		state.search = search;
 	});
 
-	return !!state.loading ? (
+	return state.loading ? (
 		<></>
 	) : (
 		<div className="max-w-6xl mx-auto px-4 py-10">
@@ -75,8 +75,8 @@ export default component$(() => {
 			<div className="mt-6 grid sm:grid-cols-5 gap-x-4">
 				{!!state.facedValues.length && (
 					<Filters
-						showMenu={mutable(state.showMenu)}
-						facetsWithValues={mutable(state.facedValues)}
+						showMenu={state.showMenu}
+						facetsWithValues={state.facedValues}
 						onToggleMenu$={async () => {
 							state.showMenu = !state.showMenu;
 						}}
@@ -88,11 +88,11 @@ export default component$(() => {
 						{state.search.items.map((item) => (
 							<ProductCard
 								key={item.productId}
-								productAsset={mutable(item.productAsset)}
-								productName={mutable(item.productName)}
-								slug={mutable(item.slug)}
-								priceWithTax={mutable(item.priceWithTax)}
-								currencyCode={mutable(item.currencyCode)}
+								productAsset={item.productAsset}
+								productName={item.productName}
+								slug={item.slug}
+								priceWithTax={item.priceWithTax}
+								currencyCode={item.currencyCode}
 							></ProductCard>
 						))}
 					</div>

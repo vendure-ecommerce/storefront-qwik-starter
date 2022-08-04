@@ -1,4 +1,4 @@
-import { component$, mutable, useClientEffect$, useContext, useStore } from '@builder.io/qwik';
+import { component$, useClientEffect$, useContext, useStore } from '@builder.io/qwik';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
 import Confirmation from '~/components/confirmation/Confirmation';
@@ -6,11 +6,7 @@ import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
 import Payment from '~/components/payment/Payment';
 import Shipping from '~/components/shipping/Shipping';
 import { APP_STATE } from '~/constants';
-import {
-	addPaymentToOrderMutation,
-	setCustomerForOrderdMutation,
-	transitionOrderToStateMutation,
-} from '~/graphql/mutations';
+import { addPaymentToOrderMutation, transitionOrderToStateMutation } from '~/graphql/mutations';
 import { ActiveOrder } from '~/types';
 import { execute } from '~/utils/api';
 
@@ -53,7 +49,7 @@ export default component$(() => {
 						{state.step === 'SHIPPING' ? (
 							<Shipping
 								onForward$={async () => {
-									const data = await execute(setCustomerForOrderdMutation());
+									// const data = await execute(setCustomerForOrderdMutation());
 									state.step = 'PAYMENT';
 								}}
 							/>
@@ -84,11 +80,11 @@ export default component$(() => {
 							<h2 className="text-lg font-medium text-gray-900 mb-4">Order summary</h2>
 
 							<CartContents
-								rows={mutable(appState.activeOrder?.lines ?? [])}
-								currencyCode={mutable(appState.activeOrder?.currencyCode!)}
-								editable={mutable(state.step === 'SHIPPING')}
+								rows={appState.activeOrder?.lines ?? []}
+								currencyCode={appState.activeOrder.currencyCode || 'USD'}
+								editable={state.step === 'SHIPPING'}
 							></CartContents>
-							<CartTotals order={mutable(appState.activeOrder)}></CartTotals>
+							<CartTotals order={appState.activeOrder}></CartTotals>
 						</div>
 					)}
 				</div>
