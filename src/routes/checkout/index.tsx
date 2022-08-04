@@ -6,7 +6,11 @@ import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
 import Payment from '~/components/payment/Payment';
 import Shipping from '~/components/shipping/Shipping';
 import { APP_STATE } from '~/constants';
-import { addPaymentToOrderMutation, transitionOrderToStateMutation } from '~/graphql/mutations';
+import {
+	addPaymentToOrderMutation,
+	setCustomerForOrderdMutation,
+	transitionOrderToStateMutation,
+} from '~/graphql/mutations';
 import { ActiveOrder } from '~/types';
 import { execute } from '~/utils/api';
 
@@ -49,8 +53,12 @@ export default component$(() => {
 						{state.step === 'SHIPPING' ? (
 							<Shipping
 								onForward$={async () => {
-									// const data = await execute(setCustomerForOrderdMutation());
-									state.step = 'PAYMENT';
+									const { setCustomerForOrder } = await execute<{
+										setCustomerForOrder: ActiveOrder;
+									}>(setCustomerForOrderdMutation());
+									if (!setCustomerForOrder.errorCode) {
+										state.step = 'PAYMENT';
+									}
 								}}
 							/>
 						) : state.step === 'PAYMENT' ? (
