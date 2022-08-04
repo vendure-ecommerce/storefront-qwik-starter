@@ -1,9 +1,9 @@
-import { component$, mutable, useContext } from '@builder.io/qwik';
+import { component$, useContext } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import CartContents from '../cart-contents/CartContents';
+import CartPrice from '../cart-totals/CartPrice';
 import CloseIcon from '../icons/CloseIcon';
-import Price from '../products/Price';
 
 export default component$(() => {
 	const location = useLocation();
@@ -33,7 +33,7 @@ export default component$(() => {
 								</div>
 								<div className="mt-8">
 									{!!appState.activeOrder && appState.activeOrder.totalQuantity ? (
-										<CartContents currencyCode={currencyCode!} editable={editable} />
+										<CartContents currencyCode={currencyCode!} />
 									) : (
 										<div className="flex items-center justify-center h-48 text-xl text-gray-400">
 											Your cart is empty
@@ -45,14 +45,7 @@ export default component$(() => {
 								<div className="border-t border-gray-200 py-6 px-4 sm:px-6">
 									<div className="flex justify-between text-base font-medium text-gray-900">
 										<p>Subtotal</p>
-										<p>
-											{currencyCode && (
-												<Price
-													priceWithTax={mutable(appState.activeOrder?.subTotalWithTax ?? 0)}
-													currencyCode={currencyCode}
-												/>
-											)}
-										</p>
+										<p>{currencyCode && <CartPrice field={'subTotalWithTax'} />}</p>
 									</div>
 									<p className="mt-0.5 text-sm text-gray-500">
 										Shipping will be calculated at checkout.

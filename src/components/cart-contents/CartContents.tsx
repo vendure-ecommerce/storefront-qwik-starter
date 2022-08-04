@@ -1,5 +1,5 @@
 import { component$, mutable, useContext } from '@builder.io/qwik';
-import { Link } from '@builder.io/qwik-city';
+import { Link, useLocation } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import { adjustOrderLineMutation, removeOrderLineMutation } from '~/graphql/mutations';
 import { ActiveOrder, CurrencyCode } from '~/types';
@@ -8,11 +8,12 @@ import Price from '../products/Price';
 
 export default component$<{
 	currencyCode: CurrencyCode;
-	editable: boolean;
-}>(({ currencyCode, editable }) => {
+}>(({ currencyCode }) => {
+	const location = useLocation();
 	const appState = useContext(APP_STATE);
 	const rows = appState.activeOrder?.lines || [];
-	const isEditable = editable !== false;
+	const isEditable = !location.pathname.startsWith('/checkout');
+
 	return (
 		<div className="flow-root">
 			<ul className="-my-6 divide-y divide-gray-200">
@@ -42,7 +43,7 @@ export default component$<{
 								</div>
 							</div>
 							<div className="flex-1 flex items-center text-sm">
-								{editable ? (
+								{isEditable ? (
 									<form>
 										<label htmlFor={`quantity-${line.id}`} className="mr-2">
 											Quantity

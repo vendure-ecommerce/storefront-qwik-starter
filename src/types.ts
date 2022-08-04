@@ -123,6 +123,11 @@ export type ActiveOrder = {
 	errorCode?: string;
 };
 
+export type OrderPriceFields = keyof Pick<
+	ActiveOrder,
+	'subTotal' | 'totalWithTax' | 'subTotalWithTax' | 'shippingWithTax'
+>;
+
 type ShippingLine = {
 	priceWithTax: 1000;
 	shippingMethod: { id: string; name: string };

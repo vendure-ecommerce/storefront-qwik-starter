@@ -7,7 +7,7 @@ import CheckCircleIcon from '../icons/CheckCircleIcon';
 export default component$<{ onForward$: PropFunction<() => void> }>(() => {
 	const appState = useContext(APP_STATE);
 	const currencyCode = appState.activeOrder?.currencyCode || 'USD';
-	const editable = !location.pathname.startsWith('/checkout');
+	const editable = location.pathname.startsWith('/checkout');
 	return (
 		<div>
 			<h2 className="text-3xl flex items-center space-x-2 sm:text-5xl font-light tracking-tight text-gray-900 my-8">
@@ -19,7 +19,7 @@ export default component$<{ onForward$: PropFunction<() => void> }>(() => {
 			</p>
 			<div className="mt-12">
 				<div className="mb-6">
-					<CartContents currencyCode={currencyCode} editable={editable} />
+					<CartContents currencyCode={currencyCode} />
 				</div>
 				<CartTotals />
 			</div>
