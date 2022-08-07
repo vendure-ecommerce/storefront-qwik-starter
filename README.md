@@ -1,10 +1,21 @@
-# Qwik storefront-qwik-starter ⚡️
+# Vendure Qwik Storefront Starter️
 
-- File based routing and MDX support
-- Vite.js tooling.
-- Express.js server.
-- Prettier code formatter.
-- Tailwind CSS framework.
+An e-commerce storefront for [Vendure](https://www.vendure.io) built with [Qwik](https://qwik.builder.io/) & [Qwik City](https://qwik.builder.io/qwikcity/overview).
+
+👉 [qwik-storefront.vendure.io](https://qwik-storefront.vendure.io)
+
+## To do
+
+- Cart ✅
+- Checkout flow ✅
+- Search facet filters ✅
+- Login ✅
+- Account creation
+- Customer account management
+- SPA-mode navigation
+- Set up GraphQL code generation
+
+**Contributions welcome!**
 
 ## Development Builds
 
@@ -46,11 +57,10 @@ Then visit [http://localhost:8080/](http://localhost:8080/)
 
 ## Related
 
+- [Vendure Docs](https://vendure.io/docs)
+- [Vendure Github](https://github.com/vendure-ecommerce/vendure)
+- [Vendure Slack](https://join.slack.com/t/vendure-ecommerce/shared_invite/enQtNzA1NTcyMDY3NTg0LTMzZGQzNDczOWJiMTU2YjAyNWJlMzdmZGE3ZDY5Y2RjMGYxZWNlYTI4NmU4Y2Q1MDNlYzE4MzQ5ODcyYTdmMGU)
 - [Qwik Docs](https://qwik.builder.io/)
 - [Qwik Github](https://github.com/BuilderIO/qwik)
 - [@QwikDev](https://twitter.com/QwikDev)
-- [Discord](https://qwik.builder.io/chat)
-- [Vite](https://vitejs.dev/)
-- [Partytown](https://partytown.builder.io/)
-- [Mitosis](https://github.com/BuilderIO/mitosis)
-- [Builder.io](https://www.builder.io/)
+- [Qwik Discord](https://qwik.builder.io/chat)
