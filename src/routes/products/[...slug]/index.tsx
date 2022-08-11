@@ -1,12 +1,4 @@
-import {
-	$,
-	component$,
-	useClientEffect$,
-	useContext,
-	useMount$,
-	useStore,
-	useWatch$,
-} from '@builder.io/qwik';
+import { $, component$, useClientEffect$, useContext, useMount$, useStore } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
@@ -65,16 +57,16 @@ export default component$(() => {
 		window.scrollTo(0, 0);
 	});
 
-	useWatch$(async (track) => {
-		track(appState, 'activeOrder');
-		calculateQuantities(state.product);
-	});
+	// useWatch$(async (track) => {
+	// 	track(appState, 'activeOrder');
+	// 	calculateQuantities(state.product);
+	// });
 
 	const findVariantById = (id: string) => state.product.variants.find((v) => v.id === id);
 	const selectedVariant = () => findVariantById(state.selectedVariantId);
 
 	return state.loading ? (
-		<></>
+		<>Loading...</>
 	) : (
 		<div>
 			<div className="max-w-6xl mx-auto px-4 py-10">
@@ -103,7 +95,10 @@ export default component$(() => {
 					<div className="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
 						<div className="">
 							<h3 className="sr-only">Description</h3>
-							<div className="text-base text-gray-700" innerHTML={state.product.description} />
+							<div
+								className="text-base text-gray-700"
+								dangerouslySetInnerHTML={state.product.description}
+							/>
 						</div>
 						{1 < state.product.variants.length ? (
 							<div className="mt-4">
