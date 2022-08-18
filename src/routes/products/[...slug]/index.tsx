@@ -1,12 +1,4 @@
-import {
-	$,
-	component$,
-	useClientEffect$,
-	useContext,
-	useMount$,
-	useStore,
-	useWatch$,
-} from '@builder.io/qwik';
+import { $, component$, useClientEffect$, useContext, useMount$, useStore } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
@@ -65,10 +57,10 @@ export default component$(() => {
 		window.scrollTo(0, 0);
 	});
 
-	useWatch$((tracker) => {
-		tracker.track(appState, 'activeOrder');
-		calculateQuantities(state.product);
-	});
+	// useWatch$(async (track) => {
+	// 	track(appState, 'activeOrder');
+	// 	calculateQuantities(state.product);
+	// });
 
 	const findVariantById = (id: string) => state.product.variants.find((v) => v.id === id);
 	const selectedVariant = () => findVariantById(state.selectedVariantId);
