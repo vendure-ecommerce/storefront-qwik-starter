@@ -1,15 +1,13 @@
-import { component$ } from '@builder.io/qwik';
-import { QwikCity, RouterOutlet } from '@builder.io/qwik-city';
+import { Html } from '@builder.io/qwik-city';
+import { Body } from './components/body/body';
 import { Head } from './components/head/head';
 import './global.css';
 
-export default component$(() => {
+export default function Root() {
 	return (
-		<QwikCity>
+		<Html>
 			<Head />
-			<body lang="en">
-				<RouterOutlet />
-			</body>
-		</QwikCity>
+			<Body />
+		</Html>
 	);
-});
+}

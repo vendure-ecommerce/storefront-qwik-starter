@@ -1,5 +1,8 @@
-import { component$, useContext, useStore } from '@builder.io/qwik';
+import { component$, useContext, useStore, useWatch$ } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
+import { setOrderShippingMethodMutation } from '~/graphql/mutations';
+import { ActiveOrder } from '~/types';
+import { execute } from '~/utils/api';
 import CheckCircleIcon from '../icons/CheckCircleIcon';
 
 export default component$(() => {
@@ -12,13 +15,13 @@ export default component$(() => {
 		{ label: 'Express Shipping', price: '$10.00' },
 	];
 
-	// useWatch$(async (track) => {
-	// 	const selected = track(state, 'selected');
-	// 	const { setOrderShippingMethod: activeOrder } = await execute<{
-	// 		setOrderShippingMethod: ActiveOrder;
-	// 	}>(setOrderShippingMethodMutation(selected.toString()));
-	// 	appState.activeOrder = activeOrder;
-	// });
+	useWatch$(async (track) => {
+		const selected = track(state, 'selected');
+		const { setOrderShippingMethod: activeOrder } = await execute<{
+			setOrderShippingMethod: ActiveOrder;
+		}>(setOrderShippingMethodMutation(selected.toString()));
+		appState.activeOrder = activeOrder;
+	});
 
 	return (
 		<div>
