@@ -15,8 +15,8 @@ export default component$(() => {
 		{ label: 'Express Shipping', price: '$10.00' },
 	];
 
-	useWatch$(async (track) => {
-		const selected = track(state, 'selected');
+	useWatch$(async (tracker) => {
+		const selected = tracker.track(state, 'selected');
 		const { setOrderShippingMethod: activeOrder } = await execute<{
 			setOrderShippingMethod: ActiveOrder;
 		}>(setOrderShippingMethodMutation(selected.toString()));
