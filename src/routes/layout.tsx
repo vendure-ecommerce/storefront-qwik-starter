@@ -1,6 +1,5 @@
 import {
 	component$,
-	Host,
 	Slot,
 	useClientEffect$,
 	useContextProvider,
@@ -23,9 +22,9 @@ export default component$(() => {
 	useContextProvider(APP_STATE, state);
 
 	useServerMount$(async () => {
-		const { collections } = await execute<{ collections: { items: Collection[] } }>(
-			getCollectionsQuery()
-		);
+		const { collections } = await execute<{
+			collections: { items: Collection[] };
+		}>(getCollectionsQuery());
 		state.collections = collections.items;
 	});
 
@@ -36,12 +35,12 @@ export default component$(() => {
 	});
 
 	return (
-		<Host>
+		<div>
 			<Header />
 			<main>
 				<Slot />
 			</main>
 			<Footer />
-		</Host>
+		</div>
 	);
 });
