@@ -85,7 +85,6 @@ export default component$(() => {
 					items={state.product.collections[state.product.collections.length - 1]?.breadcrumbs ?? []}
 				></Breadcrumbs>
 				<div className="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start mt-4 md:mt-12">
-					{/* Image gallery */}
 					<div className="w-full max-w-2xl mx-auto sm:block lg:max-w-none">
 						<span className="rounded-md overflow-hidden">
 							<div className="w-full h-full object-center object-cover rounded-lg">
@@ -98,8 +97,6 @@ export default component$(() => {
 							</div>
 						</span>
 					</div>
-
-					{/* Product info */}
 					<div className="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
 						<div className="">
 							<h3 className="sr-only">Description</h3>

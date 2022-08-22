@@ -11,5 +11,6 @@ export default function (opts: RenderToStreamOptions) {
 	return renderToStream(<Root />, {
 		manifest,
 		...opts,
+		streaming: { inOrder: { strategy: 'auto', initialChunkSize: 0, minimunChunkSize: 0 } },
 	});
 }

@@ -10,7 +10,6 @@ export default component$(() => {
 	return (
 		<>
 			<div className="relative">
-				{/* Decorative image and overlay */}
 				<div className="absolute inset-0 overflow-hidden">
 					{headerImage && (
 						<img
