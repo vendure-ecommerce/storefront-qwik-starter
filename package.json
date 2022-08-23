@@ -20,6 +20,7 @@
 	"devDependencies": {
 		"@builder.io/qwik": "0.0.103",
 		"@builder.io/qwik-city": "0.0.104",
+		"@tailwindcss/forms": "^0.5.2",
 		"@types/eslint": "8.4.6",
 		"@types/node": "latest",
 		"@typescript-eslint/eslint-plugin": "5.34.0",
@@ -27,8 +28,8 @@
 		"autoprefixer": "10.4.8",
 		"eslint": "8.22.0",
 		"eslint-plugin-qwik": "0.0.103",
-		"node-fetch": "3.2.10",
 		"husky": "^8.0.1",
+		"node-fetch": "3.2.10",
 		"postcss": "8.4.16",
 		"prettier": "2.7.1",
 		"pretty-quick": "^3.1.3",
