@@ -112,7 +112,7 @@ export default component$(() => {
 												dangerouslySetInnerHTML={state.product.description}
 											/>
 										</div>
-										{1 < state.product.variants.length ? (
+										{1 < state.product.variants.length && (
 											<div className="mt-4">
 												<label className="block text-sm font-medium text-gray-700">
 													Select option
@@ -133,8 +133,6 @@ export default component$(() => {
 													))}
 												</select>
 											</div>
-										) : (
-											<input type="hidden" value={state.selectedVariantId}></input>
 										)}
 										<div className="mt-10 flex flex-col sm:flex-row sm:items-center">
 											<Price

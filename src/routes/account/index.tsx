@@ -1,8 +1,6 @@
 import { $, component$, useClientEffect$, useContext } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
 import { logoutMutation } from '~/graphql/mutations';
-import { getActiveCustomerQuery } from '~/graphql/queries';
-import { ActiveCustomer } from '~/types';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
@@ -10,8 +8,6 @@ export default component$(() => {
 
 	useClientEffect$(async () => {
 		window.scrollTo(0, 0);
-		const data = await execute<{ activeCustomer: ActiveCustomer }>(getActiveCustomerQuery());
-		appState.customer = data.activeCustomer;
 	});
 
 	const logout = $(async () => {
@@ -23,7 +19,6 @@ export default component$(() => {
 			<h2 className="text-3xl sm:text-5xl font-light text-gray-900 my-8">My Account</h2>
 			<p className="text-gray-700 text-lg -mt-4">Welcome back!</p>
 			<button onClick$={logout}>
-				<input type="hidden" name="action" value="logout" />
 				<button
 					onClick$={logout}
 					className="underline my-4 text-primary-600 hover:text-primary-800"

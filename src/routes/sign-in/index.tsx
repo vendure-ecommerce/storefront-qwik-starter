@@ -1,11 +1,9 @@
 import { $, component$ } from '@builder.io/qwik';
-// import { APP_STATE } from '~/constants';
 import { loginMutation } from '~/graphql/mutations';
 import { ActiveCustomer } from '~/types';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
-	// const appState = useContext(APP_STATE);
 	const email = 'test@vendure.io';
 	const password = 'test';
 	const rememberMe = false;

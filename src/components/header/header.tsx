@@ -1,5 +1,8 @@
-import { component$, useContext } from '@builder.io/qwik';
+import { component$, useClientEffect$, useContext } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
+import { getActiveCustomerQuery } from '~/graphql/queries';
+import { ActiveCustomer } from '~/types';
+import { execute } from '~/utils/api';
 import Cart from '../cart/Cart';
 import ShoppingBagIcon from '../icons/ShoppingBagIcon';
 import UserIcon from '../icons/UserIcon';
@@ -14,7 +17,11 @@ export default component$(() => {
 		appState.activeOrder?.state !== 'PaymentAuthorized'
 			? appState.activeOrder?.totalQuantity || 0
 			: 0;
-	const isScrollingUp = true;
+	useClientEffect$(async () => {
+		const data = await execute<{ activeCustomer: ActiveCustomer }>(getActiveCustomerQuery());
+		appState.customer =
+			data.activeCustomer || ({ id: '-1', firstName: '', lastName: '' } as ActiveCustomer);
+	});
 	return (
 		<>
 			<header
@@ -34,15 +41,17 @@ export default component$(() => {
 								</a>
 							</p>
 						</div>
-						<div>
+						{!!appState.customer && (
 							<a
-								href={!!appState.customer?.id ? '/account' : '/sign-in'}
+								href={appState.customer.id !== '-1' ? '/account' : '/sign-in'}
 								className="flex space-x-1"
 							>
 								<UserIcon />
-								<span className="mt-1">{!!appState.customer?.id ? 'My Account' : 'Sign In'}</span>
+								<span className="mt-1">
+									{appState.customer.id !== '-1' ? 'My Account' : 'Sign In'}
+								</span>
 							</a>
-						</div>
+						)}
 					</div>
 				</div>
 				<div className="max-w-6xl mx-auto p-4 flex items-center space-x-4">
