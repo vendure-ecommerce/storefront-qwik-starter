@@ -1,6 +1,7 @@
 import {
 	$,
 	component$,
+	mutable,
 	Resource,
 	SSRStreamBlock,
 	useClientEffect$,
@@ -137,8 +138,8 @@ export default component$(() => {
 										)}
 										<div className="mt-10 flex flex-col sm:flex-row sm:items-center">
 											<Price
-												priceWithTax={selectedVariant()?.priceWithTax}
-												currencyCode={selectedVariant()?.currencyCode}
+												priceWithTax={mutable(selectedVariant()?.priceWithTax)}
+												currencyCode={mutable(selectedVariant()?.currencyCode)}
 												forcedClassName="text-3xl text-gray-900 mr-4"
 											></Price>
 											<div className="flex sm:flex-col1 align-baseline">
