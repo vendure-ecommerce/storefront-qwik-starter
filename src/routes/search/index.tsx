@@ -1,4 +1,4 @@
-import { $, component$, useClientEffect$, useStore } from '@builder.io/qwik';
+import { $, component$, mutable, useClientEffect$, useStore } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
@@ -70,8 +70,8 @@ export default component$(() => {
 			<div className="mt-6 grid sm:grid-cols-5 gap-x-4">
 				{!!state.facedValues.length && (
 					<Filters
-						showMenu={state.showMenu}
-						facetsWithValues={state.facedValues}
+						showMenu={mutable(state.showMenu)}
+						facetsWithValues={mutable(state.facedValues)}
 						onToggleMenu$={async () => {
 							state.showMenu = !state.showMenu;
 						}}
@@ -83,10 +83,10 @@ export default component$(() => {
 						{(state.search.items || []).map((item) => (
 							<ProductCard
 								key={item.productId}
-								productAsset={item.productAsset}
+								productAsset={mutable(item.productAsset)}
 								productName={item.productName}
 								slug={item.slug}
-								priceWithTax={item.priceWithTax}
+								priceWithTax={mutable(item.priceWithTax)}
 								currencyCode={item.currencyCode}
 							></ProductCard>
 						))}
