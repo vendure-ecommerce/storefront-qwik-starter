@@ -1,11 +1,9 @@
 import { $, component$ } from '@builder.io/qwik';
-// import { APP_STATE } from '~/constants';
 import { loginMutation } from '~/graphql/mutations';
 import { ActiveCustomer } from '~/types';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
-	// const appState = useContext(APP_STATE);
 	const email = 'test@vendure.io';
 	const password = 'test';
 	const rememberMe = false;
@@ -20,9 +18,9 @@ export default component$(() => {
 					<h2 className="mt-6 text-center text-3xl text-gray-900">Sign in to your account</h2>
 					<p className="mt-2 text-center text-sm text-gray-600">
 						Or{' '}
-						<a href="#" className="font-medium text-primary-600 hover:text-primary-500">
+						<span className="font-medium text-primary-600 hover:text-primary-500">
 							register a new account
-						</a>
+						</span>
 					</p>
 				</div>
 

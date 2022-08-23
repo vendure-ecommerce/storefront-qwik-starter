@@ -1,23 +1,15 @@
-import { component$, PropFunction, useClientEffect$, useContext } from '@builder.io/qwik';
+import { component$, PropFunction, useContext } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
-import { getActiveCustomerQuery } from '~/graphql/queries';
-import { ActiveCustomer } from '~/types';
-import { execute } from '~/utils/api';
 import LockClosedIcon from '../icons/LockClosedIcon';
 import ShippingMethodSelector from '../shipping-method-selector/ShippingMethodSelector';
 
 export default component$<{ onForward$: PropFunction<() => void> }>(({ onForward$ }) => {
 	const appState = useContext(APP_STATE);
-	useClientEffect$(async () => {
-		const data = await execute<{ activeCustomer: ActiveCustomer }>(getActiveCustomerQuery());
-		appState.customer = data.activeCustomer;
-	});
 	return (
 		<div>
 			<div>
 				<h2 className="text-lg font-medium text-gray-900">Contact information</h2>
 				<form>
-					<input type="hidden" name="action" value="setOrderCustomer" />
 					<div className="mt-4">
 						<label className="block text-sm font-medium text-gray-700">Email address</label>
 						<div className="mt-1">

@@ -1,4 +1,4 @@
-import { $, component$, useClientEffect$, useStore } from '@builder.io/qwik';
+import { $, component$, mutable, useClientEffect$, useStore } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
@@ -10,13 +10,11 @@ import { execute } from '~/utils/api';
 
 export default component$(() => {
 	const state = useStore<{
-		loading: boolean;
 		showMenu: boolean;
 		search: Search;
 		facedValues: FacetWithValues[];
 		facetValueIds: string[];
 	}>({
-		loading: true,
 		showMenu: false,
 		search: {} as Search,
 		facedValues: [],
@@ -25,7 +23,7 @@ export default component$(() => {
 
 	const { query } = useLocation();
 	const term = query.q;
-	const activeFacetValueIds: string[] = query.f ? [query.f] : [];
+	const activeFacetValueIds: string[] = query.f ? query.f.split('-') : [];
 
 	const executeQuery = $(
 		async (term: string, activeFacetValueIds: string[]) =>
@@ -37,7 +35,7 @@ export default component$(() => {
 		const { search } = await executeQuery(term, activeFacetValueIds);
 		state.search = search;
 		state.facedValues = groupFacetValues(state.search, activeFacetValueIds);
-		state.loading = false;
+		state.facetValueIds = activeFacetValueIds;
 	});
 
 	const onFilterChange = $(async (id: string) => {
@@ -55,9 +53,7 @@ export default component$(() => {
 		state.search = search;
 	});
 
-	return state.loading ? (
-		<></>
-	) : (
+	return (
 		<div className="max-w-6xl mx-auto px-4 py-10">
 			<div className="flex justify-between items-center">
 				<h2 className="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
@@ -75,8 +71,8 @@ export default component$(() => {
 			<div className="mt-6 grid sm:grid-cols-5 gap-x-4">
 				{!!state.facedValues.length && (
 					<Filters
-						showMenu={state.showMenu}
-						facetsWithValues={state.facedValues}
+						showMenu={mutable(state.showMenu)}
+						facetsWithValues={mutable(state.facedValues)}
 						onToggleMenu$={async () => {
 							state.showMenu = !state.showMenu;
 						}}
@@ -85,13 +81,13 @@ export default component$(() => {
 				)}
 				<div className="sm:col-span-5 lg:col-span-4">
 					<div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-						{state.search.items.map((item) => (
+						{(state.search.items || []).map((item) => (
 							<ProductCard
 								key={item.productId}
-								productAsset={item.productAsset}
+								productAsset={mutable(item.productAsset)}
 								productName={item.productName}
 								slug={item.slug}
-								priceWithTax={item.priceWithTax}
+								priceWithTax={mutable(item.priceWithTax)}
 								currencyCode={item.currencyCode}
 							></ProductCard>
 						))}
