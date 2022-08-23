@@ -25,9 +25,9 @@ export default component$(() => {
 	return (
 		<>
 			<header
-				class={`bg-gradient-to-r from-zinc-700 to-gray-900 shadow-lg transform shadow-xl sticky top-0 z-10 animate-dropIn`}
+				class={`bg-gradient-to-r from-blue-700 to-indigo-900 shadow-lg transform shadow-xl sticky top-0 z-10 animate-dropIn`}
 			>
-				<div className="bg-zinc-100 text-gray-600 shadow-inner text-center text-sm py-2 px-2 xl:px-0">
+				<div className="bg-zinc-100 text-gray-600 shadow-inner text-center text-sm py-1 px-2 xl:px-0">
 					<div className="max-w-6xl mx-2 md:mx-auto flex items-center justify-between">
 						<div>
 							<p className="hidden sm:block">

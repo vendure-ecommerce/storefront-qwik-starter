@@ -7,7 +7,7 @@ export default component$(() => {
 			name="q"
 			default-value={''}
 			placeholder="Search"
-			className="search"
+			className="search rounded"
 			onKeyUp$={async (e: any) => {
 				if (e.key === 'Enter' && !!e.target.value) {
 					window.location.href = '/search?q=' + e.target.value;

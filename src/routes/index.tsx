@@ -3,7 +3,7 @@ import CollectionCard from '~/components/collection-card/CollectionCard';
 import { APP_STATE } from '~/constants';
 
 export const headerImage =
-	'https://readonlydemo.vendure.io/assets/preview/5b/jakob-owens-274337-unsplash__preview.jpg';
+	'https://readonlydemo.vendure.io/assets/preview/2f/mikkel-bech-748940-unsplash__preview.jpg';
 
 export default component$(() => {
 	const collections = useContext(APP_STATE).collections;
@@ -19,12 +19,12 @@ export default component$(() => {
 							width="800"
 						/>
 					)}
-					<div className="absolute inset-0 bg-gradient-to-br from-zinc-400 to-black mix-blend-darken" />
+					<div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-700 mix-blend-overlay" />
 				</div>
 				<div className="absolute inset-0 bg-gray-900 opacity-50" />
 				<div className="relative max-w-3xl mx-auto py-32 px-6 flex flex-col items-center text-center sm:py-64 lg:px-0">
 					<div className="relative bg-zinc-800 bg-opacity-0 rounded-lg p-0">
-						<h1 className="text-6xl text-transparent bg-clip-text font-extrabold tracking-normal lg:text-6xl bg-gradient-to-r from-yellow-600 via-red-500 to-blue-600">
+						<h1 className="text-6xl text-transparent bg-clip-text font-extrabold tracking-normal lg:text-6xl bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600">
 							Vendure Qwik Starter
 						</h1>
 					</div>
@@ -42,33 +42,9 @@ export default component$(() => {
 						<a
 							href="https://qwik.builder.io/"
 							target="_blank"
-							className="text-red-300 hover:text-red-500"
+							className="text-[#4092ff] hover:text-red-500"
 						>
 							Qwik
-						</a>
-					</p>
-					<p className="mt-4 text-gray-300 space-x-1 flex">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="h-6 w-6"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-							stroke-width="2"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-							/>
-						</svg>
-						<span>Read more:</span>
-						<a
-							className="text-primary-200 hover:text-primary-400"
-							target="_blank"
-							href="https://t.co/fC1WeDISH0"
-						>
-							Lightning Fast Headless Commerce with Vendure and Qwik
 						</a>
 					</p>
 				</div>
