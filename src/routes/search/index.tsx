@@ -10,13 +10,11 @@ import { execute } from '~/utils/api';
 
 export default component$(() => {
 	const state = useStore<{
-		loading: boolean;
 		showMenu: boolean;
 		search: Search;
 		facedValues: FacetWithValues[];
 		facetValueIds: string[];
 	}>({
-		loading: true,
 		showMenu: false,
 		search: {} as Search,
 		facedValues: [],
@@ -37,7 +35,6 @@ export default component$(() => {
 		const { search } = await executeQuery(term, activeFacetValueIds);
 		state.search = search;
 		state.facedValues = groupFacetValues(state.search, activeFacetValueIds);
-		state.loading = false;
 	});
 
 	const onFilterChange = $(async (id: string) => {
@@ -55,9 +52,7 @@ export default component$(() => {
 		state.search = search;
 	});
 
-	return state.loading ? (
-		<></>
-	) : (
+	return (
 		<div className="max-w-6xl mx-auto px-4 py-10">
 			<div className="flex justify-between items-center">
 				<h2 className="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
@@ -85,7 +80,7 @@ export default component$(() => {
 				)}
 				<div className="sm:col-span-5 lg:col-span-4">
 					<div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-						{state.search.items.map((item) => (
+						{(state.search.items || []).map((item) => (
 							<ProductCard
 								key={item.productId}
 								productAsset={item.productAsset}
