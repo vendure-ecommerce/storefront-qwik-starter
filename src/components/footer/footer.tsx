@@ -22,7 +22,7 @@ export default component$(() => {
 		(item) => item.parent?.name === '__root_collection__' && !!item.featuredAsset
 	);
 	return (
-		<footer className="pt-6 border-t bg-gray-50">
+		<footer className="pt-6 border-t bg-gray-50 mt-12">
 			<div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 ">
 				<div className="xl:grid xl:grid-cols-3 xl:gap-8">
 					<div className="grid grid-cols-2 gap-8 xl:col-span-2">
