@@ -23,7 +23,7 @@ export default component$(() => {
 
 	const { query } = useLocation();
 	const term = query.q;
-	const activeFacetValueIds: string[] = query.f ? [query.f] : [];
+	const activeFacetValueIds: string[] = query.f ? query.f.split('-') : [];
 
 	const executeQuery = $(
 		async (term: string, activeFacetValueIds: string[]) =>
@@ -35,6 +35,7 @@ export default component$(() => {
 		const { search } = await executeQuery(term, activeFacetValueIds);
 		state.search = search;
 		state.facedValues = groupFacetValues(state.search, activeFacetValueIds);
+		state.facetValueIds = activeFacetValueIds;
 	});
 
 	const onFilterChange = $(async (id: string) => {

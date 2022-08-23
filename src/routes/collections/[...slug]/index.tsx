@@ -25,7 +25,7 @@ import { execute } from '~/utils/api';
 
 export default component$(() => {
 	const { params, query } = useLocation();
-	const activeFacetValueIds: string[] = query.f ? [query.f] : [];
+	const activeFacetValueIds: string[] = query.f ? query.f.split('-') : [];
 	const state = useStore<{
 		showMenu: boolean;
 		search: Search;
@@ -67,13 +67,12 @@ export default component$(() => {
 	});
 
 	const searchResource = useResource$<void>(async () => {
-		const { search } = activeFacetValueIds.length
+		const { search } = !!activeFacetValueIds.length
 			? await execute<{ search: Search }>(searchQueryWithTerm('', activeFacetValueIds))
 			: await execute<{ search: Search }>(searchQueryWithCollectionSlug(params.slug));
 		state.search = search;
-		if (!state.facedValues.length) {
-			state.facedValues = groupFacetValues(state.search, activeFacetValueIds);
-		}
+		state.facedValues = groupFacetValues(search, activeFacetValueIds);
+		state.facetValueIds = activeFacetValueIds;
 	});
 
 	return (
