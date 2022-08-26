@@ -13,7 +13,7 @@ export default component$(() => {
 				<div className="absolute inset-0 overflow-hidden">
 					{headerImage && (
 						<img
-							className="absolute inset-0 w-full"
+							className="h-full object-cover md:w-full"
 							src={headerImage + '?w=800'}
 							alt="header"
 							width="800"
