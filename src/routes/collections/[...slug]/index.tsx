@@ -80,7 +80,7 @@ export default component$(() => {
 			<div className="flex justify-between items-center">
 				<SSRStreamBlock>
 					<Resource
-						resource={collectionResource}
+						value={collectionResource}
 						onPending={() => <></>}
 						onResolved={(collection) => (
 							<h2 className="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
@@ -89,7 +89,7 @@ export default component$(() => {
 						)}
 					/>
 					<Resource
-						resource={searchResource}
+						value={searchResource}
 						onPending={() => <></>}
 						onResolved={() => (
 							<>
@@ -107,7 +107,7 @@ export default component$(() => {
 			</div>
 			<SSRStreamBlock>
 				<Resource
-					resource={collectionResource}
+					value={collectionResource}
 					onPending={() => <></>}
 					onResolved={(collection) => (
 						<>
@@ -128,7 +128,7 @@ export default component$(() => {
 					)}
 				/>
 				<Resource
-					resource={searchResource}
+					value={searchResource}
 					onPending={() => <></>}
 					onResolved={() => (
 						<div className="mt-6 grid sm:grid-cols-5 gap-x-4">

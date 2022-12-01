@@ -78,7 +78,7 @@ export default component$(() => {
 			<div className="max-w-6xl mx-auto px-4 py-10">
 				<SSRStreamBlock>
 					<Resource
-						resource={productResource}
+						value={productResource}
 						onPending={() => <></>}
 						onResolved={() => (
 							<>

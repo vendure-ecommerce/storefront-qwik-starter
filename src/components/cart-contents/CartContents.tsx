@@ -45,7 +45,7 @@ export default component$<{
 							<div className="flex-1 flex items-center text-sm">
 								{isEditable ? (
 									<form>
-										<label htmlFor={`quantity-${line.id}`} className="mr-2">
+										<label html-for={`quantity-${line.id}`} className="mr-2">
 											Quantity
 										</label>
 										<select
