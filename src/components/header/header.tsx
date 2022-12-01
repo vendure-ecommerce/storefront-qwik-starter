@@ -76,6 +76,8 @@ export default component$(() => {
 					</div>
 					<div className="">
 						<button
+							name="Cart"
+							aria-label={`${totalQuantity} items in cart`}
 							className="relative w-9 h-9 bg-white bg-opacity-20 rounded text-white p-1"
 							onClick$={() => (appState.showCart = !appState.showCart)}
 						>
