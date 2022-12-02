@@ -17,6 +17,7 @@ export default component$(({ collection }: IProps) => {
 							height="300"
 							loading="lazy"
 							decoding="async"
+							alt={collection.name}
 						/>
 					</div>
 				</span>

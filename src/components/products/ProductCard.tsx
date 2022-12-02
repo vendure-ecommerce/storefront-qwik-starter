@@ -8,7 +8,7 @@ export default component$(
 			<Link className="flex flex-col" href={`/products/${slug}`}>
 				<img
 					className="rounded-xl flex-grow object-cover aspect-[7/8]"
-					alt=""
+					alt={productName}
 					src={productAsset?.preview + '?w=300&h=400'}
 					width="300"
 					height="400"
