@@ -13,7 +13,7 @@ export const Head = component$(() => {
 			<meta name="viewport" content="width=device-width, initial-scale=1" />
 			<meta name="description" content="Vendure Qwik Storefront" />
 			<title>Vendure Qwik Storefront</title>
-
+			<link rel="preconnect" href="https://demo.vendure.io" />
 			<link rel="canonical" href={loc.href} />
 
 			{head.meta.map((m) => (
