@@ -28,80 +28,81 @@ export default component$(() => {
 		appState.showCart = false;
 	});
 
-	return appState.activeOrder?.id ? (
-		<div className="bg-gray-50">
-			<div
-				className={`${
-					state.step === 'CONFIRMATION' ? 'lg:max-w-3xl mx-auto' : 'lg:max-w-7xl'
-				} max-w-2xl mx-auto pt-8 pb-24 px-4 sm:px-6 lg:px-8`}
-			>
-				<h2 className="sr-only">Checkout</h2>
-				<nav className="hidden sm:block pb-8 mb-8 border-b">
-					<ol className="flex space-x-4 justify-center">
-						{steps.map((step, index) => (
-							<li key={step.name} className="flex items-center">
-								<span className={`${step.state === state.step ? 'text-primary-600' : ''}`}>
-									{step.name}
-								</span>
-								{index !== steps.length - 1 ? <ChevronRightIcon /> : null}
-							</li>
-						))}
-					</ol>
-				</nav>
-				<div className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
-					<div className={state.step === 'CONFIRMATION' ? 'lg:col-span-2' : ''}>
-						{state.step === 'SHIPPING' ? (
-							<Shipping
-								onForward$={async () => {
-									if (appState.customer?.id !== '-1') {
-										state.step = 'PAYMENT';
-									} else {
-										const { setCustomerForOrder } = await execute<{
-											setCustomerForOrder: ActiveOrder;
-										}>(setCustomerForOrderdMutation());
-										if (!setCustomerForOrder.errorCode) {
-											state.step = 'PAYMENT';
-										}
-									}
-								}}
-							/>
-						) : state.step === 'PAYMENT' ? (
-							<Payment
-								onForward$={async () => {
-									await execute(transitionOrderToStateMutation());
-									const { addPaymentToOrder: activeOrder } = await execute<{
-										addPaymentToOrder: ActiveOrder;
-									}>(addPaymentToOrderMutation());
-									appState.activeOrder = activeOrder;
-									state.step = 'CONFIRMATION';
-								}}
-							/>
-						) : state.step === 'CONFIRMATION' ? (
-							<Confirmation
-								onForward$={async () => {
-									window.location.href = '/';
-								}}
-							/>
-						) : (
-							<></>
-						)}
-					</div>
+	return (
+		<div>
+			{appState.activeOrder?.id && (
+				<div className="bg-gray-50">
+					<div
+						className={`${
+							state.step === 'CONFIRMATION' ? 'lg:max-w-3xl mx-auto' : 'lg:max-w-7xl'
+						} max-w-2xl mx-auto pt-8 pb-24 px-4 sm:px-6 lg:px-8`}
+					>
+						<h2 className="sr-only">Checkout</h2>
+						<nav className="hidden sm:block pb-8 mb-8 border-b">
+							<ol className="flex space-x-4 justify-center">
+								{steps.map((step, index) => (
+									<li key={step.name} className="flex items-center">
+										<span className={`${step.state === state.step ? 'text-primary-600' : ''}`}>
+											{step.name}
+										</span>
+										{index !== steps.length - 1 ? <ChevronRightIcon /> : null}
+									</li>
+								))}
+							</ol>
+						</nav>
+						<div className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
+							<div className={state.step === 'CONFIRMATION' ? 'lg:col-span-2' : ''}>
+								{state.step === 'SHIPPING' ? (
+									<Shipping
+										onForward$={async () => {
+											if (appState.customer?.id !== '-1') {
+												state.step = 'PAYMENT';
+											} else {
+												const { setCustomerForOrder } = await execute<{
+													setCustomerForOrder: ActiveOrder;
+												}>(setCustomerForOrderdMutation());
+												if (!setCustomerForOrder.errorCode) {
+													state.step = 'PAYMENT';
+												}
+											}
+										}}
+									/>
+								) : state.step === 'PAYMENT' ? (
+									<Payment
+										onForward$={async () => {
+											await execute(transitionOrderToStateMutation());
+											const { addPaymentToOrder: activeOrder } = await execute<{
+												addPaymentToOrder: ActiveOrder;
+											}>(addPaymentToOrderMutation());
+											appState.activeOrder = activeOrder;
+											state.step = 'CONFIRMATION';
+										}}
+									/>
+								) : state.step === 'CONFIRMATION' ? (
+									<Confirmation
+										onForward$={async () => {
+											window.location.href = '/';
+										}}
+									/>
+								) : (
+									<div></div>
+								)}
+							</div>
 
-					{state.step !== 'CONFIRMATION' && (
-						<div className="mt-10 lg:mt-0">
-							<h2 className="text-lg font-medium text-gray-900 mb-4">Order summary</h2>
+							{state.step !== 'CONFIRMATION' && (
+								<div className="mt-10 lg:mt-0">
+									<h2 className="text-lg font-medium text-gray-900 mb-4">Order summary</h2>
 
-							<CartContents
-								currencyCode={appState.activeOrder.currencyCode || 'USD'}
-								// isEditable={state.step === 'SHIPPING'}
-							></CartContents>
-							<CartTotals />
+									<CartContents
+										currencyCode={appState.activeOrder.currencyCode || 'USD'}
+									></CartContents>
+									<CartTotals />
+								</div>
+							)}
 						</div>
-					)}
+					</div>
 				</div>
-			</div>
+			)}
 		</div>
-	) : (
-		<></>
 	);
 });

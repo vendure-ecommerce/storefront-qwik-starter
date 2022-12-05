@@ -1,13 +1,13 @@
+import { isBrowser } from '@builder.io/qwik/build';
 import { AUTH_TOKEN } from '~/constants';
-import { getCookie, isClientSide, setCookie } from '.';
+import { getCookie, setCookie } from '.';
 
 export const execute = async <T>(body: {
 	query: string;
 	variables: Record<string, any>;
 }): Promise<T> => {
 	let headers: Record<string, string> = { 'Content-Type': 'application/json' };
-
-	if (isClientSide()) {
+	if (isBrowser) {
 		const token = getCookie(AUTH_TOKEN);
 		headers = { ...headers, Authorization: `Bearer ${token}` };
 	}
@@ -18,9 +18,9 @@ export const execute = async <T>(body: {
 	};
 
 	const response = await fetch('https://demo.vendure.io/shop-api', options);
-	if (isClientSide()) {
+	if (isBrowser) {
 		const responsetoken = response.headers.get('vendure-auth-token');
-		if (!!responsetoken) {
+		if (responsetoken) {
 			setCookie(AUTH_TOKEN, responsetoken, 365);
 		}
 	}

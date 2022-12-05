@@ -1,4 +1,4 @@
-import { component$, PropFunction, useStore } from '@builder.io/qwik';
+import { $, component$, PropFunction, useStore } from '@builder.io/qwik';
 import { FacetWithValues } from '~/types';
 import CloseIcon from '../icons/CloseIcon';
 import MinusIcon from '../icons/MinusIcon';
@@ -14,7 +14,7 @@ export default component$<{
 		facetsWithValues: _facetsWithValues,
 	});
 	return (
-		<>
+		<div>
 			<div class="hidden lg:block">
 				{state.facetsWithValues.map((facet: FacetWithValues) => (
 					<div class="border-b border-gray-200 py-6">
@@ -35,11 +35,11 @@ export default component$<{
 										});
 									}}
 								>
-									{!!facet.open ? <MinusIcon /> : <PlusIcon />}
+									{facet.open ? <MinusIcon /> : <PlusIcon />}
 								</span>
 							</button>
 						</h3>
-						{!!facet.open && (
+						{facet.open && (
 							<div class="pt-6">
 								<div class="space-y-4">
 									{facet.values.map((value) => (
@@ -59,7 +59,7 @@ export default component$<{
 					</div>
 				))}
 			</div>
-			{!!showMenu && (
+			{showMenu && (
 				<div class="relative z-40 lg:hidden">
 					<div class="fixed inset-0 bg-black bg-opacity-25 opacity-100"></div>
 					<div class="fixed inset-0 flex z-40">
@@ -69,7 +69,9 @@ export default component$<{
 								<button
 									type="button"
 									class="-mr-2 w-10 h-10 bg-white p-2 rounded-md flex items-center justify-center text-gray-400"
-									onClick$={onToggleMenu$}
+									onClick$={$(async () => {
+										onToggleMenu$();
+									})}
 								>
 									<span class="sr-only">Close menu</span>
 									<CloseIcon />
@@ -97,11 +99,11 @@ export default component$<{
 														);
 													}}
 												>
-													{!!facet.open ? <MinusIcon /> : <PlusIcon />}
+													{facet.open ? <MinusIcon /> : <PlusIcon />}
 												</span>
 											</button>
 										</h3>
-										{!!facet.open && (
+										{facet.open && (
 											<div class="pt-6">
 												<div class="space-y-6">
 													{facet.values.map((value) => (
@@ -125,6 +127,6 @@ export default component$<{
 					</div>
 				</div>
 			)}
-		</>
+		</div>
 	);
 });

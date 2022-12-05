@@ -1,10 +1,8 @@
-import { component$, PropFunction, useContext } from '@builder.io/qwik';
-import { APP_STATE } from '~/constants';
+import { $, component$, PropFunction } from '@builder.io/qwik';
 import LockClosedIcon from '../icons/LockClosedIcon';
 import ShippingMethodSelector from '../shipping-method-selector/ShippingMethodSelector';
 
 export default component$<{ onForward$: PropFunction<() => void> }>(({ onForward$ }) => {
-	const appState = useContext(APP_STATE);
 	return (
 		<div>
 			<div>
@@ -55,7 +53,9 @@ export default component$<{ onForward$: PropFunction<() => void> }>(({ onForward
 
 			<button
 				class="bg-primary-600 hover:bg-primary-700 flex w-full items-center justify-center space-x-2 mt-24 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-				onClick$={onForward$}
+				onClick$={$(async () => {
+					onForward$();
+				})}
 			>
 				<LockClosedIcon />
 				<span>Proceed to payment</span>
