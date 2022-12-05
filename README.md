@@ -17,41 +17,31 @@ An e-commerce storefront for [Vendure](https://www.vendure.io) built with [Qwik]
 
 **Contributions welcome!**
 
-## Development Builds
+## Development
 
-### Server-side Rendering (SSR) and Client
+Development mode uses [Vite's development server](https://vitejs.dev/). During development, the `dev` command will server-side render (SSR) the output.
 
-Server-side rendered index.html, with client-side modules prefetched and loaded by the browser. This can be used to test out server-side rendered content during development, but will be slower than the client-only development builds.
-
-```
-npm run dev.ssr
+```shell
+npm start # or `yarn start`
 ```
 
-## Production Builds
+> Note: during dev mode, Vite may request a significant number of `.js` files. This does not represent a Qwik production build.
 
-A production build should generate the client and server modules by running both client and server build commands.
+## Preview
 
-```
-npm run build
-```
+The preview command will create a production build of the client modules, a production build of `src/entry.preview.tsx`, and run a local server. The preview server is only for convenience to locally preview a production build, and it should not be used as a production server.
 
-### Server Modules
-
-Production build that creates the server-side render (SSR) module that is used by the server to render the HTML.
-
-```
-npm run build.ssr
+```shell
+npm run preview # or `yarn preview`
 ```
 
-## Express Server
+## Production
 
-This app has a minimal [Express server](https://expressjs.com/) implementation. After running a full build, you can preview the build using the command:
+The production build will generate client and server modules by running both client and server build commands. Additionally, the build command will use Typescript to run a type check on the source code.
 
+```shell
+npm run build # or `yarn build`
 ```
-npm run serve
-```
-
-Then visit [http://localhost:8080/](http://localhost:8080/)
 
 ---
 
