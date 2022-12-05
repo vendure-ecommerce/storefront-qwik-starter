@@ -1,4 +1,4 @@
-import { component$, mutable, useContext } from '@builder.io/qwik';
+import { component$, useContext } from '@builder.io/qwik';
 import { Link, useLocation } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import { adjustOrderLineMutation, removeOrderLineMutation } from '~/graphql/mutations';
@@ -12,7 +12,7 @@ export default component$<{
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
 	const rows = appState.activeOrder?.lines || [];
-	const isEditable = !location.pathname.startsWith('/checkout');
+	const isEditable = !location.pathname.startsWith('/checkout/');
 
 	return (
 		<div className="flow-root">
@@ -31,12 +31,12 @@ export default component$<{
 							<div>
 								<div className="flex justify-between text-base font-medium text-gray-900">
 									<h3>
-										<Link href={`/products/${line.productVariant.product.slug}`}>
+										<Link href={`/products/${line.productVariant.product.slug}/`}>
 											{line.productVariant.name}
 										</Link>
 									</h3>
 									<Price
-										priceWithTax={mutable(line.linePriceWithTax)}
+										priceWithTax={line.linePriceWithTax}
 										currencyCode={currencyCode}
 										forcedClassName="ml-4"
 									></Price>

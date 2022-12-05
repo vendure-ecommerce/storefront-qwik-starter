@@ -8,7 +8,7 @@ export const headerImage =
 export default component$(() => {
 	const collections = useContext(APP_STATE).collections;
 	return (
-		<>
+		<div>
 			<div className="relative">
 				<div className="absolute inset-0 overflow-hidden">
 					{headerImage && (
@@ -69,6 +69,6 @@ export default component$(() => {
 					</div>
 				</div>
 			</section>
-		</>
+		</div>
 	);
 });

@@ -1,3 +1,4 @@
+import { isBrowser } from '@builder.io/qwik/build';
 import { FacetWithValues, Search } from '~/types';
 
 export const getRandomInt = (max: number) => Math.floor(Math.random() * max);
@@ -63,10 +64,8 @@ export const changeUrlParamsWithoutRefresh = (term: string, facetValueIds: strin
 		`${window.location.origin}${window.location.pathname}?q=${term}&f=${facetValueIds.join('-')}`
 	);
 
-export const isClientSide = () => typeof window !== 'undefined';
-
 export const scrollToTop = () => {
-	if (isClientSide()) {
+	if (isBrowser) {
 		window.scrollTo(0, 0);
 	}
 };
@@ -91,4 +90,11 @@ export const getCookie = (name: string) => {
 		}
 	});
 	return result;
+};
+
+export const cleanUpParams = (params: Record<string, string>) => {
+	if ('slug' in params && params.slug[params.slug.length - 1] === '/') {
+		params.slug = params.slug.slice(0, params.slug.length - 1);
+	}
+	return params;
 };

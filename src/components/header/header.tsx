@@ -23,7 +23,7 @@ export default component$(() => {
 			data.activeCustomer || ({ id: '-1', firstName: '', lastName: '' } as ActiveCustomer);
 	});
 	return (
-		<>
+		<div>
 			<header
 				class={`bg-gradient-to-r from-blue-700 to-indigo-900 shadow-lg transform shadow-xl sticky top-0 z-10 animate-dropIn`}
 			>
@@ -92,6 +92,6 @@ export default component$(() => {
 				</div>
 			</header>
 			<Cart />
-		</>
+		</div>
 	);
 });

@@ -14,7 +14,7 @@ export default component$<{
 		facetsWithValues: _facetsWithValues,
 	});
 	return (
-		<>
+		<div>
 			<div class="hidden lg:block">
 				{state.facetsWithValues.map((facet: FacetWithValues) => (
 					<div class="border-b border-gray-200 py-6">
@@ -125,6 +125,6 @@ export default component$<{
 					</div>
 				</div>
 			)}
-		</>
+		</div>
 	);
 });

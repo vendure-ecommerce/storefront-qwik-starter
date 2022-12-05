@@ -5,9 +5,5 @@ interface AnalyticsProps {
 }
 
 export const Analytics = ({ loc }: AnalyticsProps) => {
-	return (
-		<>
-			<script dangerouslySetInnerHTML={`console.log("🧨 Analytics! ${loc.pathname}");`} />
-		</>
-	);
+	return <script dangerouslySetInnerHTML={`console.log("🧨 Analytics! ${loc.pathname}");`} />;
 };

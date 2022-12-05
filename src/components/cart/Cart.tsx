@@ -9,7 +9,7 @@ export default component$(() => {
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
 	const currencyCode = appState.activeOrder?.currencyCode || 'USD';
-	const isEditable = !location.pathname.startsWith('/checkout');
+	const isEditable = !location.pathname.startsWith('/checkout/');
 	return appState.showCart ? (
 		<div class="fixed inset-0 overflow-hidden z-20">
 			<div class="absolute inset-0 overflow-hidden">
@@ -52,7 +52,7 @@ export default component$(() => {
 									</p>
 									<div className="mt-6">
 										<a
-											href="/checkout"
+											href="/checkout/"
 											className="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700 w-full"
 										>
 											Checkout
@@ -66,6 +66,6 @@ export default component$(() => {
 			</div>
 		</div>
 	) : (
-		<></>
+		<div></div>
 	);
 });

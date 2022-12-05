@@ -83,7 +83,7 @@ export default component$(() => {
 								}}
 							/>
 						) : (
-							<></>
+							<div></div>
 						)}
 					</div>
 
@@ -93,7 +93,6 @@ export default component$(() => {
 
 							<CartContents
 								currencyCode={appState.activeOrder.currencyCode || 'USD'}
-								// isEditable={state.step === 'SHIPPING'}
 							></CartContents>
 							<CartTotals />
 						</div>
@@ -102,6 +101,6 @@ export default component$(() => {
 			</div>
 		</div>
 	) : (
-		<></>
+		<div></div>
 	);
 });
