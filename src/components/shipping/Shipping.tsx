@@ -1,10 +1,8 @@
-import { component$, PropFunction, useContext } from '@builder.io/qwik';
-import { APP_STATE } from '~/constants';
+import { component$, PropFunction } from '@builder.io/qwik';
 import LockClosedIcon from '../icons/LockClosedIcon';
 import ShippingMethodSelector from '../shipping-method-selector/ShippingMethodSelector';
 
 export default component$<{ onForward$: PropFunction<() => void> }>(({ onForward$ }) => {
-	const appState = useContext(APP_STATE);
 	return (
 		<div>
 			<div>

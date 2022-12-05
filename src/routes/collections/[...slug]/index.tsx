@@ -71,7 +71,7 @@ export default component$(() => {
 	});
 
 	const searchResource = useResource$<void>(async () => {
-		const { search } = !!activeFacetValueIds.length
+		const { search } = activeFacetValueIds.length
 			? await execute<{ search: Search }>(searchQueryWithTerm('', activeFacetValueIds))
 			: await execute<{ search: Search }>(searchQueryWithCollectionSlug(params.slug));
 		state.search = search;

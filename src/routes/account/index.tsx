@@ -1,11 +1,8 @@
-import { $, component$, useClientEffect$, useContext } from '@builder.io/qwik';
-import { APP_STATE } from '~/constants';
+import { $, component$, useClientEffect$ } from '@builder.io/qwik';
 import { logoutMutation } from '~/graphql/mutations';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
-	const appState = useContext(APP_STATE);
-
 	useClientEffect$(async () => {
 		window.scrollTo(0, 0);
 	});

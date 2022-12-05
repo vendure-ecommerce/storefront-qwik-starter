@@ -20,7 +20,7 @@ export const execute = async <T>(body: {
 	const response = await fetch('https://demo.vendure.io/shop-api', options);
 	if (isBrowser) {
 		const responsetoken = response.headers.get('vendure-auth-token');
-		if (!!responsetoken) {
+		if (responsetoken) {
 			setCookie(AUTH_TOKEN, responsetoken, 365);
 		}
 	}

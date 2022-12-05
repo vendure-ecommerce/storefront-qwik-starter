@@ -35,11 +35,11 @@ export default component$<{
 										});
 									}}
 								>
-									{!!facet.open ? <MinusIcon /> : <PlusIcon />}
+									{facet.open ? <MinusIcon /> : <PlusIcon />}
 								</span>
 							</button>
 						</h3>
-						{!!facet.open && (
+						{facet.open && (
 							<div class="pt-6">
 								<div class="space-y-4">
 									{facet.values.map((value) => (
@@ -59,7 +59,7 @@ export default component$<{
 					</div>
 				))}
 			</div>
-			{!!showMenu && (
+			{showMenu && (
 				<div class="relative z-40 lg:hidden">
 					<div class="fixed inset-0 bg-black bg-opacity-25 opacity-100"></div>
 					<div class="fixed inset-0 flex z-40">
@@ -97,11 +97,11 @@ export default component$<{
 														);
 													}}
 												>
-													{!!facet.open ? <MinusIcon /> : <PlusIcon />}
+													{facet.open ? <MinusIcon /> : <PlusIcon />}
 												</span>
 											</button>
 										</h3>
-										{!!facet.open && (
+										{facet.open && (
 											<div class="pt-6">
 												<div class="space-y-6">
 													{facet.values.map((value) => (
