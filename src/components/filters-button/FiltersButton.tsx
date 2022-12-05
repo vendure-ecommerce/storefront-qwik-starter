@@ -5,7 +5,7 @@ export default component$<{ onToggleMenu$: PropFunction<() => void> }>(({ onTogg
 	return (
 		<button
 			type="button"
-			className="flex space-x-2 items-center border rounded p-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 lg:hidden"
+			class="flex space-x-2 items-center border rounded p-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 lg:hidden"
 			onClick$={$(async () => {
 				onToggleMenu$();
 			})}

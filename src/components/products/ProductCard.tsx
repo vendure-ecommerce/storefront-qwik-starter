@@ -4,9 +4,9 @@ import Price from './Price';
 export default component$(
 	({ productAsset, productName, slug, priceWithTax, currencyCode }: any) => {
 		return (
-			<a className="flex flex-col" href={`/products/${slug}/`}>
+			<a class="flex flex-col" href={`/products/${slug}/`}>
 				<img
-					className="rounded-xl flex-grow object-cover aspect-[7/8]"
+					class="rounded-xl flex-grow object-cover aspect-[7/8]"
 					alt={productName}
 					src={productAsset?.preview + '?w=300&h=400'}
 					width="300"
@@ -14,12 +14,12 @@ export default component$(
 					loading="lazy"
 					decoding="async"
 				/>
-				<div className="h-2" />
-				<div className="text-sm text-gray-700">{productName}</div>
+				<div class="h-2" />
+				<div class="text-sm text-gray-700">{productName}</div>
 				<Price
 					priceWithTax={priceWithTax}
 					currencyCode={currencyCode}
-					forcedClassName="text-sm font-medium text-gray-900"
+					forcedClass="text-sm font-medium text-gray-900"
 				/>
 			</a>
 		);

@@ -29,7 +29,7 @@ export default component$(() => {
 			<div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
 				{methods.map((method, index) => (
 					<div
-						className={`relative bg-white border rounded-lg shadow-sm p-4 flex cursor-pointer focus:outline-none`}
+						class={`relative bg-white border rounded-lg shadow-sm p-4 flex cursor-pointer focus:outline-none`}
 						onClick$={() => (state.selected = index + 1)}
 					>
 						<span class="flex-1 flex">
@@ -40,7 +40,7 @@ export default component$(() => {
 						</span>
 						{state.selected === index + 1 && <CheckCircleIcon />}
 						<span
-							className={`border-2 ${
+							class={`border-2 ${
 								state.selected === index + 1 ? 'border-primary-500' : ''
 							} absolute -inset-px rounded-lg pointer-events-none`}
 						></span>
