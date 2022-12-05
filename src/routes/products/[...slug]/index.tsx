@@ -89,12 +89,13 @@ export default component$(() => {
 							<div class="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start mt-4 md:mt-12">
 								<div class="w-full max-w-2xl mx-auto sm:block lg:max-w-none">
 									<span class="rounded-md overflow-hidden">
-										<div class="w-full h-full object-center object-cover rounded-lg">
+										<div class="h-[400px] w-[400px]">
 											<img
-												src={state.product.featuredAsset.preview + '?w=400'}
+												src={state.product.featuredAsset.preview + '?w=400&h=400'}
 												alt={state.product.name}
-												class="w-full h-full object-center object-cover rounded-lg"
+												class="object-center object-cover rounded-lg"
 												width="400"
+												height="400"
 											/>
 										</div>
 									</span>
