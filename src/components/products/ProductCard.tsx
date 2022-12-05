@@ -4,7 +4,7 @@ import Price from './Price';
 export default component$(
 	({ productAsset, productName, slug, priceWithTax, currencyCode }: any) => {
 		return (
-			<a class="flex flex-col" href={`/products/${slug}/`}>
+			<a class="flex flex-col mx-auto" href={`/products/${slug}/`}>
 				<img
 					class="rounded-xl flex-grow object-cover aspect-[7/8]"
 					alt={productName}
