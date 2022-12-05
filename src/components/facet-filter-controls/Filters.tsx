@@ -1,4 +1,4 @@
-import { component$, PropFunction, useStore } from '@builder.io/qwik';
+import { $, component$, PropFunction, useStore } from '@builder.io/qwik';
 import { FacetWithValues } from '~/types';
 import CloseIcon from '../icons/CloseIcon';
 import MinusIcon from '../icons/MinusIcon';
@@ -69,7 +69,9 @@ export default component$<{
 								<button
 									type="button"
 									class="-mr-2 w-10 h-10 bg-white p-2 rounded-md flex items-center justify-center text-gray-400"
-									onClick$={onToggleMenu$}
+									onClick$={$(async () => {
+										onToggleMenu$();
+									})}
 								>
 									<span class="sr-only">Close menu</span>
 									<CloseIcon />
