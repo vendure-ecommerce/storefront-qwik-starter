@@ -11,12 +11,24 @@ export default component$(({ collection }: IProps) => {
 			<div class="max-w-[300px] relative rounded-lg overflow-hidden hover:opacity-75 xl:w-auto mx-auto">
 				<span class="">
 					<div class="w-full h-full object-center object-cover">
-						<img
-							src={collection.featuredAsset?.preview + '?w=300&h=300'}
-							width="300"
-							height="300"
-							alt={collection.name}
-						/>
+						<picture>
+							<source
+								srcSet={collection.featuredAsset?.preview + '?w=300&h=300&format=avif'}
+								type="image/webp"
+							/>
+							<source
+								srcSet={collection.featuredAsset?.preview + '?w=300&h=300&format=webp'}
+								type="image/webp"
+							/>
+							<img
+								src={collection.featuredAsset?.preview + '?w=300&h=300'}
+								width="300"
+								height="300"
+								loading="lazy"
+								decoding="async"
+								alt={collection.name}
+							/>
+						</picture>
 					</div>
 				</span>
 				<span class="absolute w-full bottom-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50" />
