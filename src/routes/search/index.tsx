@@ -54,9 +54,9 @@ export default component$(() => {
 	});
 
 	return (
-		<div className="max-w-6xl mx-auto px-4 py-10">
-			<div className="flex justify-between items-center">
-				<h2 className="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
+		<div class="max-w-6xl mx-auto px-4 py-10">
+			<div class="flex justify-between items-center">
+				<h2 class="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
 					{term ? `Results for "${term}"` : 'All filtered results'}
 				</h2>
 				{!!state.facedValues.length && (
@@ -68,7 +68,7 @@ export default component$(() => {
 				)}
 			</div>
 
-			<div className="mt-6 grid sm:grid-cols-5 gap-x-4">
+			<div class="mt-6 grid sm:grid-cols-5 gap-x-4">
 				{!!state.facedValues.length && (
 					<Filters
 						showMenu={state.showMenu}
@@ -79,8 +79,8 @@ export default component$(() => {
 						onFilterChange$={onFilterChange}
 					/>
 				)}
-				<div className="sm:col-span-5 lg:col-span-4">
-					<div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+				<div class="sm:col-span-5 lg:col-span-4">
+					<div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
 						{(state.search.items || []).map((item) => (
 							<ProductCard
 								key={item.productId}

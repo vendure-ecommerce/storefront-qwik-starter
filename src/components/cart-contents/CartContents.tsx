@@ -15,21 +15,21 @@ export default component$<{
 	const isEditable = !location.pathname.startsWith('/checkout/');
 
 	return (
-		<div className="flow-root">
-			<ul className="-my-6 divide-y divide-gray-200">
+		<div class="flow-root">
+			<ul class="-my-6 divide-y divide-gray-200">
 				{(rows ?? []).map((line) => (
-					<li key={line.id} className="py-6 flex">
-						<div className="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
+					<li key={line.id} class="py-6 flex">
+						<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
 							<img
 								src={line.featuredAsset?.preview + '?preset=thumb'}
 								alt={line.productVariant.name}
-								className="w-full h-full object-center object-cover"
+								class="w-full h-full object-center object-cover"
 							/>
 						</div>
 
-						<div className="ml-4 flex-1 flex flex-col">
+						<div class="ml-4 flex-1 flex flex-col">
 							<div>
-								<div className="flex justify-between text-base font-medium text-gray-900">
+								<div class="flex justify-between text-base font-medium text-gray-900">
 									<h3>
 										<Link href={`/products/${line.productVariant.product.slug}/`}>
 											{line.productVariant.name}
@@ -38,14 +38,14 @@ export default component$<{
 									<Price
 										priceWithTax={line.linePriceWithTax}
 										currencyCode={currencyCode}
-										forcedClassName="ml-4"
+										forcedClass="ml-4"
 									></Price>
 								</div>
 							</div>
-							<div className="flex-1 flex items-center text-sm">
+							<div class="flex-1 flex items-center text-sm">
 								{isEditable ? (
 									<form>
-										<label html-for={`quantity-${line.id}`} className="mr-2">
+										<label html-for={`quantity-${line.id}`} class="mr-2">
 											Quantity
 										</label>
 										<select
@@ -59,7 +59,7 @@ export default component$<{
 												);
 												appState.activeOrder = adjustOrderLine;
 											}}
-											className="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+											class="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 										>
 											<option value={1}>1</option>
 											<option value={2}>2</option>
@@ -72,17 +72,17 @@ export default component$<{
 										</select>
 									</form>
 								) : (
-									<div className="text-gray-800">
-										<span className="mr-1">Quantity</span>
-										<span className="font-medium">{line.quantity}</span>
+									<div class="text-gray-800">
+										<span class="mr-1">Quantity</span>
+										<span class="font-medium">{line.quantity}</span>
 									</div>
 								)}
-								<div className="flex-1"></div>
-								<div className="flex">
+								<div class="flex-1"></div>
+								<div class="flex">
 									{isEditable && (
 										<button
 											value={line.id}
-											className="font-medium text-primary-600 hover:text-primary-500"
+											class="font-medium text-primary-600 hover:text-primary-500"
 											onClick$={async () => {
 												const { removeOrderLine } = await execute<{ removeOrderLine: ActiveOrder }>(
 													removeOrderLineMutation(line.id)

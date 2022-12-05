@@ -80,14 +80,14 @@ export default component$(() => {
 	});
 
 	return (
-		<div className="max-w-6xl mx-auto px-4 py-10">
-			<div className="flex justify-between items-center">
+		<div class="max-w-6xl mx-auto px-4 py-10">
+			<div class="flex justify-between items-center">
 				<Resource
 					value={collectionResource}
 					onPending={() => <div></div>}
 					onRejected={() => <div></div>}
 					onResolved={(collection) => (
-						<h2 className="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
+						<h2 class="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
 							{collection?.name}
 						</h2>
 					)}
@@ -117,9 +117,9 @@ export default component$(() => {
 					<div>
 						<Breadcrumbs items={collection?.breadcrumbs || []}></Breadcrumbs>
 						{collection?.children?.length ? (
-							<div className="max-w-2xl mx-auto py-16 sm:py-16 lg:max-w-none border-b mb-16">
-								<h2 className="text-2xl font-light text-gray-900">Collections</h2>
-								<div className="mt-6 grid max-w-xs sm:max-w-none mx-auto sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
+							<div class="max-w-2xl mx-auto py-16 sm:py-16 lg:max-w-none border-b mb-16">
+								<h2 class="text-2xl font-light text-gray-900">Collections</h2>
+								<div class="mt-6 grid max-w-xs sm:max-w-none mx-auto sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
 									{collection?.children.map((child) => (
 										<CollectionCard key={child.id} collection={child}></CollectionCard>
 									))}
@@ -136,7 +136,7 @@ export default component$(() => {
 				onPending={() => <div></div>}
 				onRejected={() => <div></div>}
 				onResolved={() => (
-					<div className="mt-6 grid sm:grid-cols-5 gap-x-4">
+					<div class="mt-6 grid sm:grid-cols-5 gap-x-4">
 						{!!state.facedValues.length && (
 							<Filters
 								showMenu={state.showMenu}
@@ -147,8 +147,8 @@ export default component$(() => {
 								onFilterChange$={onFilterChange}
 							/>
 						)}
-						<div className="sm:col-span-5 lg:col-span-4">
-							<div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+						<div class="sm:col-span-5 lg:col-span-4">
+							<div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
 								{state.search.items.map((item) => (
 									<ProductCard
 										key={item.productId}

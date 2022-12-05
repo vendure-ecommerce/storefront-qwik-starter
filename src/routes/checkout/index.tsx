@@ -31,18 +31,18 @@ export default component$(() => {
 	return (
 		<div>
 			{appState.activeOrder?.id && (
-				<div className="bg-gray-50">
+				<div class="bg-gray-50">
 					<div
-						className={`${
+						class={`${
 							state.step === 'CONFIRMATION' ? 'lg:max-w-3xl mx-auto' : 'lg:max-w-7xl'
 						} max-w-2xl mx-auto pt-8 pb-24 px-4 sm:px-6 lg:px-8`}
 					>
-						<h2 className="sr-only">Checkout</h2>
-						<nav className="hidden sm:block pb-8 mb-8 border-b">
-							<ol className="flex space-x-4 justify-center">
+						<h2 class="sr-only">Checkout</h2>
+						<nav class="hidden sm:block pb-8 mb-8 border-b">
+							<ol class="flex space-x-4 justify-center">
 								{steps.map((step, index) => (
-									<li key={step.name} className="flex items-center">
-										<span className={`${step.state === state.step ? 'text-primary-600' : ''}`}>
+									<li key={step.name} class="flex items-center">
+										<span class={`${step.state === state.step ? 'text-primary-600' : ''}`}>
 											{step.name}
 										</span>
 										{index !== steps.length - 1 ? <ChevronRightIcon /> : null}
@@ -50,8 +50,8 @@ export default component$(() => {
 								))}
 							</ol>
 						</nav>
-						<div className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
-							<div className={state.step === 'CONFIRMATION' ? 'lg:col-span-2' : ''}>
+						<div class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
+							<div class={state.step === 'CONFIRMATION' ? 'lg:col-span-2' : ''}>
 								{state.step === 'SHIPPING' ? (
 									<Shipping
 										onForward$={async () => {
@@ -90,8 +90,8 @@ export default component$(() => {
 							</div>
 
 							{state.step !== 'CONFIRMATION' && (
-								<div className="mt-10 lg:mt-0">
-									<h2 className="text-lg font-medium text-gray-900 mb-4">Order summary</h2>
+								<div class="mt-10 lg:mt-0">
+									<h2 class="text-lg font-medium text-gray-900 mb-4">Order summary</h2>
 
 									<CartContents
 										currencyCode={appState.activeOrder.currencyCode || 'USD'}
