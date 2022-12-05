@@ -58,8 +58,6 @@ export default component$(() => {
 								src={headerImage + '?w=800'}
 								alt="Background header photo of bicycle taken by Mikkel Bech"
 								width="100%"
-								loading="lazy"
-								decoding="async"
 							/>
 						</picture>
 					)}
