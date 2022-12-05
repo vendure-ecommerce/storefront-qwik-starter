@@ -8,7 +8,7 @@ interface IProps {
 export default component$(({ collection }: IProps) => {
 	return (
 		<a href={'/collections/' + collection.slug} key={collection.id}>
-			<div class="max-w-[300px] relative rounded-lg overflow-hidden hover:opacity-75 xl:w-auto">
+			<div class="max-w-[300px] relative rounded-lg overflow-hidden hover:opacity-75 xl:w-auto mx-auto">
 				<span class="">
 					<div class="w-full h-full object-center object-cover">
 						<img
