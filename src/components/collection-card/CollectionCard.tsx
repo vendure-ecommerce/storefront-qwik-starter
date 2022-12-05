@@ -24,8 +24,6 @@ export default component$(({ collection }: IProps) => {
 								src={collection.featuredAsset?.preview + '?w=300&h=300'}
 								width="300"
 								height="300"
-								loading="lazy"
-								decoding="async"
 								alt={collection.name}
 							/>
 						</picture>
