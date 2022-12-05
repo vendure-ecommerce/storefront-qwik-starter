@@ -11,8 +11,6 @@ export default component$(
 					src={productAsset?.preview + '?w=300&h=400'}
 					width="300"
 					height="400"
-					loading="lazy"
-					decoding="async"
 				/>
 				<div class="h-2" />
 				<div class="text-sm text-gray-700">{productName}</div>

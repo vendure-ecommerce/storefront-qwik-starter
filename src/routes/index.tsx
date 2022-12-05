@@ -13,10 +13,11 @@ export default component$(() => {
 				<div class="absolute inset-0 overflow-hidden">
 					{headerImage && (
 						<img
-							class="h-full object-cover md:w-full"
-							src={headerImage + '?w=800'}
+							class="h-[565px] object-cover md:w-full"
+							src={headerImage + '?w=800&h=565'}
 							alt="header"
 							width="800"
+							height="565"
 						/>
 					)}
 					<div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-700 mix-blend-overlay" />
