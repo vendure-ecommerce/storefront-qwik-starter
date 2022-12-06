@@ -14,7 +14,7 @@ export default component$(({ collection }: IProps) => {
 						<picture>
 							<source
 								srcSet={collection.featuredAsset?.preview + '?w=300&h=300&format=avif'}
-								type="image/webp"
+								type="image/avif"
 							/>
 							<source
 								srcSet={collection.featuredAsset?.preview + '?w=300&h=300&format=webp'}
