@@ -6,7 +6,7 @@ export default component$(
 		return (
 			<a class="flex flex-col mx-auto" href={`/products/${slug}/`}>
 				<picture>
-					<source srcSet={productAsset?.preview + '?w=300&h=400&format=avif'} type="image/webp" />
+					<source srcSet={productAsset?.preview + '?w=300&h=400&format=avif'} type="image/avif" />
 					<source srcSet={productAsset?.preview + '?w=300&h=400&format=webp'} type="image/webp" />
 					<img
 						class="rounded-xl flex-grow object-cover aspect-[7/8]"

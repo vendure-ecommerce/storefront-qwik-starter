@@ -92,6 +92,10 @@ export default component$(() => {
 										<div class="h-[400px] w-full md:w-[400px]">
 											<picture>
 												<source
+													srcSet={state.product.featuredAsset.preview + '?w=400&h=400&format=avif'}
+													type="image/avif"
+												/>
+												<source
 													srcSet={state.product.featuredAsset.preview + '?w=400&h=400&format=webp'}
 													type="image/webp"
 												/>
