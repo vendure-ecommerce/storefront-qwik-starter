@@ -1,8 +1,10 @@
 import {
+	$,
 	component$,
 	Slot,
 	useClientEffect$,
 	useContextProvider,
+	useOn,
 	useServerMount$,
 	useStore,
 } from '@builder.io/qwik';
@@ -33,6 +35,15 @@ export default component$(() => {
 		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
 		state.activeOrder = activeOrder;
 	});
+
+	useOn(
+		'keydown',
+		$((event) => {
+			if ((event as KeyboardEvent).key === 'Escape') {
+				state.showCart = false;
+			}
+		})
+	);
 
 	return (
 		<div>
