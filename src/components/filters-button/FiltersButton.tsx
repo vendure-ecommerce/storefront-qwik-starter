@@ -10,7 +10,7 @@ export default component$<{ onToggleMenu$: PropFunction<() => void> }>(({ onTogg
 				onToggleMenu$();
 			})}
 		>
-			<span>Filters</span>
+			<span class="text-gray-600 hover:text-gray-700">Filters</span>
 			<FilterIcon />
 		</button>
 	);

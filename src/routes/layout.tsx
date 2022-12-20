@@ -29,6 +29,15 @@ export default component$(() => {
 		}
 	});
 
+	useOn(
+		'keydown',
+		$((event) => {
+			if ((event as KeyboardEvent).key === 'Escape') {
+				state.showCart = false;
+			}
+		})
+	);
+
 	return (
 		<div>
 			<Header />

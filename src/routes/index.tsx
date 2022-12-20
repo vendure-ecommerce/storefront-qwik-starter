@@ -3,7 +3,7 @@ import CollectionCard from '~/components/collection-card/CollectionCard';
 import { APP_STATE } from '~/constants';
 
 export const headerImage =
-	'https://readonlydemo.vendure.io/assets/preview/2f/mikkel-bech-748940-unsplash__preview.jpg';
+	'https://demo.vendure.io/assets/preview/2f/mikkel-bech-748940-unsplash__preview.jpg';
 
 export default component$(() => {
 	const collections = useContext(APP_STATE).collections;
@@ -12,13 +12,54 @@ export default component$(() => {
 			<div class="relative">
 				<div class="absolute inset-0 overflow-hidden">
 					{headerImage && (
-						<img
-							class="h-[565px] object-cover md:w-full"
-							src={headerImage + '?w=800&h=565'}
-							alt="header"
-							width="800"
-							height="565"
-						/>
+						<picture>
+							<source
+								srcSet={headerImage + '?w=1000&format=avif'}
+								type="image/avif"
+								media="(min-width: 1000px)"
+							/>
+							<source
+								srcSet={headerImage + '?w=800&format=avif'}
+								type="image/avif"
+								media="(min-width: 800px)"
+							/>
+							<source
+								srcSet={headerImage + '?w=600&format=avif'}
+								type="image/avif"
+								media="(min-width: 600px)"
+							/>
+							<source
+								srcSet={headerImage + '?w=400&format=avif'}
+								type="image/avif"
+								media="(min-width: 400px)"
+							/>
+							<source
+								srcSet={headerImage + '?w=1000&format=webp'}
+								type="image/webp"
+								media="(min-width: 1000px)"
+							/>
+							<source
+								srcSet={headerImage + '?w=800&format=webp'}
+								type="image/webp"
+								media="(min-width: 800px)"
+							/>
+							<source
+								srcSet={headerImage + '?w=600&format=webp'}
+								type="image/webp"
+								media="(min-width: 600px)"
+							/>
+							<source
+								srcSet={headerImage + '?w=400&format=webp'}
+								type="image/webp"
+								media="(min-width: 400px)"
+							/>
+							<img
+								class="h-full object-cover md:w-full"
+								src={headerImage + '?w=800'}
+								alt="Background header photo of bicycle taken by Mikkel Bech"
+								width="100%"
+							/>
+						</picture>
 					)}
 					<div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-700 mix-blend-overlay" />
 				</div>

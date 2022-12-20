@@ -33,7 +33,7 @@ export default component$(() => {
 				class={`bg-gradient-to-r from-blue-700 to-indigo-900 shadow-lg transform shadow-xl sticky top-0 z-10 animate-dropIn`}
 			>
 				<div class="bg-zinc-100 text-gray-600 shadow-inner text-center text-sm py-1 px-2 xl:px-0">
-					<div class="max-w-6xl mx-2 md:mx-auto flex items-center justify-between">
+					<div class="max-w-6xl mx-2 h-5 min-h-full md:mx-auto flex items-center justify-between">
 						<div>
 							<p class="hidden sm:block">
 								Exclusive: Get your own{' '}

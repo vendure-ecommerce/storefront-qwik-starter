@@ -76,7 +76,14 @@ export default component$(() => {
 	});
 
 	return (
-		<div class="max-w-6xl mx-auto px-4 py-10">
+		<div
+			class="max-w-6xl mx-auto px-4 py-10"
+			onKeyDown$={(event: QwikKeyboardEvent) => {
+				if (event.key === 'Escape') {
+					state.showMenu = false;
+				}
+			}}
+		>
 			<div class="flex justify-between items-center">
 				<Resource
 					value={collectionResource}
@@ -141,6 +148,9 @@ export default component$(() => {
 									state.showMenu = !state.showMenu;
 								}}
 								onFilterChange$={onFilterChange}
+								onEscapeMenu$={async () => {
+									state.showMenu = false;
+								}}
 							/>
 						)}
 						<div class="sm:col-span-5 lg:col-span-4">

@@ -57,7 +57,14 @@ export default component$(() => {
 	});
 
 	return (
-		<div class="max-w-6xl mx-auto px-4 py-10">
+		<div
+			class="max-w-6xl mx-auto px-4 py-10"
+			onKeyDown$={(event: QwikKeyboardEvent) => {
+				if (event.key === 'Escape') {
+					state.showMenu = false;
+				}
+			}}
+		>
 			<div class="flex justify-between items-center">
 				<h2 class="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
 					{term ? `Results for "${term}"` : 'All filtered results'}
