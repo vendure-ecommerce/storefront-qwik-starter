@@ -2,6 +2,7 @@ import {
 	$,
 	component$,
 	Slot,
+	useClientEffect$,
 	useContextProvider,
 	useOn,
 	useStore,
@@ -30,6 +31,10 @@ export default component$(() => {
 			}>(getCollectionsQuery());
 			state.collections = collections.items;
 		}
+	});
+
+	// with useTask$ doesn't have the same behaviour
+	useClientEffect$(async () => {
 		if (isBrowser) {
 			window.scrollTo(0, 0);
 			const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
