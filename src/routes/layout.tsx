@@ -1,11 +1,5 @@
-import {
-	component$,
-	Slot,
-	useClientEffect$,
-	useContextProvider,
-	useServerMount$,
-	useStore,
-} from '@builder.io/qwik';
+import { component$, Slot, useContextProvider, useStore, useTask$ } from '@builder.io/qwik';
+import { isBrowser, isServer } from '@builder.io/qwik/build';
 import { APP_STATE } from '~/constants';
 import { getActiveOrderQuery, getCollectionsQuery } from '~/graphql/queries';
 import { ActiveOrder, AppState, Collection } from '~/types';
@@ -21,17 +15,18 @@ export default component$(() => {
 	});
 	useContextProvider(APP_STATE, state);
 
-	useServerMount$(async () => {
-		const { collections } = await execute<{
-			collections: { items: Collection[] };
-		}>(getCollectionsQuery());
-		state.collections = collections.items;
-	});
-
-	useClientEffect$(async () => {
-		window.scrollTo(0, 0);
-		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
-		state.activeOrder = activeOrder;
+	useTask$(async () => {
+		if (isServer) {
+			const { collections } = await execute<{
+				collections: { items: Collection[] };
+			}>(getCollectionsQuery());
+			state.collections = collections.items;
+		}
+		if (isBrowser) {
+			window.scrollTo(0, 0);
+			const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
+			state.activeOrder = activeOrder;
+		}
 	});
 
 	return (

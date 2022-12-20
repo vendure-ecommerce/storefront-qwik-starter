@@ -1,12 +1,6 @@
-import {
-	$,
-	component$,
-	Resource,
-	useClientEffect$,
-	useResource$,
-	useStore,
-} from '@builder.io/qwik';
+import { $, component$, Resource, useResource$, useStore, useTask$ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
+import { isBrowser } from '@builder.io/qwik/build';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import Filters from '~/components/facet-filter-controls/Filters';
@@ -42,8 +36,10 @@ export default component$(() => {
 		facetValueIds: [],
 	});
 
-	useClientEffect$(async () => {
-		window.scrollTo(0, 0);
+	useTask$(() => {
+		if (isBrowser) {
+			window.scrollTo(0, 0);
+		}
 	});
 
 	const onFilterChange = $(async (id: string) => {

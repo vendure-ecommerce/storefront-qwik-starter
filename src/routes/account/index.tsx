@@ -1,10 +1,13 @@
-import { $, component$, useClientEffect$ } from '@builder.io/qwik';
+import { $, component$, useTask$ } from '@builder.io/qwik';
+import { isBrowser } from '@builder.io/qwik/build';
 import { logoutMutation } from '~/graphql/mutations';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
-	useClientEffect$(async () => {
-		window.scrollTo(0, 0);
+	useTask$(() => {
+		if (isBrowser) {
+			window.scrollTo(0, 0);
+		}
 	});
 
 	const logout = $(async () => {

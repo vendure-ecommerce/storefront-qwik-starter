@@ -1,5 +1,6 @@
-import { $, component$, useClientEffect$, useStore } from '@builder.io/qwik';
+import { $, component$, useStore, useTask$ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
+import { isBrowser } from '@builder.io/qwik/build';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
@@ -30,12 +31,14 @@ export default component$(() => {
 			await execute<{ search: Search }>(searchQueryWithTerm(term, activeFacetValueIds))
 	);
 
-	useClientEffect$(async () => {
-		window.scrollTo(0, 0);
-		const { search } = await executeQuery(term, activeFacetValueIds);
-		state.search = search;
-		state.facedValues = groupFacetValues(state.search, activeFacetValueIds);
-		state.facetValueIds = activeFacetValueIds;
+	useTask$(async () => {
+		if (isBrowser) {
+			window.scrollTo(0, 0);
+			const { search } = await executeQuery(term, activeFacetValueIds);
+			state.search = search;
+			state.facedValues = groupFacetValues(state.search, activeFacetValueIds);
+			state.facetValueIds = activeFacetValueIds;
+		}
 	});
 
 	const onFilterChange = $(async (id: string) => {

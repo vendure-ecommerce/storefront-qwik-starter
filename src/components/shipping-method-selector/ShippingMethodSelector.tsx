@@ -1,4 +1,4 @@
-import { component$, useContext, useStore, useWatch$ } from '@builder.io/qwik';
+import { component$, useContext, useStore, useTask$ } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
 import { setOrderShippingMethodMutation } from '~/graphql/mutations';
 import { ActiveOrder } from '~/types';
@@ -15,8 +15,8 @@ export default component$(() => {
 		{ label: 'Express Shipping', price: '$10.00' },
 	];
 
-	useWatch$(async (tracker) => {
-		const selected = tracker.track(state, 'selected');
+	useTask$(async (tracker) => {
+		const selected = tracker.track(() => state.selected);
 		const { setOrderShippingMethod: activeOrder } = await execute<{
 			setOrderShippingMethod: ActiveOrder;
 		}>(setOrderShippingMethodMutation(selected.toString()));

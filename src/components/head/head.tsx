@@ -1,7 +1,5 @@
 import { component$ } from '@builder.io/qwik';
 import { useDocumentHead, useLocation } from '@builder.io/qwik-city';
-import { Analytics } from './analytics';
-import { Social } from './social';
 
 export const Head = component$(() => {
 	const head = useDocumentHead();
@@ -27,9 +25,6 @@ export const Head = component$(() => {
 			{head.styles.map((s) => (
 				<style {...s.props} dangerouslySetInnerHTML={s.style} />
 			))}
-
-			<Social />
-			<Analytics loc={loc} />
 		</head>
 	);
 });
