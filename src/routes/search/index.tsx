@@ -1,4 +1,4 @@
-import { $, component$, useStore, useTask$ } from '@builder.io/qwik';
+import { $, component$, QwikKeyboardEvent, useStore, useTask$ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import { isBrowser } from '@builder.io/qwik/build';
 import Filters from '~/components/facet-filter-controls/Filters';

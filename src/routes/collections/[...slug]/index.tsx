@@ -1,4 +1,12 @@
-import { $, component$, Resource, useResource$, useStore, useTask$ } from '@builder.io/qwik';
+import {
+	$,
+	component$,
+	QwikKeyboardEvent,
+	Resource,
+	useResource$,
+	useStore,
+	useTask$,
+} from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import { isBrowser } from '@builder.io/qwik/build';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
@@ -148,9 +156,6 @@ export default component$(() => {
 									state.showMenu = !state.showMenu;
 								}}
 								onFilterChange$={onFilterChange}
-								onEscapeMenu$={async () => {
-									state.showMenu = false;
-								}}
 							/>
 						)}
 						<div class="sm:col-span-5 lg:col-span-4">

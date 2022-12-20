@@ -1,4 +1,12 @@
-import { component$, Slot, useContextProvider, useStore, useTask$ } from '@builder.io/qwik';
+import {
+	$,
+	component$,
+	Slot,
+	useContextProvider,
+	useOn,
+	useStore,
+	useTask$,
+} from '@builder.io/qwik';
 import { isBrowser, isServer } from '@builder.io/qwik/build';
 import { APP_STATE } from '~/constants';
 import { getActiveOrderQuery, getCollectionsQuery } from '~/graphql/queries';
@@ -31,7 +39,7 @@ export default component$(() => {
 
 	useOn(
 		'keydown',
-		$((event) => {
+		$((event: unknown) => {
 			if ((event as KeyboardEvent).key === 'Escape') {
 				state.showCart = false;
 			}
