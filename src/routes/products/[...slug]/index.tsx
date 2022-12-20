@@ -2,13 +2,13 @@ import {
 	$,
 	component$,
 	Resource,
-	useClientEffect$,
 	useContext,
 	useResource$,
 	useStore,
-	useWatch$,
+	useTask$,
 } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
+import { isBrowser } from '@builder.io/qwik/build';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CheckIcon from '~/components/icons/CheckIcon';
@@ -57,12 +57,14 @@ export default component$(() => {
 		calculateQuantities(state.product);
 	});
 
-	useClientEffect$(async () => {
-		window.scrollTo(0, 0);
+	useTask$(() => {
+		if (isBrowser) {
+			window.scrollTo(0, 0);
+		}
 	});
 
-	useWatch$((tracker) => {
-		tracker.track(appState, 'activeOrder');
+	useTask$((tracker) => {
+		tracker.track(() => appState.activeOrder);
 		calculateQuantities(state.product);
 	});
 

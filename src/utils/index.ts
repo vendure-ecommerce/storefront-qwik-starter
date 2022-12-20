@@ -85,7 +85,7 @@ export const getCookie = (name: string) => {
 	let result = null;
 	keyValues.forEach((item) => {
 		const [key, value] = item.split('=');
-		if (key === name) {
+		if (key.trim() === name) {
 			result = value;
 		}
 	});

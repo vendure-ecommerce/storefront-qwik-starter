@@ -3,11 +3,12 @@ import {
 	component$,
 	QwikKeyboardEvent,
 	Resource,
-	useClientEffect$,
 	useResource$,
 	useStore,
+	useTask$,
 } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
+import { isBrowser } from '@builder.io/qwik/build';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import Filters from '~/components/facet-filter-controls/Filters';
@@ -43,8 +44,10 @@ export default component$(() => {
 		facetValueIds: [],
 	});
 
-	useClientEffect$(async () => {
-		window.scrollTo(0, 0);
+	useTask$(() => {
+		if (isBrowser) {
+			window.scrollTo(0, 0);
+		}
 	});
 
 	const onFilterChange = $(async (id: string) => {
@@ -153,9 +156,6 @@ export default component$(() => {
 									state.showMenu = !state.showMenu;
 								}}
 								onFilterChange$={onFilterChange}
-								onEscapeMenu$={async () => {
-									state.showMenu = false;
-								}}
 							/>
 						)}
 						<div class="sm:col-span-5 lg:col-span-4">

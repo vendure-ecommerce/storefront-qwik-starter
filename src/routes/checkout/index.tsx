@@ -1,4 +1,5 @@
-import { component$, useClientEffect$, useContext, useStore } from '@builder.io/qwik';
+import { component$, useContext, useStore, useTask$ } from '@builder.io/qwik';
+import { isBrowser } from '@builder.io/qwik/build';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
 import Confirmation from '~/components/confirmation/Confirmation';
@@ -23,9 +24,11 @@ export default component$(() => {
 		{ name: 'Confirmation', state: 'CONFIRMATION' },
 	];
 
-	useClientEffect$(async () => {
-		window.scrollTo(0, 0);
-		appState.showCart = false;
+	useTask$(() => {
+		if (isBrowser) {
+			window.scrollTo(0, 0);
+			appState.showCart = false;
+		}
 	});
 
 	return (

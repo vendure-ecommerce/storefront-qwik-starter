@@ -1,4 +1,5 @@
-import { component$, useClientEffect$, useContext } from '@builder.io/qwik';
+import { component$, useContext, useTask$ } from '@builder.io/qwik';
+import { isBrowser } from '@builder.io/qwik/build';
 import { APP_STATE } from '~/constants';
 import { getActiveCustomerQuery } from '~/graphql/queries';
 import { ActiveCustomer } from '~/types';
@@ -13,14 +14,18 @@ export default component$(() => {
 	const collections = useContext(APP_STATE).collections.filter(
 		(item) => item.parent?.name === '__root_collection__' && !!item.featuredAsset
 	);
+
 	const totalQuantity =
 		appState.activeOrder?.state !== 'PaymentAuthorized'
 			? appState.activeOrder?.totalQuantity || 0
 			: 0;
-	useClientEffect$(async () => {
-		const data = await execute<{ activeCustomer: ActiveCustomer }>(getActiveCustomerQuery());
-		appState.customer =
-			data.activeCustomer || ({ id: '-1', firstName: '', lastName: '' } as ActiveCustomer);
+
+	useTask$(async () => {
+		if (isBrowser) {
+			const data = await execute<{ activeCustomer: ActiveCustomer }>(getActiveCustomerQuery());
+			appState.customer =
+				data.activeCustomer || ({ id: '-1', firstName: '', lastName: '' } as ActiveCustomer);
+		}
 	});
 	return (
 		<div>
