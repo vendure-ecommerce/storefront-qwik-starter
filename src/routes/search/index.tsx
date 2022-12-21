@@ -1,4 +1,4 @@
-import { $, component$, QwikKeyboardEvent, useStore, useTask$ } from '@builder.io/qwik';
+import { $, component$, QwikKeyboardEvent, useClientEffect$, useStore } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import { isBrowser } from '@builder.io/qwik/build';
 import Filters from '~/components/facet-filter-controls/Filters';
@@ -31,7 +31,7 @@ export default component$(() => {
 			await execute<{ search: Search }>(searchQueryWithTerm(term, activeFacetValueIds))
 	);
 
-	useTask$(async () => {
+	useClientEffect$(async () => {
 		if (isBrowser) {
 			window.scrollTo(0, 0);
 			const { search } = await executeQuery(term, activeFacetValueIds);
