@@ -1,6 +1,5 @@
-import { component$, useContext, useTask$ } from '@builder.io/qwik';
+import { component$, useClientEffect$, useContext } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
-import { isBrowser } from '@builder.io/qwik/build';
 import { APP_STATE } from '~/constants';
 import { getActiveCustomerQuery } from '~/graphql/queries';
 import { ActiveCustomer } from '~/types';
@@ -21,13 +20,13 @@ export default component$(() => {
 			? appState.activeOrder?.totalQuantity || 0
 			: 0;
 
-	useTask$(async () => {
-		if (isBrowser) {
-			const data = await execute<{ activeCustomer: ActiveCustomer }>(getActiveCustomerQuery());
-			appState.customer =
-				data.activeCustomer || ({ id: '-1', firstName: '', lastName: '' } as ActiveCustomer);
-		}
+	useClientEffect$(async () => {
+		const data = await execute<{ activeCustomer: ActiveCustomer }>(getActiveCustomerQuery());
+		appState.customer =
+			data.activeCustomer || ({ id: '-1', firstName: '', lastName: '' } as ActiveCustomer);
+		console.log('asdasd', appState.customer);
 	});
+
 	return (
 		<div>
 			<header
