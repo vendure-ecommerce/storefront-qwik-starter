@@ -1,12 +1,12 @@
 import { component$ } from '@builder.io/qwik';
 
-export default component$<{ forcedClassName?: string }>(({ forcedClassName }) => {
+export default component$<{ forcedClass?: string }>(({ forcedClass }) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 20 20"
 			fill="currentColor"
-			class={forcedClassName || 'h-5 w-5 text-primary-600'}
+			class={forcedClass || 'h-5 w-5 text-primary-600'}
 		>
 			<path
 				fill-rule="evenodd"

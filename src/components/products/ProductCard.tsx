@@ -1,10 +1,11 @@
 import { component$ } from '@builder.io/qwik';
+import { Link } from '@builder.io/qwik-city';
 import Price from './Price';
 
 export default component$(
 	({ productAsset, productName, slug, priceWithTax, currencyCode }: any) => {
 		return (
-			<a class="flex flex-col mx-auto" href={`/products/${slug}/`}>
+			<Link class="flex flex-col mx-auto" href={`/products/${slug}/`}>
 				<picture>
 					<source srcSet={productAsset?.preview + '?w=300&h=400&format=avif'} type="image/avif" />
 					<source srcSet={productAsset?.preview + '?w=300&h=400&format=webp'} type="image/webp" />
@@ -25,7 +26,7 @@ export default component$(
 					currencyCode={currencyCode}
 					forcedClass="text-sm font-medium text-gray-900"
 				/>
-			</a>
+			</Link>
 		);
 	}
 );

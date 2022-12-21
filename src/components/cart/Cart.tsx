@@ -1,5 +1,5 @@
 import { component$, useContext } from '@builder.io/qwik';
-import { useLocation } from '@builder.io/qwik-city';
+import { Link, useLocation } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import CartContents from '../cart-contents/CartContents';
 import CartPrice from '../cart-totals/CartPrice';
@@ -53,12 +53,12 @@ export default component$(() => {
 												Shipping will be calculated at checkout.
 											</p>
 											<div class="mt-6">
-												<a
+												<Link
 													href="/checkout/"
 													class="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700 w-full"
 												>
 													Checkout
-												</a>
+												</Link>
 											</div>
 										</div>
 									)}

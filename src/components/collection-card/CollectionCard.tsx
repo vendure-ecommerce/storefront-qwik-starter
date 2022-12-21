@@ -1,4 +1,5 @@
 import { component$ } from '@builder.io/qwik';
+import { Link } from '@builder.io/qwik-city';
 import { Collection } from '../../types';
 
 interface IProps {
@@ -7,7 +8,7 @@ interface IProps {
 
 export default component$(({ collection }: IProps) => {
 	return (
-		<a href={'/collections/' + collection.slug} key={collection.id}>
+		<Link href={'/collections/' + collection.slug} key={collection.id}>
 			<div class="max-w-[300px] relative rounded-lg overflow-hidden hover:opacity-75 xl:w-auto mx-auto">
 				<span class="">
 					<div class="w-full h-full object-center object-cover">
@@ -34,6 +35,6 @@ export default component$(({ collection }: IProps) => {
 					{collection.name}
 				</span>
 			</div>
-		</a>
+		</Link>
 	);
 });
