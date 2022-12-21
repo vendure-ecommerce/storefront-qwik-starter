@@ -58,15 +58,16 @@ export default component$(() => {
 								{state.step === 'SHIPPING' ? (
 									<Shipping
 										onForward$={async () => {
-											if (appState.customer?.id !== '-1') {
-												state.step = 'PAYMENT';
-											} else {
+											if (!appState.customer?.id) {
 												const { setCustomerForOrder } = await execute<{
 													setCustomerForOrder: ActiveOrder;
 												}>(setCustomerForOrderdMutation());
+
 												if (!setCustomerForOrder.errorCode) {
 													state.step = 'PAYMENT';
 												}
+											} else {
+												state.step = 'PAYMENT';
 											}
 										}}
 									/>
