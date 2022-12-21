@@ -24,7 +24,6 @@ export default component$(() => {
 		const data = await execute<{ activeCustomer: ActiveCustomer }>(getActiveCustomerQuery());
 		appState.customer =
 			data.activeCustomer || ({ id: '-1', firstName: '', lastName: '' } as ActiveCustomer);
-		console.log('asdasd', appState.customer);
 	});
 
 	return (
