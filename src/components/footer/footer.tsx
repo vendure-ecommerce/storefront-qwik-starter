@@ -32,13 +32,13 @@ export default component$(() => {
 								<ul class="mt-4 space-y-4">
 									{collections.map((collection) => (
 										<li key={collection.id}>
-											<a
+											<Link
 												class="text-base text-gray-500 hover:text-gray-600"
 												href={'/collections/' + collection.slug}
 												key={collection.id}
 											>
 												{collection.name}
-											</a>
+											</Link>
 										</li>
 									))}
 								</ul>

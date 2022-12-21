@@ -1,4 +1,5 @@
 import { component$, useContext, useTask$ } from '@builder.io/qwik';
+import { Link } from '@builder.io/qwik-city';
 import { isBrowser } from '@builder.io/qwik/build';
 import { APP_STATE } from '~/constants';
 import { getActiveCustomerQuery } from '~/graphql/queries';
@@ -47,31 +48,31 @@ export default component$(() => {
 							</p>
 						</div>
 						{!!appState.customer && (
-							<a
+							<Link
 								href={appState.customer.id !== '-1' ? '/account' : '/sign-in'}
 								class="flex space-x-1"
 							>
 								<UserIcon />
 								<span class="mt-1">{appState.customer.id !== '-1' ? 'My Account' : 'Sign In'}</span>
-							</a>
+							</Link>
 						)}
 					</div>
 				</div>
 				<div class="max-w-6xl mx-auto p-4 flex items-center space-x-4">
 					<h1 class="text-white w-10">
-						<a href="/">
+						<Link href="/">
 							<img src={`/cube-logo-small.webp`} width={40} height={31} alt="Vendure logo" />
-						</a>
+						</Link>
 					</h1>
 					<div class="flex space-x-4 hidden sm:block">
 						{collections.map((collection) => (
-							<a
+							<Link
 								class="text-sm md:text-base text-gray-200 hover:text-white"
 								href={'/collections/' + collection.slug}
 								key={collection.id}
 							>
 								{collection.name}
-							</a>
+							</Link>
 						))}
 					</div>
 					<div class="flex-1 md:pr-8">
