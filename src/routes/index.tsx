@@ -2,8 +2,7 @@ import { component$, useContext } from '@builder.io/qwik';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import { APP_STATE } from '~/constants';
 
-export const headerImage =
-	'https://demo.vendure.io/assets/preview/2f/mikkel-bech-748940-unsplash__preview.jpg';
+export const headerImage = '/homepage.webp';
 
 export default component$(() => {
 	const collections = useContext(APP_STATE).collections;
@@ -14,42 +13,42 @@ export default component$(() => {
 					{headerImage && (
 						<picture>
 							<source
-								srcSet={headerImage + '?w=1000&format=avif'}
+								srcSet={headerImage + '?w=1000'}
 								type="image/avif"
 								media="(min-width: 1000px)"
 							/>
 							<source
-								srcSet={headerImage + '?w=800&format=avif'}
+								srcSet={headerImage + '?w=800'}
 								type="image/avif"
 								media="(min-width: 800px)"
 							/>
 							<source
-								srcSet={headerImage + '?w=600&format=avif'}
+								srcSet={headerImage + '?w=600'}
 								type="image/avif"
 								media="(min-width: 600px)"
 							/>
 							<source
-								srcSet={headerImage + '?w=400&format=avif'}
+								srcSet={headerImage + '?w=400'}
 								type="image/avif"
 								media="(min-width: 400px)"
 							/>
 							<source
-								srcSet={headerImage + '?w=1000&format=webp'}
+								srcSet={headerImage + '?w=1000'}
 								type="image/webp"
 								media="(min-width: 1000px)"
 							/>
 							<source
-								srcSet={headerImage + '?w=800&format=webp'}
+								srcSet={headerImage + '?w=800'}
 								type="image/webp"
 								media="(min-width: 800px)"
 							/>
 							<source
-								srcSet={headerImage + '?w=600&format=webp'}
+								srcSet={headerImage + '?w=600'}
 								type="image/webp"
 								media="(min-width: 600px)"
 							/>
 							<source
-								srcSet={headerImage + '?w=400&format=webp'}
+								srcSet={headerImage + '?w=400'}
 								type="image/webp"
 								media="(min-width: 400px)"
 							/>
