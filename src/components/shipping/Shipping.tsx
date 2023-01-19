@@ -34,7 +34,7 @@ export default component$<{
 								type="email"
 								value={appState.customer?.emailAddress}
 								disabled={appState.customer?.id !== '-1'}
-								onChange$={$((event: QwikChangeEvent<HTMLInputElement>, element: Element) => {
+								onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
 									appState.customer.emailAddress = event.target.value;
 								})}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
@@ -49,7 +49,7 @@ export default component$<{
 									type="text"
 									value={appState.customer?.firstName}
 									disabled={appState.customer?.id !== '-1'}
-									onChange$={$((event: QwikChangeEvent<HTMLInputElement>, element: Element) => {
+									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
 										appState.customer.firstName = event.target.value;
 									})}
 									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
@@ -64,7 +64,7 @@ export default component$<{
 									type="text"
 									value={appState.customer?.lastName}
 									disabled={appState.customer?.id !== '-1'}
-									onChange$={$((event: QwikChangeEvent<HTMLInputElement>, element: Element) => {
+									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
 										appState.customer.lastName = event.target.value;
 									})}
 									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
