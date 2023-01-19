@@ -1,3 +1,5 @@
+import { ActiveCustomer } from '~/types';
+
 export const addItemToOrderMutation = (productVariantId: string, quantity: number) => ({
 	variables: {
 		productVariantId,
@@ -265,14 +267,12 @@ export const logoutMutation = () => ({
 `,
 });
 
-export const setCustomerForOrderdMutation = (
-	input = {
-		emailAddress: 'test@test.it',
-		firstName: 'Jhon',
-		lastName: 'Doe',
-	}
-) => ({
-	variables: { input },
+export const setCustomerForOrderdMutation = ({
+	emailAddress,
+	firstName,
+	lastName,
+}: Omit<ActiveCustomer, 'id'>) => ({
+	variables: { input: { emailAddress, firstName, lastName } },
 	query: `
   mutation setCustomerForOrder($input: CreateCustomerInput!) {
     setCustomerForOrder(input: $input) {
