@@ -12,7 +12,7 @@ import {
 	setCustomerForOrderdMutation,
 	transitionOrderToStateMutation,
 } from '~/graphql/mutations';
-import { ActiveOrder } from '~/types';
+import { ActiveCustomer, ActiveOrder } from '~/types';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
@@ -57,11 +57,11 @@ export default component$(() => {
 							<div class={state.step === 'CONFIRMATION' ? 'lg:col-span-2' : ''}>
 								{state.step === 'SHIPPING' ? (
 									<Shipping
-										onForward$={async () => {
-											if (!appState.customer?.id) {
+										onForward$={async (customer: Omit<ActiveCustomer, 'id'>) => {
+											if (appState.customer?.id === '-1') {
 												const { setCustomerForOrder } = await execute<{
 													setCustomerForOrder: ActiveOrder;
-												}>(setCustomerForOrderdMutation());
+												}>(setCustomerForOrderdMutation(customer));
 
 												if (!setCustomerForOrder.errorCode) {
 													state.step = 'PAYMENT';

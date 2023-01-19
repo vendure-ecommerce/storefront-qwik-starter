@@ -2,7 +2,7 @@ export type AppState = {
 	collections: Collection[];
 	activeOrder: ActiveOrder;
 	showCart: boolean;
-	customer?: ActiveCustomer;
+	customer: ActiveCustomer;
 };
 
 export type Product = {
