@@ -1,5 +1,6 @@
 import { isBrowser } from '@builder.io/qwik/build';
-import { AUTH_TOKEN, VENDURE_PUBLIC_URL } from '~/constants';
+import { AUTH_TOKEN } from '~/constants';
+import { ENV_VARIABLES } from '~/env';
 import { getCookie, setCookie } from '.';
 
 export const execute = async <T>(body: {
@@ -17,7 +18,7 @@ export const execute = async <T>(body: {
 		body: JSON.stringify(body),
 	};
 
-	const response = await fetch(VENDURE_PUBLIC_URL, options);
+	const response = await fetch(ENV_VARIABLES.VITE_VENDURE_PUBLIC_URL, options);
 	if (isBrowser) {
 		const responsetoken = response.headers.get('vendure-auth-token');
 		if (responsetoken) {
