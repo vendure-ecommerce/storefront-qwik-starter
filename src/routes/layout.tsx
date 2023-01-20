@@ -10,8 +10,12 @@ import {
 } from '@builder.io/qwik';
 import { isBrowser, isServer } from '@builder.io/qwik/build';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
-import { getActiveOrderQuery, getCollectionsQuery } from '~/graphql/queries';
-import { ActiveCustomer, ActiveOrder, AppState, Collection } from '~/types';
+import {
+	getActiveOrderQuery,
+	getAvailableCountriesQuery,
+	getCollectionsQuery,
+} from '~/graphql/queries';
+import { ActiveCustomer, ActiveOrder, AppState, Collection, Country } from '~/types';
 import { execute } from '~/utils/api';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
@@ -22,6 +26,7 @@ export default component$(() => {
 		activeOrder: {} as ActiveOrder,
 		showCart: false,
 		customer: { id: CUSTOMER_NOT_DEFINED_ID, firstName: '', lastName: '' } as ActiveCustomer,
+		availableCountries: [],
 	});
 	useContextProvider(APP_STATE, state);
 
@@ -31,6 +36,10 @@ export default component$(() => {
 				collections: { items: Collection[] };
 			}>(getCollectionsQuery());
 			state.collections = collections.items;
+			const { availableCountries } = await execute<{ availableCountries: Country[] }>(
+				getAvailableCountriesQuery()
+			);
+			state.availableCountries = availableCountries;
 		}
 	});
 

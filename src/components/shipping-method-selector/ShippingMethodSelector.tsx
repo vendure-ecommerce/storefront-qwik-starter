@@ -1,7 +1,7 @@
 import { component$, useContext, useStore, useTask$ } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
 import { setOrderShippingMethodMutation } from '~/graphql/mutations';
-import { eligibleShippingMethodsQuery } from '~/graphql/queries';
+import { getEligibleShippingMethodsQuery } from '~/graphql/queries';
 import { ActiveOrder, EligibleShippingMethods } from '~/types';
 import { formatPrice } from '~/utils';
 import { execute } from '~/utils/api';
@@ -18,7 +18,7 @@ export default component$(() => {
 	useTask$(async () => {
 		const { eligibleShippingMethods } = await execute<{
 			eligibleShippingMethods: EligibleShippingMethods[];
-		}>(eligibleShippingMethodsQuery());
+		}>(getEligibleShippingMethodsQuery());
 		state.methods = eligibleShippingMethods;
 	});
 

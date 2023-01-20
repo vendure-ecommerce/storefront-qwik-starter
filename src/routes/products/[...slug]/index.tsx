@@ -20,7 +20,7 @@ import { APP_STATE } from '~/constants';
 import { addItemToOrderMutation } from '~/graphql/mutations';
 import { getProductQuery } from '~/graphql/queries';
 import { ActiveOrder, Line, Product, Variant } from '~/types';
-import { cleanUpParams } from '~/utils';
+import { cleanUpParams, isEnvVariableEnabled } from '~/utils';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
@@ -221,9 +221,11 @@ export default component$(() => {
 					)}
 				/>
 			</div>
-			<div class="mt-24">
-				<TopReviews />
-			</div>
+			{isEnvVariableEnabled('VITE_SHOW_REVIEWS') && (
+				<div class="mt-24">
+					<TopReviews />
+				</div>
+			)}
 		</div>
 	);
 });

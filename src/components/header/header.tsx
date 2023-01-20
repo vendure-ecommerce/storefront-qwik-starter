@@ -22,14 +22,14 @@ export default component$(() => {
 
 	useClientEffect$(async () => {
 		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
-		if (activeOrder.customer) {
+		if (activeOrder?.customer) {
 			appState.customer = activeOrder?.customer;
 		}
 		if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
 			const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
 				getActiveCustomerQuery()
 			);
-			if (activeOrder.customer) {
+			if (activeOrder?.customer) {
 				appState.customer = activeCustomer;
 			}
 		}

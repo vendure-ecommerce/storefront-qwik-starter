@@ -1,4 +1,4 @@
-import { component$, useContext, useStore, useTask$ } from '@builder.io/qwik';
+import { $, component$, useContext, useStore, useTask$ } from '@builder.io/qwik';
 import { isBrowser } from '@builder.io/qwik/build';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
@@ -6,19 +6,23 @@ import Confirmation from '~/components/confirmation/Confirmation';
 import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
 import Payment from '~/components/payment/Payment';
 import Shipping from '~/components/shipping/Shipping';
-import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
+import { APP_STATE } from '~/constants';
 import {
 	addPaymentToOrderMutation,
 	setCustomerForOrderdMutation,
+	setOrderShippingAddressMutation,
 	transitionOrderToStateMutation,
 } from '~/graphql/mutations';
-import { ActiveCustomer, ActiveOrder } from '~/types';
+import { ActiveCustomer, ActiveOrder, ShippingAddress } from '~/types';
+import { isEnvVariableEnabled } from '~/utils';
 import { execute } from '~/utils/api';
+
+type Step = 'SHIPPING' | 'PAYMENT' | 'CONFIRMATION';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
-	const state = useStore<{ step: 'SHIPPING' | 'PAYMENT' | 'CONFIRMATION' }>({ step: 'SHIPPING' });
-	const steps = [
+	const state = useStore<{ step: Step }>({ step: 'SHIPPING' });
+	const steps: { name: string; state: Step }[] = [
 		{ name: 'Shipping', state: 'SHIPPING' },
 		{ name: 'Payment', state: 'PAYMENT' },
 		{ name: 'Confirmation', state: 'CONFIRMATION' },
@@ -29,6 +33,15 @@ export default component$(() => {
 			window.scrollTo(0, 0);
 			appState.showCart = false;
 		}
+	});
+
+	const confirmPayment = $(async () => {
+		await execute(transitionOrderToStateMutation());
+		const { addPaymentToOrder: activeOrder } = await execute<{
+			addPaymentToOrder: ActiveOrder;
+		}>(addPaymentToOrderMutation());
+		appState.activeOrder = activeOrder;
+		state.step = 'CONFIRMATION';
 	});
 
 	return (
@@ -44,12 +57,17 @@ export default component$(() => {
 						<nav class="hidden sm:block pb-8 mb-8 border-b">
 							<ol class="flex space-x-4 justify-center">
 								{steps.map((step, index) => (
-									<li key={step.name} class="flex items-center">
-										<span class={`${step.state === state.step ? 'text-primary-600' : ''}`}>
-											{step.name}
-										</span>
-										{index !== steps.length - 1 ? <ChevronRightIcon /> : null}
-									</li>
+									<>
+										{isEnvVariableEnabled('VITE_SHOW_PAYMENT_STEP') ||
+											(step.state !== 'PAYMENT' && (
+												<li key={step.name} class="flex items-center">
+													<span class={`${step.state === state.step ? 'text-primary-600' : ''}`}>
+														{step.name}
+													</span>
+													{index !== steps.length - 1 ? <ChevronRightIcon /> : null}
+												</li>
+											))}
+									</>
 								))}
 							</ol>
 						</nav>
@@ -57,31 +75,33 @@ export default component$(() => {
 							<div class={state.step === 'CONFIRMATION' ? 'lg:col-span-2' : ''}>
 								{state.step === 'SHIPPING' ? (
 									<Shipping
-										onForward$={async (customer: Omit<ActiveCustomer, 'id'>) => {
-											if (appState.customer?.id === CUSTOMER_NOT_DEFINED_ID) {
-												const { setCustomerForOrder } = await execute<{
-													setCustomerForOrder: ActiveOrder;
-												}>(setCustomerForOrderdMutation(customer));
+										onForward$={async (
+											customer: Omit<ActiveCustomer, 'id'>,
+											shippingAddress: ShippingAddress
+										) => {
+											const { setCustomerForOrder } = await execute<{
+												setCustomerForOrder: ActiveOrder;
+											}>(setCustomerForOrderdMutation(customer));
 
-												if (!setCustomerForOrder.errorCode) {
-													state.step = 'PAYMENT';
+											if (!setCustomerForOrder.errorCode) {
+												const { setOrderShippingAddress } = await execute<{
+													setOrderShippingAddress: ActiveOrder;
+												}>(setOrderShippingAddressMutation(shippingAddress));
+
+												console.log('setOrderShippingAddress', setOrderShippingAddress);
+
+												if (!setOrderShippingAddress.errorCode) {
+													if (isEnvVariableEnabled('VITE_SHOW_PAYMENT_STEP')) {
+														state.step = 'PAYMENT';
+													} else {
+														confirmPayment();
+													}
 												}
-											} else {
-												state.step = 'PAYMENT';
 											}
 										}}
 									/>
 								) : state.step === 'PAYMENT' ? (
-									<Payment
-										onForward$={async () => {
-											await execute(transitionOrderToStateMutation());
-											const { addPaymentToOrder: activeOrder } = await execute<{
-												addPaymentToOrder: ActiveOrder;
-											}>(addPaymentToOrderMutation());
-											appState.activeOrder = activeOrder;
-											state.step = 'CONFIRMATION';
-										}}
-									/>
+									<Payment onForward$={confirmPayment} />
 								) : state.step === 'CONFIRMATION' ? (
 									<Confirmation
 										onForward$={async () => {

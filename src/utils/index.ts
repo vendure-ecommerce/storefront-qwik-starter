@@ -1,4 +1,5 @@
 import { isBrowser } from '@builder.io/qwik/build';
+import { ENV_VARIABLES } from '~/env';
 import { FacetWithValues, Search } from '~/types';
 
 export const getRandomInt = (max: number) => Math.floor(Math.random() * max);
@@ -97,4 +98,16 @@ export const cleanUpParams = (params: Record<string, string>) => {
 		params.slug = params.slug.slice(0, params.slug.length - 1);
 	}
 	return params;
+};
+
+export const isEnvVariableEnabled = (envVariable: keyof typeof ENV_VARIABLES) =>
+	ENV_VARIABLES[envVariable] === 'true';
+
+export const isOrderAddressValid = (orderAddress: OrderAddress): boolean => {
+	return !!(
+		orderAddress.streetLine1 &&
+		orderAddress.city &&
+		orderAddress.countryCode &&
+		orderAddress.postalCode
+	);
 };

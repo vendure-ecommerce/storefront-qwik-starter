@@ -3,6 +3,8 @@ export type AppState = {
 	activeOrder: ActiveOrder;
 	showCart: boolean;
 	customer: ActiveCustomer;
+	shippingAddress?: ShippingAddress;
+	availableCountries: Country[];
 };
 
 export type Product = {
@@ -74,16 +76,16 @@ type TaxSummary = {
 	taxTotal: number;
 };
 
-type ShippingAddress = {
-	fullName?: any;
-	streetLine1?: any;
-	streetLine2?: any;
-	company?: any;
-	city?: any;
-	province?: any;
-	postalCode?: any;
-	countryCode?: any;
-	phoneNumber?: any;
+export type ShippingAddress = {
+	fullName?: string;
+	streetLine1?: string;
+	streetLine2?: string;
+	company?: string;
+	city?: string;
+	province?: string;
+	postalCode?: string;
+	countryCode?: string;
+	phoneNumber?: string;
 };
 
 type ProductVariant = {
@@ -201,6 +203,12 @@ export type ActiveCustomer = {
 export type EligibleShippingMethods = {
 	name: string;
 	price: number;
+};
+
+export type Country = {
+	id: string;
+	code: string;
+	name: string;
 };
 
 export type CurrencyCode =

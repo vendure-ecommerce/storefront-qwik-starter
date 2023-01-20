@@ -8,21 +8,41 @@ import {
 } from '@builder.io/qwik';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { getActiveOrderQuery } from '~/graphql/queries';
-import { ActiveCustomer, ActiveOrder } from '~/types';
+import { ActiveCustomer, ActiveOrder, ShippingAddress } from '~/types';
 import { execute } from '~/utils/api';
+import AddressForm from '../address-form/AddressForm';
 import LockClosedIcon from '../icons/LockClosedIcon';
 import ShippingMethodSelector from '../shipping-method-selector/ShippingMethodSelector';
 
-export default component$<{
-	onForward$: PropFunction<(customer: Omit<ActiveCustomer, 'id'>) => Promise<void>>;
-}>(({ onForward$ }) => {
+type IProps = {
+	onForward$: PropFunction<
+		(customer: Omit<ActiveCustomer, 'id'>, shippingAddress: ShippingAddress) => Promise<void>
+	>;
+};
+
+export default component$<IProps>(({ onForward$ }) => {
 	const appState = useContext(APP_STATE);
+
 	useClientEffect$(async () => {
 		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
-		if (activeOrder.customer) {
+		if (activeOrder?.customer) {
 			appState.customer = activeOrder?.customer;
+			if (activeOrder.shippingAddress) {
+				appState.shippingAddress = activeOrder.shippingAddress || {
+					city: '',
+					company: '',
+					countryCode: appState.availableCountries[0].code,
+					fullName: '',
+					phoneNumber: '',
+					postalCode: '',
+					province: '',
+					streetLine1: '',
+					streetLine2: '',
+				};
+			}
 		}
 	});
+
 	return (
 		<div>
 			<div>
@@ -76,6 +96,13 @@ export default component$<{
 				</form>
 			</div>
 
+			<input type="hidden" name="action" value="setCheckoutShipping" />
+			<div class="mt-10 border-t border-gray-200 pt-10">
+				<h2 class="text-lg font-medium text-gray-900">Shipping information</h2>
+			</div>
+
+			<AddressForm shippingAddress={appState.shippingAddress!} />
+
 			<div class="mt-10 border-t border-gray-200 pt-10">
 				<ShippingMethodSelector />
 			</div>
@@ -83,7 +110,7 @@ export default component$<{
 			<button
 				class="bg-primary-600 hover:bg-primary-700 flex w-full items-center justify-center space-x-2 mt-24 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
 				onClick$={$(async () => {
-					onForward$(appState.customer);
+					onForward$(appState.customer, appState.shippingAddress!);
 				})}
 			>
 				<LockClosedIcon />
