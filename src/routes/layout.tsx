@@ -9,9 +9,9 @@ import {
 	useTask$,
 } from '@builder.io/qwik';
 import { isBrowser, isServer } from '@builder.io/qwik/build';
-import { APP_STATE } from '~/constants';
+import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { getActiveOrderQuery, getCollectionsQuery } from '~/graphql/queries';
-import { ActiveOrder, AppState, Collection } from '~/types';
+import { ActiveCustomer, ActiveOrder, AppState, Collection } from '~/types';
 import { execute } from '~/utils/api';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
@@ -21,6 +21,7 @@ export default component$(() => {
 		collections: [],
 		activeOrder: {} as ActiveOrder,
 		showCart: false,
+		customer: { id: CUSTOMER_NOT_DEFINED_ID, firstName: '', lastName: '' } as ActiveCustomer,
 	});
 	useContextProvider(APP_STATE, state);
 

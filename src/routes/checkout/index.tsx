@@ -6,7 +6,7 @@ import Confirmation from '~/components/confirmation/Confirmation';
 import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
 import Payment from '~/components/payment/Payment';
 import Shipping from '~/components/shipping/Shipping';
-import { APP_STATE } from '~/constants';
+import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import {
 	addPaymentToOrderMutation,
 	setCustomerForOrderdMutation,
@@ -58,7 +58,7 @@ export default component$(() => {
 								{state.step === 'SHIPPING' ? (
 									<Shipping
 										onForward$={async (customer: Omit<ActiveCustomer, 'id'>) => {
-											if (appState.customer?.id === '-1') {
+											if (appState.customer?.id === CUSTOMER_NOT_DEFINED_ID) {
 												const { setCustomerForOrder } = await execute<{
 													setCustomerForOrder: ActiveOrder;
 												}>(setCustomerForOrderdMutation(customer));

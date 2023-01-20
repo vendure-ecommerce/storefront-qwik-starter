@@ -6,7 +6,7 @@ import {
 	useClientEffect$,
 	useContext,
 } from '@builder.io/qwik';
-import { APP_STATE } from '~/constants';
+import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { getActiveOrderQuery } from '~/graphql/queries';
 import { ActiveCustomer, ActiveOrder } from '~/types';
 import { execute } from '~/utils/api';
@@ -19,8 +19,9 @@ export default component$<{
 	const appState = useContext(APP_STATE);
 	useClientEffect$(async () => {
 		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
-		appState.customer =
-			activeOrder?.customer || ({ id: '-1', firstName: '', lastName: '' } as ActiveCustomer);
+		if (activeOrder.customer) {
+			appState.customer = activeOrder?.customer;
+		}
 	});
 	return (
 		<div>
@@ -33,7 +34,7 @@ export default component$<{
 							<input
 								type="email"
 								value={appState.customer?.emailAddress}
-								disabled={appState.customer?.id !== '-1'}
+								disabled={appState.customer?.id !== CUSTOMER_NOT_DEFINED_ID}
 								onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
 									appState.customer.emailAddress = event.target.value;
 								})}
@@ -48,7 +49,7 @@ export default component$<{
 								<input
 									type="text"
 									value={appState.customer?.firstName}
-									disabled={appState.customer?.id !== '-1'}
+									disabled={appState.customer?.id !== CUSTOMER_NOT_DEFINED_ID}
 									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
 										appState.customer.firstName = event.target.value;
 									})}
@@ -63,7 +64,7 @@ export default component$<{
 								<input
 									type="text"
 									value={appState.customer?.lastName}
-									disabled={appState.customer?.id !== '-1'}
+									disabled={appState.customer?.id !== CUSTOMER_NOT_DEFINED_ID}
 									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
 										appState.customer.lastName = event.target.value;
 									})}

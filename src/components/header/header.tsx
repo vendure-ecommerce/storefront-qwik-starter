@@ -1,6 +1,6 @@
 import { component$, useClientEffect$, useContext } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
-import { APP_STATE } from '~/constants';
+import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { getActiveCustomerQuery, getActiveOrderQuery } from '~/graphql/queries';
 import { ActiveCustomer, ActiveOrder } from '~/types';
 import { execute } from '~/utils/api';
@@ -22,12 +22,16 @@ export default component$(() => {
 
 	useClientEffect$(async () => {
 		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
-		appState.customer =
-			activeOrder?.customer || ({ id: '-1', firstName: '', lastName: '' } as ActiveCustomer);
-		if (appState.customer.id === '-1') {
-			const data = await execute<{ activeCustomer: ActiveCustomer }>(getActiveCustomerQuery());
-			appState.customer =
-				data.activeCustomer || ({ id: '-1', firstName: '', lastName: '' } as ActiveCustomer);
+		if (activeOrder.customer) {
+			appState.customer = activeOrder?.customer;
+		}
+		if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
+			const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
+				getActiveCustomerQuery()
+			);
+			if (activeOrder.customer) {
+				appState.customer = activeCustomer;
+			}
 		}
 	});
 
@@ -52,11 +56,13 @@ export default component$(() => {
 						</div>
 						{!!appState.customer && (
 							<Link
-								href={appState.customer.id !== '-1' ? '/account' : '/sign-in'}
+								href={appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? '/account' : '/sign-in'}
 								class="flex space-x-1"
 							>
 								<UserIcon />
-								<span class="mt-1">{appState.customer.id !== '-1' ? 'My Account' : 'Sign In'}</span>
+								<span class="mt-1">
+									{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? 'My Account' : 'Sign In'}
+								</span>
 							</Link>
 						)}
 					</div>
