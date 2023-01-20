@@ -250,14 +250,9 @@ export const getActiveCustomerQuery = () => ({
 `,
 });
 
-export const nextOrderStatesQuery = () => ({
-	variables: {},
-	query: `query nextOrderStates { nextOrderStates }`,
-});
-
 // eligible shipping methods
 
-export const eligibleShippingMethodsQuery = () => ({
+export const getEligibleShippingMethodsQuery = () => ({
 	variables: {},
 	query: `
     query eligibleShippingMethods {
@@ -268,6 +263,21 @@ export const eligibleShippingMethodsQuery = () => ({
         metadata
         price
         priceWithTax
+      }
+    }
+`,
+});
+
+// available countries
+
+export const getAvailableCountriesQuery = () => ({
+	variables: {},
+	query: `
+    query availableCountries {
+      availableCountries {
+        id
+        name
+        code
       }
     }
 `,
