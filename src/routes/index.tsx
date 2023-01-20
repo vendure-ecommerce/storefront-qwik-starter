@@ -1,6 +1,7 @@
 import { component$, useContext } from '@builder.io/qwik';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import { APP_STATE } from '~/constants';
+import { t } from '~/locales';
 
 export const headerImage = '/homepage.webp';
 
@@ -66,7 +67,7 @@ export default component$(() => {
 				<div class="relative max-w-3xl mx-auto py-32 px-6 flex flex-col items-center text-center sm:py-64 lg:px-0">
 					<div class="relative bg-zinc-800 bg-opacity-0 rounded-lg p-0">
 						<h1 class="text-6xl text-transparent bg-clip-text font-extrabold tracking-normal lg:text-6xl bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600">
-							Vendure Qwik Starter
+							{t('title')}
 						</h1>
 					</div>
 
