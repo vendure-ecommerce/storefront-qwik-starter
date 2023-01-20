@@ -26,6 +26,17 @@ export default component$(() => {
 		activeOrder: {} as ActiveOrder,
 		showCart: false,
 		customer: { id: CUSTOMER_NOT_DEFINED_ID, firstName: '', lastName: '' } as ActiveCustomer,
+		shippingAddress: {
+			city: '',
+			company: '',
+			countryCode: '',
+			fullName: '',
+			phoneNumber: '',
+			postalCode: '',
+			province: '',
+			streetLine1: '',
+			streetLine2: '',
+		},
 		availableCountries: [],
 	});
 	useContextProvider(APP_STATE, state);
@@ -40,6 +51,7 @@ export default component$(() => {
 				getAvailableCountriesQuery()
 			);
 			state.availableCountries = availableCountries;
+			state.shippingAddress.countryCode = availableCountries[0].code;
 		}
 	});
 

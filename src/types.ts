@@ -3,7 +3,7 @@ export type AppState = {
 	activeOrder: ActiveOrder;
 	showCart: boolean;
 	customer: ActiveCustomer;
-	shippingAddress?: ShippingAddress;
+	shippingAddress: ShippingAddress;
 	availableCountries: Country[];
 };
 

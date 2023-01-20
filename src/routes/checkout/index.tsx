@@ -88,8 +88,6 @@ export default component$(() => {
 													setOrderShippingAddress: ActiveOrder;
 												}>(setOrderShippingAddressMutation(shippingAddress));
 
-												console.log('setOrderShippingAddress', setOrderShippingAddress);
-
 												if (!setOrderShippingAddress.errorCode) {
 													if (isEnvVariableEnabled('VITE_SHOW_PAYMENT_STEP')) {
 														state.step = 'PAYMENT';

@@ -5,10 +5,12 @@ import {
 	QwikChangeEvent,
 	useClientEffect$,
 	useContext,
+	useSignal,
 } from '@builder.io/qwik';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { getActiveOrderQuery } from '~/graphql/queries';
 import { ActiveCustomer, ActiveOrder, ShippingAddress } from '~/types';
+import { isActiveCustomerValid, isShippingAddressValid } from '~/utils';
 import { execute } from '~/utils/api';
 import AddressForm from '../address-form/AddressForm';
 import LockClosedIcon from '../icons/LockClosedIcon';
@@ -22,23 +24,14 @@ type IProps = {
 
 export default component$<IProps>(({ onForward$ }) => {
 	const appState = useContext(APP_STATE);
+	const isFormValidSignal = useSignal(false);
 
 	useClientEffect$(async () => {
 		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
 		if (activeOrder?.customer) {
 			appState.customer = activeOrder?.customer;
 			if (activeOrder.shippingAddress) {
-				appState.shippingAddress = activeOrder.shippingAddress || {
-					city: '',
-					company: '',
-					countryCode: appState.availableCountries[0].code,
-					fullName: '',
-					phoneNumber: '',
-					postalCode: '',
-					province: '',
-					streetLine1: '',
-					streetLine2: '',
-				};
+				appState.shippingAddress = activeOrder.shippingAddress;
 			}
 		}
 	});
@@ -57,6 +50,9 @@ export default component$<IProps>(({ onForward$ }) => {
 								disabled={appState.customer?.id !== CUSTOMER_NOT_DEFINED_ID}
 								onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
 									appState.customer.emailAddress = event.target.value;
+									isFormValidSignal.value =
+										isShippingAddressValid(appState.shippingAddress) &&
+										isActiveCustomerValid(appState.customer);
 								})}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							/>
@@ -72,6 +68,9 @@ export default component$<IProps>(({ onForward$ }) => {
 									disabled={appState.customer?.id !== CUSTOMER_NOT_DEFINED_ID}
 									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
 										appState.customer.firstName = event.target.value;
+										isFormValidSignal.value =
+											isShippingAddressValid(appState.shippingAddress) &&
+											isActiveCustomerValid(appState.customer);
 									})}
 									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
@@ -87,6 +86,9 @@ export default component$<IProps>(({ onForward$ }) => {
 									disabled={appState.customer?.id !== CUSTOMER_NOT_DEFINED_ID}
 									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
 										appState.customer.lastName = event.target.value;
+										isFormValidSignal.value =
+											isShippingAddressValid(appState.shippingAddress) &&
+											isActiveCustomerValid(appState.customer);
 									})}
 									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
@@ -101,17 +103,27 @@ export default component$<IProps>(({ onForward$ }) => {
 				<h2 class="text-lg font-medium text-gray-900">Shipping information</h2>
 			</div>
 
-			<AddressForm shippingAddress={appState.shippingAddress!} />
+			<AddressForm
+				shippingAddress={appState.shippingAddress}
+				onChange$={$(() => {
+					isFormValidSignal.value =
+						isShippingAddressValid(appState.shippingAddress) &&
+						isActiveCustomerValid(appState.customer);
+				})}
+			/>
 
 			<div class="mt-10 border-t border-gray-200 pt-10">
 				<ShippingMethodSelector />
 			</div>
 
 			<button
-				class="bg-primary-600 hover:bg-primary-700 flex w-full items-center justify-center space-x-2 mt-24 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-				onClick$={$(async () => {
-					onForward$(appState.customer, appState.shippingAddress!);
+				class="bg-primary-600 hover:bg-primary-700 flex w-full items-center justify-center space-x-2 mt-24 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:bg-slate-300"
+				onClick$={$(() => {
+					if (isFormValidSignal.value) {
+						onForward$(appState.customer, appState.shippingAddress);
+					}
 				})}
+				disabled={!isFormValidSignal.value}
 			>
 				<LockClosedIcon />
 				<span>Proceed to payment</span>

@@ -8,6 +8,11 @@ module.exports = {
 				primary: colors.blue,
 			},
 		},
+		variants: {
+			extend: {
+				opacity: ['disabled'],
+			},
+		},
 	},
 	plugins: [require('@tailwindcss/forms')],
 };

@@ -1,14 +1,14 @@
-import { $, component$, QwikChangeEvent, useContext } from '@builder.io/qwik';
+import { $, component$, PropFunction, QwikChangeEvent, useContext } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
 import { ShippingAddress } from '~/types';
 
 type IProps = {
 	shippingAddress: ShippingAddress;
+	onChange$: PropFunction<() => void>;
 };
 
-export default component$<IProps>(({ shippingAddress }) => {
+export default component$<IProps>(({ shippingAddress, onChange$ }) => {
 	const appState = useContext(APP_STATE);
-
 	return (
 		<div>
 			{shippingAddress.countryCode && (
@@ -25,10 +25,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 								value={shippingAddress.fullName}
 								autoComplete="given-name"
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-								onChange$={$(
-									(e: QwikChangeEvent<HTMLInputElement>) =>
-										(shippingAddress.fullName = e.target.value)
-								)}
+								onChange$={$((e: QwikChangeEvent<HTMLInputElement>) => {
+									shippingAddress.fullName = e.target.value;
+									onChange$();
+								})}
 							/>
 						</div>
 					</div>
@@ -44,9 +44,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 								id="company"
 								value={shippingAddress.company}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-								onChange$={(e: QwikChangeEvent<HTMLInputElement>) =>
-									(shippingAddress.company = e.target.value)
-								}
+								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+									shippingAddress.company = e.target.value;
+									onChange$();
+								}}
 							/>
 						</div>
 					</div>
@@ -62,9 +63,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 								id="streetLine1"
 								value={shippingAddress.streetLine1}
 								autoComplete="street-address"
-								onChange$={(e: QwikChangeEvent<HTMLInputElement>) =>
-									(shippingAddress.streetLine1 = e.target.value)
-								}
+								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+									shippingAddress.streetLine1 = e.target.value;
+									onChange$();
+								}}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							/>
 						</div>
@@ -81,9 +83,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 								id="streetLine2"
 								value={shippingAddress.streetLine2}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-								onChange$={(e: QwikChangeEvent<HTMLInputElement>) =>
-									(shippingAddress.streetLine2 = e.target.value)
-								}
+								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+									shippingAddress.streetLine2 = e.target.value;
+									onChange$();
+								}}
 							/>
 						</div>
 					</div>
@@ -100,9 +103,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 								autoComplete="address-level2"
 								value={shippingAddress.city}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-								onChange$={(e: QwikChangeEvent<HTMLInputElement>) =>
-									(shippingAddress.city = e.target.value)
-								}
+								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+									shippingAddress.city = e.target.value;
+									onChange$();
+								}}
 							/>
 						</div>
 					</div>
@@ -118,9 +122,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 									name="countryCode"
 									value={shippingAddress.countryCode}
 									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-									onChange$={(e: QwikChangeEvent<HTMLSelectElement>) =>
-										(shippingAddress.province = e.target.value)
-									}
+									onChange$={(e: QwikChangeEvent<HTMLSelectElement>) => {
+										shippingAddress.province = e.target.value;
+										onChange$();
+									}}
 								>
 									{appState.availableCountries.map((item) => (
 										<option
@@ -147,9 +152,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 								id="province"
 								value={shippingAddress.province}
 								autoComplete="address-level1"
-								onChange$={(e: QwikChangeEvent<HTMLInputElement>) =>
-									(shippingAddress.province = e.target.value)
-								}
+								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+									shippingAddress.province = e.target.value;
+									onChange$();
+								}}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							/>
 						</div>
@@ -166,9 +172,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 								id="postalCode"
 								value={shippingAddress.postalCode}
 								autoComplete="postal-code"
-								onChange$={(e: QwikChangeEvent<HTMLInputElement>) =>
-									(shippingAddress.postalCode = e.target.value)
-								}
+								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+									shippingAddress.postalCode = e.target.value;
+									onChange$();
+								}}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							/>
 						</div>
@@ -185,9 +192,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 								id="phoneNumber"
 								value={shippingAddress.phoneNumber}
 								autoComplete="tel"
-								onChange$={(e: QwikChangeEvent<HTMLInputElement>) =>
-									(shippingAddress.phoneNumber = e.target.value)
-								}
+								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+									shippingAddress.phoneNumber = e.target.value;
+									onChange$();
+								}}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							/>
 						</div>
