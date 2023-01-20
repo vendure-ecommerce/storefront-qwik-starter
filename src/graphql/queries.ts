@@ -254,3 +254,21 @@ export const nextOrderStatesQuery = () => ({
 	variables: {},
 	query: `query nextOrderStates { nextOrderStates }`,
 });
+
+// eligible shipping methods
+
+export const eligibleShippingMethodsQuery = () => ({
+	variables: {},
+	query: `
+    query eligibleShippingMethods {
+      eligibleShippingMethods {
+        id
+        name
+        description
+        metadata
+        price
+        priceWithTax
+      }
+    }
+`,
+});

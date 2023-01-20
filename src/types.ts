@@ -198,6 +198,11 @@ export type ActiveCustomer = {
 	emailAddress?: string;
 };
 
+export type EligibleShippingMethods = {
+	name: string;
+	price: number;
+};
+
 export type CurrencyCode =
 	/** United Arab Emirates dirham */
 	| 'AED'
