@@ -1,13 +1,12 @@
-import { $, component$, PropFunction, QwikChangeEvent, useContext } from '@builder.io/qwik';
+import { $, component$, QwikChangeEvent, useContext } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
 import { ShippingAddress } from '~/types';
 
 type IProps = {
 	shippingAddress: ShippingAddress;
-	onChange$: PropFunction<() => void>;
 };
 
-export default component$<IProps>(({ shippingAddress, onChange$ }) => {
+export default component$<IProps>(({ shippingAddress }) => {
 	const appState = useContext(APP_STATE);
 	return (
 		<div>
@@ -26,8 +25,10 @@ export default component$<IProps>(({ shippingAddress, onChange$ }) => {
 								autoComplete="given-name"
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								onChange$={$((e: QwikChangeEvent<HTMLInputElement>) => {
-									shippingAddress.fullName = e.target.value;
-									onChange$();
+									appState.shippingAddress = {
+										...appState.shippingAddress,
+										fullName: e.target.value,
+									};
 								})}
 							/>
 						</div>
@@ -45,8 +46,10 @@ export default component$<IProps>(({ shippingAddress, onChange$ }) => {
 								value={shippingAddress.company}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
-									shippingAddress.company = e.target.value;
-									onChange$();
+									appState.shippingAddress = {
+										...appState.shippingAddress,
+										company: e.target.value,
+									};
 								}}
 							/>
 						</div>
@@ -64,8 +67,10 @@ export default component$<IProps>(({ shippingAddress, onChange$ }) => {
 								value={shippingAddress.streetLine1}
 								autoComplete="street-address"
 								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
-									shippingAddress.streetLine1 = e.target.value;
-									onChange$();
+									appState.shippingAddress = {
+										...appState.shippingAddress,
+										streetLine1: e.target.value,
+									};
 								}}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							/>
@@ -84,8 +89,10 @@ export default component$<IProps>(({ shippingAddress, onChange$ }) => {
 								value={shippingAddress.streetLine2}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
-									shippingAddress.streetLine2 = e.target.value;
-									onChange$();
+									appState.shippingAddress = {
+										...appState.shippingAddress,
+										streetLine2: e.target.value,
+									};
 								}}
 							/>
 						</div>
@@ -104,8 +111,7 @@ export default component$<IProps>(({ shippingAddress, onChange$ }) => {
 								value={shippingAddress.city}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
-									shippingAddress.city = e.target.value;
-									onChange$();
+									appState.shippingAddress = { ...appState.shippingAddress, city: e.target.value };
 								}}
 							/>
 						</div>
@@ -123,8 +129,10 @@ export default component$<IProps>(({ shippingAddress, onChange$ }) => {
 									value={shippingAddress.countryCode}
 									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 									onChange$={(e: QwikChangeEvent<HTMLSelectElement>) => {
-										shippingAddress.province = e.target.value;
-										onChange$();
+										appState.shippingAddress = {
+											...appState.shippingAddress,
+											countryCode: e.target.value,
+										};
 									}}
 								>
 									{appState.availableCountries.map((item) => (
@@ -153,8 +161,10 @@ export default component$<IProps>(({ shippingAddress, onChange$ }) => {
 								value={shippingAddress.province}
 								autoComplete="address-level1"
 								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
-									shippingAddress.province = e.target.value;
-									onChange$();
+									appState.shippingAddress = {
+										...appState.shippingAddress,
+										province: e.target.value,
+									};
 								}}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							/>
@@ -173,8 +183,10 @@ export default component$<IProps>(({ shippingAddress, onChange$ }) => {
 								value={shippingAddress.postalCode}
 								autoComplete="postal-code"
 								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
-									shippingAddress.postalCode = e.target.value;
-									onChange$();
+									appState.shippingAddress = {
+										...appState.shippingAddress,
+										postalCode: e.target.value,
+									};
 								}}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							/>
@@ -193,8 +205,10 @@ export default component$<IProps>(({ shippingAddress, onChange$ }) => {
 								value={shippingAddress.phoneNumber}
 								autoComplete="tel"
 								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
-									shippingAddress.phoneNumber = e.target.value;
-									onChange$();
+									appState.shippingAddress = {
+										...appState.shippingAddress,
+										phoneNumber: e.target.value,
+									};
 								}}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							/>

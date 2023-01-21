@@ -6,6 +6,7 @@ import {
 	useClientEffect$,
 	useContext,
 	useSignal,
+	useTask$,
 } from '@builder.io/qwik';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { getActiveOrderQuery } from '~/graphql/queries';
@@ -36,6 +37,13 @@ export default component$<IProps>(({ onForward$ }) => {
 		}
 	});
 
+	useTask$(({ track }) => {
+		track(() => appState.customer);
+		track(() => appState.shippingAddress);
+		isFormValidSignal.value =
+			isShippingAddressValid(appState.shippingAddress) && isActiveCustomerValid(appState.customer);
+	});
+
 	return (
 		<div>
 			<div>
@@ -49,10 +57,7 @@ export default component$<IProps>(({ onForward$ }) => {
 								value={appState.customer?.emailAddress}
 								disabled={appState.customer?.id !== CUSTOMER_NOT_DEFINED_ID}
 								onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-									appState.customer.emailAddress = event.target.value;
-									isFormValidSignal.value =
-										isShippingAddressValid(appState.shippingAddress) &&
-										isActiveCustomerValid(appState.customer);
+									appState.customer = { ...appState.customer, emailAddress: event.target.value };
 								})}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							/>
@@ -67,10 +72,7 @@ export default component$<IProps>(({ onForward$ }) => {
 									value={appState.customer?.firstName}
 									disabled={appState.customer?.id !== CUSTOMER_NOT_DEFINED_ID}
 									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-										appState.customer.firstName = event.target.value;
-										isFormValidSignal.value =
-											isShippingAddressValid(appState.shippingAddress) &&
-											isActiveCustomerValid(appState.customer);
+										appState.customer = { ...appState.customer, firstName: event.target.value };
 									})}
 									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
@@ -85,10 +87,7 @@ export default component$<IProps>(({ onForward$ }) => {
 									value={appState.customer?.lastName}
 									disabled={appState.customer?.id !== CUSTOMER_NOT_DEFINED_ID}
 									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-										appState.customer.lastName = event.target.value;
-										isFormValidSignal.value =
-											isShippingAddressValid(appState.shippingAddress) &&
-											isActiveCustomerValid(appState.customer);
+										appState.customer = { ...appState.customer, lastName: event.target.value };
 									})}
 									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
@@ -103,14 +102,7 @@ export default component$<IProps>(({ onForward$ }) => {
 				<h2 class="text-lg font-medium text-gray-900">Shipping information</h2>
 			</div>
 
-			<AddressForm
-				shippingAddress={appState.shippingAddress}
-				onChange$={$(() => {
-					isFormValidSignal.value =
-						isShippingAddressValid(appState.shippingAddress) &&
-						isActiveCustomerValid(appState.customer);
-				})}
-			/>
+			<AddressForm shippingAddress={appState.shippingAddress} />
 
 			<div class="mt-10 border-t border-gray-200 pt-10">
 				<ShippingMethodSelector />
