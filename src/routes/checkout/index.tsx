@@ -2,7 +2,6 @@ import { $, component$, useContext, useStore, useTask$ } from '@builder.io/qwik'
 import { isBrowser } from '@builder.io/qwik/build';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
-import Confirmation from '~/components/confirmation/Confirmation';
 import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
 import Payment from '~/components/payment/Payment';
 import Shipping from '~/components/shipping/Shipping';
@@ -41,7 +40,7 @@ export default component$(() => {
 			addPaymentToOrder: ActiveOrder;
 		}>(addPaymentToOrderMutation());
 		appState.activeOrder = activeOrder;
-		state.step = 'CONFIRMATION';
+		window.location.href = `/checkout/confirmation/${activeOrder.code}`;
 	});
 
 	return (
@@ -100,12 +99,6 @@ export default component$(() => {
 									/>
 								) : state.step === 'PAYMENT' ? (
 									<Payment onForward$={confirmPayment} />
-								) : state.step === 'CONFIRMATION' ? (
-									<Confirmation
-										onForward$={async () => {
-											window.location.href = '/';
-										}}
-									/>
 								) : (
 									<div></div>
 								)}
@@ -114,10 +107,7 @@ export default component$(() => {
 							{state.step !== 'CONFIRMATION' && (
 								<div class="mt-10 lg:mt-0">
 									<h2 class="text-lg font-medium text-gray-900 mb-4">Order summary</h2>
-
-									<CartContents
-										currencyCode={appState.activeOrder.currencyCode || 'USD'}
-									></CartContents>
+									<CartContents />
 									<CartTotals />
 								</div>
 							)}

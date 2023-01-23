@@ -2,17 +2,18 @@ import { component$, useContext } from '@builder.io/qwik';
 import { Link, useLocation } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import { adjustOrderLineMutation, removeOrderLineMutation } from '~/graphql/mutations';
-import { ActiveOrder, CurrencyCode } from '~/types';
+import { ActiveOrder } from '~/types';
 import { execute } from '~/utils/api';
 import Price from '../products/Price';
 
 export default component$<{
-	currencyCode: CurrencyCode;
-}>(({ currencyCode }) => {
+	order?: ActiveOrder;
+}>(({ order }) => {
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
-	const rows = appState.activeOrder?.lines || [];
-	const isEditable = !location.pathname.startsWith('/checkout/');
+	const rows = order?.lines || appState.activeOrder?.lines || [];
+	const isEditable = !location.pathname.startsWith('/checkout/') && !order;
+	const currencyCode = order?.currencyCode || appState.activeOrder?.currencyCode || 'USD';
 
 	return (
 		<div class="flow-root">
