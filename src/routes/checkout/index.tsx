@@ -58,15 +58,15 @@ export default component$(() => {
 							<ol class="flex space-x-4 justify-center">
 								{steps.map((step, index) => (
 									<>
-										{isEnvVariableEnabled('VITE_SHOW_PAYMENT_STEP') ||
-											(step.state !== 'PAYMENT' && (
-												<li key={step.name} class="flex items-center">
-													<span class={`${step.state === state.step ? 'text-primary-600' : ''}`}>
-														{step.name}
-													</span>
-													{index !== steps.length - 1 ? <ChevronRightIcon /> : null}
-												</li>
-											))}
+										{(isEnvVariableEnabled('VITE_SHOW_PAYMENT_STEP') ||
+											step.state !== 'PAYMENT') && (
+											<li key={step.name} class="flex items-center">
+												<span class={`${step.state === state.step ? 'text-primary-600' : ''}`}>
+													{step.name}
+												</span>
+												{index !== steps.length - 1 ? <ChevronRightIcon /> : null}
+											</li>
+										)}
 									</>
 								))}
 							</ol>
