@@ -46,7 +46,7 @@ export default component$(() => {
 			const { collections } = await execute<{
 				collections: { items: Collection[] };
 			}>(getCollectionsQuery());
-			state.collections = collections.items;
+			state.collections = collections.items.filter((item) => item.name !== 'Pet Food');
 			const { availableCountries } = await execute<{ availableCountries: Country[] }>(
 				getAvailableCountriesQuery()
 			);
