@@ -1,10 +1,4 @@
-import {
-	$,
-	component$,
-	QwikKeyboardEvent,
-	useBrowserVisibleTask$,
-	useStore,
-} from '@builder.io/qwik';
+import { $, component$, QwikKeyboardEvent, useClientEffect$, useStore } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import { isBrowser } from '@builder.io/qwik/build';
 import Filters from '~/components/facet-filter-controls/Filters';
@@ -28,16 +22,16 @@ export default component$(() => {
 		facetValueIds: [],
 	});
 
-	const { url } = useLocation();
-	const term = url.searchParams.get('q') || '';
-	const activeFacetValueIds: string[] = url.searchParams.get('f')?.split('-') || [];
+	const { query } = useLocation();
+	const term = query.q;
+	const activeFacetValueIds: string[] = query.f ? query.f.split('-') : [];
 
 	const executeQuery = $(
 		async (term: string, activeFacetValueIds: string[]) =>
 			await execute<{ search: Search }>(searchQueryWithTerm(term, activeFacetValueIds))
 	);
 
-	useBrowserVisibleTask$(async () => {
+	useClientEffect$(async () => {
 		if (isBrowser) {
 			window.scrollTo(0, 0);
 			const { search } = await executeQuery(term, activeFacetValueIds);

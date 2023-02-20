@@ -1,4 +1,4 @@
-import { component$, useBrowserVisibleTask$, useContext } from '@builder.io/qwik';
+import { component$, useClientEffect$, useContext } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { getActiveCustomerQuery, getActiveOrderQuery } from '~/graphql/queries';
@@ -20,7 +20,7 @@ export default component$(() => {
 			? appState.activeOrder?.totalQuantity || 0
 			: 0;
 
-	useBrowserVisibleTask$(async () => {
+	useClientEffect$(async () => {
 		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
 		if (activeOrder?.customer) {
 			appState.customer = activeOrder?.customer;

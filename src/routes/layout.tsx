@@ -2,7 +2,7 @@ import {
 	$,
 	component$,
 	Slot,
-	useBrowserVisibleTask$,
+	useClientEffect$,
 	useContextProvider,
 	useOn,
 	useStore,
@@ -56,7 +56,7 @@ export default component$(() => {
 	});
 
 	// with useTask$ doesn't have the same behaviour
-	useBrowserVisibleTask$(async () => {
+	useClientEffect$(async () => {
 		if (isBrowser) {
 			window.scrollTo(0, 0);
 			const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());

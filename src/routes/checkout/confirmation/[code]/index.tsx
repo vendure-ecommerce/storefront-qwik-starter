@@ -1,4 +1,4 @@
-import { component$, PropFunction, useBrowserVisibleTask$, useStore } from '@builder.io/qwik';
+import { component$, PropFunction, useClientEffect$, useStore } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
@@ -22,7 +22,7 @@ export default component$<{ onForward$: PropFunction<() => void> }>(() => {
 		{ name: 'Confirmation', state: 'CONFIRMATION' },
 	];
 
-	useBrowserVisibleTask$(async () => {
+	useClientEffect$(async () => {
 		const { orderByCode } = await execute<{ orderByCode: ActiveOrder }>(
 			getOrderByCodeQuery({ code })
 		);
