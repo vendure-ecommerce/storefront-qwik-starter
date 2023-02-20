@@ -3,7 +3,7 @@ import {
 	component$,
 	PropFunction,
 	QwikChangeEvent,
-	useClientEffect$,
+	useBrowserVisibleTask$,
 	useContext,
 	useSignal,
 	useTask$,
@@ -27,7 +27,7 @@ export default component$<IProps>(({ onForward$ }) => {
 	const appState = useContext(APP_STATE);
 	const isFormValidSignal = useSignal(false);
 
-	useClientEffect$(async () => {
+	useBrowserVisibleTask$(async () => {
 		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
 		if (activeOrder?.customer) {
 			appState.customer = activeOrder?.customer;
