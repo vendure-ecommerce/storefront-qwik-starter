@@ -55,7 +55,6 @@ export default component$(() => {
 		}
 	});
 
-	// with useTask$ doesn't have the same behaviour
 	useBrowserVisibleTask$(async () => {
 		if (isBrowser) {
 			window.scrollTo(0, 0);
