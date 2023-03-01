@@ -75,13 +75,13 @@ export default component$(() => {
 					</h1>
 					<div class="flex space-x-4 hidden sm:block">
 						{collections.map((collection) => (
-							<Link
+							<a
 								class="text-sm md:text-base text-gray-200 hover:text-white"
 								href={'/collections/' + collection.slug}
 								key={collection.id}
 							>
 								{collection.name}
-							</Link>
+							</a>
 						))}
 					</div>
 					<div class="flex-1 md:pr-8">

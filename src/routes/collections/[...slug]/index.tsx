@@ -29,9 +29,9 @@ import {
 import { execute } from '~/utils/api';
 
 export default component$(() => {
-	const { params: _params, query } = useLocation();
+	const { params: _params, url } = useLocation();
 	const params = cleanUpParams(_params);
-	const activeFacetValueIds: string[] = query.f ? query.f.split('-') : [];
+	const activeFacetValueIds: string[] = url.searchParams.get('f')?.split('-') || [];
 	const state = useStore<{
 		showMenu: boolean;
 		search: Search;
