@@ -62,7 +62,7 @@ export default component$(() => {
 		changeUrlParamsWithoutRefresh('', facetValueIds);
 
 		const { search } = facetValueIds.length
-			? await execute<{ search: Search }>(searchQueryWithTerm('', state.facetValueIds))
+			? await execute<{ search: Search }>(searchQueryWithTerm(params.slug, '', state.facetValueIds))
 			: await execute<{ search: Search }>(searchQueryWithCollectionSlug(params.slug));
 		state.search = search;
 	});
@@ -76,7 +76,7 @@ export default component$(() => {
 
 	const searchResource = useResource$<void>(async () => {
 		const { search } = activeFacetValueIds.length
-			? await execute<{ search: Search }>(searchQueryWithTerm('', activeFacetValueIds))
+			? await execute<{ search: Search }>(searchQueryWithTerm(params.slug, '', activeFacetValueIds))
 			: await execute<{ search: Search }>(searchQueryWithCollectionSlug(params.slug));
 		state.search = search;
 		state.facedValues = groupFacetValues(search, activeFacetValueIds);
