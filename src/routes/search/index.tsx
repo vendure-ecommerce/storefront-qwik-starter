@@ -34,7 +34,7 @@ export default component$(() => {
 
 	const executeQuery = $(
 		async (term: string, activeFacetValueIds: string[]) =>
-			await execute<{ search: Search }>(searchQueryWithTerm(term, activeFacetValueIds))
+			await execute<{ search: Search }>(searchQueryWithTerm('', term, activeFacetValueIds))
 	);
 
 	useBrowserVisibleTask$(async () => {
