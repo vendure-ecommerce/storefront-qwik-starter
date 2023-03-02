@@ -6,9 +6,9 @@ import {
 	useContextProvider,
 	useOn,
 	useStore,
-	useTask$,
 } from '@builder.io/qwik';
-import { isBrowser, isServer } from '@builder.io/qwik/build';
+import { routeLoader$ } from '@builder.io/qwik-city';
+import { isBrowser } from '@builder.io/qwik/build';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import {
 	getActiveOrderQuery,
@@ -20,16 +20,34 @@ import { execute } from '~/utils/api';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
 
+export const collectionsLoader$ = routeLoader$(async () => {
+	const { collections: collections } = await execute<{
+		collections: { items: Collection[] };
+	}>(getCollectionsQuery());
+	return collections.items;
+});
+
+export const availableCountriesLoader$ = routeLoader$(async () => {
+	const { availableCountries } = await execute<{ availableCountries: Country[] }>(
+		getAvailableCountriesQuery()
+	);
+	return availableCountries;
+});
+
 export default component$(() => {
+	const collectionsSignal = collectionsLoader$.use();
+	const availableCountriesSignal = availableCountriesLoader$.use();
+
 	const state = useStore<AppState>({
-		collections: [],
-		activeOrder: {} as ActiveOrder,
 		showCart: false,
 		customer: { id: CUSTOMER_NOT_DEFINED_ID, firstName: '', lastName: '' } as ActiveCustomer,
+		activeOrder: {} as ActiveOrder,
+		collections: collectionsSignal.value || [],
+		availableCountries: availableCountriesSignal.value || [],
 		shippingAddress: {
 			city: '',
 			company: '',
-			countryCode: '',
+			countryCode: availableCountriesSignal.value[0].code,
 			fullName: '',
 			phoneNumber: '',
 			postalCode: '',
@@ -37,23 +55,9 @@ export default component$(() => {
 			streetLine1: '',
 			streetLine2: '',
 		},
-		availableCountries: [],
 	});
-	useContextProvider(APP_STATE, state);
 
-	useTask$(async () => {
-		if (isServer) {
-			const { collections } = await execute<{
-				collections: { items: Collection[] };
-			}>(getCollectionsQuery());
-			state.collections = collections.items.filter((item) => item.name !== 'Pet Food');
-			const { availableCountries } = await execute<{ availableCountries: Country[] }>(
-				getAvailableCountriesQuery()
-			);
-			state.availableCountries = availableCountries;
-			state.shippingAddress.countryCode = availableCountries[0].code;
-		}
-	});
+	useContextProvider(APP_STATE, state);
 
 	useBrowserVisibleTask$(async () => {
 		if (isBrowser) {
