@@ -1,5 +1,4 @@
 import { component$, useContext } from '@builder.io/qwik';
-import { Link } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import GitIcon from '../icons/GitIcon';
 
@@ -32,13 +31,13 @@ export default component$(() => {
 								<ul class="mt-4 space-y-4">
 									{collections.map((collection) => (
 										<li key={collection.id}>
-											<Link
+											<a
 												class="text-base text-gray-500 hover:text-gray-600"
 												href={'/collections/' + collection.slug}
 												key={collection.id}
 											>
 												{collection.name}
-											</Link>
+											</a>
 										</li>
 									))}
 								</ul>
@@ -50,9 +49,9 @@ export default component$(() => {
 								<ul class="mt-4 space-y-4">
 									{navigation.support.map((item) => (
 										<li key={item.name}>
-											<Link href={item.href} class="text-base text-gray-500 hover:text-gray-600">
+											<a href={item.href} class="text-base text-gray-500 hover:text-gray-600">
 												{item.name}
-											</Link>
+											</a>
 										</li>
 									))}
 								</ul>
@@ -66,9 +65,9 @@ export default component$(() => {
 								<ul class="mt-4 space-y-4">
 									{navigation.company.map((item) => (
 										<li key={item.name}>
-											<Link href={item.href} class="text-base text-gray-500 hover:text-gray-600">
+											<a href={item.href} class="text-base text-gray-500 hover:text-gray-600">
 												{item.name}
-											</Link>
+											</a>
 										</li>
 									))}
 								</ul>
