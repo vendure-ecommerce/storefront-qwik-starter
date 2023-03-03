@@ -18,7 +18,7 @@ export const execute = async <T>(body: ExecuteProps): Promise<T> => {
 	const options = { method: 'POST', headers, body: JSON.stringify(body) };
 
 	const response: ResponseProps<T> = isBrowser
-		? await server$(() => executeRequest(options))()
+		? await executeOnTheServer(options)
 		: await executeRequest(options);
 
 	if (isBrowser && response.token) {
@@ -27,6 +27,8 @@ export const execute = async <T>(body: ExecuteProps): Promise<T> => {
 
 	return response.data;
 };
+
+const executeOnTheServer = server$(async (options: Options) => executeRequest(options));
 
 const executeRequest = async (options: Options) => {
 	const httpResponse = await fetch(ENV_VARIABLES.VITE_VENDURE_PUBLIC_URL, options);
