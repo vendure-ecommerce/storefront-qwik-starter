@@ -20,14 +20,14 @@ import { execute } from '~/utils/api';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
 
-export const collectionsLoader$ = routeLoader$(async () => {
+export const useCollectionsLoader = routeLoader$(async () => {
 	const { collections: collections } = await execute<{
 		collections: { items: Collection[] };
 	}>(getCollectionsQuery());
 	return collections.items;
 });
 
-export const availableCountriesLoader$ = routeLoader$(async () => {
+export const useAvailableCountriesLoader = routeLoader$(async () => {
 	const { availableCountries } = await execute<{ availableCountries: Country[] }>(
 		getAvailableCountriesQuery()
 	);
@@ -35,8 +35,8 @@ export const availableCountriesLoader$ = routeLoader$(async () => {
 });
 
 export default component$(() => {
-	const collectionsSignal = collectionsLoader$.use();
-	const availableCountriesSignal = availableCountriesLoader$.use();
+	const collectionsSignal = useCollectionsLoader.use();
+	const availableCountriesSignal = useAvailableCountriesLoader.use();
 
 	const state = useStore<AppState>({
 		showCart: false,
