@@ -4,6 +4,14 @@ An e-commerce storefront for [Vendure](https://www.vendure.io) built with [Qwik]
 
 👉 [qwik-storefront.vendure.io](https://qwik-storefront.vendure.io)
 
+## Core Web Vitals
+
+<br/>
+
+![pagespeed.web.dev](docs/metrics.png)
+
+<br/>
+
 ## To do
 
 - Cart ✅
