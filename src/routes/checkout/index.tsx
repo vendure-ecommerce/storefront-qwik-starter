@@ -37,6 +37,7 @@ export default component$(() => {
 			addPaymentToOrder: ActiveOrder;
 		}>(addPaymentToOrderMutation());
 		appState.activeOrder = activeOrder;
+		scrollToTop();
 		window.location.href = `/checkout/confirmation/${activeOrder.code}`;
 	});
 
@@ -92,6 +93,7 @@ export default component$(() => {
 													}
 												}
 											}
+											scrollToTop();
 										}}
 									/>
 								) : state.step === 'PAYMENT' ? (
