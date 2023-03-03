@@ -8,7 +8,6 @@ import {
 	useStore,
 } from '@builder.io/qwik';
 import { routeLoader$ } from '@builder.io/qwik-city';
-import { isBrowser } from '@builder.io/qwik/build';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import {
 	getActiveOrderQuery,
@@ -16,6 +15,7 @@ import {
 	getCollectionsQuery,
 } from '~/graphql/queries';
 import { ActiveCustomer, ActiveOrder, AppState, Collection, Country } from '~/types';
+import { scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
@@ -60,11 +60,9 @@ export default component$(() => {
 	useContextProvider(APP_STATE, state);
 
 	useBrowserVisibleTask$(async () => {
-		if (isBrowser) {
-			window.scrollTo(0, 0);
-			const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
-			state.activeOrder = activeOrder;
-		}
+		scrollToTop();
+		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
+		state.activeOrder = activeOrder;
 	});
 
 	useOn(

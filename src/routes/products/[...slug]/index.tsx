@@ -2,13 +2,13 @@ import {
 	$,
 	component$,
 	Resource,
+	useBrowserVisibleTask$,
 	useContext,
 	useResource$,
 	useStore,
 	useTask$,
 } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
-import { isBrowser } from '@builder.io/qwik/build';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CheckIcon from '~/components/icons/CheckIcon';
@@ -20,7 +20,7 @@ import { APP_STATE } from '~/constants';
 import { addItemToOrderMutation } from '~/graphql/mutations';
 import { getProductQuery } from '~/graphql/queries';
 import { ActiveOrder, Line, Product, Variant } from '~/types';
-import { cleanUpParams, isEnvVariableEnabled } from '~/utils';
+import { cleanUpParams, isEnvVariableEnabled, scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
@@ -57,10 +57,8 @@ export default component$(() => {
 		calculateQuantities(state.product);
 	});
 
-	useTask$(() => {
-		if (isBrowser) {
-			window.scrollTo(0, 0);
-		}
+	useBrowserVisibleTask$(() => {
+		scrollToTop();
 	});
 
 	useTask$((tracker) => {

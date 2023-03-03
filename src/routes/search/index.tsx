@@ -6,13 +6,17 @@ import {
 	useStore,
 } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
-import { isBrowser } from '@builder.io/qwik/build';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
 import { searchQueryWithTerm } from '~/graphql/queries';
 import { FacetWithValues, Search } from '~/types';
-import { changeUrlParamsWithoutRefresh, enableDisableFacetValues, groupFacetValues } from '~/utils';
+import {
+	changeUrlParamsWithoutRefresh,
+	enableDisableFacetValues,
+	groupFacetValues,
+	scrollToTop,
+} from '~/utils';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
@@ -38,13 +42,11 @@ export default component$(() => {
 	);
 
 	useBrowserVisibleTask$(async () => {
-		if (isBrowser) {
-			window.scrollTo(0, 0);
-			const { search } = await executeQuery(term, activeFacetValueIds);
-			state.search = search;
-			state.facedValues = groupFacetValues(state.search, activeFacetValueIds);
-			state.facetValueIds = activeFacetValueIds;
-		}
+		scrollToTop();
+		const { search } = await executeQuery(term, activeFacetValueIds);
+		state.search = search;
+		state.facedValues = groupFacetValues(state.search, activeFacetValueIds);
+		state.facetValueIds = activeFacetValueIds;
 	});
 
 	const onFilterChange = $(async (id: string) => {

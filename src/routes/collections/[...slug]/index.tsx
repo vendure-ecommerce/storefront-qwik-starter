@@ -3,12 +3,11 @@ import {
 	component$,
 	QwikKeyboardEvent,
 	Resource,
+	useBrowserVisibleTask$,
 	useResource$,
 	useStore,
-	useTask$,
 } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
-import { isBrowser } from '@builder.io/qwik/build';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import Filters from '~/components/facet-filter-controls/Filters';
@@ -25,6 +24,7 @@ import {
 	cleanUpParams,
 	enableDisableFacetValues,
 	groupFacetValues,
+	scrollToTop,
 } from '~/utils';
 import { execute } from '~/utils/api';
 
@@ -44,10 +44,8 @@ export default component$(() => {
 		facetValueIds: [],
 	});
 
-	useTask$(() => {
-		if (isBrowser) {
-			window.scrollTo(0, 0);
-		}
+	useBrowserVisibleTask$(() => {
+		scrollToTop();
 	});
 
 	const onFilterChange = $(async (id: string) => {

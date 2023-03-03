@@ -1,13 +1,11 @@
-import { $, component$, useTask$ } from '@builder.io/qwik';
-import { isBrowser } from '@builder.io/qwik/build';
+import { $, component$, useBrowserVisibleTask$ } from '@builder.io/qwik';
 import { logoutMutation } from '~/graphql/mutations';
+import { scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
-	useTask$(() => {
-		if (isBrowser) {
-			window.scrollTo(0, 0);
-		}
+	useBrowserVisibleTask$(() => {
+		scrollToTop();
 	});
 
 	const logout = $(async () => {

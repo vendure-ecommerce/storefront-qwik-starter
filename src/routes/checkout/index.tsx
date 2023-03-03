@@ -1,5 +1,4 @@
-import { $, component$, useContext, useStore, useTask$ } from '@builder.io/qwik';
-import { isBrowser } from '@builder.io/qwik/build';
+import { $, component$, useBrowserVisibleTask$, useContext, useStore } from '@builder.io/qwik';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
 import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
@@ -13,7 +12,7 @@ import {
 	transitionOrderToStateMutation,
 } from '~/graphql/mutations';
 import { ActiveCustomer, ActiveOrder, ShippingAddress } from '~/types';
-import { isEnvVariableEnabled } from '~/utils';
+import { isEnvVariableEnabled, scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
 
 type Step = 'SHIPPING' | 'PAYMENT' | 'CONFIRMATION';
@@ -27,11 +26,9 @@ export default component$(() => {
 		{ name: 'Confirmation', state: 'CONFIRMATION' },
 	];
 
-	useTask$(() => {
-		if (isBrowser) {
-			window.scrollTo(0, 0);
-			appState.showCart = false;
-		}
+	useBrowserVisibleTask$(() => {
+		scrollToTop();
+		appState.showCart = false;
 	});
 
 	const confirmPayment = $(async () => {
