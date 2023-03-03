@@ -83,7 +83,7 @@ export const setCookie = (name: string, value: string, days: number) => {
 
 export const getCookie = (name: string) => {
 	const keyValues = document.cookie.split(';');
-	let result = null;
+	let result = '';
 	keyValues.forEach((item) => {
 		const [key, value] = item.split('=');
 		if (key.trim() === name) {
