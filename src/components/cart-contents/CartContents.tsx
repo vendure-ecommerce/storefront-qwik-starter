@@ -12,7 +12,7 @@ export default component$<{
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
 	const rows = order?.lines || appState.activeOrder?.lines || [];
-	const isEditable = !location.pathname.startsWith('/checkout/') && !order;
+	const isEditable = !location.url.toString().startsWith('/checkout/') && !order;
 	const currencyCode = order?.currencyCode || appState.activeOrder?.currencyCode || 'USD';
 
 	return (

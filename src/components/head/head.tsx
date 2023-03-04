@@ -16,7 +16,7 @@ export const Head = component$(() => {
 			<link rel="manifest" href="/manifest.json" />
 			<link rel="apple-touch-icon" href="/logo-192-192.png" />
 			<link rel="preconnect" href="https://demo.vendure.io" />
-			<link rel="canonical" href={loc.href} />
+			<link rel="canonical" href={loc.url.toString()} />
 
 			{head.meta.map((m) => (
 				<meta {...m} />
