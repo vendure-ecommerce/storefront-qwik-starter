@@ -61,7 +61,7 @@ export default component$<{ onForward$: PropFunction<() => void> }>(() => {
 										<div class="mb-6">
 											<CartContents order={store.order} />
 										</div>
-										<CartTotals />
+										<CartTotals order={store.order} />
 									</div>
 								</div>
 							</div>
