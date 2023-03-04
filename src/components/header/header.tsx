@@ -84,7 +84,7 @@ export default component$(() => {
 							</a>
 						))}
 					</div>
-					<div class="flex-1 md:pr-8">
+					<div class="flex-1 hidden sm:block md:pr-8">
 						<SearchBar />
 					</div>
 					<div class="">
