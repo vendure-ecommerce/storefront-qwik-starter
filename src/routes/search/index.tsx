@@ -60,7 +60,7 @@ export default component$(() => {
 		state.facetValueIds = facetValueIds;
 		changeUrlParamsWithoutRefresh(term, facetValueIds);
 
-		const { search } = await await executeQuery(term, state.facetValueIds);
+		const { search } = await executeQuery(term, state.facetValueIds);
 		state.search = search;
 	});
 

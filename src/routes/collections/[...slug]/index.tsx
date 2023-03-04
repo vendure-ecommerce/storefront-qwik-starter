@@ -31,7 +31,7 @@ export const useCollectionLoader = routeLoader$(async ({ params }) => {
 	return collection;
 });
 
-export const searchLoader = routeLoader$(async ({ params: p, url }) => {
+export const useSearchLoader = routeLoader$(async ({ params: p, url }) => {
 	const params = cleanUpParams(p);
 	const activeFacetValueIds: string[] = url.searchParams.get('f')?.split('-') || [];
 	const { search } = activeFacetValueIds.length
@@ -46,7 +46,7 @@ export default component$(() => {
 	const activeFacetValueIds: string[] = url.searchParams.get('f')?.split('-') || [];
 
 	const collectionSignal = useCollectionLoader.use();
-	const searchSignal = searchLoader.use();
+	const searchSignal = useSearchLoader();
 
 	const state = useStore<{
 		showMenu: boolean;

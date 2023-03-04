@@ -7,7 +7,7 @@ import Shipping from '~/components/shipping/Shipping';
 import { APP_STATE } from '~/constants';
 import {
 	addPaymentToOrderMutation,
-	setCustomerForOrderdMutation,
+	setCustomerForOrderMutation,
 	setOrderShippingAddressMutation,
 	transitionOrderToStateMutation,
 } from '~/graphql/mutations';
@@ -78,7 +78,7 @@ export default component$(() => {
 										) => {
 											const { setCustomerForOrder } = await execute<{
 												setCustomerForOrder: ActiveOrder;
-											}>(setCustomerForOrderdMutation(customer));
+											}>(setCustomerForOrderMutation(customer));
 
 											if (!setCustomerForOrder.errorCode) {
 												const { setOrderShippingAddress } = await execute<{

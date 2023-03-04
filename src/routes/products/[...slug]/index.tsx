@@ -21,14 +21,14 @@ import { ActiveOrder, Line, Product, Variant } from '~/types';
 import { cleanUpParams, isEnvVariableEnabled, scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
 
-export const productLoader = routeLoader$(async ({ params }) => {
+export const useProductLoader = routeLoader$(async ({ params }) => {
 	const { slug } = cleanUpParams(params);
 	const { product } = await execute<{ product: Product }>(getProductQuery({ slug }));
 	return product;
 });
 
 export default component$(() => {
-	const productSignal = productLoader.use();
+	const productSignal = useProductLoader();
 
 	const appState = useContext(APP_STATE);
 	const state = useStore<{

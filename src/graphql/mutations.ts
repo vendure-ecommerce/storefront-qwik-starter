@@ -267,7 +267,7 @@ export const logoutMutation = () => ({
 `,
 });
 
-export const setCustomerForOrderdMutation = ({
+export const setCustomerForOrderMutation = ({
 	emailAddress,
 	firstName,
 	lastName,
