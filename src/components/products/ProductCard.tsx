@@ -11,8 +11,8 @@ export default component$(
 					loading="lazy"
 					layout="fixed"
 					class="rounded-xl flex-grow object-cover aspect-[7/8]"
-					width="250"
-					height="250"
+					width="200"
+					height="200"
 					src={productAsset?.preview + '?w=300&h=400'}
 					alt={productName}
 				/>
