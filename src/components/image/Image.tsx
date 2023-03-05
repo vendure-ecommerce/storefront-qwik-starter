@@ -1,13 +1,13 @@
+import type { QRL, QwikIntrinsicElements } from '@builder.io/qwik';
 import {
 	component$,
 	createContextId,
 	useContext,
 	useContextProvider,
 	useId,
-	useTask$,
 	useSignal,
+	useTask$,
 } from '@builder.io/qwik';
-import type { QwikIntrinsicElements, QRL } from '@builder.io/qwik';
 
 export const DEFAULT_RESOLUTIONS = [3840, 1920, 1280, 960, 640];
 
@@ -127,7 +127,7 @@ export const getSrcSet = async ({
 
 	const srcSets = [];
 	for await (const breakpoint of breakpoints.sort()) {
-		let transformedHeight;
+		let transformedHeight = typeof height === 'string' ? parseInt(height, 10) : height;
 		if (height && aspectRatio) {
 			transformedHeight = Math.round(breakpoint * aspectRatio);
 		}
