@@ -1,5 +1,6 @@
 import { component$, useContext } from '@builder.io/qwik';
 import CollectionCard from '~/components/collection-card/CollectionCard';
+import { Image } from '~/components/image/Image';
 import { APP_STATE } from '~/constants';
 import { t } from '~/locales';
 
@@ -12,54 +13,12 @@ export default component$(() => {
 			<div class="relative">
 				<div class="absolute inset-0 overflow-hidden">
 					{headerImage && (
-						<picture>
-							<source
-								srcSet={headerImage + '?w=1000'}
-								type="image/avif"
-								media="(min-width: 1000px)"
-							/>
-							<source
-								srcSet={headerImage + '?w=800'}
-								type="image/avif"
-								media="(min-width: 800px)"
-							/>
-							<source
-								srcSet={headerImage + '?w=600'}
-								type="image/avif"
-								media="(min-width: 600px)"
-							/>
-							<source
-								srcSet={headerImage + '?w=400'}
-								type="image/avif"
-								media="(min-width: 400px)"
-							/>
-							<source
-								srcSet={headerImage + '?w=1000'}
-								type="image/webp"
-								media="(min-width: 1000px)"
-							/>
-							<source
-								srcSet={headerImage + '?w=800'}
-								type="image/webp"
-								media="(min-width: 800px)"
-							/>
-							<source
-								srcSet={headerImage + '?w=600'}
-								type="image/webp"
-								media="(min-width: 600px)"
-							/>
-							<source
-								srcSet={headerImage + '?w=400'}
-								type="image/webp"
-								media="(min-width: 400px)"
-							/>
-							<img
-								class="h-full object-cover md:w-full"
-								src={headerImage + '?w=800'}
-								alt="Background header photo of bicycle taken by Mikkel Bech"
-								width="100%"
-							/>
-						</picture>
+						<Image
+							layout="fullWidth"
+							class="h-full md:w-full"
+							src={headerImage}
+							alt="Background header photo of bicycle taken by Mikkel Bech"
+						/>
 					)}
 					<div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-700 mix-blend-overlay" />
 				</div>

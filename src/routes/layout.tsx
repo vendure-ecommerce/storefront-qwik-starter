@@ -8,7 +8,8 @@ import {
 	useStore,
 } from '@builder.io/qwik';
 import { routeLoader$ } from '@builder.io/qwik-city';
-import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
+import { ImageTransformerProps, useImageProvider } from '~/components/image/Image';
+import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, IMAGE_RESOLUTIONS } from '~/constants';
 import {
 	getActiveOrderQuery,
 	getAvailableCountriesQuery,
@@ -35,6 +36,16 @@ export const useAvailableCountriesLoader = routeLoader$(async () => {
 });
 
 export default component$(() => {
+	const imageTransformer$ = $(({ src, width }: ImageTransformerProps): string => {
+		return `${src}?w=${width}`;
+	});
+
+	// Provide your default options
+	useImageProvider({
+		imageTransformer$,
+		resolutions: IMAGE_RESOLUTIONS,
+	});
+
 	const collectionsSignal = useCollectionsLoader.use();
 	const availableCountriesSignal = useAvailableCountriesLoader.use();
 
