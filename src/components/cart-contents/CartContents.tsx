@@ -4,6 +4,7 @@ import { APP_STATE } from '~/constants';
 import { adjustOrderLineMutation, removeOrderLineMutation } from '~/graphql/mutations';
 import { ActiveOrder } from '~/types';
 import { execute } from '~/utils/api';
+import { Image } from '../image/Image';
 import Price from '../products/Price';
 
 export default component$<{
@@ -21,10 +22,11 @@ export default component$<{
 				{(rows ?? []).map((line) => (
 					<li key={line.id} class="py-6 flex">
 						<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
-							<img
+							<Image
+								layout="fullWidth"
+								class="w-full h-full object-center object-cover"
 								src={line.featuredAsset?.preview + '?preset=thumb'}
 								alt={line.productVariant.name}
-								class="w-full h-full object-center object-cover"
 							/>
 						</div>
 
