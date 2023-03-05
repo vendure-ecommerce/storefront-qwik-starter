@@ -9,13 +9,7 @@ type ExecuteProps = { query: string; variables: Record<string, any> };
 type Options = { method: string; headers: Record<string, string>; body: string };
 
 export const execute = async <T>(body: ExecuteProps): Promise<T> => {
-	let headers: Record<string, string> = { 'Content-Type': 'application/json' };
-	if (isBrowser) {
-		const token = getCookie(AUTH_TOKEN);
-		headers = { ...headers, Authorization: `Bearer ${token}` };
-	}
-
-	const options = { method: 'POST', headers, body: JSON.stringify(body) };
+	const options = { method: 'POST', headers: createHeaders(), body: JSON.stringify(body) };
 
 	const response: ResponseProps<T> = isBrowser
 		? await executeOnTheServer(options)
@@ -26,6 +20,15 @@ export const execute = async <T>(body: ExecuteProps): Promise<T> => {
 	}
 
 	return response.data;
+};
+
+const createHeaders = () => {
+	let headers: Record<string, string> = { 'Content-Type': 'application/json' };
+	if (isBrowser) {
+		const token = getCookie(AUTH_TOKEN);
+		headers = { ...headers, Authorization: `Bearer ${token}` };
+	}
+	return headers;
 };
 
 const executeOnTheServer = server$(async (options: Options) => executeRequest(options));
