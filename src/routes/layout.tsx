@@ -36,8 +36,8 @@ export const useAvailableCountriesLoader = routeLoader$(async () => {
 });
 
 export default component$(() => {
-	const imageTransformer$ = $(({ src, width }: ImageTransformerProps): string => {
-		return `https://that-test.site/cdn-cgi/image/w=${width},q=100,fit=contain,format=webp/${src}`;
+	const imageTransformer$ = $(({ src, width, height }: ImageTransformerProps): string => {
+		return `https://that-test.site/cdn-cgi/image/w=${width},h=${height},q=100,fit=contain,format=webp/${src}`;
 	});
 
 	// Provide your default options

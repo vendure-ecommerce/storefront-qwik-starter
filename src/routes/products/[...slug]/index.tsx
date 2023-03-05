@@ -86,7 +86,6 @@ export default component$(() => {
 							<span class="rounded-md overflow-hidden">
 								<div class="h-[400px] w-full md:w-[400px]">
 									<Image
-										loading="lazy"
 										layout="fixed"
 										class="object-center object-cover rounded-lg"
 										width="400"

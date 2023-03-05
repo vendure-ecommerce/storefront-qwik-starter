@@ -8,7 +8,6 @@ export default component$(
 		return (
 			<Link class="flex flex-col mx-auto" href={`/products/${slug}/`}>
 				<Image
-					loading="lazy"
 					layout="fixed"
 					class="rounded-xl flex-grow object-cover aspect-[7/8]"
 					width="200"
