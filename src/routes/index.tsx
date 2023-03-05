@@ -1,11 +1,8 @@
 import { component$, useContext } from '@builder.io/qwik';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import { Image } from '~/components/image/Image';
-import { APP_STATE } from '~/constants';
+import { APP_STATE, HOMEPAGE_IMAGE } from '~/constants';
 import { t } from '~/locales';
-
-export const headerImage =
-	'https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2022&q=80';
 
 export default component$(() => {
 	const collections = useContext(APP_STATE).collections;
@@ -13,14 +10,12 @@ export default component$(() => {
 		<div>
 			<div class="relative">
 				<div class="absolute inset-0 overflow-hidden">
-					{headerImage && (
-						<Image
-							layout="fullWidth"
-							class="h-full md:w-full"
-							src={headerImage}
-							alt="Background header photo of bicycle taken by Mikkel Bech"
-						/>
-					)}
+					<Image
+						layout="fullWidth"
+						class="h-full md:w-full"
+						src={HOMEPAGE_IMAGE}
+						alt="Background header photo of bicycle taken by Mikkel Bech"
+					/>
 					<div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-700 mix-blend-overlay" />
 				</div>
 				<div class="absolute inset-0 bg-gray-900 opacity-50" />
