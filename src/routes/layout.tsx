@@ -49,8 +49,8 @@ export default component$(() => {
 		resolutions: IMAGE_RESOLUTIONS,
 	});
 
-	const collectionsSignal = useCollectionsLoader.use();
-	const availableCountriesSignal = useAvailableCountriesLoader.use();
+	const collectionsSignal = useCollectionsLoader();
+	const availableCountriesSignal = useAvailableCountriesLoader();
 
 	const state = useStore<AppState>({
 		showCart: false,

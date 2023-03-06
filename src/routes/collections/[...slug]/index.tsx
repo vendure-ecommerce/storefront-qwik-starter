@@ -45,7 +45,7 @@ export default component$(() => {
 	const params = cleanUpParams(p);
 	const activeFacetValueIds: string[] = url.searchParams.get('f')?.split('-') || [];
 
-	const collectionSignal = useCollectionLoader.use();
+	const collectionSignal = useCollectionLoader();
 	const searchSignal = useSearchLoader();
 
 	const state = useStore<{
