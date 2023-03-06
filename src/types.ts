@@ -200,6 +200,11 @@ export type ActiveCustomer = {
 	emailAddress?: string;
 };
 
+export type Login = ActiveCustomer & {
+	__typename: 'CurrentUser' | string;
+	message: string;
+};
+
 export type EligibleShippingMethods = {
 	name: string;
 	price: number;

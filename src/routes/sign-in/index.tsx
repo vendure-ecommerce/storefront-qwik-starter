@@ -1,7 +1,7 @@
 import { $, component$, useSignal } from '@builder.io/qwik';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import { loginMutation } from '~/graphql/mutations';
-import { ActiveCustomer } from '~/types';
+import { Login } from '~/types';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
@@ -11,13 +11,14 @@ export default component$(() => {
 	const error = useSignal('');
 
 	const login = $(async () => {
-		const { login } = await execute<{ login: ActiveCustomer }>(
+		const { login } = await execute<{ login: Login }>(
 			loginMutation(email.value, password.value, rememberMe.value)
 		);
-		// @ts-ignore-next-line
-		if (login.__typename == 'CurrentUser') window.location.href = '/account';
-		// @ts-ignore-next-line
-		else error.value = login.message;
+		if (login.__typename === 'CurrentUser') {
+			window.location.href = '/account';
+		} else {
+			error.value = login.message;
+		}
 	});
 	return (
 		<div class="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
