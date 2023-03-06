@@ -29,7 +29,7 @@ export default component$(() => {
 			const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
 				getActiveCustomerQuery()
 			);
-			if (activeOrder?.customer) {
+			if (activeCustomer) {
 				appState.customer = activeCustomer;
 			}
 		}
