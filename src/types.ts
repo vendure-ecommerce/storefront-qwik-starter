@@ -194,16 +194,20 @@ export type Review = {
 };
 
 export type ActiveCustomer = {
+	title?: string;
 	firstName: string;
 	id: string;
 	lastName: string;
 	emailAddress?: string;
+	phoneNumber?: number;
 };
 
 export type Login = ActiveCustomer & {
 	__typename: 'CurrentUser' | string;
 	message: string;
 };
+
+export type ActiveTab = 'details' | 'history' | 'addresses' | 'password';
 
 export type EligibleShippingMethods = {
 	name: string;
