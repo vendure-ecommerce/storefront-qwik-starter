@@ -31,9 +31,13 @@ export default component$(() => {
 			<button onClick$={logout} class="underline my-4 text-primary-600 hover:text-primary-800">
 				Sign out
 			</button>
-			<div class="h-96 border-2 border-dashed border-slate-200 rounded-lg flex items-center justify-center">
-				<div class="text-xl text-gray-500">
-					<TabsContainer />
+			<div class="h-96 flex justify-center">
+				<div class="w-full text-xl text-gray-500">
+					<TabsContainer>
+						<div>
+							<p>Form</p>
+						</div>
+					</TabsContainer>
 				</div>
 			</div>
 		</div>

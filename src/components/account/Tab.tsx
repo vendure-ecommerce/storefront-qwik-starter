@@ -1,8 +1,7 @@
-import { component$ } from '@builder.io/qwik';
-import { JSX } from '@builder.io/qwik/jsx-runtime';
+import { Component, component$ } from '@builder.io/qwik';
 
 interface IProps {
-	Icon: JSX.Element;
+	Icon: Component<{ class: string }>;
 	text: string;
 	href: string;
 	isActive: boolean;
