@@ -199,7 +199,7 @@ export type ActiveCustomer = {
 	id: string;
 	lastName: string;
 	emailAddress?: string;
-	phoneNumber?: number;
+	phoneNumber?: string;
 };
 
 export type Login = ActiveCustomer & {

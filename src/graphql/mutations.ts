@@ -267,6 +267,24 @@ export const logoutMutation = () => ({
 `,
 });
 
+export const updateCustomerMutation = ({
+	title,
+	phoneNumber,
+	firstName,
+	lastName,
+}: ActiveCustomer) => ({
+	variables: { input: { title, phoneNumber, firstName, lastName } },
+	query: `
+	mutation updateCustomer($input: UpdateCustomerInput!) {
+		...Customer
+		... on ErrorResult {
+			errorCode
+			message
+		}
+	}
+`,
+});
+
 export const setCustomerForOrderMutation = ({
 	emailAddress,
 	firstName,

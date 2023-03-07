@@ -246,8 +246,11 @@ export const getActiveCustomerQuery = () => ({
     query activeCustomer {
         activeCustomer {
             id
+            title
             firstName
             lastName
+            emailAddress
+            phoneNumber
         }
     }
 `,
