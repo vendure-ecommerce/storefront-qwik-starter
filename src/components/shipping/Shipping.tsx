@@ -40,6 +40,12 @@ export default component$<IProps>(({ onForward$ }) => {
 	useTask$(({ track }) => {
 		track(() => appState.customer);
 		track(() => appState.shippingAddress);
+		if (!appState.shippingAddress.countryCode) {
+			appState.shippingAddress = {
+				...appState.shippingAddress,
+				countryCode: appState.availableCountries[0].code,
+			};
+		}
 		isFormValidSignal.value =
 			isShippingAddressValid(appState.shippingAddress) && isActiveCustomerValid(appState.customer);
 	});

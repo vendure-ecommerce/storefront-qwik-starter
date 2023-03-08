@@ -256,6 +256,44 @@ export const getActiveCustomerQuery = () => ({
 `,
 });
 
+export const getActiveCustomerPurchaseHistoryQuery = () => ({
+	variables: {},
+	query: `
+    query activeCustomer {
+        activeCustomer {
+            id
+            orders {
+              items
+            }
+        }
+    }
+`,
+});
+
+export const getActiveCustomerAddressesQuery = () => ({
+	variables: {},
+	query: `
+    query activeCustomerAddresses {
+      activeCustomer {
+            id
+            addresses {
+              fullName
+              company
+              streetLine1
+              streetLine2
+              city
+              province
+              postalCode
+              country
+              phoneNumber
+              defaultShippingAddress
+              defaultBillingAddress
+            }
+        }
+    }
+`,
+});
+
 // eligible shipping methods
 
 export const getEligibleShippingMethodsQuery = () => ({

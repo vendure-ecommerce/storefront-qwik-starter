@@ -4,13 +4,14 @@ import CartTotals from '~/components/cart-totals/CartTotals';
 import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
 import Payment from '~/components/payment/Payment';
 import Shipping from '~/components/shipping/Shipping';
-import { APP_STATE } from '~/constants';
+import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import {
 	addPaymentToOrderMutation,
 	setCustomerForOrderMutation,
 	setOrderShippingAddressMutation,
 	transitionOrderToStateMutation,
 } from '~/graphql/mutations';
+import { getActiveCustomerAddressesQuery } from '~/graphql/queries';
 import { ActiveCustomer, ActiveOrder, ShippingAddress } from '~/types';
 import { isEnvVariableEnabled, scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
@@ -26,9 +27,16 @@ export default component$(() => {
 		{ name: 'Confirmation', state: 'CONFIRMATION' },
 	];
 
-	useBrowserVisibleTask$(() => {
+	useBrowserVisibleTask$(async () => {
 		scrollToTop();
 		appState.showCart = false;
+		//! FIX redirect to home if cart is empty
+		const activeCustomerAddresses = await execute<{ id: string; addresses: ShippingAddress[] }>(
+			getActiveCustomerAddressesQuery()
+		);
+		// if (activeCustomer) {
+		console.log({ activeCustomerAddresses });
+		// }
 	});
 
 	const confirmPayment = $(async () => {
@@ -36,6 +44,7 @@ export default component$(() => {
 		const { addPaymentToOrder: activeOrder } = await execute<{
 			addPaymentToOrder: ActiveOrder;
 		}>(addPaymentToOrderMutation());
+		//! FIX this should be set to addPaymentToOrder?
 		appState.activeOrder = activeOrder;
 		scrollToTop();
 		window.location.href = `/checkout/confirmation/${activeOrder.code}`;
@@ -76,11 +85,7 @@ export default component$(() => {
 											customer: Omit<ActiveCustomer, 'id'>,
 											shippingAddress: ShippingAddress
 										) => {
-											const { setCustomerForOrder } = await execute<{
-												setCustomerForOrder: ActiveOrder;
-											}>(setCustomerForOrderMutation(customer));
-
-											if (!setCustomerForOrder.errorCode) {
+											const setOrderShippingAddress = async () => {
 												const { setOrderShippingAddress } = await execute<{
 													setOrderShippingAddress: ActiveOrder;
 												}>(setOrderShippingAddressMutation(shippingAddress));
@@ -92,6 +97,19 @@ export default component$(() => {
 														confirmPayment();
 													}
 												}
+											};
+
+											if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
+												const { setCustomerForOrder } = await execute<{
+													setCustomerForOrder: ActiveOrder;
+												}>(setCustomerForOrderMutation(customer));
+												if (!setCustomerForOrder.errorCode) {
+													setOrderShippingAddress();
+												}
+											} else {
+												//! FIX this should setOrderBillingAdress as this is fired onForward$
+												//! and call this when customer has preferred shipping address outside of onForward$
+												setOrderShippingAddress();
 											}
 											scrollToTop();
 										}}
