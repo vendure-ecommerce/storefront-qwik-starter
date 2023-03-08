@@ -1,6 +1,6 @@
 import { component$, useContext } from '@builder.io/qwik';
 import { Link, useLocation } from '@builder.io/qwik-city';
-import { APP_STATE, IMAGE_PLACEHOLDER_COLOR } from '~/constants';
+import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
 import { adjustOrderLineMutation, removeOrderLineMutation } from '~/graphql/mutations';
 import { ActiveOrder } from '~/types';
 import { execute } from '~/utils/api';
@@ -29,7 +29,7 @@ export default component$<{
 								class="w-full h-full object-center object-cover"
 								src={line.featuredAsset?.preview + '?preset=thumb'}
 								alt={line.productVariant.name}
-								placeholder={IMAGE_PLACEHOLDER_COLOR}
+								placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 							/>
 						</div>
 
