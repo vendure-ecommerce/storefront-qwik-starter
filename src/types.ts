@@ -207,8 +207,6 @@ export type Login = ActiveCustomer & {
 	message: string;
 };
 
-export type ActiveTab = 'details' | 'history' | 'addresses' | 'password';
-
 export type EligibleShippingMethods = {
 	name: string;
 	price: number;

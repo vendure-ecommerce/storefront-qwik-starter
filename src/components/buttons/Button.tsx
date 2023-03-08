@@ -1,5 +1,5 @@
 import { $, component$, PropFunction, Slot } from '@builder.io/qwik';
-export default component$<{ onClick$: PropFunction<() => void> }>(({ onClick$ }) => {
+export const Button = component$<{ onClick$: PropFunction<() => void> }>(({ onClick$ }) => {
 	return (
 		<button
 			type="button"

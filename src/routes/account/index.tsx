@@ -6,14 +6,20 @@ import {
 	useContext,
 	useSignal,
 } from '@builder.io/qwik';
-import TabsContainer from '~/components/account/TabsContainer';
-import Button from '~/components/buttons/Button';
-import HighlightedButton from '~/components/buttons/HighlightedButton';
+import { TabsContainer } from '~/components/account/TabsContainer';
+import { Button } from '~/components/buttons/Button';
+import { HighlightedButton } from '~/components/buttons/HighlightedButton';
+import { ErrorMessage } from '~/components/error-message/ErrorMessage';
 import CheckIcon from '~/components/icons/CheckIcon';
 import PencilIcon from '~/components/icons/PencilIcon';
 import XMarkIcon from '~/components/icons/XMarkIcon';
+import { Modal } from '~/components/modal/Modal';
 import { APP_STATE } from '~/constants';
-import { logoutMutation, updateCustomerMutation } from '~/graphql/mutations';
+import {
+	logoutMutation,
+	requestUpdateCustomerEmailAddressMutation,
+	updateCustomerMutation,
+} from '~/graphql/mutations';
 import { getActiveCustomerQuery } from '~/graphql/queries';
 import { ActiveCustomer } from '~/types';
 import { scrollToTop } from '~/utils';
@@ -22,8 +28,12 @@ import { execute } from '~/utils/api';
 export default component$(() => {
 	const appState = useContext(APP_STATE);
 	const isEditing = useSignal(false);
+	const showModal = useSignal(false);
+	const newEmail = useSignal('');
+	const errorMessage = useSignal('');
+	const currentPassword = useSignal('');
 	const update = {
-		customer: {},
+		customer: {} as ActiveCustomer,
 		address: {},
 	};
 
@@ -31,7 +41,11 @@ export default component$(() => {
 		const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
 			getActiveCustomerQuery()
 		);
+		if (!activeCustomer) {
+			window.location.href = '/sign-in';
+		}
 		appState.customer = activeCustomer;
+		newEmail.value = activeCustomer.emailAddress as string;
 		scrollToTop();
 	});
 
@@ -41,12 +55,32 @@ export default component$(() => {
 			.join(' ');
 	};
 
-	const saveCustomer = $(async () => {
-		const updateCustomer = await execute<{
+	const updateCustomer = $(async (): Promise<void> => {
+		await execute<{
 			updateCustomer: ActiveCustomer;
 		}>(updateCustomerMutation(appState.customer));
-		// @ts-ignore-next-line
-		console.log(updateCustomer.errorCode);
+
+		if (appState.customer.emailAddress !== newEmail.value) {
+			showModal.value = true;
+		} else {
+			isEditing.value = false;
+		}
+	});
+
+	const updateEmail = $(async (password: string, newEmail: string) => {
+		const result = await execute<{
+			password: string;
+			newEmail: string;
+		}>(requestUpdateCustomerEmailAddressMutation(password, newEmail));
+		// @ts-ignore
+		if (result.requestUpdateCustomerEmailAddress.__typename === 'InvalidCredentialsError') {
+			// @ts-ignore
+			errorMessage.value = result.requestUpdateCustomerEmailAddress.message;
+		} else {
+			errorMessage.value = '';
+			isEditing.value = false;
+			showModal.value = false;
+		}
 	});
 
 	const logout = $(async () => {
@@ -64,6 +98,47 @@ export default component$(() => {
 				<div class="w-full text-xl text-gray-500">
 					<TabsContainer>
 						<div q:slot="tabContent" class="min-h-[24rem] rounded-lg p-4 space-y-4">
+							<Modal
+								open={showModal.value}
+								title="Confirm E-Mail address change"
+								//! FIX instance of "JSXNodeImpl" / You might need to use 'noSerialize()' or use an object literal instead.
+								// icon={<ShieldCheckIcon forcedClass="h-10 w-10 text-primary-500" />}
+								submitProps={{
+									type: 'button',
+									onClick$: $(() => {
+										updateEmail(currentPassword.value, newEmail.value);
+									}),
+								}}
+								cancelProps={{
+									type: 'button',
+									onClick$: $(() => {
+										showModal.value = false;
+									}),
+								}}
+							>
+								<div q:slot="modalContent" class="space-y-4">
+									<p>We will send a verification E-Mail to {newEmail.value}</p>
+
+									<div class="space-y-1">
+										<label html-for="password">Confirm the change by entering your password:</label>
+										<input
+											type="password"
+											name="password"
+											onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
+												currentPassword.value = event.target.value;
+											})}
+											class="w-full"
+										/>
+									</div>
+
+									{errorMessage.value !== '' && (
+										<ErrorMessage
+											heading="We ran into a problem changing your E-Mail!"
+											message={errorMessage.value}
+										/>
+									)}
+								</div>
+							</Modal>
 							<div class="gap-4 grid grid-cols-1 md:grid-cols-2">
 								{isEditing.value && (
 									<div class="md:col-span-2 md:w-1/4">
@@ -72,10 +147,7 @@ export default component$(() => {
 											type="text"
 											value={appState.customer?.title}
 											onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-												update.customer = {
-													...appState.customer,
-													title: event.target.value,
-												};
+												update.customer.title = event.target.value;
 											})}
 											class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 										/>
@@ -92,10 +164,9 @@ export default component$(() => {
 												type="text"
 												value={appState.customer?.firstName}
 												onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-													update.customer = {
-														...appState.customer,
-														firstName: event.target.value,
-													};
+													if (event.target.value !== '') {
+														update.customer.firstName = event.target.value;
+													}
 												})}
 												class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 											/>
@@ -108,10 +179,9 @@ export default component$(() => {
 												type="text"
 												value={appState.customer?.lastName}
 												onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-													update.customer = {
-														...appState.customer,
-														lastName: event.target.value,
-													};
+													if (event.target.value !== '') {
+														update.customer.lastName = event.target.value;
+													}
 												})}
 												class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 											/>
@@ -131,10 +201,9 @@ export default component$(() => {
 											type="email"
 											value={appState.customer?.emailAddress}
 											onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-												update.customer = {
-													...appState.customer,
-													emailAddress: event.target.value,
-												};
+												if (event.target.value !== '') {
+													newEmail.value = event.target.value;
+												}
 											})}
 											class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 										/>
@@ -150,10 +219,7 @@ export default component$(() => {
 											type="tel"
 											value={appState.customer?.phoneNumber}
 											onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-												update.customer = {
-													...appState.customer,
-													phoneNumber: event.target.value,
-												};
+												update.customer.phoneNumber = event.target.value;
 											})}
 											class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 										/>
@@ -169,8 +235,7 @@ export default component$(() => {
 										<HighlightedButton
 											onClick$={() => {
 												appState.customer = { ...appState.customer, ...update.customer };
-												saveCustomer();
-												isEditing.value = false;
+												updateCustomer();
 											}}
 										>
 											<CheckIcon /> Save
@@ -188,8 +253,8 @@ export default component$(() => {
 							) : (
 								<HighlightedButton
 									onClick$={() => {
-										isEditing.value = true;
 										update.customer = { ...appState.customer };
+										isEditing.value = true;
 									}}
 								>
 									<PencilIcon /> Edit

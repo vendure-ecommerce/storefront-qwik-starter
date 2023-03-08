@@ -5,7 +5,7 @@ import ShoppingBagIcon from '../icons/ShoppingBagIcon';
 import UserCircleIcon from '../icons/UserCircleIcon';
 import Tab from './Tab';
 
-export default component$(() => {
+export const TabsContainer = component$(() => {
 	const activeTabSignal = useSignal('details');
 
 	return (

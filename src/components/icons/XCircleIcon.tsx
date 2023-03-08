@@ -1,10 +1,10 @@
 import { component$ } from '@builder.io/qwik';
 
-export default component$(() => {
+export default component$<{ forcedClass?: string }>(({ forcedClass }) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			class="h-5 w-5 text-red-400"
+			class={forcedClass || 'h-5 w-5 text-red-400'}
 			fill="none"
 			viewBox="0 0 24 24"
 			stroke="currentColor"
