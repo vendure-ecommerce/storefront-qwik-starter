@@ -1,6 +1,7 @@
 import { component$ } from '@builder.io/qwik';
 import { Collection } from '../../types';
 import { Image } from '../image/Image';
+import { IMAGE_PLACEHOLDER_COLOR } from '~/constants';
 
 interface IProps {
 	collection: Collection;
@@ -17,7 +18,7 @@ export default component$(({ collection }: IProps) => {
 						height="300"
 						src={collection.featuredAsset?.preview}
 						alt={collection.name}
-						placeholder="rgba(37,99,235, 1)"
+						placeholder={IMAGE_PLACEHOLDER_COLOR}
 					/>
 				</div>
 				<span class="absolute w-full bottom-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50" />

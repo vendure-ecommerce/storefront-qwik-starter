@@ -7,3 +7,4 @@ export const CUSTOMER_NOT_DEFINED_ID = 'CUSTOMER_NOT_DEFINED_ID';
 export const HEADER_AUTH_TOKEN_KEY = 'vendure-auth-token';
 export const IMAGE_RESOLUTIONS = [1000, 800, 600, 400];
 export const HOMEPAGE_IMAGE = '/homepage.webp';
+export const IMAGE_PLACEHOLDER_COLOR = 'rgba(37,99,235, 0.4)';

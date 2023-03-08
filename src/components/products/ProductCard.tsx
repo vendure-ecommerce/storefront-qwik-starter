@@ -2,6 +2,7 @@ import { component$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import { Image } from '../image/Image';
 import Price from './Price';
+import { IMAGE_PLACEHOLDER_COLOR } from '~/constants';
 
 export default component$(
 	({ productAsset, productName, slug, priceWithTax, currencyCode }: any) => {
@@ -14,7 +15,7 @@ export default component$(
 					height="200"
 					src={productAsset?.preview + '?w=300&h=400'}
 					alt={productName}
-					placeholder="rgba(37,99,235, 1)"
+					placeholder={IMAGE_PLACEHOLDER_COLOR}
 				/>
 				<div class="h-2" />
 				<div class="text-sm text-gray-700">{productName}</div>
