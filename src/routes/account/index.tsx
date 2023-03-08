@@ -67,14 +67,16 @@ export default component$(() => {
 	});
 
 	const updateEmail = $(async (password: string, newEmail: string) => {
-		const result = await execute<{
-			password: string;
-			newEmail: string;
+		const { requestUpdateCustomerEmailAddress } = await execute<{
+			requestUpdateCustomerEmailAddress: {
+				password: string;
+				newEmail: string;
+			};
 		}>(requestUpdateCustomerEmailAddressMutation(password, newEmail));
 		// @ts-ignore
-		if (result.requestUpdateCustomerEmailAddress.__typename === 'InvalidCredentialsError') {
+		if (requestUpdateCustomerEmailAddress.__typename === 'InvalidCredentialsError') {
 			// @ts-ignore
-			errorMessage.value = result.requestUpdateCustomerEmailAddress.message;
+			errorMessage.value = requestUpdateCustomerEmailAddress.message;
 		} else {
 			errorMessage.value = '';
 			isEditing.value = false;

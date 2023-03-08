@@ -93,6 +93,9 @@ export default component$<{
 													removeOrderLineMutation(line.id)
 												);
 												appState.activeOrder = removeOrderLine;
+												if (!!!appState.activeOrder?.lines?.length) {
+													window.location.href = '/';
+												}
 											}}
 										>
 											Remove

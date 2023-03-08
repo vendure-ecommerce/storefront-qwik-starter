@@ -11,7 +11,6 @@ import {
 	setOrderShippingAddressMutation,
 	transitionOrderToStateMutation,
 } from '~/graphql/mutations';
-import { getActiveCustomerAddressesQuery } from '~/graphql/queries';
 import { ActiveCustomer, ActiveOrder, ShippingAddress } from '~/types';
 import { isEnvVariableEnabled, scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
@@ -30,13 +29,9 @@ export default component$(() => {
 	useBrowserVisibleTask$(async () => {
 		scrollToTop();
 		appState.showCart = false;
-		//! FIX redirect to home if cart is empty
-		const activeCustomerAddresses = await execute<{ id: string; addresses: ShippingAddress[] }>(
-			getActiveCustomerAddressesQuery()
-		);
-		// if (activeCustomer) {
-		console.log({ activeCustomerAddresses });
-		// }
+		if (!!!appState.activeOrder?.lines?.length) {
+			window.location.href = '/';
+		}
 	});
 
 	const confirmPayment = $(async () => {
@@ -44,7 +39,6 @@ export default component$(() => {
 		const { addPaymentToOrder: activeOrder } = await execute<{
 			addPaymentToOrder: ActiveOrder;
 		}>(addPaymentToOrderMutation());
-		//! FIX this should be set to addPaymentToOrder?
 		appState.activeOrder = activeOrder;
 		scrollToTop();
 		window.location.href = `/checkout/confirmation/${activeOrder.code}`;
@@ -107,8 +101,6 @@ export default component$(() => {
 													setOrderShippingAddress();
 												}
 											} else {
-												//! FIX this should setOrderBillingAdress as this is fired onForward$
-												//! and call this when customer has preferred shipping address outside of onForward$
 												setOrderShippingAddress();
 											}
 											scrollToTop();

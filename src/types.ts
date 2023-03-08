@@ -86,6 +86,9 @@ export type ShippingAddress = {
 	postalCode?: string;
 	countryCode?: string;
 	phoneNumber?: string;
+	defaultShippingAddress?: boolean;
+	defaultBillingAddress?: boolean;
+	country?: Country;
 };
 
 type ProductVariant = {

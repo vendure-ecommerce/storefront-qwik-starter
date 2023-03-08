@@ -284,7 +284,9 @@ export const getActiveCustomerAddressesQuery = () => ({
               city
               province
               postalCode
-              country
+              country {
+                code
+              }
               phoneNumber
               defaultShippingAddress
               defaultBillingAddress
