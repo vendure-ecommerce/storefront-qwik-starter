@@ -92,6 +92,7 @@ export default component$(() => {
 										height="400"
 										src={state.product.featuredAsset.preview + '?w=400&h=400'}
 										alt={state.product.name}
+										placeholder="rgba(37,99,235, 1)"
 									/>
 								</div>
 							</span>

@@ -14,6 +14,7 @@ export default component$(
 					height="200"
 					src={productAsset?.preview + '?w=300&h=400'}
 					alt={productName}
+					placeholder="rgba(37,99,235, 1)"
 				/>
 				<div class="h-2" />
 				<div class="text-sm text-gray-700">{productName}</div>

@@ -29,6 +29,7 @@ export default component$<{
 								class="w-full h-full object-center object-cover"
 								src={line.featuredAsset?.preview + '?preset=thumb'}
 								alt={line.productVariant.name}
+								placeholder="rgba(37,99,235, 1)"
 							/>
 						</div>
 

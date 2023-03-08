@@ -17,6 +17,7 @@ export default component$(({ collection }: IProps) => {
 						height="300"
 						src={collection.featuredAsset?.preview}
 						alt={collection.name}
+						placeholder="rgba(37,99,235, 1)"
 					/>
 				</div>
 				<span class="absolute w-full bottom-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50" />

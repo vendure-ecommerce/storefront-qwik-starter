@@ -15,6 +15,7 @@ export default component$(() => {
 						class="h-full md:w-full"
 						src={HOMEPAGE_IMAGE}
 						alt="Background header photo of bicycle taken by Mikkel Bech"
+						placeholder="rgba(37,99,235, 1)"
 					/>
 					<div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-700 mix-blend-overlay" />
 				</div>
