@@ -73,7 +73,7 @@ export const getStyles = ({
 
 	const baseStyles = {
 		'object-fit': objectFit,
-		'background-color': placeholder || 'transparent',
+		background: placeholder || 'transparent',
 	};
 
 	switch (layout) {
