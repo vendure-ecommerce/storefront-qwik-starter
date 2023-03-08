@@ -1,4 +1,5 @@
 import { Component, component$ } from '@builder.io/qwik';
+import { Link } from '@builder.io/qwik-city';
 
 interface IProps {
 	Icon: Component<{ class: string }>;
@@ -7,10 +8,10 @@ interface IProps {
 	isActive: boolean;
 }
 
-export default component$(({ Icon, text, href, isActive }: IProps) => {
+export const Tab = component$(({ Icon, text, href, isActive }: IProps) => {
 	return (
 		<li>
-			<a
+			<Link
 				href={href}
 				class={`group w-full gap-x-2 max-w-[12rem] inline-flex items-center justify-around p-4 rounded-t-lg border-b-2 ${
 					isActive
@@ -24,7 +25,7 @@ export default component$(({ Icon, text, href, isActive }: IProps) => {
 					}`}
 				/>
 				<p class="flex-1">{text}</p>
-			</a>
+			</Link>
 		</li>
 	);
 });

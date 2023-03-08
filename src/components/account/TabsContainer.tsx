@@ -1,13 +1,11 @@
-import { Slot, component$, useSignal } from '@builder.io/qwik';
+import { Slot, component$ } from '@builder.io/qwik';
 import HashtagIcon from '../icons/HashtagIcon';
 import MapPinIcon from '../icons/MapPinIcon';
 import ShoppingBagIcon from '../icons/ShoppingBagIcon';
 import UserCircleIcon from '../icons/UserCircleIcon';
-import Tab from './Tab';
+import { Tab } from './Tab';
 
-export const TabsContainer = component$(() => {
-	const activeTabSignal = useSignal('details');
-
+export const TabsContainer = component$<{ activeTab: string }>(({ activeTab }) => {
 	return (
 		<>
 			<div class="border-b border-gray-200 mt-4">
@@ -15,29 +13,29 @@ export const TabsContainer = component$(() => {
 					<Tab
 						Icon={UserCircleIcon}
 						text="Account details"
-						href="#"
-						isActive={activeTabSignal.value === 'details'}
+						href="/account"
+						isActive={activeTab === 'details'}
 					/>
 
 					<Tab
 						Icon={ShoppingBagIcon}
 						text="Purchase history"
-						href="#"
-						isActive={activeTabSignal.value === 'history'}
+						href="/account/orders"
+						isActive={activeTab === 'orders'}
 					/>
 
 					<Tab
 						Icon={MapPinIcon}
 						text="Addresses"
-						href="#"
-						isActive={activeTabSignal.value === 'addresses'}
+						href="/account/address-book"
+						isActive={activeTab === 'address-book'}
 					/>
 
 					<Tab
 						Icon={HashtagIcon}
 						text="Password change"
-						href="#"
-						isActive={activeTabSignal.value === 'password'}
+						href="/account/password"
+						isActive={activeTab === 'password'}
 					/>
 				</ul>
 			</div>

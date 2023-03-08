@@ -34,7 +34,6 @@ export default component$(() => {
 	const currentPassword = useSignal('');
 	const update = {
 		customer: {} as ActiveCustomer,
-		address: {},
 	};
 
 	useBrowserVisibleTask$(async () => {
@@ -96,7 +95,7 @@ export default component$(() => {
 			</button>
 			<div class="h-96 flex justify-center">
 				<div class="w-full text-xl text-gray-500">
-					<TabsContainer>
+					<TabsContainer activeTab="details">
 						<div q:slot="tabContent" class="min-h-[24rem] rounded-lg p-4 space-y-4">
 							<Modal
 								open={showModal.value}

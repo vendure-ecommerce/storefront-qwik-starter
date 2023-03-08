@@ -306,6 +306,20 @@ export const requestUpdateCustomerEmailAddressMutation = (
 `,
 });
 
+export const updateCustomerPasswordMutation = (currentPassword: string, newPassword: string) => ({
+	variables: { currentPassword, newPassword },
+	query: `
+	mutation updateCustomerPassword($currentPassword: String! $newPassword: String!) {
+        updateCustomerPassword(currentPassword: $currentPassword, newPassword: $newPassword) {
+            ... on Success {
+                success
+            }
+            ...ErrorResult
+        }
+    }  
+`,
+});
+
 export const setCustomerForOrderMutation = ({
 	emailAddress,
 	firstName,
