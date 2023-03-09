@@ -5,6 +5,7 @@ export type AppState = {
 	customer: ActiveCustomer;
 	shippingAddress: ShippingAddress;
 	availableCountries: Country[];
+	addressBook: ShippingAddress[];
 };
 
 export type Product = {

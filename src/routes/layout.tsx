@@ -69,6 +69,7 @@ export default component$(() => {
 			streetLine1: '',
 			streetLine2: '',
 		},
+		addressBook: [],
 	});
 
 	useContextProvider(APP_STATE, state);

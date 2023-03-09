@@ -1,9 +1,12 @@
 import { $, component$, useBrowserVisibleTask$, useContext } from '@builder.io/qwik';
+import AddressCard from '~/components/account/AddressCard';
 import { TabsContainer } from '~/components/account/TabsContainer';
+import { HighlightedButton } from '~/components/buttons/HighlightedButton';
+import PlusIcon from '~/components/icons/PlusIcon';
 import { APP_STATE } from '~/constants';
 import { logoutMutation } from '~/graphql/mutations';
-import { getActiveCustomerQuery } from '~/graphql/queries';
-import { ActiveCustomer } from '~/types';
+import { getActiveCustomerAddressesQuery } from '~/graphql/queries';
+import { ShippingAddress } from '~/types';
 import { scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
 
@@ -11,13 +14,17 @@ export default component$(() => {
 	const appState = useContext(APP_STATE);
 
 	useBrowserVisibleTask$(async () => {
-		const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
-			getActiveCustomerQuery()
-		);
+		const { activeCustomer } = await execute<{
+			activeCustomer: { id: string; addresses: ShippingAddress[] };
+		}>(getActiveCustomerAddressesQuery());
+
 		if (!activeCustomer) {
 			window.location.href = '/sign-in';
 		}
-		appState.customer = activeCustomer;
+
+		if (activeCustomer?.addresses) {
+			appState.addressBook.push(...activeCustomer.addresses);
+		}
 		scrollToTop();
 	});
 
@@ -42,7 +49,14 @@ export default component$(() => {
 				<div class="w-full text-xl text-gray-500">
 					<TabsContainer activeTab="address-book">
 						<div q:slot="tabContent" class="min-h-[24rem] rounded-lg p-4 space-y-4">
-							addresses
+							<div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-w-md md:max-w-6xl mx-auto">
+								{[...appState.addressBook].map((address) => (
+									<AddressCard address={address} />
+								))}
+							</div>
+							<HighlightedButton onClick$={() => {}}>
+								<PlusIcon /> &nbsp; New Address
+							</HighlightedButton>
 						</div>
 					</TabsContainer>
 				</div>
