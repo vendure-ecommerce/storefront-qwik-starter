@@ -13,7 +13,6 @@ export default component$(({ collection }: IProps) => {
 			<div class="max-w-[300px] relative rounded-lg overflow-hidden hover:opacity-75 xl:w-auto mx-auto">
 				<div class="w-full h-full object-center object-cover">
 					<Image
-						class="my-class"
 						layout="fixed"
 						width="300"
 						height="300"
