@@ -12,6 +12,7 @@ import { HighlightedButton } from '~/components/buttons/HighlightedButton';
 import { ErrorMessage } from '~/components/error-message/ErrorMessage';
 import CheckIcon from '~/components/icons/CheckIcon';
 import PencilIcon from '~/components/icons/PencilIcon';
+import ShieldCheckIcon from '~/components/icons/ShieldCheckIcon';
 import XMarkIcon from '~/components/icons/XMarkIcon';
 import { Modal } from '~/components/modal/Modal';
 import { APP_STATE } from '~/constants';
@@ -95,15 +96,13 @@ export default component$(() => {
 			<button onClick$={logout} class="underline my-4 text-primary-600 hover:text-primary-800">
 				Sign out
 			</button>
-			<div class="h-96 flex justify-center">
+			<div class="flex justify-center">
 				<div class="w-full text-xl text-gray-500">
 					<TabsContainer activeTab="details">
 						<div q:slot="tabContent" class="min-h-[24rem] rounded-lg p-4 space-y-4">
 							<Modal
 								open={showModal.value}
 								title="Confirm E-Mail address change"
-								//! FIX instance of "JSXNodeImpl" / You might need to use 'noSerialize()' or use an object literal instead.
-								// icon={<ShieldCheckIcon forcedClass="h-10 w-10 text-primary-500" />}
 								submitProps={{
 									type: 'button',
 									onClick$: $(() => {
@@ -117,6 +116,9 @@ export default component$(() => {
 									}),
 								}}
 							>
+								<div q:slot="modalIcon">
+									<ShieldCheckIcon forcedClass="h-10 w-10 text-primary-500" />
+								</div>
 								<div q:slot="modalContent" class="space-y-4">
 									<p>We will send a verification E-Mail to {newEmail.value}</p>
 

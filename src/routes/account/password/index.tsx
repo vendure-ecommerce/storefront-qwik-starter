@@ -8,6 +8,7 @@ import {
 } from '@builder.io/qwik';
 import { TabsContainer } from '~/components/account/TabsContainer';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
+import { ErrorMessage } from '~/components/error-message/ErrorMessage';
 import CheckIcon from '~/components/icons/CheckIcon';
 import { APP_STATE } from '~/constants';
 import { logoutMutation, updateCustomerPasswordMutation } from '~/graphql/mutations';
@@ -21,6 +22,7 @@ export default component$(() => {
 	const currentPassword = useSignal('');
 	const newPassword = useSignal('');
 	const confirmPassword = useSignal('');
+	const errorMessage = useSignal('');
 
 	useBrowserVisibleTask$(async () => {
 		const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
@@ -52,7 +54,7 @@ export default component$(() => {
 			}>(updateCustomerPasswordMutation(currentPassword.value, newPassword.value));
 			console.log(result);
 		} else {
-			console.log('password does not match');
+			errorMessage.value = 'Confirm password does not match!';
 		}
 	});
 
@@ -63,7 +65,7 @@ export default component$(() => {
 			<button onClick$={logout} class="underline my-4 text-primary-600 hover:text-primary-800">
 				Sign out
 			</button>
-			<div class="h-96 flex justify-center">
+			<div class="flex justify-center">
 				<div class="w-full text-xl text-gray-500">
 					<TabsContainer activeTab="password">
 						<div q:slot="tabContent" class="min-h-[24rem] rounded-lg p-4 space-y-4">
@@ -106,6 +108,12 @@ export default component$(() => {
 									<CheckIcon /> Save
 								</HighlightedButton>
 							</div>
+							{errorMessage.value !== '' && (
+								<ErrorMessage
+									heading="We ran into a problem changing your password!"
+									message={errorMessage.value}
+								/>
+							)}
 						</div>
 					</TabsContainer>
 				</div>

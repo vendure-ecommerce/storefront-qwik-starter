@@ -38,7 +38,7 @@ export default component$(() => {
 			<button onClick$={logout} class="underline my-4 text-primary-600 hover:text-primary-800">
 				Sign out
 			</button>
-			<div class="h-96 flex justify-center">
+			<div class="flex justify-center">
 				<div class="w-full text-xl text-gray-500">
 					<TabsContainer activeTab="address-book">
 						<div q:slot="tabContent" class="min-h-[24rem] rounded-lg p-4 space-y-4">

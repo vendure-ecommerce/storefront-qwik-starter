@@ -1,8 +1,7 @@
-import { QwikIntrinsicElements, QwikJSX, Slot, component$ } from '@builder.io/qwik';
+import { QwikIntrinsicElements, Slot, component$ } from '@builder.io/qwik';
 import { Button } from '../buttons/Button';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import CheckIcon from '../icons/CheckIcon';
-import ShieldCheckIcon from '../icons/ShieldCheckIcon';
 import XMarkIcon from '../icons/XMarkIcon';
 
 type ButtonProps = QwikIntrinsicElements['button'];
@@ -10,14 +9,13 @@ type ButtonProps = QwikIntrinsicElements['button'];
 interface IProps {
 	title: string;
 	open: boolean;
-	icon?: QwikJSX.Element;
 	iconBackground?: string;
 	submitProps?: ButtonProps;
 	cancelProps?: ButtonProps;
 }
 
 export const Modal = component$(
-	({ title, open, icon, iconBackground, submitProps, cancelProps }: IProps) => {
+	({ title, open, iconBackground, submitProps, cancelProps }: IProps) => {
 		return (
 			<div
 				class={`relative z-[100] ${open ? '' : 'hidden'}`}
@@ -37,7 +35,7 @@ export const Modal = component$(
 											iconBackground ? iconBackground : 'bg-white'
 										} sm:mx-0 sm:h-10 sm:w-10`}
 									>
-										{icon || <ShieldCheckIcon forcedClass="h-10 w-10 text-primary-500" />}
+										{<Slot name="modalIcon" />}
 									</div>
 									<div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
 										<h3 class="text-xl leading-6 font-medium text-gray-900" id="modal-title">
