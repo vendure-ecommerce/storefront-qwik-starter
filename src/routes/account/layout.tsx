@@ -12,7 +12,8 @@ export default component$(() => {
 
 	const logout = $(async () => {
 		await execute(logoutMutation());
-		navigate('/');
+		// this force an hard refresh
+		window.location.href = '/';
 	});
 
 	return (
