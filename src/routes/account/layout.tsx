@@ -10,6 +10,8 @@ import { useNavigate } from '@builder.io/qwik-city';
 import { TabsContainer } from '~/components/account/TabsContainer';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { logoutMutation } from '~/graphql/mutations';
+import { getActiveCustomerQuery, getActiveOrderQuery } from '~/graphql/queries';
+import { ActiveCustomer, ActiveOrder } from '~/types';
 import { fullNameWithTitle } from '~/utils';
 import { execute } from '~/utils/api';
 
@@ -24,7 +26,20 @@ export default component$(() => {
 		window.location.href = '/';
 	});
 
-	useBrowserVisibleTask$(() => {
+	useBrowserVisibleTask$(async () => {
+		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
+		if (activeOrder?.customer) {
+			appState.customer = activeOrder?.customer;
+		}
+		if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
+			const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
+				getActiveCustomerQuery()
+			);
+			if (activeCustomer) {
+				appState.customer = activeCustomer;
+			}
+		}
+
 		if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
 			navigate('/');
 		} else {
@@ -33,7 +48,7 @@ export default component$(() => {
 	});
 
 	return canBeVisible.value ? (
-		<div class="max-w-6xl xl:mx-auto px-4">
+		<div class="px-4">
 			<h2 class="text-3xl sm:text-5xl font-light text-gray-900 my-8">My Account</h2>
 			<p class="text-gray-700 text-lg -mt-4">
 				Welcome back, {fullNameWithTitle(appState.customer)}

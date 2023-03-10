@@ -97,6 +97,6 @@ export default component$(() => {
 			)}
 		</div>
 	) : (
-		<div style="height: 100vh" />
+		<div class="h-[100vh]" />
 	);
 });

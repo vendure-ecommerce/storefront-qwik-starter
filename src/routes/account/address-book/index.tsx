@@ -46,6 +46,6 @@ export default component$(() => {
 			</HighlightedButton>
 		</div>
 	) : (
-		<div style="height: 100vh" />
+		<div class="h-[100vh]" />
 	);
 });
