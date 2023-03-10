@@ -257,12 +257,23 @@ export const getActiveCustomerQuery = () => ({
 });
 
 export const getActiveCustomerOrdersQuery = () => ({
-	variables: {},
+	variables: {
+		options: {
+			filter: {
+				active: {
+					eq: false,
+				},
+			},
+			sort: {
+				createdAt: 'DESC',
+			},
+		},
+	},
 	query: `
-    query activeCustomerOrders {
+    query activeCustomerOrders($options: OrderListOptions) {
         activeCustomer {
             id
-            orders {
+            orders(options: $options) {
               items {
                 id
                 code
