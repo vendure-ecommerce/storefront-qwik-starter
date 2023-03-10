@@ -1,11 +1,19 @@
 import { $, component$, PropFunction, Slot } from '@builder.io/qwik';
-export const Button = component$<{ onClick$: PropFunction<() => void> }>(({ onClick$ }) => {
+
+type Props = {
+	extraClass?: string;
+	onClick$?: PropFunction<() => void>;
+};
+
+export const Button = component$<Props>(({ extraClass, onClick$ }) => {
 	return (
 		<button
 			type="button"
-			class="flex items-center justify-around bg-gray-100 border rounded-md py-2 px-4 text-base font-medium text-black hover:text-white hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-800"
+			class={`flex items-center justify-around bg-gray-100 border rounded-md py-2 px-4 text-base font-medium text-black hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-800 ${extraClass}`}
 			onClick$={$(async () => {
-				onClick$();
+				if (onClick$) {
+					onClick$();
+				}
 			})}
 		>
 			<Slot />

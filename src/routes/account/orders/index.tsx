@@ -11,14 +11,12 @@ import { execute } from '~/utils/api';
 export default component$(() => {
 	const appState = useContext(APP_STATE);
 	const activeCustomerOrdersSignal = useSignal<ActiveCustomerOrders>();
-	const isReadySignal = useSignal(false);
 
 	useBrowserVisibleTask$(async () => {
 		const { activeCustomer: activeCustomerOrders } = await execute<{
 			activeCustomer: ActiveCustomerOrders;
 		}>(getActiveCustomerOrdersQuery());
 		activeCustomerOrdersSignal.value = activeCustomerOrders;
-		isReadySignal.value = true;
 		scrollToTop();
 	});
 
@@ -33,7 +31,7 @@ export default component$(() => {
 		window.location.href = '/';
 	});
 
-	return isReadySignal.value ? (
+	return activeCustomerOrdersSignal.value ? (
 		<div class="max-w-6xl xl:mx-auto px-4">
 			<h2 class="text-3xl sm:text-5xl font-light text-gray-900 my-8">My Account</h2>
 			<p class="text-gray-700 text-lg -mt-4">Welcome back, {fullNameWithTitle()}</p>

@@ -3,11 +3,12 @@ import { ENV_VARIABLES } from '~/env';
 import { ActiveCustomer, FacetWithValues, Search, ShippingAddress } from '~/types';
 
 export const getRandomInt = (max: number) => Math.floor(Math.random() * max);
-export function formatPrice(value: number, currency: any) {
+
+export function formatPrice(value: number | undefined, currency: any) {
 	return new Intl.NumberFormat('en-US', {
 		style: 'currency',
 		currency,
-	}).format(value / 100);
+	}).format(value || 0 / 100);
 }
 
 export const groupFacetValues = (

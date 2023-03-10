@@ -1,4 +1,4 @@
-import { $, component$, useBrowserVisibleTask$, useContext } from '@builder.io/qwik';
+import { $, component$, useBrowserVisibleTask$, useContext, useSignal } from '@builder.io/qwik';
 import AddressCard from '~/components/account/AddressCard';
 import { TabsContainer } from '~/components/account/TabsContainer';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
@@ -12,6 +12,7 @@ import { execute } from '~/utils/api';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
+	const activeCustomerAddresses = useSignal<{ id: string; addresses: ShippingAddress[] }>();
 
 	useBrowserVisibleTask$(async () => {
 		const { activeCustomer } = await execute<{
@@ -21,6 +22,8 @@ export default component$(() => {
 		if (!activeCustomer) {
 			window.location.href = '/sign-in';
 		}
+
+		activeCustomerAddresses.value = activeCustomer;
 
 		if (activeCustomer?.addresses) {
 			appState.addressBook.splice(0, appState.addressBook.length);
@@ -39,7 +42,7 @@ export default component$(() => {
 		await execute(logoutMutation());
 		window.location.href = '/';
 	});
-	return (
+	return activeCustomerAddresses.value ? (
 		<div class="max-w-6xl xl:mx-auto px-4">
 			<h2 class="text-3xl sm:text-5xl font-light text-gray-900 my-8">My Account</h2>
 			<p class="text-gray-700 text-lg -mt-4">Welcome back, {fullNameWithTitle()}</p>
@@ -65,5 +68,7 @@ export default component$(() => {
 				</div>
 			</div>
 		</div>
+	) : (
+		<div style="height: 100vh" />
 	);
 });

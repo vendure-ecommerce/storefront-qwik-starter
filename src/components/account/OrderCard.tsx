@@ -1,4 +1,5 @@
 import { component$ } from '@builder.io/qwik';
+import { useNavigate } from '@builder.io/qwik-city';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
 import { ActiveCustomerOrder } from '~/types';
 import { formatPrice } from '~/utils';
@@ -9,6 +10,8 @@ type IProps = {
 };
 
 export default component$<IProps>(({ order }) => {
+	const navigate = useNavigate();
+
 	return (
 		<div class="container mx-auto p-9 bg-white max-w-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-300 text-center">
 			<Image
@@ -34,7 +37,7 @@ export default component$<IProps>(({ order }) => {
 				<HighlightedButton
 					extraClass="m-auto"
 					onClick$={() => {
-						window.location.href = `/account/orders/${order?.code}`;
+						navigate(`/account/orders/${order?.code}`);
 					}}
 				>
 					Go to detail

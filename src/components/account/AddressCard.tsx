@@ -1,8 +1,10 @@
 import { component$ } from '@builder.io/qwik';
+import { useNavigate } from '@builder.io/qwik-city';
 import { deleteCustomerAddressMutation } from '~/graphql/mutations';
 import { ShippingAddress } from '~/types';
 import { execute } from '~/utils/api';
 import { Button } from '../buttons/Button';
+import { HighlightedButton } from '../buttons/HighlightedButton';
 import PencilIcon from '../icons/PencilIcon';
 import XCircleIcon from '../icons/XCircleIcon';
 
@@ -11,6 +13,8 @@ type IProps = {
 };
 
 export default component$<IProps>(({ address }) => {
+	const navigate = useNavigate();
+
 	return (
 		<div class="max-w-xs bg-white shadow-lg rounded-lg overflow-hidden my-4">
 			<div class="py-4 px-6">
@@ -47,20 +51,21 @@ export default component$<IProps>(({ address }) => {
 					<h1 class="px-2 text-sm">{address.phoneNumber}</h1>
 				</div>
 				<div class="flex justify-around">
-					<Button
+					<HighlightedButton
 						onClick$={() => {
 							window.location.href = '/account/address-book/' + address.id;
 						}}
 					>
 						<PencilIcon /> &nbsp; Edit
-					</Button>
+					</HighlightedButton>
 					<Button
 						onClick$={async () => {
-							// @ts-ignore
-							await execute<{
-								id: string;
-							}>(deleteCustomerAddressMutation(address.id));
-							window.location.href = '/account/address-book/';
+							if (address.id) {
+								await execute<{
+									id: string;
+								}>(deleteCustomerAddressMutation(address.id));
+								navigate();
+							}
 						}}
 					>
 						<XCircleIcon /> &nbsp; Delete
