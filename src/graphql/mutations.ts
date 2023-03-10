@@ -386,10 +386,6 @@ export const deleteCustomerAddressMutation = (id: string) => ({
 	mutation deleteCustomerAddress($id: ID!) {
 		deleteCustomerAddress(id: $id) {
 			success
-			... on ErrorResult {
-					errorCode
-					message
-			}
 		}
 	}
 `,

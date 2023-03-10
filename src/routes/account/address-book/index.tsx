@@ -4,6 +4,7 @@ import AddressCard from '~/components/account/AddressCard';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
 import PlusIcon from '~/components/icons/PlusIcon';
 import { APP_STATE } from '~/constants';
+import { deleteCustomerAddressMutation } from '~/graphql/mutations';
 import { getActiveCustomerAddressesQuery } from '~/graphql/queries';
 import { ShippingAddress } from '~/types';
 import { scrollToTop } from '~/utils';
@@ -37,7 +38,15 @@ export default component$(() => {
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-w-md md:max-w-6xl mx-auto">
 				{[...appState.addressBook].map((address) => (
 					<div key={address.id}>
-						<AddressCard address={address} />
+						<AddressCard
+							address={address}
+							onDelete$={async (id) => {
+								await execute<{
+									id: string;
+								}>(deleteCustomerAddressMutation(id));
+								location.reload();
+							}}
+						/>
 					</div>
 				))}
 			</div>

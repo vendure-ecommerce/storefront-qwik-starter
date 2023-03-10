@@ -1,8 +1,6 @@
-import { component$ } from '@builder.io/qwik';
-import { useNavigate } from '@builder.io/qwik-city';
-import { deleteCustomerAddressMutation } from '~/graphql/mutations';
+import { PropFunction, component$ } from '@builder.io/qwik';
+import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import { ShippingAddress } from '~/types';
-import { execute } from '~/utils/api';
 import { Button } from '../buttons/Button';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import PencilIcon from '../icons/PencilIcon';
@@ -10,9 +8,10 @@ import XCircleIcon from '../icons/XCircleIcon';
 
 type IProps = {
 	address: ShippingAddress;
+	onDelete$?: PropFunction<(id: string) => void>;
 };
 
-export default component$<IProps>(({ address }) => {
+export default component$<IProps>(({ address, onDelete$ }) => {
 	const navigate = useNavigate();
 
 	return (
@@ -59,12 +58,9 @@ export default component$<IProps>(({ address }) => {
 						<PencilIcon /> &nbsp; Edit
 					</HighlightedButton>
 					<Button
-						onClick$={async () => {
-							if (address.id) {
-								await execute<{
-									id: string;
-								}>(deleteCustomerAddressMutation(address.id));
-								navigate();
+						onClick$={() => {
+							if (onDelete$ && address.id) {
+								onDelete$(address.id);
 							}
 						}}
 					>
