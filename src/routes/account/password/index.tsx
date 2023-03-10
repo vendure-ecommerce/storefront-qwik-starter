@@ -6,6 +6,7 @@ import {
 	useContext,
 	useSignal,
 } from '@builder.io/qwik';
+import { useNavigate } from '@builder.io/qwik-city';
 import { TabsContainer } from '~/components/account/TabsContainer';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
 import { ErrorMessage } from '~/components/error-message/ErrorMessage';
@@ -18,6 +19,7 @@ import { scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
+	const navigate = useNavigate();
 	const appState = useContext(APP_STATE);
 	const currentPassword = useSignal('');
 	const newPassword = useSignal('');
@@ -29,7 +31,7 @@ export default component$(() => {
 			getActiveCustomerQuery()
 		);
 		if (!activeCustomer) {
-			window.location.href = '/sign-in';
+			navigate('/sign-in');
 		}
 		appState.customer = activeCustomer;
 		scrollToTop();
@@ -43,7 +45,7 @@ export default component$(() => {
 
 	const logout = $(async () => {
 		await execute(logoutMutation());
-		window.location.href = '/';
+		navigate('/');
 	});
 
 	const updatePassword = $(async () => {

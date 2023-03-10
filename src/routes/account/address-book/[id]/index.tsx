@@ -1,5 +1,5 @@
 import { $, component$, useBrowserVisibleTask$, useContext } from '@builder.io/qwik';
-import { useLocation } from '@builder.io/qwik-city';
+import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import { TabsContainer } from '~/components/account/TabsContainer';
 import AddressForm from '~/components/address-form/AddressForm';
 import { Button } from '~/components/buttons/Button';
@@ -14,6 +14,7 @@ import { scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
+	const navigate = useNavigate();
 	const appState = useContext(APP_STATE);
 	const location = useLocation();
 
@@ -23,7 +24,7 @@ export default component$(() => {
 		}>(getActiveCustomerAddressesQuery());
 
 		if (!activeCustomer) {
-			window.location.href = '/sign-in';
+			navigate('/sign-in');
 		}
 
 		if (activeCustomer?.addresses) {
@@ -51,12 +52,12 @@ export default component$(() => {
 		await execute<{
 			updateCustomerAddress: ShippingAddress;
 		}>(updateCustomerAddressMutation(appState.shippingAddress));
-		window.location.href = '/account/address-book';
+		navigate('/account/address-book');
 	});
 
 	const logout = $(async () => {
 		await execute(logoutMutation());
-		window.location.href = '/';
+		navigate('/');
 	});
 	return (
 		<div class="max-w-6xl xl:mx-auto px-4">
@@ -78,7 +79,7 @@ export default component$(() => {
 									<span class="mr-4" />
 									<Button
 										onClick$={() => {
-											window.location.href = '/account/address-book';
+											navigate('/account/address-book');
 										}}
 									>
 										<XMarkIcon /> &nbsp; Cancel

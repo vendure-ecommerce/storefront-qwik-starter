@@ -1,4 +1,5 @@
 import { $, component$, useBrowserVisibleTask$, useContext, useSignal } from '@builder.io/qwik';
+import { useNavigate } from '@builder.io/qwik-city';
 import AddressCard from '~/components/account/AddressCard';
 import { TabsContainer } from '~/components/account/TabsContainer';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
@@ -11,6 +12,7 @@ import { scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
+	const navigate = useNavigate();
 	const appState = useContext(APP_STATE);
 	const activeCustomerAddresses = useSignal<{ id: string; addresses: ShippingAddress[] }>();
 
@@ -20,7 +22,7 @@ export default component$(() => {
 		}>(getActiveCustomerAddressesQuery());
 
 		if (!activeCustomer) {
-			window.location.href = '/sign-in';
+			navigate('/sign-in');
 		}
 
 		activeCustomerAddresses.value = activeCustomer;
@@ -40,7 +42,7 @@ export default component$(() => {
 
 	const logout = $(async () => {
 		await execute(logoutMutation());
-		window.location.href = '/';
+		navigate('/');
 	});
 	return activeCustomerAddresses.value ? (
 		<div class="max-w-6xl xl:mx-auto px-4">

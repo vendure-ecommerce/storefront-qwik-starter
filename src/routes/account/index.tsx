@@ -6,6 +6,7 @@ import {
 	useContext,
 	useSignal,
 } from '@builder.io/qwik';
+import { useNavigate } from '@builder.io/qwik-city';
 import { TabsContainer } from '~/components/account/TabsContainer';
 import { Button } from '~/components/buttons/Button';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
@@ -27,6 +28,7 @@ import { scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
+	const navigate = useNavigate();
 	const appState = useContext(APP_STATE);
 	const isEditing = useSignal(false);
 	const showModal = useSignal(false);
@@ -42,7 +44,7 @@ export default component$(() => {
 			getActiveCustomerQuery()
 		);
 		if (!activeCustomer) {
-			window.location.href = '/sign-in';
+			navigate('/sign-in');
 		}
 		appState.customer = activeCustomer;
 		newEmail.value = activeCustomer.emailAddress as string;
@@ -72,12 +74,12 @@ export default component$(() => {
 			requestUpdateCustomerEmailAddress: {
 				password: string;
 				newEmail: string;
+				__typename: string;
+				message?: string;
 			};
 		}>(requestUpdateCustomerEmailAddressMutation(password, newEmail));
-		// @ts-ignore
 		if (requestUpdateCustomerEmailAddress.__typename === 'InvalidCredentialsError') {
-			// @ts-ignore
-			errorMessage.value = requestUpdateCustomerEmailAddress.message;
+			errorMessage.value = requestUpdateCustomerEmailAddress.message || '';
 		} else {
 			errorMessage.value = '';
 			isEditing.value = false;
@@ -87,7 +89,7 @@ export default component$(() => {
 
 	const logout = $(async () => {
 		await execute(logoutMutation());
-		window.location.href = '/';
+		navigate('/');
 	});
 	return (
 		<div class="max-w-6xl xl:mx-auto px-4">

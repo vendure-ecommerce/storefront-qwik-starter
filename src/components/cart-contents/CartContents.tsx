@@ -1,5 +1,5 @@
 import { component$, useContext } from '@builder.io/qwik';
-import { Link, useLocation } from '@builder.io/qwik-city';
+import { Link, useLocation, useNavigate } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import { adjustOrderLineMutation, removeOrderLineMutation } from '~/graphql/mutations';
 import { ActiveOrder } from '~/types';
@@ -10,6 +10,7 @@ import Price from '../products/Price';
 export default component$<{
 	order?: ActiveOrder;
 }>(({ order }) => {
+	const navigate = useNavigate();
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
 	const rows = order?.lines || appState.activeOrder?.lines || [];
@@ -94,7 +95,7 @@ export default component$<{
 												);
 												appState.activeOrder = removeOrderLine;
 												if (appState.activeOrder?.lines?.length) {
-													window.location.href = '/';
+													navigate(`/`);
 												}
 											}}
 										>

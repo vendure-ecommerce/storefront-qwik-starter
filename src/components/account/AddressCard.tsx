@@ -53,7 +53,7 @@ export default component$<IProps>(({ address }) => {
 				<div class="flex justify-around">
 					<HighlightedButton
 						onClick$={() => {
-							window.location.href = '/account/address-book/' + address.id;
+							navigate(`/account/address-book/${address.id}`);
 						}}
 					>
 						<PencilIcon /> &nbsp; Edit

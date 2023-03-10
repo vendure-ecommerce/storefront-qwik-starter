@@ -1,4 +1,5 @@
 import { $, component$, useBrowserVisibleTask$, useContext, useSignal } from '@builder.io/qwik';
+import { useNavigate } from '@builder.io/qwik-city';
 import OrderCard from '~/components/account/OrderCard';
 import { TabsContainer } from '~/components/account/TabsContainer';
 import { APP_STATE } from '~/constants';
@@ -9,6 +10,7 @@ import { scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
+	const navigate = useNavigate();
 	const appState = useContext(APP_STATE);
 	const activeCustomerOrdersSignal = useSignal<ActiveCustomerOrders>();
 
@@ -28,7 +30,7 @@ export default component$(() => {
 
 	const logout = $(async () => {
 		await execute(logoutMutation());
-		window.location.href = '/';
+		navigate('/');
 	});
 
 	return activeCustomerOrdersSignal.value ? (

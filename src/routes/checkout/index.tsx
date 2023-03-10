@@ -1,4 +1,5 @@
 import { $, component$, useBrowserVisibleTask$, useContext, useStore } from '@builder.io/qwik';
+import { useNavigate } from '@builder.io/qwik-city';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
 import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
@@ -18,6 +19,7 @@ import { execute } from '~/utils/api';
 type Step = 'SHIPPING' | 'PAYMENT' | 'CONFIRMATION';
 
 export default component$(() => {
+	const navigate = useNavigate();
 	const appState = useContext(APP_STATE);
 	const state = useStore<{ step: Step }>({ step: 'SHIPPING' });
 	const steps: { name: string; state: Step }[] = [
@@ -30,7 +32,7 @@ export default component$(() => {
 		scrollToTop();
 		appState.showCart = false;
 		if (appState.activeOrder?.lines?.length) {
-			window.location.href = '/';
+			navigate('/');
 		}
 	});
 
@@ -41,7 +43,7 @@ export default component$(() => {
 		}>(addPaymentToOrderMutation());
 		appState.activeOrder = activeOrder;
 		scrollToTop();
-		window.location.href = `/checkout/confirmation/${activeOrder.code}`;
+		navigate(`/checkout/confirmation/${activeOrder.code}`);
 	});
 
 	return (

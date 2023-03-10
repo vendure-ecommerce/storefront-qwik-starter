@@ -1,5 +1,5 @@
 import { $, component$, useBrowserVisibleTask$, useContext, useStore } from '@builder.io/qwik';
-import { useLocation } from '@builder.io/qwik-city';
+import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import { TabsContainer } from '~/components/account/TabsContainer';
 import { APP_STATE } from '~/constants';
 import { logoutMutation } from '~/graphql/mutations';
@@ -9,6 +9,7 @@ import { formatPrice, scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
+	const navigate = useNavigate();
 	const appState = useContext(APP_STATE);
 	const {
 		params: { code },
@@ -31,7 +32,7 @@ export default component$(() => {
 
 	const logout = $(async () => {
 		await execute(logoutMutation());
-		window.location.href = '/';
+		navigate('/');
 	});
 	return (
 		<div class="max-w-6xl xl:mx-auto px-4">
