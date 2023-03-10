@@ -1,6 +1,7 @@
 import { component$, useContext } from '@builder.io/qwik';
 import { Link, useLocation } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
+import { isCheckoutPage } from '~/utils';
 import CartContents from '../cart-contents/CartContents';
 import CartPrice from '../cart-totals/CartPrice';
 import CloseIcon from '../icons/CloseIcon';
@@ -8,7 +9,8 @@ import CloseIcon from '../icons/CloseIcon';
 export default component$(() => {
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
-	const isEditable = location.url.toString().indexOf('/checkout/') === -1;
+	const _isCheckoutPage = isCheckoutPage(location.url.toString());
+
 	return (
 		<div>
 			{appState.showCart && (
@@ -42,7 +44,7 @@ export default component$(() => {
 											)}
 										</div>
 									</div>
-									{appState.activeOrder?.totalQuantity && isEditable && (
+									{appState.activeOrder?.totalQuantity && _isCheckoutPage && (
 										<div class="border-t border-gray-200 py-6 px-4 sm:px-6">
 											<div class="flex justify-between text-base font-medium text-gray-900">
 												<p>Subtotal</p>

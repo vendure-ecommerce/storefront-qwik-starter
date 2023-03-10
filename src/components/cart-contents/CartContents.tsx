@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from '@builder.io/qwik-city';
 import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
 import { adjustOrderLineMutation, removeOrderLineMutation } from '~/graphql/mutations';
 import { ActiveOrder } from '~/types';
+import { isCheckoutPage } from '~/utils';
 import { execute } from '~/utils/api';
 import { Image } from '../image/Image';
 import Price from '../products/Price';
@@ -14,7 +15,7 @@ export default component$<{
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
 	const rows = order?.lines || appState.activeOrder?.lines || [];
-	const isEditable = !location.url.toString().startsWith('/checkout/') && !order;
+	const _isCheckoutPage = !isCheckoutPage(location.url.toString()) && !order;
 	const currencyCode = order?.currencyCode || appState.activeOrder?.currencyCode || 'USD';
 
 	return (
@@ -50,13 +51,13 @@ export default component$<{
 								</div>
 							</div>
 							<div class="flex-1 flex items-center text-sm">
-								{isEditable ? (
+								{_isCheckoutPage ? (
 									<form>
 										<label html-for={`quantity-${line.id}`} class="mr-2">
 											Quantity
 										</label>
 										<select
-											disabled={!isEditable}
+											disabled={!_isCheckoutPage}
 											id={`quantity-${line.id}`}
 											name={`quantity-${line.id}`}
 											value={line.quantity}
@@ -86,7 +87,7 @@ export default component$<{
 								)}
 								<div class="flex-1"></div>
 								<div class="flex">
-									{isEditable && (
+									{_isCheckoutPage && (
 										<button
 											value={line.id}
 											class="font-medium text-primary-600 hover:text-primary-500"
@@ -95,7 +96,8 @@ export default component$<{
 													removeOrderLineMutation(line.id)
 												);
 												appState.activeOrder = removeOrderLine;
-												if (appState.activeOrder?.lines?.length) {
+												if (appState.activeOrder?.lines?.length === 0) {
+													appState.showCart = false;
 													navigate(`/`);
 												}
 											}}

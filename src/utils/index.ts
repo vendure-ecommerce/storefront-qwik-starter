@@ -139,3 +139,5 @@ export const formatDateTime = (dateToConvert: Date) => {
 	const orderedDate = date.split('-').reverse().join('-');
 	return `${orderedDate} ${hour}:${minutes}`;
 };
+
+export const isCheckoutPage = (url: string) => url.indexOf('/checkout/') === -1;
