@@ -1,7 +1,14 @@
-import { $, component$, Slot, useContext } from '@builder.io/qwik';
+import {
+	$,
+	component$,
+	Slot,
+	useBrowserVisibleTask$,
+	useContext,
+	useSignal,
+} from '@builder.io/qwik';
 import { useNavigate } from '@builder.io/qwik-city';
 import { TabsContainer } from '~/components/account/TabsContainer';
-import { APP_STATE } from '~/constants';
+import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { logoutMutation } from '~/graphql/mutations';
 import { fullNameWithTitle } from '~/utils';
 import { execute } from '~/utils/api';
@@ -9,6 +16,7 @@ import { execute } from '~/utils/api';
 export default component$(() => {
 	const navigate = useNavigate();
 	const appState = useContext(APP_STATE);
+	const canBeVisible = useSignal(false);
 
 	const logout = $(async () => {
 		await execute(logoutMutation());
@@ -16,7 +24,15 @@ export default component$(() => {
 		window.location.href = '/';
 	});
 
-	return (
+	useBrowserVisibleTask$(() => {
+		if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
+			navigate('/');
+		} else {
+			canBeVisible.value = true;
+		}
+	});
+
+	return canBeVisible.value ? (
 		<div class="max-w-6xl xl:mx-auto px-4">
 			<h2 class="text-3xl sm:text-5xl font-light text-gray-900 my-8">My Account</h2>
 			<p class="text-gray-700 text-lg -mt-4">
@@ -33,5 +49,5 @@ export default component$(() => {
 				</div>
 			</div>
 		</div>
-	);
+	) : null;
 });
