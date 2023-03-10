@@ -96,12 +96,8 @@ export default component$<{
 													removeOrderLineMutation(line.id)
 												);
 												appState.activeOrder = removeOrderLine;
-												if (
-													appState.activeOrder?.lines?.length === 0 &&
-													isCheckoutPage(location.url.toString())
-												) {
+												if (appState.activeOrder?.lines?.length === 0) {
 													appState.showCart = false;
-													navigate(`/`);
 												}
 											}}
 										>
