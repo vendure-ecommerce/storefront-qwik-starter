@@ -15,7 +15,7 @@ export default component$<{
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
 	const rows = order?.lines || appState.activeOrder?.lines || [];
-	const isInEditableUrl = !isCheckoutPage(location.url.toString()) && !order;
+	const isInEditableUrl = !isCheckoutPage(location.url.toString()) || !order;
 	const currencyCode = order?.currencyCode || appState.activeOrder?.currencyCode || 'USD';
 
 	return (
@@ -96,8 +96,12 @@ export default component$<{
 													removeOrderLineMutation(line.id)
 												);
 												appState.activeOrder = removeOrderLine;
-												if (appState.activeOrder?.lines?.length === 0) {
+												if (
+													appState.activeOrder?.lines?.length === 0 &&
+													isCheckoutPage(location.url.toString())
+												) {
 													appState.showCart = false;
+													navigate(`/`);
 												}
 											}}
 										>
