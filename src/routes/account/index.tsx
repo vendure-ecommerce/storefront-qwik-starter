@@ -84,17 +84,11 @@ export default component$(() => {
 			<Modal
 				open={showModal.value}
 				title="Confirm E-Mail address change"
-				submitProps={{
-					type: 'button',
-					onClick$: $(() => {
-						updateEmail(currentPassword.value, newEmail.value);
-					}),
+				onSubmit$={() => {
+					updateEmail(currentPassword.value, newEmail.value);
 				}}
-				cancelProps={{
-					type: 'button',
-					onClick$: $(() => {
-						showModal.value = false;
-					}),
+				onCancel$={() => {
+					showModal.value = false;
 				}}
 			>
 				<div q:slot="modalIcon">
