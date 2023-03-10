@@ -20,7 +20,6 @@ export default component$<{
 
 	return (
 		<div class="flow-root">
-			{isInEditableUrl ? 'y' : 'n'}
 			<ul class="-my-6 divide-y divide-gray-200">
 				{(rows ?? []).map((line) => (
 					<li key={line.id} class="py-6 flex">
