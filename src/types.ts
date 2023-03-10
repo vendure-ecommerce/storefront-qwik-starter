@@ -223,6 +223,28 @@ export type Country = {
 	name: string;
 };
 
+export type ActiveCustomerOrders = {
+	id: string;
+	orders: {
+		items: ActiveCustomerOrder[];
+		totalItems: string;
+	};
+};
+
+export type ActiveCustomerOrder = {
+	id: string;
+	code: string;
+	state: string;
+	totalWithTax: number;
+	currencyCode: string;
+	lines: {
+		featuredAsset: {
+			preview: string;
+		};
+		productVariant: { name: string };
+	}[];
+};
+
 export type CurrencyCode =
 	/** United Arab Emirates dirham */
 	| 'AED'

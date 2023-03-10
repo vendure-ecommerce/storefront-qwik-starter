@@ -259,21 +259,28 @@ export const getActiveCustomerQuery = () => ({
 export const getActiveCustomerOrdersQuery = () => ({
 	variables: {},
 	query: `
-    query activeCustomerOrders($options: OrderListOptions) {
-      activeCustomer {
-        id
-        orders(options: $options) {
-            items {
+    query activeCustomerOrders {
+        activeCustomer {
+            id
+            orders {
+              items {
                 id
-                updatedAt
                 code
                 state
+                totalWithTax
                 currencyCode
-                total
+                lines {
+                  featuredAsset {
+                    preview
+                  }
+                  productVariant {
+                    name
+                  }
+                }
+              }
+              totalItems
             }
-            totalItems
         }
-      }
     }
 `,
 });

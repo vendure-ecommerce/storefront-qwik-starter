@@ -1,28 +1,45 @@
 import { component$ } from '@builder.io/qwik';
-import { ActiveOrder } from '~/types';
+import { HighlightedButton } from '~/components/buttons/HighlightedButton';
+import { ActiveCustomerOrder } from '~/types';
 import { formatPrice } from '~/utils';
+import { Image } from '../image/Image';
 
 type IProps = {
-	order: ActiveOrder;
+	order: ActiveCustomerOrder;
 };
 
 export default component$<IProps>(({ order }) => {
 	return (
-		<div class="bg-white p-4 rounded-lg shadow-lg max-w-xs">
-			<div class="pt-2 text-gray-600 text-sm">Order code</div>
-			<h4 class="my-2 text-xl font-semibold uppercase leading-tight truncate">{order?.code}</h4>
-			<span class="bg-teal-200 text-teal-800 text-xs px-2 inline-block rounded-full  uppercase font-semibold tracking-wide">
-				PaymentSettled
-			</span>
-			<div class="mt-4 text-xl">
-				{formatPrice(order?.totalWithTax, order?.currencyCode || 'USD')}
+		<div class="container mx-auto p-9 bg-white max-w-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-300 text-center">
+			<Image
+				layout="fixed"
+				width="200"
+				class="w-full h-full object-center object-cover m-auto"
+				src={order.lines[0].featuredAsset?.preview}
+				alt={order.lines[0].productVariant.name}
+			/>
+			<div class="items-center">
+				<div>
+					<h1 class="mt-5 text-sm">
+						Order:
+						<span class="ml-2 text-xl font-semibold">{order?.code}</span>
+					</h1>
+					<span class="bg-teal-200 text-teal-800 text-xs px-2 py-2 mt-2 inline-block rounded-full  uppercase font-semibold tracking-wide">
+						{order.state}
+					</span>
+					<p class="my-2">{formatPrice(order?.totalWithTax, order?.currencyCode || 'USD')}</p>
+				</div>
 			</div>
-			<a
-				href={'/account/orders/' + order?.code}
-				class="mt-4 max-w-xs flex-1 bg-primary-600 hover:bg-primary-700 transition-colors border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full"
-			>
-				Go to detail
-			</a>
+			<div>
+				<HighlightedButton
+					extraClass="m-auto"
+					onClick$={() => {
+						window.location.href = `/account/orders/${order?.code}`;
+					}}
+				>
+					Go to detail
+				</HighlightedButton>
+			</div>
 		</div>
 	);
 });
