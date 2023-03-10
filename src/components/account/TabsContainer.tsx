@@ -1,11 +1,14 @@
 import { Slot, component$ } from '@builder.io/qwik';
+import { useLocation } from '@builder.io/qwik-city';
 import HashtagIcon from '../icons/HashtagIcon';
 import MapPinIcon from '../icons/MapPinIcon';
 import ShoppingBagIcon from '../icons/ShoppingBagIcon';
 import UserCircleIcon from '../icons/UserCircleIcon';
 import { Tab } from './Tab';
 
-export const TabsContainer = component$<{ activeTab: string }>(({ activeTab }) => {
+export const TabsContainer = component$(() => {
+	const location = useLocation();
+
 	return (
 		<>
 			<div class="border-b border-gray-200 mt-4">
@@ -14,32 +17,32 @@ export const TabsContainer = component$<{ activeTab: string }>(({ activeTab }) =
 						Icon={UserCircleIcon}
 						text="Account details"
 						href="/account"
-						isActive={activeTab === 'details'}
+						isActive={location.url.pathname.indexOf('details') >= 0}
 					/>
 
 					<Tab
 						Icon={ShoppingBagIcon}
 						text="Purchase history"
 						href="/account/orders"
-						isActive={activeTab === 'orders'}
+						isActive={location.url.pathname.indexOf('orders') >= 0}
 					/>
 
 					<Tab
 						Icon={MapPinIcon}
 						text="Addresses"
 						href="/account/address-book"
-						isActive={activeTab === 'address-book'}
+						isActive={location.url.pathname.indexOf('address-book') >= 0}
 					/>
 
 					<Tab
 						Icon={HashtagIcon}
 						text="Password change"
 						href="/account/password"
-						isActive={activeTab === 'password'}
+						isActive={location.url.pathname.indexOf('password') >= 0}
 					/>
 				</ul>
 			</div>
-			<Slot name="tabContent" />
+			<Slot />
 		</>
 	);
 });

@@ -123,3 +123,11 @@ export const isActiveCustomerValid = (activeCustomer: ActiveCustomer): boolean =
 		activeCustomer.firstName &&
 		activeCustomer.lastName
 	);
+
+export const fullNameWithTitle = ({
+	title,
+	firstName,
+	lastName,
+}: Pick<ActiveCustomer, 'title' | 'firstName' | 'lastName'>): string => {
+	return [title, firstName, lastName].filter((x) => !!x).join(' ');
+};
