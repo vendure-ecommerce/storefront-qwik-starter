@@ -193,7 +193,7 @@ export default component$(() => {
 								) : (
 									<div class="md:col-span-2">
 										<h3 class="text-sm text-gray-500">Full Name</h3>
-										{fullNameWithTitle()}
+										<p class="py-2 text-lg text-gray-700">{fullNameWithTitle()}</p>
 									</div>
 								)}
 
@@ -211,7 +211,7 @@ export default component$(() => {
 											class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 										/>
 									) : (
-										appState.customer?.emailAddress
+										<p class="py-2 text-lg text-gray-700">{appState.customer?.emailAddress}</p>
 									)}
 								</div>
 
@@ -227,7 +227,7 @@ export default component$(() => {
 											class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 										/>
 									) : (
-										appState.customer?.phoneNumber
+										<p class="py-2 text-lg text-gray-700">{appState.customer?.phoneNumber}</p>
 									)}
 								</div>
 							</div>
@@ -241,7 +241,7 @@ export default component$(() => {
 												updateCustomer();
 											}}
 										>
-											<CheckIcon /> Save
+											<CheckIcon /> &nbsp; Save
 										</HighlightedButton>
 
 										<Button
@@ -249,7 +249,7 @@ export default component$(() => {
 												isEditing.value = false;
 											}}
 										>
-											<XMarkIcon forcedClass="w-4 h-4" /> Cancel
+											<XMarkIcon forcedClass="w-4 h-4" /> &nbsp; Cancel
 										</Button>
 									</div>
 								</>
@@ -260,7 +260,7 @@ export default component$(() => {
 										isEditing.value = true;
 									}}
 								>
-									<PencilIcon /> Edit
+									<PencilIcon /> &nbsp; Edit
 								</HighlightedButton>
 							)}
 						</div>

@@ -105,7 +105,7 @@ export default component$(() => {
 										updatePassword();
 									}}
 								>
-									<CheckIcon /> Save
+									<CheckIcon /> &nbsp; Save
 								</HighlightedButton>
 							</div>
 							{errorMessage.value !== '' && (

@@ -108,7 +108,6 @@ export const isShippingAddressValid = (orderAddress: ShippingAddress): boolean =
 		!!orderAddress &&
 		orderAddress.fullName &&
 		orderAddress.streetLine1 &&
-		orderAddress.company &&
 		orderAddress.city &&
 		orderAddress.province &&
 		orderAddress.postalCode &&

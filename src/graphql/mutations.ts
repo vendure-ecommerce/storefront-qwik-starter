@@ -298,8 +298,8 @@ export const requestUpdateCustomerEmailAddressMutation = (
 		) {
 			__typename
 			... on ErrorResult {
-				errorCode
-				message
+					errorCode
+					message
 		  	}
 		}
 	}  
@@ -312,7 +312,7 @@ export const updateCustomerPasswordMutation = (currentPassword: string, newPassw
 	mutation updateCustomerPassword($currentPassword: String! $newPassword: String!) {
         updateCustomerPassword(currentPassword: $currentPassword, newPassword: $newPassword) {
             ... on Success {
-                success
+					success
             }
             ...ErrorResult
         }
@@ -327,8 +327,8 @@ export const updateCustomerAddressMutation = (input: ShippingAddress) => ({
 		updateCustomerAddress(input: $input) {
 			...Address
 			... on ErrorResult {
-				errorCode
-				message
+					errorCode
+					message
 			}
 		}
 	}

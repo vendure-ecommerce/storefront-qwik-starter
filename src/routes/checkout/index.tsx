@@ -79,6 +79,11 @@ export default component$(() => {
 											customer: Omit<ActiveCustomer, 'id'>,
 											shippingAddress: ShippingAddress
 										) => {
+											delete shippingAddress.id;
+											delete shippingAddress.country;
+											delete shippingAddress.defaultShippingAddress;
+											delete shippingAddress.defaultBillingAddress;
+
 											const setOrderShippingAddress = async () => {
 												const { setOrderShippingAddress } = await execute<{
 													setOrderShippingAddress: ActiveOrder;

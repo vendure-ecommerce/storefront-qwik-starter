@@ -256,16 +256,24 @@ export const getActiveCustomerQuery = () => ({
 `,
 });
 
-export const getActiveCustomerPurchaseHistoryQuery = () => ({
+export const getActiveCustomerOrdersQuery = () => ({
 	variables: {},
 	query: `
-    query activeCustomer {
-        activeCustomer {
-            id
-            orders {
-              items
+    query activeCustomerOrders($options: OrderListOptions) {
+      activeCustomer {
+        id
+        orders(options: $options) {
+            items {
+                id
+                updatedAt
+                code
+                state
+                currencyCode
+                total
             }
+            totalItems
         }
+      }
     }
 `,
 });

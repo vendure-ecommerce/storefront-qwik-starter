@@ -1,8 +1,9 @@
 import { $, component$, useBrowserVisibleTask$, useContext } from '@builder.io/qwik';
+import OrderCard from '~/components/account/OrderCard';
 import { TabsContainer } from '~/components/account/TabsContainer';
 import { APP_STATE } from '~/constants';
 import { logoutMutation } from '~/graphql/mutations';
-import { getActiveCustomerQuery } from '~/graphql/queries';
+import { getActiveCustomerOrdersQuery } from '~/graphql/queries';
 import { ActiveCustomer } from '~/types';
 import { scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
@@ -12,12 +13,8 @@ export default component$(() => {
 
 	useBrowserVisibleTask$(async () => {
 		const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
-			getActiveCustomerQuery()
+			getActiveCustomerOrdersQuery()
 		);
-		if (!activeCustomer) {
-			window.location.href = '/sign-in';
-		}
-		appState.customer = activeCustomer;
 		scrollToTop();
 	});
 
@@ -42,7 +39,13 @@ export default component$(() => {
 				<div class="w-full text-xl text-gray-500">
 					<TabsContainer activeTab="orders">
 						<div q:slot="tabContent" class="min-h-[24rem] rounded-lg p-4 space-y-4">
-							past orders
+							<div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-w-md md:max-w-6xl mx-auto">
+								{[...appState.addressBook].map((address) => (
+									<div key={address.id}>
+										<OrderCard order={appState.activeOrder} />
+									</div>
+								))}
+							</div>
 						</div>
 					</TabsContainer>
 				</div>

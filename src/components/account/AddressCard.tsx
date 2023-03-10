@@ -56,6 +56,7 @@ export default component$<IProps>(({ address }) => {
 					</Button>
 					<Button
 						onClick$={async () => {
+							// @ts-ignore
 							await execute<{
 								id: string;
 							}>(deleteCustomerAddressMutation(address.id));
