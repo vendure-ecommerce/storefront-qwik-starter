@@ -31,7 +31,7 @@ export default component$(() => {
 	useBrowserVisibleTask$(async () => {
 		scrollToTop();
 		appState.showCart = false;
-		if (appState.activeOrder?.lines?.length) {
+		if (appState.activeOrder?.lines?.length === 0) {
 			navigate('/');
 		}
 	});

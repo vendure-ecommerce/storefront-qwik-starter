@@ -8,7 +8,7 @@ import CloseIcon from '../icons/CloseIcon';
 export default component$(() => {
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
-	const isEditable = !location.url.toString().startsWith('/checkout/');
+	const isEditable = location.url.toString().indexOf('/checkout/') === -1;
 	return (
 		<div>
 			{appState.showCart && (

@@ -25,8 +25,8 @@ export default component$<{
 						<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
 							<Image
 								layout="fixed"
-								width="350"
-								height="350"
+								width="100"
+								height="100"
 								class="w-full h-full object-center object-cover"
 								src={line.featuredAsset?.preview + '?preset=thumb'}
 								alt={line.productVariant.name}
