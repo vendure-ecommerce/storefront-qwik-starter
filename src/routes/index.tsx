@@ -1,7 +1,7 @@
 import { component$, useContext } from '@builder.io/qwik';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import { Image } from '~/components/image/Image';
-import { APP_STATE, HOMEPAGE_IMAGE } from '~/constants';
+import { APP_STATE, HOMEPAGE_IMAGE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
 import { t } from '~/locales';
 
 export default component$(() => {
@@ -15,6 +15,7 @@ export default component$(() => {
 						class="h-full md:w-full"
 						src={HOMEPAGE_IMAGE}
 						alt="Background header photo of bicycle taken by Mikkel Bech"
+						placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 					/>
 					<div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-700 mix-blend-overlay" />
 				</div>

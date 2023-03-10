@@ -9,7 +9,7 @@ import {
 } from '@builder.io/qwik';
 import { routeLoader$ } from '@builder.io/qwik-city';
 import { ImageTransformerProps, useImageProvider } from '~/components/image/Image';
-import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, HOMEPAGE_IMAGE, IMAGE_RESOLUTIONS } from '~/constants';
+import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, IMAGE_RESOLUTIONS } from '~/constants';
 import {
 	getActiveOrderQuery,
 	getAvailableCountriesQuery,
@@ -37,10 +37,7 @@ export const useAvailableCountriesLoader = routeLoader$(async () => {
 
 export default component$(() => {
 	const imageTransformer$ = $(({ src, width, height }: ImageTransformerProps): string => {
-		const isHomepageImage = src.indexOf(HOMEPAGE_IMAGE) !== -1;
-		return isHomepageImage
-			? src
-			: `https://that-test.site/cdn-cgi/image/w=${width},h=${height},q=100,fit=contain,format=webp/${src}`;
+		return `${src}?w=${width}&h=${height}&format=webp`;
 	});
 
 	// Provide your default options

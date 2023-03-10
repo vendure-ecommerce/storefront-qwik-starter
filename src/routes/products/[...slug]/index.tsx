@@ -15,7 +15,7 @@ import { Image } from '~/components/image/Image';
 import Price from '~/components/products/Price';
 import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import TopReviews from '~/components/top-reviews/TopReviews';
-import { APP_STATE } from '~/constants';
+import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
 import { addItemToOrderMutation } from '~/graphql/mutations';
 import { getProductQuery } from '~/graphql/queries';
 import { ActiveOrder, Line, Product, Variant } from '~/types';
@@ -92,6 +92,7 @@ export default component$(() => {
 										height="400"
 										src={state.product.featuredAsset.preview + '?w=400&h=400'}
 										alt={state.product.name}
+										placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 									/>
 								</div>
 							</span>

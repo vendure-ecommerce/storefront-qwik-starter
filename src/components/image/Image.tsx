@@ -34,6 +34,7 @@ export type ImageTransformerProps = {
  * @alpha
  */
 export interface ImageProps extends ImageAttributes {
+	placeholder?: string;
 	style?: Record<string, string | number>;
 	aspectRatio?: number;
 	layout: 'fixed' | 'constrained' | 'fullWidth';
@@ -50,39 +51,58 @@ export const useImageProvider = (state: ImageState) => {
 };
 
 export const getStyles = ({
+	placeholder,
 	width,
 	height,
 	aspectRatio,
 	objectFit = 'cover',
 	layout,
-}: Pick<ImageProps, 'width' | 'height' | 'aspectRatio' | 'objectFit' | 'layout'>): Record<
-	string,
-	string | undefined
-> => {
+}: Pick<
+	ImageProps,
+	'placeholder' | 'width' | 'height' | 'aspectRatio' | 'objectFit' | 'layout'
+>): Record<string, string | undefined> => {
 	const isValid = (value?: string | number) => value || value === 0;
-	const objectFitStyle = { 'object-fit': objectFit };
+
+	if (height === 'auto' && width === 'auto' && isValid(aspectRatio)) {
+		console.warn(`To use the aspect ratio either set the width or the height`);
+	}
+
+	if (height !== 'auto' && layout !== 'fixed' && isValid(aspectRatio)) {
+		console.warn(`To maintain the aspect ratio we set 'height: "auto"'`);
+	}
+
+	const baseStyles = {
+		'object-fit': objectFit,
+		background: placeholder || 'transparent',
+	};
+
 	switch (layout) {
 		case 'fixed':
 			return {
-				...objectFitStyle,
+				...baseStyles,
 				width: isValid(width) ? `${width}px` : undefined,
 				height: isValid(height) ? `${height}px` : undefined,
 			};
 		case 'constrained':
 			return {
-				...objectFitStyle,
+				...baseStyles,
 				width: '100%',
+				height: isValid(aspectRatio) ? 'auto' : undefined,
 				'max-width': isValid(width) ? `${width}px` : undefined,
 				'max-height': isValid(height) ? `${height}px` : undefined,
 				'aspect-ratio': isValid(aspectRatio) ? `${aspectRatio}` : undefined,
 			};
-		case 'fullWidth':
+		case 'fullWidth': {
+			const heightStyle = {
+				height: isValid(aspectRatio) ? 'auto' : isValid(height) ? `${height}px` : undefined,
+			};
 			return {
-				...objectFitStyle,
+				...baseStyles,
+				...heightStyle,
 				width: '100%',
 				'aspect-ratio': isValid(aspectRatio) ? `${aspectRatio}` : undefined,
-				height: isValid(height) ? `${height}px` : undefined,
 			};
+		}
 	}
 };
 
@@ -91,16 +111,10 @@ export const getSizes = ({ width, layout }: Pick<ImageProps, 'width' | 'layout'>
 		return undefined;
 	}
 	switch (layout) {
-		// If screen is wider than the max size, image width is the max size,
-		// otherwise it's the width of the screen
 		case `constrained`:
 			return `(min-width: ${width}px) ${width}px, 100vw`;
-
-		// Image is always the same width, whatever the size of the screen
 		case `fixed`:
 			return `${width}px`;
-
-		// Image is always the width of the screen
 		case `fullWidth`:
 			return `100vw`;
 
@@ -166,13 +180,7 @@ export const getBreakpoints = ({
 		return [width, doubleWidth];
 	}
 	if (layout === 'constrained') {
-		return [
-			// Always include the image at 1x and 2x the specified width
-			width,
-			doubleWidth,
-			// Filter out any resolutions that are larger than the double-res image
-			...resolutions.filter((w) => w < doubleWidth),
-		];
+		return [width, doubleWidth, ...resolutions.filter((w) => w < doubleWidth)];
 	}
 
 	return [];

@@ -1,5 +1,6 @@
 import { component$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
+import { IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
 import { Image } from '../image/Image';
 import Price from './Price';
 
@@ -14,6 +15,7 @@ export default component$(
 					height="200"
 					src={productAsset?.preview + '?w=300&h=400'}
 					alt={productName}
+					placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 				/>
 				<div class="h-2" />
 				<div class="text-sm text-gray-700">{productName}</div>
