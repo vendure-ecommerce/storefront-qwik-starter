@@ -78,6 +78,7 @@ type TaxSummary = {
 };
 
 export type ShippingAddress = {
+	id?: string;
 	fullName?: string;
 	streetLine1?: string;
 	streetLine2?: string;

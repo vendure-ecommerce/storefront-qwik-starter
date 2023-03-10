@@ -277,6 +277,7 @@ export const getActiveCustomerAddressesQuery = () => ({
       activeCustomer {
             id
             addresses {
+              id
               fullName
               company
               streetLine1

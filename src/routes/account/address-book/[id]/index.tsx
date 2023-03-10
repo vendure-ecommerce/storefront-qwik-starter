@@ -1,10 +1,13 @@
 import { $, component$, useBrowserVisibleTask$, useContext } from '@builder.io/qwik';
-import AddressCard from '~/components/account/AddressCard';
+import { useLocation } from '@builder.io/qwik-city';
 import { TabsContainer } from '~/components/account/TabsContainer';
+import AddressForm from '~/components/address-form/AddressForm';
+import { Button } from '~/components/buttons/Button';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
-import PlusIcon from '~/components/icons/PlusIcon';
+import CheckIcon from '~/components/icons/CheckIcon';
+import XMarkIcon from '~/components/icons/XMarkIcon';
 import { APP_STATE } from '~/constants';
-import { logoutMutation } from '~/graphql/mutations';
+import { logoutMutation, updateCustomerAddressMutation } from '~/graphql/mutations';
 import { getActiveCustomerAddressesQuery } from '~/graphql/queries';
 import { ShippingAddress } from '~/types';
 import { scrollToTop } from '~/utils';
@@ -12,6 +15,7 @@ import { execute } from '~/utils/api';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
+	const location = useLocation();
 
 	useBrowserVisibleTask$(async () => {
 		const { activeCustomer } = await execute<{
@@ -23,9 +27,16 @@ export default component$(() => {
 		}
 
 		if (activeCustomer?.addresses) {
-			appState.addressBook.splice(0, appState.addressBook.length);
-			appState.addressBook.push(...activeCustomer.addresses);
+			const [activeAddress] = activeCustomer.addresses.filter(
+				(address) => address.id === location.params.id
+			);
+			activeAddress.countryCode = activeAddress?.country?.code;
+			appState.shippingAddress = {
+				...appState.shippingAddress,
+				...activeAddress,
+			};
 		}
+
 		scrollToTop();
 	});
 
@@ -34,6 +45,14 @@ export default component$(() => {
 			.filter((x) => !!x)
 			.join(' ');
 	};
+
+	const updateAddress = $(async () => {
+		delete appState.shippingAddress.country;
+		await execute<{
+			updateCustomerAddress: ShippingAddress;
+		}>(updateCustomerAddressMutation(appState.shippingAddress));
+		window.location.href = '/account/address-book';
+	});
 
 	const logout = $(async () => {
 		await execute(logoutMutation());
@@ -50,16 +69,22 @@ export default component$(() => {
 				<div class="w-full text-xl text-gray-500">
 					<TabsContainer activeTab="address-book">
 						<div q:slot="tabContent" class="min-h-[24rem] rounded-lg p-4 space-y-4">
-							<div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-w-md md:max-w-6xl mx-auto">
-								{[...appState.addressBook].map((address) => (
-									<div key={address.id}>
-										<AddressCard address={address} />
-									</div>
-								))}
+							<div class="max-w-md">
+								<AddressForm shippingAddress={appState.shippingAddress} />
+								<div class="flex mt-8">
+									<HighlightedButton onClick$={updateAddress}>
+										<CheckIcon /> &nbsp; Save
+									</HighlightedButton>
+									<span class="mr-4" />
+									<Button
+										onClick$={() => {
+											window.location.href = '/account/address-book';
+										}}
+									>
+										<XMarkIcon /> &nbsp; Cancel
+									</Button>
+								</div>
 							</div>
-							<HighlightedButton onClick$={() => {}}>
-								<PlusIcon /> &nbsp; New Address
-							</HighlightedButton>
 						</div>
 					</TabsContainer>
 				</div>

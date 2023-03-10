@@ -1,5 +1,7 @@
 import { component$ } from '@builder.io/qwik';
+import { deleteCustomerAddressMutation } from '~/graphql/mutations';
 import { ShippingAddress } from '~/types';
+import { execute } from '~/utils/api';
 import { Button } from '../buttons/Button';
 import PencilIcon from '../icons/PencilIcon';
 import XCircleIcon from '../icons/XCircleIcon';
@@ -45,10 +47,21 @@ export default component$<IProps>(({ address }) => {
 					<h1 class="px-2 text-sm">{address.phoneNumber}</h1>
 				</div>
 				<div class="flex justify-around">
-					<Button onClick$={() => {}}>
+					<Button
+						onClick$={() => {
+							window.location.href = '/account/address-book/' + address.id;
+						}}
+					>
 						<PencilIcon /> &nbsp; Edit
 					</Button>
-					<Button onClick$={() => {}}>
+					<Button
+						onClick$={async () => {
+							await execute<{
+								id: string;
+							}>(deleteCustomerAddressMutation(address.id));
+							window.location.href = '/account/address-book/';
+						}}
+					>
 						<XCircleIcon /> &nbsp; Delete
 					</Button>
 				</div>

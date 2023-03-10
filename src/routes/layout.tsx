@@ -59,6 +59,7 @@ export default component$(() => {
 		collections: collectionsSignal.value || [],
 		availableCountries: availableCountriesSignal.value || [],
 		shippingAddress: {
+			id: '',
 			city: '',
 			company: '',
 			countryCode: availableCountriesSignal.value[0].code,
