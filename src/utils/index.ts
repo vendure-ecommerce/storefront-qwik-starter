@@ -131,3 +131,11 @@ export const fullNameWithTitle = ({
 }: Pick<ActiveCustomer, 'title' | 'firstName' | 'lastName'>): string => {
 	return [title, firstName, lastName].filter((x) => !!x).join(' ');
 };
+
+export const formatDateTime = (dateToConvert: Date) => {
+	const result = new Date(dateToConvert).toISOString();
+	const [date, time] = result.split('T');
+	const [hour, minutes] = time.split(':');
+	const orderedDate = date.split('-').reverse().join('-');
+	return `${orderedDate} ${hour}:${minutes}`;
+};

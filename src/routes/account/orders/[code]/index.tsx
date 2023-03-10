@@ -2,7 +2,7 @@ import { component$, useBrowserVisibleTask$, useStore } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import { getOrderByCodeQuery } from '~/graphql/queries';
 import { ActiveOrder } from '~/types';
-import { formatPrice, scrollToTop } from '~/utils';
+import { formatDateTime, formatPrice, scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
@@ -20,14 +20,14 @@ export default component$(() => {
 	});
 
 	return store.order ? (
-		<div class="min-h-[24rem] rounded-lg p-4 space-y-4">
-			<pre class="hidden">{JSON.stringify(store.order, null, '\t')}</pre>
+		<div class="min-h-[24rem] rounded-lg p-4 space-y-4 text-gray-900">
 			<div>
-				<h2 class="text-2xl mb-2">
-					Order <span class="font-medium">{store.order?.code}</span>
+				<h2 class="mb-2">
+					Order <span class="text-xl font-semibold">{store.order?.code}</span>
 				</h2>
-				<p class="mb-4 text-gray-600">
-					Placed on <span class="font-medium">{store.order?.createdAt.toString()}</span>
+				<p class="mb-4">
+					Placed on{' '}
+					<span class="text-xl font-semibold">{formatDateTime(store.order?.createdAt)}</span>
 				</p>
 				<ul class="divide-y divide-gray-200">
 					{store.order?.lines.map((line) => {
@@ -41,7 +41,7 @@ export default component$(() => {
 								</div>
 								<div class="ml-4 flex-1 flex flex-col">
 									<div>
-										<div class="flex justify-between text-base font-medium text-gray-900">
+										<div class="flex justify-between text-base font-medium">
 											<h3>{line.productVariant.name}</h3>
 											<p class="ml-4">
 												{formatPrice(line.productVariant.price, store.order?.currencyCode || 'USD')}
@@ -70,7 +70,7 @@ export default component$(() => {
 			<dl class="border-t mt-6 border-gray-200 py-6 space-y-6">
 				<div class="flex items-center justify-between">
 					<dt class="text-sm">Subtotal</dt>
-					<dd class="text-sm font-medium text-gray-900">
+					<dd class="text-sm font-medium">
 						{formatPrice(store.order?.subTotal, store.order?.currencyCode || 'USD')}
 					</dd>
 				</div>
@@ -81,19 +81,19 @@ export default component$(() => {
 							(<span>Standard Shipping</span>)
 						</span>
 					</dt>
-					<dd class="text-sm font-medium text-gray-900">
+					<dd class="text-sm font-medium">
 						{formatPrice(store.order?.shippingWithTax, store.order?.currencyCode || 'USD')}
 					</dd>
 				</div>
 				<div class="flex items-center justify-between">
 					<dt class="text-sm">Tax</dt>
-					<dd class="text-sm font-medium text-gray-900">
+					<dd class="text-sm font-medium">
 						{formatPrice(store.order?.taxSummary[0].taxTotal, store.order?.currencyCode || 'USD')}
 					</dd>
 				</div>
 				<div class="flex items-center justify-between border-t border-gray-200 pt-6">
 					<dt class="text-base font-medium">Total</dt>
-					<dd class="text-base font-medium text-gray-900">
+					<dd class="text-base font-medium">
 						{formatPrice(store.order?.totalWithTax, store.order?.currencyCode || 'USD')}
 					</dd>
 				</div>
