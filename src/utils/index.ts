@@ -140,4 +140,4 @@ export const formatDateTime = (dateToConvert: Date) => {
 	return `${orderedDate} ${hour}:${minutes}`;
 };
 
-export const isCheckoutPage = (url: string) => url.indexOf('/checkout/') === -1;
+export const isCheckoutPage = (url: string) => url.indexOf('/checkout/') >= 0;

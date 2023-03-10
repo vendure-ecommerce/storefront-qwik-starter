@@ -15,11 +15,12 @@ export default component$<{
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
 	const rows = order?.lines || appState.activeOrder?.lines || [];
-	const _isCheckoutPage = !isCheckoutPage(location.url.toString()) && !order;
+	const isInEditableUrl = !isCheckoutPage(location.url.toString()) && !order;
 	const currencyCode = order?.currencyCode || appState.activeOrder?.currencyCode || 'USD';
 
 	return (
 		<div class="flow-root">
+			{isInEditableUrl ? 'y' : 'n'}
 			<ul class="-my-6 divide-y divide-gray-200">
 				{(rows ?? []).map((line) => (
 					<li key={line.id} class="py-6 flex">
@@ -51,13 +52,13 @@ export default component$<{
 								</div>
 							</div>
 							<div class="flex-1 flex items-center text-sm">
-								{_isCheckoutPage ? (
+								{isInEditableUrl ? (
 									<form>
 										<label html-for={`quantity-${line.id}`} class="mr-2">
 											Quantity
 										</label>
 										<select
-											disabled={!_isCheckoutPage}
+											disabled={!isInEditableUrl}
 											id={`quantity-${line.id}`}
 											name={`quantity-${line.id}`}
 											value={line.quantity}
@@ -87,7 +88,7 @@ export default component$<{
 								)}
 								<div class="flex-1"></div>
 								<div class="flex">
-									{_isCheckoutPage && (
+									{isInEditableUrl && (
 										<button
 											value={line.id}
 											class="font-medium text-primary-600 hover:text-primary-500"

@@ -9,7 +9,7 @@ import CloseIcon from '../icons/CloseIcon';
 export default component$(() => {
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
-	const _isCheckoutPage = isCheckoutPage(location.url.toString());
+	const isInEditableUrl = !isCheckoutPage(location.url.toString());
 
 	return (
 		<div>
@@ -44,7 +44,7 @@ export default component$(() => {
 											)}
 										</div>
 									</div>
-									{appState.activeOrder?.totalQuantity && _isCheckoutPage && (
+									{appState.activeOrder?.totalQuantity && isInEditableUrl && (
 										<div class="border-t border-gray-200 py-6 px-4 sm:px-6">
 											<div class="flex justify-between text-base font-medium text-gray-900">
 												<p>Subtotal</p>
