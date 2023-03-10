@@ -320,20 +320,65 @@ export const updateCustomerPasswordMutation = (currentPassword: string, newPassw
 `,
 });
 
-export const updateCustomerAddressMutation = (input: ShippingAddress) => ({
-	variables: { input },
-	query: `
-	mutation updateCustomerAddress($input: UpdateAddressInput!) {
-		updateCustomerAddress(input: $input) {
-			...Address
-			... on ErrorResult {
-					errorCode
-					message
+export const updateCustomerAddressMutation = (input: ShippingAddress) => {
+	const {
+		id,
+		city,
+		company,
+		countryCode,
+		fullName,
+		phoneNumber,
+		postalCode,
+		province,
+		streetLine1,
+		streetLine2,
+	} = input;
+	return {
+		variables: {
+			input: {
+				id,
+				city,
+				company,
+				countryCode,
+				fullName,
+				phoneNumber,
+				postalCode,
+				province,
+				streetLine1,
+				streetLine2,
+			},
+		},
+		query: `
+		mutation UpdateAddress($input: UpdateAddressInput!) {
+			updateCustomerAddress(input: $input) {
+				...Address
+				__typename
 			}
 		}
-	}
+		
+		fragment Address on Address {
+			id
+			fullName
+			company
+			streetLine1
+			streetLine2
+			city
+			province
+			postalCode
+			country {
+				id
+				code
+				name
+				__typename
+			}
+			phoneNumber
+			defaultShippingAddress
+			defaultBillingAddress
+			__typename
+		}
 `,
-});
+	};
+};
 
 export const deleteCustomerAddressMutation = (id: string) => ({
 	variables: { id },
