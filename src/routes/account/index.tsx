@@ -1,6 +1,22 @@
-import { $, component$, useBrowserVisibleTask$, useContext, useSignal } from '@builder.io/qwik';
+import {
+	$,
+	QwikChangeEvent,
+	component$,
+	useBrowserVisibleTask$,
+	useContext,
+	useSignal,
+} from '@builder.io/qwik';
 import { useNavigate } from '@builder.io/qwik-city';
+import { isBrowser } from '@builder.io/qwik/build';
+import { Button } from '~/components/buttons/Button';
+import { HighlightedButton } from '~/components/buttons/HighlightedButton';
+import { ErrorMessage } from '~/components/error-message/ErrorMessage';
+import CheckIcon from '~/components/icons/CheckIcon';
+import PencilSquareIcon from '~/components/icons/PencilSquareIcon';
+import ShieldCheckIcon from '~/components/icons/ShieldCheckIcon';
+import XMarkIcon from '~/components/icons/XMarkIcon';
 import { Image } from '~/components/image/Image';
+import { Modal } from '~/components/modal/Modal';
 import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
 import {
 	requestUpdateCustomerEmailAddressMutation,
@@ -66,206 +82,199 @@ export default component$(() => {
 	});
 
 	return (
-		<div class="min-h-[24rem] rounded-lg p-4 space-y-4 ">
-			<div class="flex flex-col justify-center items-center">
-				<div class="relative flex flex-col items-center rounded-[20px] w-[400px] mx-auto p-4 bg-white bg-clip-border shadow-xl hover:shadow-2xl">
-					<div class="relative flex h-32 w-full justify-center rounded-xl bg-cover">
-						<Image
-							layout="fullWidth"
-							src="/account-background.png"
-							class="absolute flex h-32 w-full justify-center rounded-xl bg-cover"
-							alt="background"
-							placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
-						/>
-						<div class="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400">
+		<div>
+			<div class="min-h-[24rem] max-w-6xl m-auto rounded-lg p-4 space-y-4 ">
+				<div class="flex flex-col justify-center items-center">
+					<div class="relative flex flex-col items-center rounded-[20px] w-[400px] mx-auto p-4 bg-white bg-clip-border shadow-xl hover:shadow-2xl">
+						<div class="relative flex h-32 w-full justify-center rounded-xl bg-cover">
 							<Image
 								layout="fullWidth"
-								class="h-full w-full rounded-full"
-								src="/user-icon.webp"
-								alt="user icon"
+								src="/account-background.png"
+								class="absolute flex h-32 w-full justify-center rounded-xl bg-cover"
+								alt="background"
 								placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 							/>
-						</div>
-					</div>
-					<div class="mt-16 flex flex-col items-center pb-4">
-						<h4 class="text-xl font-bold">
-							{appState.customer?.firstName} {appState.customer?.lastName}
-						</h4>
-						<p class="text-base font-normal">{appState.customer?.title}</p>
-					</div>
-					<div class="flex flex-col items-center justify-center text-center">
-						{appState.customer?.phoneNumber && (
-							<div>
-								Phone:
-								<span class="text-xl font-bold px-2">{appState.customer?.phoneNumber}</span>
+							<div class="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400">
+								<Image
+									layout="fullWidth"
+									class="h-full w-full rounded-full"
+									src="/user-icon.webp"
+									alt="user icon"
+									placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
+								/>
 							</div>
-						)}
-						<div>
-							Email:
-							<span class="text-xl font-bold px-2">{appState.customer?.emailAddress}</span>
+							<div class="absolute -bottom-12 right-0">
+								<button
+									class="hover:text-primary-700"
+									onClick$={() => {
+										isEditing.value = !isEditing.value;
+										if (isBrowser) {
+											window.scrollTo(0, 100);
+										}
+										if (!isEditing.value && isBrowser) {
+											window.scrollTo(0, 0);
+										}
+									}}
+								>
+									<PencilSquareIcon />
+								</button>
+							</div>
+						</div>
+						<div class="mt-16 flex flex-col items-center pb-4">
+							<h4 class="text-xl md:text-3xl font-bold">
+								{appState.customer?.title && (
+									<span class="text-base font-normal mr-1">{appState.customer?.title}</span>
+								)}
+								{appState.customer?.firstName} {appState.customer?.lastName}
+							</h4>
+						</div>
+						<div class="flex flex-col items-center justify-center text-center">
+							{appState.customer?.phoneNumber && (
+								<div class="text-sm md:text-lg">
+									Phone:
+									<span class="font-bold px-2">{appState.customer?.phoneNumber}</span>
+								</div>
+							)}
+							<div class="text-sm md:text-lg">
+								Email:
+								<span class="font-bold px-2">{appState.customer?.emailAddress}</span>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<div class="min-h-[24rem] rounded-lg p-4 space-y-4">
+				<Modal
+					open={showModal.value}
+					title="Confirm E-Mail address change"
+					onSubmit$={() => {
+						updateEmail(currentPassword.value, newEmail.value);
+					}}
+					onCancel$={() => {
+						showModal.value = false;
+					}}
+				>
+					<div q:slot="modalIcon">
+						<ShieldCheckIcon forcedClass="h-10 w-10 text-primary-500" />
+					</div>
+					<div q:slot="modalContent" class="space-y-4">
+						<p>We will send a verification E-Mail to {newEmail.value}</p>
+
+						<div class="space-y-1">
+							<label html-for="password">Confirm the change by entering your password:</label>
+							<input
+								type="password"
+								name="password"
+								onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
+									currentPassword.value = event.target.value;
+								})}
+								class="w-full"
+							/>
+						</div>
+
+						{errorMessage.value !== '' && (
+							<ErrorMessage
+								heading="We ran into a problem changing your E-Mail!"
+								message={errorMessage.value}
+							/>
+						)}
+					</div>
+				</Modal>
+				{isEditing.value && (
+					<div class="max-w-3xl m-auto">
+						<div class="gap-4 grid grid-cols-1 md:grid-cols-2">
+							<div class="md:col-span-2 md:w-1/4">
+								<h3 class="text-sm text-gray-500">Title</h3>
+								<input
+									type="text"
+									value={appState.customer?.title}
+									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
+										update.customer.title = event.target.value;
+									})}
+									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+								/>
+							</div>
+
+							<div>
+								<label html-for="firstName" class="text-sm text-gray-500">
+									First Name
+								</label>
+								<input
+									type="text"
+									value={appState.customer?.firstName}
+									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
+										if (event.target.value !== '') {
+											update.customer.firstName = event.target.value;
+										}
+									})}
+									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+								/>
+							</div>
+							<div>
+								<label html-for="lastName" class="text-sm text-gray-500">
+									Last Name
+								</label>
+								<input
+									type="text"
+									value={appState.customer?.lastName}
+									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
+										if (event.target.value !== '') {
+											update.customer.lastName = event.target.value;
+										}
+									})}
+									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+								/>
+							</div>
+							<div>
+								<h3 class="text-sm text-gray-500">E-Mail</h3>
+								<input
+									type="email"
+									value={appState.customer?.emailAddress}
+									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
+										if (event.target.value !== '') {
+											newEmail.value = event.target.value;
+										}
+									})}
+									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+								/>
+							</div>
+
+							<div>
+								<h3 class="text-sm text-gray-500">Phone Nr.</h3>
+								<input
+									type="tel"
+									value={appState.customer?.phoneNumber}
+									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
+										update.customer.phoneNumber = event.target.value;
+									})}
+									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+								/>
+							</div>
+						</div>
+
+						<div class="flex gap-x-4 mt-8">
+							<HighlightedButton
+								onClick$={() => {
+									appState.customer = { ...appState.customer, ...update.customer };
+									updateCustomer();
+									scrollToTop();
+								}}
+							>
+								<CheckIcon /> &nbsp; Save
+							</HighlightedButton>
+
+							<Button
+								onClick$={() => {
+									isEditing.value = false;
+									scrollToTop();
+								}}
+							>
+								<XMarkIcon forcedClass="w-4 h-4" /> &nbsp; Cancel
+							</Button>
+						</div>
+					</div>
+				)}
+			</div>
 		</div>
-		// <div class="min-h-[24rem] rounded-lg p-4 space-y-4">
-		// 	<Modal
-		// 		open={showModal.value}
-		// 		title="Confirm E-Mail address change"
-		// 		onSubmit$={() => {
-		// 			updateEmail(currentPassword.value, newEmail.value);
-		// 		}}
-		// 		onCancel$={() => {
-		// 			showModal.value = false;
-		// 		}}
-		// 	>
-		// 		<div q:slot="modalIcon">
-		// 			<ShieldCheckIcon forcedClass="h-10 w-10 text-primary-500" />
-		// 		</div>
-		// 		<div q:slot="modalContent" class="space-y-4">
-		// 			<p>We will send a verification E-Mail to {newEmail.value}</p>
-
-		// 			<div class="space-y-1">
-		// 				<label html-for="password">Confirm the change by entering your password:</label>
-		// 				<input
-		// 					type="password"
-		// 					name="password"
-		// 					onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-		// 						currentPassword.value = event.target.value;
-		// 					})}
-		// 					class="w-full"
-		// 				/>
-		// 			</div>
-
-		// 			{errorMessage.value !== '' && (
-		// 				<ErrorMessage
-		// 					heading="We ran into a problem changing your E-Mail!"
-		// 					message={errorMessage.value}
-		// 				/>
-		// 			)}
-		// 		</div>
-		// 	</Modal>
-		// 	<div class="gap-4 grid grid-cols-1 md:grid-cols-2">
-		// 		{isEditing.value && (
-		// 			<div class="md:col-span-2 md:w-1/4">
-		// 				<h3 class="text-sm text-gray-500">Title</h3>
-		// 				<input
-		// 					type="text"
-		// 					value={appState.customer?.title}
-		// 					onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-		// 						update.customer.title = event.target.value;
-		// 					})}
-		// 					class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-		// 				/>
-		// 			</div>
-		// 		)}
-
-		// 		{isEditing.value ? (
-		// 			<>
-		// 				<div>
-		// 					<label html-for="firstName" class="text-sm text-gray-500">
-		// 						First Name
-		// 					</label>
-		// 					<input
-		// 						type="text"
-		// 						value={appState.customer?.firstName}
-		// 						onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-		// 							if (event.target.value !== '') {
-		// 								update.customer.firstName = event.target.value;
-		// 							}
-		// 						})}
-		// 						class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-		// 					/>
-		// 				</div>
-		// 				<div>
-		// 					<label html-for="lastName" class="text-sm text-gray-500">
-		// 						Last Name
-		// 					</label>
-		// 					<input
-		// 						type="text"
-		// 						value={appState.customer?.lastName}
-		// 						onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-		// 							if (event.target.value !== '') {
-		// 								update.customer.lastName = event.target.value;
-		// 							}
-		// 						})}
-		// 						class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-		// 					/>
-		// 				</div>
-		// 			</>
-		// 		) : (
-		// 			<div class="md:col-span-2">
-		// 				<h3 class="text-sm text-gray-500">Full Name</h3>
-		// 				<p class="py-2 text-lg text-gray-700">{fullNameWithTitle(appState.customer)}</p>
-		// 			</div>
-		// 		)}
-
-		// 		<div>
-		// 			<h3 class="text-sm text-gray-500">E-Mail</h3>
-		// 			{isEditing.value ? (
-		// 				<input
-		// 					type="email"
-		// 					value={appState.customer?.emailAddress}
-		// 					onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-		// 						if (event.target.value !== '') {
-		// 							newEmail.value = event.target.value;
-		// 						}
-		// 					})}
-		// 					class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-		// 				/>
-		// 			) : (
-		// 				<p class="py-2 text-lg text-gray-700">{appState.customer?.emailAddress}</p>
-		// 			)}
-		// 		</div>
-
-		// 		<div>
-		// 			<h3 class="text-sm text-gray-500">Phone Nr.</h3>
-		// 			{isEditing.value ? (
-		// 				<input
-		// 					type="tel"
-		// 					value={appState.customer?.phoneNumber}
-		// 					onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-		// 						update.customer.phoneNumber = event.target.value;
-		// 					})}
-		// 					class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-		// 				/>
-		// 			) : (
-		// 				<p class="py-2 text-lg text-gray-700">{appState.customer?.phoneNumber}</p>
-		// 			)}
-		// 		</div>
-		// 	</div>
-
-		// 	{isEditing.value ? (
-		// 		<>
-		// 			<div class="flex gap-x-4">
-		// 				<HighlightedButton
-		// 					onClick$={() => {
-		// 						appState.customer = { ...appState.customer, ...update.customer };
-		// 						updateCustomer();
-		// 					}}
-		// 				>
-		// 					<CheckIcon /> &nbsp; Save
-		// 				</HighlightedButton>
-
-		// 				<Button
-		// 					onClick$={() => {
-		// 						isEditing.value = false;
-		// 					}}
-		// 				>
-		// 					<XMarkIcon forcedClass="w-4 h-4" /> &nbsp; Cancel
-		// 				</Button>
-		// 			</div>
-		// 		</>
-		// 	) : (
-		// 		<HighlightedButton
-		// 			onClick$={() => {
-		// 				update.customer = { ...appState.customer };
-		// 				isEditing.value = true;
-		// 			}}
-		// 		>
-		// 			<PencilIcon /> &nbsp; Edit
-		// 		</HighlightedButton>
-		// 	)}
-		// </div>
 	);
 });

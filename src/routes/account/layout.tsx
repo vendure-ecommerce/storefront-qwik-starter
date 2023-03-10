@@ -49,13 +49,15 @@ export default component$(() => {
 
 	return canBeVisible.value ? (
 		<div class="px-4">
-			<h2 class="text-3xl sm:text-5xl font-light text-gray-900 my-8">My Account</h2>
-			<p class="text-gray-700 text-lg -mt-4">
-				Welcome back, {fullNameWithTitle(appState.customer)}
-			</p>
-			<button onClick$={logout} class="underline my-4 text-primary-600 hover:text-primary-800">
-				Sign out
-			</button>
+			<div class="max-w-6xl m-auto">
+				<h2 class="text-3xl md:text-4xl font-light text-gray-900 my-8">My Account</h2>
+				<p class="text-gray-700 text-md -mt-4">
+					Welcome back, {fullNameWithTitle(appState.customer)}
+				</p>
+				<button onClick$={logout} class="underline my-4 text-primary-600 hover:text-primary-800">
+					Sign out
+				</button>
+			</div>
 			<div class="flex justify-center">
 				<div class="w-full text-xl text-gray-500">
 					<TabsContainer>

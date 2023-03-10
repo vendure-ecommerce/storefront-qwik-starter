@@ -8,7 +8,6 @@ import { Tab } from './Tab';
 
 export const TabsContainer = component$(() => {
 	const location = useLocation();
-
 	return (
 		<>
 			<div class="border-b border-gray-200 mt-4">
@@ -17,7 +16,7 @@ export const TabsContainer = component$(() => {
 						Icon={UserCircleIcon}
 						text="Account details"
 						href="/account"
-						isActive={location.url.pathname.indexOf('details') >= 0}
+						isActive={location.url.pathname === '/account/'}
 					/>
 
 					<Tab

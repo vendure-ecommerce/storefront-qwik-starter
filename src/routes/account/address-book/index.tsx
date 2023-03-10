@@ -34,8 +34,8 @@ export default component$(() => {
 	});
 
 	return activeCustomerAddresses.value ? (
-		<div class="min-h-[24rem] rounded-lg p-4 space-y-4">
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-w-md md:max-w-6xl mx-auto">
+		<div class="min-h-[24rem] max-w-6xl m-auto rounded-lg p-4 space-y-4">
+			<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-md md:max-w-6xl mx-auto">
 				{[...appState.addressBook].map((address) => (
 					<div key={address.id}>
 						<AddressCard
