@@ -38,11 +38,10 @@ export default component$(() => {
 
 	const updatePassword = $(async () => {
 		if (newPassword.value === confirmPassword.value) {
-			const result = await execute<{
+			await execute<{
 				currentPassword: string;
 				newPassword: string;
 			}>(updateCustomerPasswordMutation(currentPassword.value, newPassword.value));
-			console.log(result);
 		} else {
 			errorMessage.value = 'Confirm password does not match!';
 		}

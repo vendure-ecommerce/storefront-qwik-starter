@@ -309,14 +309,22 @@ export const requestUpdateCustomerEmailAddressMutation = (
 export const updateCustomerPasswordMutation = (currentPassword: string, newPassword: string) => ({
 	variables: { currentPassword, newPassword },
 	query: `
-	mutation updateCustomerPassword($currentPassword: String! $newPassword: String!) {
-        updateCustomerPassword(currentPassword: $currentPassword, newPassword: $newPassword) {
-            ... on Success {
+		mutation updateCustomerPasswordMutation($currentPassword: String!, $newPassword: String!) {
+			updateCustomerPassword(currentPassword: $currentPassword, newPassword: $newPassword) {
+				... on Success {
 					success
-            }
-            ...ErrorResult
-        }
-    }  
+					__typename
+				}
+				...ErrorResult
+				__typename
+			}
+		}
+		
+		fragment ErrorResult on ErrorResult {
+			errorCode
+			message
+			__typename
+		}
 `,
 });
 
@@ -349,7 +357,7 @@ export const updateCustomerAddressMutation = (input: ShippingAddress) => {
 			},
 		},
 		query: `
-		mutation UpdateAddress($input: UpdateAddressInput!) {
+		mutation updateCustomerAddressMutation($input: UpdateAddressInput!) {
 			updateCustomerAddress(input: $input) {
 				...Address
 				__typename
