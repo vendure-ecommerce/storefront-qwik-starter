@@ -5,7 +5,7 @@ type Props = {
 	onClick$?: PropFunction<() => void>;
 };
 
-export const Button = component$<Props>(({ extraClass, onClick$ }) => {
+export const Button = component$<Props>(({ extraClass = '', onClick$ }) => {
 	return (
 		<button
 			type="button"
