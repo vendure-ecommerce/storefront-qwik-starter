@@ -246,8 +246,78 @@ export const getActiveCustomerQuery = () => ({
     query activeCustomer {
         activeCustomer {
             id
+            title
             firstName
             lastName
+            emailAddress
+            phoneNumber
+        }
+    }
+`,
+});
+
+export const getActiveCustomerOrdersQuery = () => ({
+	variables: {
+		options: {
+			filter: {
+				active: {
+					eq: false,
+				},
+			},
+			sort: {
+				createdAt: 'DESC',
+			},
+		},
+	},
+	query: `
+    query activeCustomerOrders($options: OrderListOptions) {
+        activeCustomer {
+            id
+            orders(options: $options) {
+              items {
+                id
+                code
+                state
+                totalWithTax
+                currencyCode
+                lines {
+                  featuredAsset {
+                    preview
+                  }
+                  productVariant {
+                    name
+                  }
+                }
+              }
+              totalItems
+            }
+        }
+    }
+`,
+});
+
+export const getActiveCustomerAddressesQuery = () => ({
+	variables: {},
+	query: `
+    query activeCustomerAddresses {
+      activeCustomer {
+            id
+            addresses {
+              id
+              fullName
+              company
+              streetLine1
+              streetLine2
+              city
+              province
+              postalCode
+              country {
+                code
+              }
+              phoneNumber
+              defaultShippingAddress
+              defaultBillingAddress
+            }
         }
     }
 `,

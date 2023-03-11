@@ -267,6 +267,196 @@ export const logoutMutation = () => ({
 `,
 });
 
+export const updateCustomerMutation = ({
+	title,
+	firstName,
+	lastName,
+	phoneNumber,
+}: ActiveCustomer) => ({
+	variables: { input: { title, firstName, lastName, phoneNumber } },
+	query: `
+	mutation updateCustomer($input: UpdateCustomerInput!) {
+		updateCustomer(input: $input) {
+			__typename
+		}
+	}
+`,
+});
+
+export const requestUpdateCustomerEmailAddressMutation = (
+	password: string,
+	newEmailAddress: string
+) => ({
+	variables: { password, newEmailAddress },
+	query: `
+	mutation requestUpdateCustomerEmailAddress(
+		$password: String!, $newEmailAddress: String!
+	) {
+		requestUpdateCustomerEmailAddress(
+			password: $password
+			newEmailAddress: $newEmailAddress
+		) {
+			__typename
+			... on ErrorResult {
+					errorCode
+					message
+		  	}
+		}
+	}  
+`,
+});
+
+export const updateCustomerPasswordMutation = (currentPassword: string, newPassword: string) => ({
+	variables: { currentPassword, newPassword },
+	query: `
+		mutation updateCustomerPasswordMutation($currentPassword: String!, $newPassword: String!) {
+			updateCustomerPassword(currentPassword: $currentPassword, newPassword: $newPassword) {
+				... on Success {
+					success
+					__typename
+				}
+				...ErrorResult
+				__typename
+			}
+		}
+		
+		fragment ErrorResult on ErrorResult {
+			errorCode
+			message
+			__typename
+		}
+`,
+});
+
+export const updateCustomerAddressMutation = (input: ShippingAddress) => {
+	const {
+		id,
+		city,
+		company,
+		countryCode,
+		fullName,
+		phoneNumber,
+		postalCode,
+		province,
+		streetLine1,
+		streetLine2,
+	} = input;
+	return {
+		variables: {
+			input: {
+				id,
+				city,
+				company,
+				countryCode,
+				fullName,
+				phoneNumber,
+				postalCode,
+				province,
+				streetLine1,
+				streetLine2,
+			},
+		},
+		query: `
+		mutation updateCustomerAddressMutation($input: UpdateAddressInput!) {
+			updateCustomerAddress(input: $input) {
+				...Address
+				__typename
+			}
+		}
+		
+		fragment Address on Address {
+			id
+			fullName
+			company
+			streetLine1
+			streetLine2
+			city
+			province
+			postalCode
+			country {
+				id
+				code
+				name
+				__typename
+			}
+			phoneNumber
+			defaultShippingAddress
+			defaultBillingAddress
+			__typename
+		}
+`,
+	};
+};
+
+export const createCustomerAddressMutation = (input: ShippingAddress) => {
+	const {
+		city,
+		company,
+		countryCode,
+		fullName,
+		phoneNumber,
+		postalCode,
+		province,
+		streetLine1,
+		streetLine2,
+	} = input;
+	return {
+		variables: {
+			input: {
+				city,
+				company,
+				countryCode,
+				fullName,
+				phoneNumber,
+				postalCode,
+				province,
+				streetLine1,
+				streetLine2,
+			},
+		},
+		query: `
+		mutation createCustomerAddressMutation($input: CreateAddressInput!) {
+			createCustomerAddress(input: $input) {
+				...Address
+				__typename
+			}
+		}
+
+		fragment Address on Address {
+			id
+			fullName
+			company
+			streetLine1
+			streetLine2
+			city
+			province
+			postalCode
+			country {
+				id
+				code
+				name
+				__typename
+			}
+			phoneNumber
+			defaultShippingAddress
+			defaultBillingAddress
+			__typename
+		}
+`,
+	};
+};
+
+export const deleteCustomerAddressMutation = (id: string) => ({
+	variables: { id },
+	query: `
+	mutation deleteCustomerAddress($id: ID!) {
+		deleteCustomerAddress(id: $id) {
+			success
+		}
+	}
+`,
+});
+
 export const setCustomerForOrderMutation = ({
 	emailAddress,
 	firstName,

@@ -1,19 +1,19 @@
 import { component$ } from '@builder.io/qwik';
 
-export default component$<{ forcedClass?: string }>(({ forcedClass }) => {
+export default component$(() => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			class={forcedClass || 'h-5 w-5 text-red-400'}
 			fill="none"
 			viewBox="0 0 24 24"
+			stroke-width="1.5"
 			stroke="currentColor"
-			stroke-width="2"
+			class="w-6 h-6"
 		>
 			<path
 				stroke-linecap="round"
 				stroke-linejoin="round"
-				d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+				d="M5.25 8.25h15m-16.5 7.5h15m-1.8-13.5l-3.9 19.5m-2.1-19.5l-3.9 19.5"
 			/>
 		</svg>
 	);

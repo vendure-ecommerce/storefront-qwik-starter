@@ -1,10 +1,12 @@
 import { $, component$, useSignal } from '@builder.io/qwik';
+import { useNavigate } from '@builder.io/qwik-city';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import { loginMutation } from '~/graphql/mutations';
 import { Login } from '~/types';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
+	const navigate = useNavigate();
 	const email = useSignal('');
 	const password = useSignal('');
 	const rememberMe = useSignal(true);
@@ -15,7 +17,7 @@ export default component$(() => {
 			loginMutation(email.value, password.value, rememberMe.value)
 		);
 		if (login.__typename === 'CurrentUser') {
-			window.location.href = '/account';
+			navigate('/account');
 		} else {
 			error.value = login.message;
 		}

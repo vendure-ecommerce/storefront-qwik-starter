@@ -1,10 +1,11 @@
 import { $, component$, useBrowserVisibleTask$, useContext, useStore } from '@builder.io/qwik';
+import { useNavigate } from '@builder.io/qwik-city';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
 import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
 import Payment from '~/components/payment/Payment';
 import Shipping from '~/components/shipping/Shipping';
-import { APP_STATE } from '~/constants';
+import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import {
 	addPaymentToOrderMutation,
 	setCustomerForOrderMutation,
@@ -18,6 +19,7 @@ import { execute } from '~/utils/api';
 type Step = 'SHIPPING' | 'PAYMENT' | 'CONFIRMATION';
 
 export default component$(() => {
+	const navigate = useNavigate();
 	const appState = useContext(APP_STATE);
 	const state = useStore<{ step: Step }>({ step: 'SHIPPING' });
 	const steps: { name: string; state: Step }[] = [
@@ -26,9 +28,12 @@ export default component$(() => {
 		{ name: 'Confirmation', state: 'CONFIRMATION' },
 	];
 
-	useBrowserVisibleTask$(() => {
+	useBrowserVisibleTask$(async () => {
 		scrollToTop();
 		appState.showCart = false;
+		if (appState.activeOrder?.lines?.length === 0) {
+			navigate('/');
+		}
 	});
 
 	const confirmPayment = $(async () => {
@@ -38,7 +43,7 @@ export default component$(() => {
 		}>(addPaymentToOrderMutation());
 		appState.activeOrder = activeOrder;
 		scrollToTop();
-		window.location.href = `/checkout/confirmation/${activeOrder.code}`;
+		navigate(`/checkout/confirmation/${activeOrder.code}`);
 	});
 
 	return (
@@ -76,11 +81,12 @@ export default component$(() => {
 											customer: Omit<ActiveCustomer, 'id'>,
 											shippingAddress: ShippingAddress
 										) => {
-											const { setCustomerForOrder } = await execute<{
-												setCustomerForOrder: ActiveOrder;
-											}>(setCustomerForOrderMutation(customer));
+											delete shippingAddress.id;
+											delete shippingAddress.country;
+											delete shippingAddress.defaultShippingAddress;
+											delete shippingAddress.defaultBillingAddress;
 
-											if (!setCustomerForOrder.errorCode) {
+											const setOrderShippingAddress = async () => {
 												const { setOrderShippingAddress } = await execute<{
 													setOrderShippingAddress: ActiveOrder;
 												}>(setOrderShippingAddressMutation(shippingAddress));
@@ -92,6 +98,17 @@ export default component$(() => {
 														confirmPayment();
 													}
 												}
+											};
+
+											if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
+												const { setCustomerForOrder } = await execute<{
+													setCustomerForOrder: ActiveOrder;
+												}>(setCustomerForOrderMutation(customer));
+												if (!setCustomerForOrder.errorCode) {
+													setOrderShippingAddress();
+												}
+											} else {
+												setOrderShippingAddress();
 											}
 											scrollToTop();
 										}}

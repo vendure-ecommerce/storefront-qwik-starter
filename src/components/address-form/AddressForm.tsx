@@ -14,7 +14,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 				<div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
 					<div>
 						<label html-for="fullName" class="block text-sm font-medium text-gray-700">
-							First name
+							Full name
 						</label>
 						<div class="mt-1">
 							<input

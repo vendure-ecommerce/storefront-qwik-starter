@@ -9,7 +9,7 @@ import {
 	useTask$,
 } from '@builder.io/qwik';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
-import { getActiveOrderQuery } from '~/graphql/queries';
+import { getActiveCustomerAddressesQuery, getActiveOrderQuery } from '~/graphql/queries';
 import { ActiveCustomer, ActiveOrder, ShippingAddress } from '~/types';
 import { isActiveCustomerValid, isShippingAddressValid } from '~/utils';
 import { execute } from '~/utils/api';
@@ -35,11 +35,33 @@ export default component$<IProps>(({ onForward$ }) => {
 				appState.shippingAddress = activeOrder.shippingAddress;
 			}
 		}
+		const { activeCustomer } = await execute<{
+			activeCustomer: { id: string; addresses: ShippingAddress[] };
+		}>(getActiveCustomerAddressesQuery());
+
+		if (activeCustomer?.addresses) {
+			const [defaultShippingAddress] = activeCustomer.addresses.filter(
+				(address) => !!address.defaultShippingAddress
+			);
+			if (defaultShippingAddress) {
+				defaultShippingAddress.countryCode = defaultShippingAddress?.country?.code;
+				appState.shippingAddress = {
+					...appState.shippingAddress,
+					...defaultShippingAddress,
+				};
+			}
+		}
 	});
 
 	useTask$(({ track }) => {
 		track(() => appState.customer);
 		track(() => appState.shippingAddress);
+		if (!appState.shippingAddress.countryCode) {
+			appState.shippingAddress = {
+				...appState.shippingAddress,
+				countryCode: appState.availableCountries[0].code,
+			};
+		}
 		isFormValidSignal.value =
 			isShippingAddressValid(appState.shippingAddress) && isActiveCustomerValid(appState.customer);
 	});

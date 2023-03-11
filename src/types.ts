@@ -5,6 +5,7 @@ export type AppState = {
 	customer: ActiveCustomer;
 	shippingAddress: ShippingAddress;
 	availableCountries: Country[];
+	addressBook: ShippingAddress[];
 };
 
 export type Product = {
@@ -77,6 +78,7 @@ type TaxSummary = {
 };
 
 export type ShippingAddress = {
+	id?: string;
 	fullName?: string;
 	streetLine1?: string;
 	streetLine2?: string;
@@ -86,6 +88,9 @@ export type ShippingAddress = {
 	postalCode?: string;
 	countryCode?: string;
 	phoneNumber?: string;
+	defaultShippingAddress?: boolean;
+	defaultBillingAddress?: boolean;
+	country?: Country;
 };
 
 type ProductVariant = {
@@ -194,10 +199,12 @@ export type Review = {
 };
 
 export type ActiveCustomer = {
+	title?: string;
 	firstName: string;
 	id: string;
 	lastName: string;
 	emailAddress?: string;
+	phoneNumber?: string;
 };
 
 export type Login = ActiveCustomer & {
@@ -214,6 +221,28 @@ export type Country = {
 	id: string;
 	code: string;
 	name: string;
+};
+
+export type ActiveCustomerOrders = {
+	id: string;
+	orders: {
+		items: ActiveCustomerOrder[];
+		totalItems: string;
+	};
+};
+
+export type ActiveCustomerOrder = {
+	id: string;
+	code: string;
+	state: string;
+	totalWithTax: number;
+	currencyCode: string;
+	lines: {
+		featuredAsset: {
+			preview: string;
+		};
+		productVariant: { name: string };
+	}[];
 };
 
 export type CurrencyCode =

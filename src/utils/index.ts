@@ -3,7 +3,8 @@ import { ENV_VARIABLES } from '~/env';
 import { ActiveCustomer, FacetWithValues, Search, ShippingAddress } from '~/types';
 
 export const getRandomInt = (max: number) => Math.floor(Math.random() * max);
-export function formatPrice(value: number, currency: any) {
+
+export function formatPrice(value = 0, currency: any) {
 	return new Intl.NumberFormat('en-US', {
 		style: 'currency',
 		currency,
@@ -108,7 +109,6 @@ export const isShippingAddressValid = (orderAddress: ShippingAddress): boolean =
 		!!orderAddress &&
 		orderAddress.fullName &&
 		orderAddress.streetLine1 &&
-		orderAddress.company &&
 		orderAddress.city &&
 		orderAddress.province &&
 		orderAddress.postalCode &&
@@ -123,3 +123,21 @@ export const isActiveCustomerValid = (activeCustomer: ActiveCustomer): boolean =
 		activeCustomer.firstName &&
 		activeCustomer.lastName
 	);
+
+export const fullNameWithTitle = ({
+	title,
+	firstName,
+	lastName,
+}: Pick<ActiveCustomer, 'title' | 'firstName' | 'lastName'>): string => {
+	return [title, firstName, lastName].filter((x) => !!x).join(' ');
+};
+
+export const formatDateTime = (dateToConvert: Date) => {
+	const result = new Date(dateToConvert).toISOString();
+	const [date, time] = result.split('T');
+	const [hour, minutes] = time.split(':');
+	const orderedDate = date.split('-').reverse().join('-');
+	return `${orderedDate} ${hour}:${minutes}`;
+};
+
+export const isCheckoutPage = (url: string) => url.indexOf('/checkout/') >= 0;
