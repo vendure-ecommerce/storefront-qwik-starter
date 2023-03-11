@@ -1,5 +1,5 @@
 import { PropFunction, component$ } from '@builder.io/qwik';
-import { useLocation, useNavigate } from '@builder.io/qwik-city';
+import { useNavigate } from '@builder.io/qwik-city';
 import { ShippingAddress } from '~/types';
 import { Button } from '../buttons/Button';
 import { HighlightedButton } from '../buttons/HighlightedButton';
