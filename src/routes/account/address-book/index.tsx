@@ -50,7 +50,11 @@ export default component$(() => {
 					</div>
 				))}
 			</div>
-			<HighlightedButton onClick$={() => {}}>
+			<HighlightedButton
+				onClick$={() => {
+					navigate('/account/address-book/add');
+				}}
+			>
 				<PlusIcon /> &nbsp; New Address
 			</HighlightedButton>
 		</div>

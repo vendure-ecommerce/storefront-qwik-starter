@@ -6,7 +6,7 @@ import { HighlightedButton } from '~/components/buttons/HighlightedButton';
 import CheckIcon from '~/components/icons/CheckIcon';
 import XMarkIcon from '~/components/icons/XMarkIcon';
 import { APP_STATE } from '~/constants';
-import { updateCustomerAddressMutation } from '~/graphql/mutations';
+import { createCustomerAddressMutation, updateCustomerAddressMutation } from '~/graphql/mutations';
 import { getActiveCustomerAddressesQuery } from '~/graphql/queries';
 import { ShippingAddress } from '~/types';
 import { scrollToTop } from '~/utils';
@@ -23,39 +23,46 @@ export default component$(() => {
 			activeCustomer: { id: string; addresses: ShippingAddress[] };
 		}>(getActiveCustomerAddressesQuery());
 
-		if (!activeCustomer) {
-			navigate('/sign-in');
-		}
-
 		if (activeCustomer?.addresses) {
 			const [activeAddress] = activeCustomer.addresses.filter(
 				(address) => address.id === location.params.id
 			);
-			activeAddress.countryCode = activeAddress?.country?.code;
-			appState.shippingAddress = {
-				...appState.shippingAddress,
-				...activeAddress,
-			};
-			activeCustomerAddress.value = activeAddress;
+			if (activeAddress) {
+				activeAddress.countryCode = activeAddress?.country?.code;
+				appState.shippingAddress = {
+					...appState.shippingAddress,
+					...activeAddress,
+				};
+				activeCustomerAddress.value = activeAddress;
+			} else {
+				activeCustomerAddress.value = appState.shippingAddress;
+			}
+		} else {
+			activeCustomerAddress.value = appState.shippingAddress;
 		}
-
 		scrollToTop();
 	});
 
-	const updateAddress = $(async () => {
+	const createOrUpdateAddress = $(async () => {
 		delete appState.shippingAddress.country;
-		await execute<{
-			updateCustomerAddress: ShippingAddress;
-		}>(updateCustomerAddressMutation(appState.shippingAddress));
+		if (location.params.id === 'add') {
+			await execute<{
+				createCustomerAddress: ShippingAddress;
+			}>(createCustomerAddressMutation(appState.shippingAddress));
+		} else {
+			await execute<{
+				updateCustomerAddress: ShippingAddress;
+			}>(updateCustomerAddressMutation(appState.shippingAddress));
+		}
 		navigate('/account/address-book');
 	});
 
 	return activeCustomerAddress.value ? (
-		<div class="min-h-[24rem] rounded-lg p-4 space-y-4">
+		<div class="min-h-[24rem] max-w-6xl m-auto rounded-lg p-4 space-y-4">
 			<div class="max-w-md">
 				<AddressForm shippingAddress={appState.shippingAddress} />
 				<div class="flex mt-8">
-					<HighlightedButton onClick$={updateAddress}>
+					<HighlightedButton onClick$={createOrUpdateAddress}>
 						<CheckIcon /> &nbsp; Save
 					</HighlightedButton>
 					<span class="mr-4" />
