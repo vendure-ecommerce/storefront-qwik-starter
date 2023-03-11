@@ -1,8 +1,8 @@
 import { component$, useBrowserVisibleTask$, useContext } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
-import { getActiveCustomerQuery, getActiveOrderQuery } from '~/graphql/queries';
-import { ActiveCustomer, ActiveOrder } from '~/types';
+import { getActiveCustomerQuery } from '~/graphql/queries';
+import { ActiveCustomer } from '~/types';
 import { execute } from '~/utils/api';
 import Cart from '../cart/Cart';
 import ShoppingBagIcon from '../icons/ShoppingBagIcon';
@@ -21,10 +21,6 @@ export default component$(() => {
 			: 0;
 
 	useBrowserVisibleTask$(async () => {
-		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
-		if (activeOrder?.customer) {
-			appState.customer = activeOrder?.customer;
-		}
 		if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
 			const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
 				getActiveCustomerQuery()
@@ -55,7 +51,7 @@ export default component$(() => {
 							</p>
 						</div>
 						{!!appState.customer && (
-							<Link
+							<a
 								href={appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? '/account' : '/sign-in'}
 								class="flex space-x-1 pb-1 pr-2"
 							>
@@ -63,7 +59,7 @@ export default component$(() => {
 								<span class="mt-1">
 									{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? 'My Account' : 'Sign In'}
 								</span>
-							</Link>
+							</a>
 						)}
 					</div>
 				</div>

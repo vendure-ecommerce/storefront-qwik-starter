@@ -19,8 +19,8 @@ export default component$<IProps>(({ order }) => {
 				width="200"
 				height="200"
 				class="w-full h-full object-center object-cover m-auto"
-				src={order.lines[0].featuredAsset?.preview}
-				alt={order.lines[0].productVariant.name}
+				src={order.lines[0]?.featuredAsset?.preview}
+				alt={order.lines[0]?.productVariant?.name}
 			/>
 			<div class="items-center">
 				<div>

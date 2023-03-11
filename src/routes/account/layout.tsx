@@ -1,54 +1,34 @@
-import {
-	$,
-	component$,
-	Slot,
-	useBrowserVisibleTask$,
-	useContext,
-	useSignal,
-} from '@builder.io/qwik';
-import { useNavigate } from '@builder.io/qwik-city';
+import { $, component$, Slot, useBrowserVisibleTask$, useContext } from '@builder.io/qwik';
 import { TabsContainer } from '~/components/account/TabsContainer';
-import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
+import { APP_STATE } from '~/constants';
 import { logoutMutation } from '~/graphql/mutations';
-import { getActiveCustomerQuery, getActiveOrderQuery } from '~/graphql/queries';
-import { ActiveCustomer, ActiveOrder } from '~/types';
+import { getActiveCustomerQuery } from '~/graphql/queries';
+import { ActiveCustomer } from '~/types';
 import { fullNameWithTitle } from '~/utils';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
-	const navigate = useNavigate();
 	const appState = useContext(APP_STATE);
-	const canBeVisible = useSignal(false);
 
 	const logout = $(async () => {
 		await execute(logoutMutation());
-		// this force an hard refresh
+		// force hard refresh
 		window.location.href = '/';
 	});
 
 	useBrowserVisibleTask$(async () => {
-		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
-		if (activeOrder?.customer) {
-			appState.customer = activeOrder?.customer;
-		}
-		if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
-			const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
-				getActiveCustomerQuery()
-			);
-			if (activeCustomer) {
-				appState.customer = activeCustomer;
-			}
-		}
-
-		if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
-			navigate('/');
+		const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
+			getActiveCustomerQuery()
+		);
+		if (activeCustomer) {
+			appState.customer = activeCustomer;
 		} else {
-			canBeVisible.value = true;
+			window.location.href = '/';
 		}
 	});
 
-	return canBeVisible.value ? (
-		<div class="px-4">
+	return (
+		<div class="px-4 h-screen">
 			<div class="max-w-6xl m-auto">
 				<h2 class="text-3xl md:text-4xl font-light text-gray-900 my-8">My Account</h2>
 				<p class="text-gray-700 text-md -mt-4">
@@ -66,5 +46,5 @@ export default component$(() => {
 				</div>
 			</div>
 		</div>
-	) : null;
+	);
 });

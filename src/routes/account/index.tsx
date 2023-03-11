@@ -6,7 +6,6 @@ import {
 	useContext,
 	useSignal,
 } from '@builder.io/qwik';
-import { useNavigate } from '@builder.io/qwik-city';
 import { isBrowser } from '@builder.io/qwik/build';
 import { Button } from '~/components/buttons/Button';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
@@ -28,7 +27,6 @@ import { scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
-	const navigate = useNavigate();
 	const appState = useContext(APP_STATE);
 	const isEditing = useSignal(false);
 	const showModal = useSignal(false);
@@ -43,9 +41,6 @@ export default component$(() => {
 		const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
 			getActiveCustomerQuery()
 		);
-		if (!activeCustomer) {
-			navigate('/sign-in');
-		}
 		appState.customer = activeCustomer;
 		newEmail.value = activeCustomer.emailAddress as string;
 		scrollToTop();
@@ -56,11 +51,9 @@ export default component$(() => {
 			updateCustomer: ActiveCustomer;
 		}>(updateCustomerMutation(appState.customer));
 
-		if (appState.customer.emailAddress !== newEmail.value) {
-			showModal.value = true;
-		} else {
-			isEditing.value = false;
-		}
+		appState.customer.emailAddress !== newEmail.value
+			? (showModal.value = true)
+			: (isEditing.value = false);
 	});
 
 	const updateEmail = $(async (password: string, newEmail: string) => {

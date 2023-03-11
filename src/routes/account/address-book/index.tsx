@@ -20,10 +20,6 @@ export default component$(() => {
 			activeCustomer: { id: string; addresses: ShippingAddress[] };
 		}>(getActiveCustomerAddressesQuery());
 
-		if (!activeCustomer) {
-			navigate('/sign-in');
-		}
-
 		activeCustomerAddresses.value = activeCustomer;
 
 		if (activeCustomer?.addresses) {
