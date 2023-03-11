@@ -4,11 +4,11 @@ import { ActiveCustomer, FacetWithValues, Search, ShippingAddress } from '~/type
 
 export const getRandomInt = (max: number) => Math.floor(Math.random() * max);
 
-export function formatPrice(value: number | undefined, currency: any) {
+export function formatPrice(value = 0, currency: any) {
 	return new Intl.NumberFormat('en-US', {
 		style: 'currency',
 		currency,
-	}).format(value || 0 / 100);
+	}).format(value / 100);
 }
 
 export const groupFacetValues = (
