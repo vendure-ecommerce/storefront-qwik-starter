@@ -13,7 +13,6 @@ export default component$(() => {
 		const { verifyCustomerAccount } = await execute<{
 			verifyCustomerAccount: {
 				token: string;
-				password: string;
 				__typename: string;
 				message: string;
 			};
