@@ -1,5 +1,7 @@
 import { component$, useBrowserVisibleTask$, useStore } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
+import { Image } from '~/components/image/Image';
+import { IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
 import { getOrderByCodeQuery } from '~/graphql/queries';
 import { ActiveOrder } from '~/types';
 import { formatDateTime, formatPrice, scrollToTop } from '~/utils';
@@ -34,9 +36,13 @@ export default component$(() => {
 						return (
 							<li class="py-6 flex">
 								<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
-									<img
+									<Image
+										layout="fixed"
+										width={100}
+										height={100}
 										class="rounded object-cover max-w-max h-full"
 										src={line.featuredAsset.preview}
+										placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 									/>
 								</div>
 								<div class="ml-4 flex-1 flex flex-col">
