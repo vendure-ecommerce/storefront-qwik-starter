@@ -42,7 +42,7 @@ export default component$(() => {
 			getActiveCustomerQuery()
 		);
 		appState.customer = activeCustomer;
-		newEmail.value = activeCustomer.emailAddress as string;
+		newEmail.value = activeCustomer?.emailAddress as string;
 		scrollToTop();
 	});
 

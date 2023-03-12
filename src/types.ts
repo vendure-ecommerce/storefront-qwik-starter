@@ -212,6 +212,12 @@ export type Login = ActiveCustomer & {
 	message: string;
 };
 
+export type RegisterCustomer = Omit<ActiveCustomer, 'id'> & {
+	password: string;
+	success?: boolean;
+	message?: string;
+};
+
 export type EligibleShippingMethods = {
 	name: string;
 	price: number;

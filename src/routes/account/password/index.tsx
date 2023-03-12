@@ -64,8 +64,8 @@ export default component$(() => {
 	});
 
 	return appState.customer ? (
-		<div class="min-h-[24rem] max-w-6xl m-auto rounded-lg p-4 space-y-4">
-			<div class="bg-white shadow-lg rounded-lg max-w-sm py-4 px-6">
+		<div class="max-w-6xl m-auto rounded-lg p-4 space-y-4 flex justify-center">
+			<div class="bg-white shadow-lg rounded-lg w-[20rem] py-4 px-6">
 				<div class="p-4">
 					<h3 class="text-sm text-gray-500">Current Password</h3>
 					<input
@@ -97,19 +97,11 @@ export default component$(() => {
 					/>
 				</div>
 				<div class="flex gap-x-4 p-4 justify-between">
-					<HighlightedButton
-						onClick$={() => {
-							updatePassword();
-						}}
-					>
+					<HighlightedButton onClick$={updatePassword}>
 						<CheckIcon /> &nbsp; Save
 					</HighlightedButton>
 					<div>
-						<button
-							onClick$={() => {
-								togglePasswordFields();
-							}}
-						>
+						<button onClick$={togglePasswordFields}>
 							{showPasswordAsTextSignal.value ? <EyeIcon /> : <EyeSlashIcon />}
 						</button>
 					</div>
