@@ -214,7 +214,7 @@ export type Login = ActiveCustomer & {
 
 export type RegisterCustomer = Omit<ActiveCustomer, 'id'> & {
 	password: string;
-	success?: boolean;
+	__typename?: string;
 	message?: string;
 };
 
