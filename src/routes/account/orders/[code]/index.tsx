@@ -40,6 +40,7 @@ export default component$(() => {
 										layout="fixed"
 										width={100}
 										height={100}
+										aspectRatio={1}
 										class="rounded object-cover max-w-max h-full"
 										src={line.featuredAsset.preview}
 										placeholder={IMAGE_PLACEHOLDER_BACKGROUND}

@@ -18,6 +18,7 @@ export default component$<IProps>(({ order }) => {
 				layout="fixed"
 				width="200"
 				height="200"
+				aspectRatio={1}
 				class="w-full h-full object-center object-cover m-auto"
 				src={order.lines[0]?.featuredAsset?.preview}
 				alt={order.lines[0]?.productVariant?.name}
