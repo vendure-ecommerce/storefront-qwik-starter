@@ -1,4 +1,4 @@
-import { ActiveCustomer, ShippingAddress } from '~/types';
+import { ActiveCustomer, RegisterCustomer, ShippingAddress } from '~/types';
 
 export const addItemToOrderMutation = (productVariantId: string, quantity: number) => ({
 	variables: {
@@ -231,6 +231,47 @@ export const adjustOrderLineMutation = (orderLineId: string, quantity: number) =
 							id
 							slug
 					}
+			}
+		}
+	}
+`,
+});
+
+export const registerCustomerAccountMutation = ({
+	emailAddress,
+	firstName,
+	lastName,
+	password,
+}: RegisterCustomer) => ({
+	variables: { input: { emailAddress, firstName, lastName, password } },
+	query: `
+	mutation registerCustomerAccount($input: RegisterCustomerInput!) {
+	registerCustomerAccount(input: $input) {
+			... on Success {
+				success
+			}
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+`,
+});
+
+export const verifyCustomerAccountMutation = (token: string) => ({
+	variables: { token },
+	query: `
+	mutation verifyCustomerAccount($token: String!) {
+		verifyCustomerAccount(token: $token) {
+			__typename
+			... on CurrentUser {
+			id
+			identifier
+			}
+			... on ErrorResult {
+			errorCode
+			message
 			}
 		}
 	}
