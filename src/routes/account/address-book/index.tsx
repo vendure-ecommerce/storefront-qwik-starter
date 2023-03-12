@@ -30,10 +30,10 @@ export default component$(() => {
 	});
 
 	return activeCustomerAddresses.value ? (
-		<div class="min-h-[24rem] max-w-6xl m-auto rounded-lg p-4 space-y-4">
-			<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-md md:max-w-6xl mx-auto">
+		<div class="max-w-6xl m-auto rounded-lg p-4 space-y-4">
+			<div class="flex flex-wrap gap-6 justify-evenly">
 				{[...appState.addressBook].map((address) => (
-					<div key={address.id}>
+					<div class="min-w-[20rem]" key={address.id}>
 						<AddressCard
 							address={address}
 							onDelete$={async (id) => {
@@ -46,13 +46,15 @@ export default component$(() => {
 					</div>
 				))}
 			</div>
-			<HighlightedButton
-				onClick$={() => {
-					navigate('/account/address-book/add');
-				}}
-			>
-				<PlusIcon /> &nbsp; New Address
-			</HighlightedButton>
+			<div class="flex justify-center">
+				<HighlightedButton
+					onClick$={() => {
+						navigate('/account/address-book/add');
+					}}
+				>
+					<PlusIcon /> &nbsp; New Address
+				</HighlightedButton>
+			</div>
 		</div>
 	) : (
 		<div class="h-[100vh]" />

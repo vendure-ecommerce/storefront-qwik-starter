@@ -58,8 +58,8 @@ export default component$(() => {
 	});
 
 	return activeCustomerAddress.value ? (
-		<div class="min-h-[24rem] max-w-6xl m-auto rounded-lg p-4 space-y-4">
-			<div class="max-w-md">
+		<div class="max-w-6xl m-auto rounded-lg p-4 space-y-4">
+			<div class="max-w-md m-auto">
 				<AddressForm shippingAddress={appState.shippingAddress} />
 				<div class="flex mt-8">
 					<HighlightedButton onClick$={createOrUpdateAddress}>
