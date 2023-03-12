@@ -18,8 +18,8 @@ An e-commerce storefront for [Vendure](https://www.vendure.io) built with [Qwik]
 - Checkout flow ✅
 - Search facet filters ✅
 - Login ✅
-- Account creation
-- Customer account management
+- Account creation ✅
+- Customer account management ✅
 - SPA-mode navigation
 - Set up GraphQL code generation
 
