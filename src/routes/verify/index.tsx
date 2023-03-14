@@ -16,7 +16,7 @@ export default component$(() => {
 				__typename: string;
 				message: string;
 			};
-		}>(verifyCustomerAccountMutation(location.params.token));
+		}>(verifyCustomerAccountMutation(location.url.href.split('=')[1]));
 
 		verifyCustomerAccount.__typename !== 'CurrentUser'
 			? (error.value = verifyCustomerAccount.message)

@@ -17,16 +17,18 @@
 		// Configure properties specific to VS Code.
 		"vscode": {
 			// Add the IDs of extensions you want installed when the container is created.
-			"extensions": ["dbaeumer.vscode-eslint"]
+			"extensions": ["dbaeumer.vscode-eslint", "ms-vscode-remote.remote-containers"]
 		}
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
+	"forwardPorts": [3000, 5432, 8080],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "yarn install",
+	"postCreateCommand": "./devcontainer-install-vendure.sh",
 
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "node"
+	"remoteUser": "root",
+
+	"postStartCommand": "sudo service postgresql start && pnpm develop"
 }

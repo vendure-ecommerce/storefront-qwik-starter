@@ -1,3 +1,6 @@
+# Server
+one-click-deploy
+
 # Build
 build
 dist
@@ -7,6 +10,7 @@ functions/**/*.js
 
 # Development
 node_modules
+.pnpm-store
 
 # Cache
 .cache
