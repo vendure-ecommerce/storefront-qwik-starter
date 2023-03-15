@@ -2,9 +2,9 @@ import {
 	$,
 	QwikChangeEvent,
 	component$,
-	useBrowserVisibleTask$,
 	useContext,
 	useSignal,
+	useVisibleTask$,
 } from '@builder.io/qwik';
 import { isBrowser } from '@builder.io/qwik/build';
 import { Button } from '~/components/buttons/Button';
@@ -37,7 +37,7 @@ export default component$(() => {
 		customer: {} as ActiveCustomer,
 	};
 
-	useBrowserVisibleTask$(async () => {
+	useVisibleTask$(async () => {
 		const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
 			getActiveCustomerQuery()
 		);

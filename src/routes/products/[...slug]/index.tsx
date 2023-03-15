@@ -1,11 +1,4 @@
-import {
-	$,
-	component$,
-	useBrowserVisibleTask$,
-	useContext,
-	useStore,
-	useTask$,
-} from '@builder.io/qwik';
+import { $, component$, useContext, useStore, useTask$, useVisibleTask$ } from '@builder.io/qwik';
 import { routeLoader$ } from '@builder.io/qwik-city';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
@@ -57,7 +50,7 @@ export default component$(() => {
 
 	calculateQuantities(state.product);
 
-	useBrowserVisibleTask$(() => {
+	useVisibleTask$(() => {
 		scrollToTop();
 	});
 

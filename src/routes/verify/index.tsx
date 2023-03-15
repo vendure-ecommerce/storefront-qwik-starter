@@ -1,4 +1,4 @@
-import { component$, useBrowserVisibleTask$, useSignal } from '@builder.io/qwik';
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import { verifyCustomerAccountMutation } from '~/graphql/mutations';
@@ -9,7 +9,7 @@ export default component$(() => {
 	const location = useLocation();
 	const navigate = useNavigate();
 
-	useBrowserVisibleTask$(async () => {
+	useVisibleTask$(async () => {
 		const { verifyCustomerAccount } = await execute<{
 			verifyCustomerAccount: {
 				token: string;

@@ -1,4 +1,4 @@
-import { component$, useBrowserVisibleTask$, useStore } from '@builder.io/qwik';
+import { component$, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import { Image } from '~/components/image/Image';
 import { IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
@@ -13,7 +13,7 @@ export default component$(() => {
 	} = useLocation();
 	const store = useStore<{ order?: ActiveOrder }>({});
 
-	useBrowserVisibleTask$(async () => {
+	useVisibleTask$(async () => {
 		const { orderByCode } = await execute<{ orderByCode: ActiveOrder }>(
 			getOrderByCodeQuery({ code })
 		);

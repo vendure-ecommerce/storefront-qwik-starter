@@ -1,10 +1,4 @@
-import {
-	$,
-	component$,
-	QwikKeyboardEvent,
-	useBrowserVisibleTask$,
-	useStore,
-} from '@builder.io/qwik';
+import { $, QwikKeyboardEvent, component$, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
@@ -41,7 +35,7 @@ export default component$(() => {
 			await execute<{ search: Search }>(searchQueryWithTerm('', term, activeFacetValueIds))
 	);
 
-	useBrowserVisibleTask$(async () => {
+	useVisibleTask$(async () => {
 		scrollToTop();
 		const { search } = await executeQuery(term, activeFacetValueIds);
 		state.search = search;
