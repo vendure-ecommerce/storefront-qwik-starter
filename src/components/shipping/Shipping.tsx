@@ -1,12 +1,12 @@
 import {
 	$,
-	component$,
 	PropFunction,
 	QwikChangeEvent,
-	useBrowserVisibleTask$,
+	component$,
 	useContext,
 	useSignal,
 	useTask$,
+	useVisibleTask$,
 } from '@builder.io/qwik';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { getActiveCustomerAddressesQuery, getActiveOrderQuery } from '~/graphql/queries';
@@ -27,7 +27,7 @@ export default component$<IProps>(({ onForward$ }) => {
 	const appState = useContext(APP_STATE);
 	const isFormValidSignal = useSignal(false);
 
-	useBrowserVisibleTask$(async () => {
+	useVisibleTask$(async () => {
 		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
 		if (activeOrder?.customer) {
 			appState.customer = activeOrder?.customer;

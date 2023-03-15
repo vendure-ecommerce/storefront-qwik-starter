@@ -1,11 +1,11 @@
 import {
 	$,
-	component$,
 	Slot,
-	useBrowserVisibleTask$,
+	component$,
 	useContextProvider,
 	useOn,
 	useStore,
+	useVisibleTask$,
 } from '@builder.io/qwik';
 import { routeLoader$ } from '@builder.io/qwik-city';
 import { ImageTransformerProps, useImageProvider } from '~/components/image/Image';
@@ -72,7 +72,7 @@ export default component$(() => {
 
 	useContextProvider(APP_STATE, state);
 
-	useBrowserVisibleTask$(async () => {
+	useVisibleTask$(async () => {
 		scrollToTop();
 		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
 		state.activeOrder = activeOrder;

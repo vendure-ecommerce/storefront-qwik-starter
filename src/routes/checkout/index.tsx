@@ -1,4 +1,4 @@
-import { $, component$, useBrowserVisibleTask$, useContext, useStore } from '@builder.io/qwik';
+import { $, component$, useContext, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useNavigate } from '@builder.io/qwik-city';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
@@ -28,7 +28,7 @@ export default component$(() => {
 		{ name: 'Confirmation', state: 'CONFIRMATION' },
 	];
 
-	useBrowserVisibleTask$(async () => {
+	useVisibleTask$(async () => {
 		scrollToTop();
 		appState.showCart = false;
 		if (appState.activeOrder?.lines?.length === 0) {
