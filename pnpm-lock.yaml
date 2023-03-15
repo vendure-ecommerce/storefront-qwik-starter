@@ -9,9 +9,9 @@ specifiers:
   '@typescript-eslint/eslint-plugin': 5.55.0
   '@typescript-eslint/parser': 5.55.0
   autoprefixer: 10.4.14
+  concurrently: 7.6.0
   eslint: 8.36.0
   eslint-plugin-qwik: 0.21.0
-  concurrently: 7.6.0
   husky: ^8.0.3
   node-fetch: 3.3.1
   postcss: 8.4.21
