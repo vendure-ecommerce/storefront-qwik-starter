@@ -11,12 +11,7 @@ import CollectionCard from '~/components/collection-card/CollectionCard';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
-import {
-	getCollectionQuery,
-	searchQueryWithCollectionSlug,
-	searchQueryWithTerm,
-} from '~/graphql/queries';
-import { Collection, FacetWithValues, Search } from '~/types';
+import { FacetWithValues } from '~/types';
 import {
 	changeUrlParamsWithoutRefresh,
 	cleanUpParams,
@@ -24,19 +19,21 @@ import {
 	groupFacetValues,
 	scrollToTop,
 } from '~/utils';
-import { execute } from '~/utils/api';
+import { getCollectionBySlug } from '~/providers/collections/collections';
+import { searchQueryWithCollectionSlug, searchQueryWithTerm } from '~/providers/products/products';
+import { Collection, SearchResponse } from '~/generated/graphql';
 
 export const useCollectionLoader = routeLoader$(async ({ params }) => {
-	const { collection } = await execute<{ collection: Collection }>(getCollectionQuery(params.slug));
-	return collection;
+	const { collection } = await getCollectionBySlug(params.slug);
+	return collection as Collection;
 });
 
 export const useSearchLoader = routeLoader$(async ({ params: p, url }) => {
 	const params = cleanUpParams(p);
 	const activeFacetValueIds: string[] = url.searchParams.get('f')?.split('-') || [];
 	const { search } = activeFacetValueIds.length
-		? await execute<{ search: Search }>(searchQueryWithTerm(params.slug, '', activeFacetValueIds))
-		: await execute<{ search: Search }>(searchQueryWithCollectionSlug(params.slug));
+		? await searchQueryWithTerm(params.slug, '', activeFacetValueIds)
+		: await searchQueryWithCollectionSlug(params.slug);
 	return search;
 });
 
@@ -50,13 +47,13 @@ export default component$(() => {
 
 	const state = useStore<{
 		showMenu: boolean;
-		search: Search;
+		search: SearchResponse;
 		facedValues: FacetWithValues[];
 		facetValueIds: string[];
 	}>({
 		showMenu: false,
-		search: searchSignal.value,
-		facedValues: groupFacetValues(searchSignal.value, activeFacetValueIds),
+		search: searchSignal.value as SearchResponse,
+		facedValues: groupFacetValues(searchSignal.value as SearchResponse, activeFacetValueIds),
 		facetValueIds: activeFacetValueIds,
 	});
 
@@ -76,9 +73,9 @@ export default component$(() => {
 		changeUrlParamsWithoutRefresh('', facetValueIds);
 
 		const { search } = facetValueIds.length
-			? await execute<{ search: Search }>(searchQueryWithTerm(params.slug, '', state.facetValueIds))
-			: await execute<{ search: Search }>(searchQueryWithCollectionSlug(params.slug));
-		state.search = search;
+			? await searchQueryWithTerm(params.slug, '', state.facetValueIds)
+			: await searchQueryWithCollectionSlug(params.slug);
+		state.search = search as SearchResponse;
 	});
 
 	return (
