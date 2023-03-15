@@ -90,9 +90,12 @@ export default component$(() => {
 							</div>
 
 							<div class="text-sm">
-								<span class="font-medium text-primary-600 hover:text-primary-500">
+								<button
+									onClick$={() => navigate('/forgot-password')}
+									class="font-medium text-primary-600 hover:text-primary-500"
+								>
 									Forgot your password?
-								</span>
+								</button>
 							</div>
 						</div>
 
