@@ -1,12 +1,13 @@
 import gql from 'graphql-tag';
 import { sdk } from '~/graphql-wrapper';
+import { Collection } from '~/generated/graphql';
 
 export const getCollections = async () => {
-	return sdk.collections();
+	return await sdk.collections().then((res) => res.collections.items as Collection[]);
 };
 
 export const getCollectionBySlug = async (slug: string) => {
-	return sdk.collection({ slug });
+	return await sdk.collection({ slug }).then((res) => res.collection as Collection);
 };
 
 gql`

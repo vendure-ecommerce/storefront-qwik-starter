@@ -1,6 +1,6 @@
 overwrite: true
 schema:
-  - 'https://demo.vendure.io/shop-api'
+  - 'https://readonlydemo.vendure.io/shop-api'
   # This is the additional schema extension that would be present it
   # the Stripe playment plugin is enabled on the Vendure server. Added
   # manually here to allow codegen to work regardless.

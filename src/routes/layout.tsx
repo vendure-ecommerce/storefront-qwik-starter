@@ -17,11 +17,9 @@ import { execute } from '~/utils/api';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
 import { getCollections } from '~/providers/collections/collections';
-import { Collection } from '~/generated/graphql';
 
 export const useCollectionsLoader = routeLoader$(async () => {
-	const { collections } = await getCollections();
-	return collections.items as Collection[];
+	return await getCollections();
 });
 
 export const useAvailableCountriesLoader = routeLoader$(async () => {

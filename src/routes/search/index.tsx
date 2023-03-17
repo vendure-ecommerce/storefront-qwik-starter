@@ -43,8 +43,7 @@ export default component$(() => {
 
 	useBrowserVisibleTask$(async () => {
 		scrollToTop();
-		const { search } = await executeQuery(term, activeFacetValueIds);
-		state.search = search as SearchResponse;
+		state.search = await executeQuery(term, activeFacetValueIds);
 		state.facedValues = groupFacetValues(state.search, activeFacetValueIds);
 		state.facetValueIds = activeFacetValueIds;
 	});
@@ -60,8 +59,7 @@ export default component$(() => {
 		state.facetValueIds = facetValueIds;
 		changeUrlParamsWithoutRefresh(term, facetValueIds);
 
-		const { search } = await executeQuery(term, state.facetValueIds);
-		state.search = search as SearchResponse;
+		state.search = await executeQuery(term, state.facetValueIds);
 	});
 
 	return (

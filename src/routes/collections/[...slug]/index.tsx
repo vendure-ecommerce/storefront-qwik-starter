@@ -21,20 +21,18 @@ import {
 } from '~/utils';
 import { getCollectionBySlug } from '~/providers/collections/collections';
 import { searchQueryWithCollectionSlug, searchQueryWithTerm } from '~/providers/products/products';
-import { Collection, SearchResponse } from '~/generated/graphql';
+import { SearchResponse } from '~/generated/graphql';
 
 export const useCollectionLoader = routeLoader$(async ({ params }) => {
-	const { collection } = await getCollectionBySlug(params.slug);
-	return collection as Collection;
+	return await getCollectionBySlug(params.slug);
 });
 
 export const useSearchLoader = routeLoader$(async ({ params: p, url }) => {
 	const params = cleanUpParams(p);
 	const activeFacetValueIds: string[] = url.searchParams.get('f')?.split('-') || [];
-	const { search } = activeFacetValueIds.length
+	return activeFacetValueIds.length
 		? await searchQueryWithTerm(params.slug, '', activeFacetValueIds)
 		: await searchQueryWithCollectionSlug(params.slug);
-	return search;
 });
 
 export default component$(() => {
@@ -72,10 +70,9 @@ export default component$(() => {
 		state.facetValueIds = facetValueIds;
 		changeUrlParamsWithoutRefresh('', facetValueIds);
 
-		const { search } = facetValueIds.length
+		state.search = facetValueIds.length
 			? await searchQueryWithTerm(params.slug, '', state.facetValueIds)
 			: await searchQueryWithCollectionSlug(params.slug);
-		state.search = search as SearchResponse;
 	});
 
 	return (
