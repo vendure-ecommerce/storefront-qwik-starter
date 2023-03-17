@@ -1,4 +1,4 @@
-import { $, component$, useBrowserVisibleTask$, useContext, useSignal } from '@builder.io/qwik';
+import { $, component$, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { logoutMutation } from '~/graphql/mutations';
@@ -23,7 +23,7 @@ export default component$(() => {
 			? appState.activeOrder?.totalQuantity || 0
 			: 0;
 
-	useBrowserVisibleTask$(async () => {
+	useVisibleTask$(async () => {
 		if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
 			const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
 				getActiveCustomerQuery()

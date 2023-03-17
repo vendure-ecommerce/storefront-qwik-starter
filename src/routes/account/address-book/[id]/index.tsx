@@ -1,4 +1,4 @@
-import { $, component$, useBrowserVisibleTask$, useContext, useSignal } from '@builder.io/qwik';
+import { $, component$, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import AddressForm from '~/components/address-form/AddressForm';
 import { Button } from '~/components/buttons/Button';
@@ -18,7 +18,7 @@ export default component$(() => {
 	const appState = useContext(APP_STATE);
 	const activeCustomerAddress = useSignal<ShippingAddress>();
 
-	useBrowserVisibleTask$(async () => {
+	useVisibleTask$(async () => {
 		const { activeCustomer } = await execute<{
 			activeCustomer: { id: string; addresses: ShippingAddress[] };
 		}>(getActiveCustomerAddressesQuery());

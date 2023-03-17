@@ -1,4 +1,4 @@
-import { component$, useBrowserVisibleTask$, useSignal } from '@builder.io/qwik';
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import OrderCard from '~/components/account/OrderCard';
 import { getActiveCustomerOrdersQuery } from '~/graphql/queries';
 import { ActiveCustomerOrders } from '~/types';
@@ -8,7 +8,7 @@ import { execute } from '~/utils/api';
 export default component$(() => {
 	const activeCustomerOrdersSignal = useSignal<ActiveCustomerOrders>();
 
-	useBrowserVisibleTask$(async () => {
+	useVisibleTask$(async () => {
 		const { activeCustomer: activeCustomerOrders } = await execute<{
 			activeCustomer: ActiveCustomerOrders;
 		}>(getActiveCustomerOrdersQuery());

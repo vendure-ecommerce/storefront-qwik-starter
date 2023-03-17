@@ -266,14 +266,72 @@ export const verifyCustomerAccountMutation = (token: string) => ({
 		verifyCustomerAccount(token: $token) {
 			__typename
 			... on CurrentUser {
-			id
-			identifier
+				id
+				identifier
 			}
 			... on ErrorResult {
-			errorCode
-			message
+				errorCode
+				message
 			}
 		}
+	}
+`,
+});
+
+export const requestPasswordResetMutation = (emailAddress: string) => ({
+	variables: { emailAddress },
+	query: `
+	mutation requestPasswordReset($emailAddress: String!) {
+		requestPasswordReset(emailAddress: $emailAddress) {
+			... on Success {
+				success
+			}
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+`,
+});
+
+export const resetPasswordMutation = (token: string, password: string) => ({
+	variables: { token, password },
+	query: `
+	mutation resetPassword($token: String!, $password: String!) {
+		resetPassword(token: $token, password: $password) {
+			__typename
+			... on CurrentUser {
+				id
+				identifier
+			}
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+`,
+});
+
+export const updateCustomerEmailAddressMutation = (token: string) => ({
+	variables: { token },
+	query: `
+	mutation updateCustomerEmailAddress($token: String!) {
+		updateCustomerEmailAddress(token: $token) {
+			... on Success {
+				success
+				__typename
+			}
+			...ErrorResult
+			__typename
+		}
+	}
+
+	fragment ErrorResult on ErrorResult {
+		errorCode
+		message
+		__typename
 	}
 `,
 });

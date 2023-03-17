@@ -1,4 +1,4 @@
-import { component$, Slot, useBrowserVisibleTask$, useContext } from '@builder.io/qwik';
+import { Slot, component$, useContext, useVisibleTask$ } from '@builder.io/qwik';
 import { TabsContainer } from '~/components/account/TabsContainer';
 import { APP_STATE } from '~/constants';
 import { getActiveCustomerQuery } from '~/graphql/queries';
@@ -9,7 +9,7 @@ import { execute } from '~/utils/api';
 export default component$(() => {
 	const appState = useContext(APP_STATE);
 
-	useBrowserVisibleTask$(async () => {
+	useVisibleTask$(async () => {
 		const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
 			getActiveCustomerQuery()
 		);

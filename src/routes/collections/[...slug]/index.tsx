@@ -1,10 +1,4 @@
-import {
-	$,
-	component$,
-	QwikKeyboardEvent,
-	useBrowserVisibleTask$,
-	useStore,
-} from '@builder.io/qwik';
+import { $, QwikKeyboardEvent, component$, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { routeLoader$, useLocation } from '@builder.io/qwik-city';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CollectionCard from '~/components/collection-card/CollectionCard';
@@ -55,7 +49,7 @@ export default component$(() => {
 		facetValueIds: activeFacetValueIds,
 	});
 
-	useBrowserVisibleTask$(async () => {
+	useVisibleTask$(async () => {
 		scrollToTop();
 	});
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 git config --global --add safe.directory /workspaces/storefront-qwik-starter
 pnpm install
 git clone https://github.com/vendure-ecommerce/one-click-deploy.git &> /dev/null
