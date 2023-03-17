@@ -314,6 +314,28 @@ export const resetPasswordMutation = (token: string, password: string) => ({
 `,
 });
 
+export const updateCustomerEmailAddressMutation = (token: string) => ({
+	variables: { token },
+	query: `
+	mutation updateCustomerEmailAddress($token: String!) {
+		updateCustomerEmailAddress(token: $token) {
+			... on Success {
+				success
+				__typename
+			}
+			...ErrorResult
+			__typename
+		}
+	}
+
+	fragment ErrorResult on ErrorResult {
+		errorCode
+		message
+		__typename
+	}
+`,
+});
+
 export const loginMutation = (email: string, password: string, rememberMe: boolean) => ({
 	variables: { email, password, rememberMe },
 	query: `
