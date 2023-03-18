@@ -1,11 +1,11 @@
 import { $, component$, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
-import { useLocation, useNavigate } from '@builder.io/qwik-city';
+import { Form, globalAction$, useLocation, useNavigate, z, zod$ } from '@builder.io/qwik-city';
 import AddressForm from '~/components/address-form/AddressForm';
 import { Button } from '~/components/buttons/Button';
-import { HighlightedButton } from '~/components/buttons/HighlightedButton';
 import CheckIcon from '~/components/icons/CheckIcon';
+import XCircleIcon from '~/components/icons/XCircleIcon';
 import XMarkIcon from '~/components/icons/XMarkIcon';
-import { APP_STATE } from '~/constants';
+import { APP_STATE, AUTH_TOKEN } from '~/constants';
 import { createCustomerAddressMutation, updateCustomerAddressMutation } from '~/graphql/mutations';
 import { getActiveCustomerAddressesQuery } from '~/graphql/queries';
 import { ShippingAddress } from '~/types';
@@ -43,37 +43,85 @@ export default component$(() => {
 		scrollToTop();
 	});
 
-	const createOrUpdateAddress = $(async () => {
+	const createOrUpdateAddress = $(async (id: string | undefined, authToken: string | undefined) => {
 		delete appState.shippingAddress.country;
-		if (location.params.id === 'add') {
+		if (id === 'add') {
 			await execute<{
 				createCustomerAddress: ShippingAddress;
-			}>(createCustomerAddressMutation(appState.shippingAddress));
+			}>(createCustomerAddressMutation(appState.shippingAddress), authToken);
 		} else {
 			await execute<{
 				updateCustomerAddress: ShippingAddress;
-			}>(updateCustomerAddressMutation(appState.shippingAddress));
+			}>(updateCustomerAddressMutation(appState.shippingAddress), authToken);
 		}
-		navigate('/account/address-book');
 	});
+
+	const useSubmitFormAction = globalAction$(
+		async (data, { cookie, redirect, url }) => {
+			const id = url.pathname.split('/').slice(-2, -1)[0];
+			const authToken = cookie.get(AUTH_TOKEN)?.value;
+			appState.shippingAddress = { ...appState.shippingAddress, ...data };
+			appState.shippingAddress.id = id === 'add' ? '' : id;
+			await createOrUpdateAddress(id, authToken);
+			redirect(303, '/account/address-book');
+		},
+		zod$({
+			fullName: z.string().nonempty(),
+			company: z.string(),
+			streetLine1: z.string().nonempty(),
+			streetLine2: z.string(),
+			city: z.string().nonempty(),
+			countryCode: z.string().nonempty(),
+			province: z.string().nonempty(),
+			postalCode: z.string().nonempty(),
+			phoneNumber: z.string(),
+		})
+	);
+	const action = useSubmitFormAction();
 
 	return activeCustomerAddress.value ? (
 		<div class="max-w-6xl m-auto rounded-lg p-4 space-y-4">
 			<div class="max-w-md m-auto">
-				<AddressForm shippingAddress={appState.shippingAddress} />
-				<div class="flex mt-8">
-					<HighlightedButton onClick$={createOrUpdateAddress}>
-						<CheckIcon /> &nbsp; Save
-					</HighlightedButton>
-					<span class="mr-4" />
-					<Button
-						onClick$={() => {
-							navigate('/account/address-book');
-						}}
-					>
-						<XMarkIcon /> &nbsp; Cancel
-					</Button>
-				</div>
+				<Form action={action}>
+					<AddressForm shippingAddress={appState.shippingAddress} />
+					{action.value?.failed && (
+						<div class="rounded-md bg-red-50 p-4 mt-8">
+							<div class="flex">
+								<div class="flex-shrink-0">
+									<XCircleIcon />
+								</div>
+								<div class="ml-3">
+									<h3 class="text-sm font-medium text-red-800">
+										We ran into a problem updating your address!
+									</h3>
+
+									{Object.entries(action?.value?.fieldErrors || {}).map(([field, error]) => (
+										<p class="text-sm text-red-700 mt-2">
+											{field} - {error}
+										</p>
+									))}
+								</div>
+							</div>
+						</div>
+					)}
+					<div class="flex mt-8">
+						<button
+							type="submit"
+							class="flex items-center justify-around bg-primary-500 border border-transparent rounded-md py-2 px-4 text-base font-medium text-white hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-800"
+						>
+							<CheckIcon /> &nbsp; Save
+						</button>
+
+						<span class="mr-4" />
+						<Button
+							onClick$={() => {
+								navigate('/account/address-book');
+							}}
+						>
+							<XMarkIcon /> &nbsp; Cancel
+						</Button>
+					</div>
+				</Form>
 			</div>
 		</div>
 	) : (
