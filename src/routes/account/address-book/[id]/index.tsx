@@ -57,8 +57,8 @@ export default component$(() => {
 	});
 
 	const useSubmitFormAction = globalAction$(
-		async (data, { cookie, redirect }) => {
-			const id = location.params.id;
+		async (data, { cookie, redirect, url }) => {
+			const id = url.pathname.split('/').slice(-2, -1)[0];
 			const authToken = cookie.get(AUTH_TOKEN)?.value;
 			appState.shippingAddress = { ...appState.shippingAddress, ...data };
 			appState.shippingAddress.id = id === 'add' ? '' : id;
