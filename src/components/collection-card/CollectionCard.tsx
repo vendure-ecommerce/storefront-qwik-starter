@@ -1,7 +1,7 @@
 import { component$ } from '@builder.io/qwik';
 import { IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
-import { Collection } from '../../types';
 import { Image } from '../image/Image';
+import { Collection } from '~/generated/graphql';
 
 interface IProps {
 	collection: Collection;

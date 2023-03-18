@@ -1,20 +1,27 @@
 import { server$ } from '@builder.io/qwik-city';
 import { isBrowser } from '@builder.io/qwik/build';
+import { DocumentNode, print } from 'graphql/index';
 import { AUTH_TOKEN, HEADER_AUTH_TOKEN_KEY } from '~/constants';
 import { ENV_VARIABLES } from '~/env';
 import { getCookie, setCookie } from '.';
 
 type ResponseProps<T> = { token: string; data: T };
-type ExecuteProps = { query: string; variables: Record<string, any> };
+type ExecuteProps<V> = { query: string; variables?: V };
 type Options = { method: string; headers: Record<string, string>; body: string };
 
-export const execute = async <T>(body: ExecuteProps, authToken: string = ''): Promise<T> => {
-	const options = { method: 'POST', headers: createHeaders(), body: JSON.stringify(body) };
+export const requester = async <R, V>(doc: DocumentNode, vars?: V): Promise<R> => {
+	return execute<R, V>({ query: print(doc), variables: vars });
+};
 
+export const execute = async <R, V = Record<string, any>>(
+	body: ExecuteProps<V>,
+	authToken: string = ''
+): Promise<R> => {
+	const options = { method: 'POST', headers: createHeaders(), body: JSON.stringify(body) };
 	if (authToken !== '') {
 		options.headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken}` };
 	}
-	const response: ResponseProps<T> = isBrowser
+	const response: ResponseProps<R> = isBrowser
 		? await executeOnTheServer(options)
 		: await executeRequest(options);
 

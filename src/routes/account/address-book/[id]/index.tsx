@@ -2,7 +2,6 @@ import { $, component$, useContext, useSignal, useVisibleTask$ } from '@builder.
 import { Form, globalAction$, useLocation, useNavigate, z, zod$ } from '@builder.io/qwik-city';
 import AddressForm from '~/components/address-form/AddressForm';
 import { Button } from '~/components/buttons/Button';
-import { HighlightedButton } from '~/components/buttons/HighlightedButton';
 import CheckIcon from '~/components/icons/CheckIcon';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import XMarkIcon from '~/components/icons/XMarkIcon';
@@ -58,10 +57,11 @@ export default component$(() => {
 	});
 
 	const submitFormAction = globalAction$(
-		async (formData, { cookie, redirect, url }) => {
+		async (data, { cookie, redirect, url }) => {
 			const id = url.pathname.split('/').slice(-2, -1)[0];
 			const authToken = cookie.get(AUTH_TOKEN)?.value;
-			appState.shippingAddress = { ...appState.shippingAddress, ...formData };
+			appState.shippingAddress = { ...appState.shippingAddress, ...data };
+			appState.shippingAddress.id = id === 'add' ? '' : id;
 			await createOrUpdateAddress(id, authToken);
 			redirect(303, '/account/address-book');
 		},
@@ -107,9 +107,13 @@ export default component$(() => {
 						</div>
 					)}
 					<div class="flex mt-8">
-						<HighlightedButton onClick$={() => {}}>
-							<CheckIcon /> &nbsp; <button type="submit">Save</button>
-						</HighlightedButton>
+						<button
+							type="submit"
+							class="flex items-center justify-around bg-primary-500 border border-transparent rounded-md py-2 px-4 text-base font-medium text-white hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-800"
+						>
+							<CheckIcon /> &nbsp; Save
+						</button>
+
 						<span class="mr-4" />
 						<Button
 							onClick$={() => {

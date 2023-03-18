@@ -10,22 +10,16 @@ import {
 import { routeLoader$ } from '@builder.io/qwik-city';
 import { ImageTransformerProps, useImageProvider } from '~/components/image/Image';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, IMAGE_RESOLUTIONS } from '~/constants';
-import {
-	getActiveOrderQuery,
-	getAvailableCountriesQuery,
-	getCollectionsQuery,
-} from '~/graphql/queries';
-import { ActiveCustomer, ActiveOrder, AppState, Collection, Country } from '~/types';
+import { getActiveOrderQuery, getAvailableCountriesQuery } from '~/graphql/queries';
+import { ActiveCustomer, ActiveOrder, AppState, Country } from '~/types';
 import { scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
+import { getCollections } from '~/providers/collections/collections';
 
 export const useCollectionsLoader = routeLoader$(async () => {
-	const { collections: collections } = await execute<{
-		collections: { items: Collection[] };
-	}>(getCollectionsQuery());
-	return collections.items;
+	return await getCollections();
 });
 
 export const useAvailableCountriesLoader = routeLoader$(async () => {
