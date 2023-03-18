@@ -8,9 +8,12 @@ type ResponseProps<T> = { token: string; data: T };
 type ExecuteProps = { query: string; variables: Record<string, any> };
 type Options = { method: string; headers: Record<string, string>; body: string };
 
-export const execute = async <T>(body: ExecuteProps): Promise<T> => {
+export const execute = async <T>(body: ExecuteProps, authToken: string = ''): Promise<T> => {
 	const options = { method: 'POST', headers: createHeaders(), body: JSON.stringify(body) };
 
+	if (authToken !== '') {
+		options.headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken}` };
+	}
 	const response: ResponseProps<T> = isBrowser
 		? await executeOnTheServer(options)
 		: await executeRequest(options);
