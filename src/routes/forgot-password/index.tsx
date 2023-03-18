@@ -1,11 +1,9 @@
 import { $, component$, useSignal } from '@builder.io/qwik';
-import { useNavigate } from '@builder.io/qwik-city';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import { requestPasswordResetMutation } from '~/graphql/mutations';
 import { execute } from '~/utils/api';
 
 export default component$(() => {
-	const navigate = useNavigate();
 	const email = useSignal('');
 	const error = useSignal('');
 	const success = useSignal(false);

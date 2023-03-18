@@ -56,7 +56,7 @@ export default component$(() => {
 		}
 	});
 
-	const submitFormAction = globalAction$(
+	const useSubmitFormAction = globalAction$(
 		async (data, { cookie, redirect, url }) => {
 			const id = url.pathname.split('/').slice(-2, -1)[0];
 			const authToken = cookie.get(AUTH_TOKEN)?.value;
@@ -77,14 +77,14 @@ export default component$(() => {
 			phoneNumber: z.string(),
 		})
 	);
-	const useSubmitFormAction = submitFormAction();
+	const action = useSubmitFormAction();
 
 	return activeCustomerAddress.value ? (
 		<div class="max-w-6xl m-auto rounded-lg p-4 space-y-4">
 			<div class="max-w-md m-auto">
-				<Form action={useSubmitFormAction}>
+				<Form action={action}>
 					<AddressForm shippingAddress={appState.shippingAddress} />
-					{useSubmitFormAction.value?.failed && (
+					{action.value?.failed && (
 						<div class="rounded-md bg-red-50 p-4 mt-8">
 							<div class="flex">
 								<div class="flex-shrink-0">
@@ -95,13 +95,11 @@ export default component$(() => {
 										We ran into a problem updating your address!
 									</h3>
 
-									{Object.entries(useSubmitFormAction?.value?.fieldErrors || {}).map(
-										([field, error]) => (
-											<p class="text-sm text-red-700 mt-2">
-												{field} - {error}
-											</p>
-										)
-									)}
+									{Object.entries(action?.value?.fieldErrors || {}).map(([field, error]) => (
+										<p class="text-sm text-red-700 mt-2">
+											{field} - {error}
+										</p>
+									))}
 								</div>
 							</div>
 						</div>
