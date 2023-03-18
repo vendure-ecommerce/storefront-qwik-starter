@@ -3,25 +3,25 @@ import { useLocation } from '@builder.io/qwik-city';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
-import { searchQueryWithTerm } from '~/graphql/queries';
-import { FacetWithValues, Search } from '~/types';
+import { FacetWithValues } from '~/types';
 import {
 	changeUrlParamsWithoutRefresh,
 	enableDisableFacetValues,
 	groupFacetValues,
 	scrollToTop,
 } from '~/utils';
-import { execute } from '~/utils/api';
+import { searchQueryWithTerm } from '~/providers/products/products';
+import { SearchResponse } from '~/generated/graphql';
 
 export default component$(() => {
 	const state = useStore<{
 		showMenu: boolean;
-		search: Search;
+		search: SearchResponse;
 		facedValues: FacetWithValues[];
 		facetValueIds: string[];
 	}>({
 		showMenu: false,
-		search: {} as Search,
+		search: {} as SearchResponse,
 		facedValues: [],
 		facetValueIds: [],
 	});
@@ -32,13 +32,12 @@ export default component$(() => {
 
 	const executeQuery = $(
 		async (term: string, activeFacetValueIds: string[]) =>
-			await execute<{ search: Search }>(searchQueryWithTerm('', term, activeFacetValueIds))
+			await searchQueryWithTerm('', term, activeFacetValueIds)
 	);
 
 	useVisibleTask$(async () => {
 		scrollToTop();
-		const { search } = await executeQuery(term, activeFacetValueIds);
-		state.search = search;
+		state.search = await executeQuery(term, activeFacetValueIds);
 		state.facedValues = groupFacetValues(state.search, activeFacetValueIds);
 		state.facetValueIds = activeFacetValueIds;
 	});
@@ -54,8 +53,7 @@ export default component$(() => {
 		state.facetValueIds = facetValueIds;
 		changeUrlParamsWithoutRefresh(term, facetValueIds);
 
-		const { search } = await executeQuery(term, state.facetValueIds);
-		state.search = search;
+		state.search = await executeQuery(term, state.facetValueIds);
 	});
 
 	return (

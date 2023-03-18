@@ -3,15 +3,20 @@ import { isBrowser } from '@builder.io/qwik/build';
 import { AUTH_TOKEN, HEADER_AUTH_TOKEN_KEY } from '~/constants';
 import { ENV_VARIABLES } from '~/env';
 import { getCookie, setCookie } from '.';
+import { DocumentNode, print } from 'graphql/index';
 
 type ResponseProps<T> = { token: string; data: T };
-type ExecuteProps = { query: string; variables: Record<string, any> };
+type ExecuteProps<V> = { query: string; variables?: V };
 type Options = { method: string; headers: Record<string, string>; body: string };
 
-export const execute = async <T>(body: ExecuteProps): Promise<T> => {
+export const requester = async <R, V>(doc: DocumentNode, vars?: V): Promise<R> => {
+	return execute<R, V>({ query: print(doc), variables: vars });
+};
+
+export const execute = async <R, V = Record<string, any>>(body: ExecuteProps<V>): Promise<R> => {
 	const options = { method: 'POST', headers: createHeaders(), body: JSON.stringify(body) };
 
-	const response: ResponseProps<T> = isBrowser
+	const response: ResponseProps<R> = isBrowser
 		? await executeOnTheServer(options)
 		: await executeRequest(options);
 
