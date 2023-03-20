@@ -10,15 +10,15 @@ import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import TopReviews from '~/components/top-reviews/TopReviews';
 import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
 import { addItemToOrderMutation } from '~/graphql/mutations';
-import { getProductQuery } from '~/graphql/queries';
-import { ActiveOrder, Line, Product, Variant } from '~/types';
+import { ActiveOrder, Line, Variant } from '~/types';
 import { cleanUpParams, isEnvVariableEnabled, scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
+import { getProductBySlug } from '~/providers/products/products';
+import { Product } from '~/generated/graphql';
 
 export const useProductLoader = routeLoader$(async ({ params }) => {
 	const { slug } = cleanUpParams(params);
-	const { product } = await execute<{ product: Product }>(getProductQuery({ slug }));
-	return product;
+	return await getProductBySlug(slug);
 });
 
 export default component$(() => {
@@ -83,7 +83,7 @@ export default component$(() => {
 										class="object-center object-cover rounded-lg"
 										width="400"
 										height="400"
-										src={state.product.featuredAsset.preview + '?w=400&h=400'}
+										src={state.product.featuredAsset?.preview + '?w=400&h=400'}
 										alt={state.product.name}
 										placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 									/>
