@@ -86,6 +86,15 @@ export default component$(() => {
 			: await searchQueryWithCollectionSlug(params.slug);
 	});
 
+	const onOpenCloseFilter = $((id: string) => {
+		state.facedValues = state.facedValues.map((f) => {
+			if (f.id === id) {
+				f.open = !f.open;
+			}
+			return f;
+		});
+	});
+
 	return (
 		<div
 			class="max-w-6xl mx-auto px-4 py-10"
@@ -131,6 +140,7 @@ export default component$(() => {
 							state.showMenu = !state.showMenu;
 						}}
 						onFilterChange$={onFilterChange}
+						onOpenCloseFilter$={onOpenCloseFilter}
 					/>
 				)}
 				<div class="sm:col-span-5 lg:col-span-4">
