@@ -1,7 +1,6 @@
 import { $, component$, useSignal } from '@builder.io/qwik';
 import XCircleIcon from '~/components/icons/XCircleIcon';
-import { requestPasswordResetMutation } from '~/graphql/mutations';
-import { execute } from '~/utils/api';
+import { requestPasswordResetMutation } from '~/providers/account/account';
 
 export default component$(() => {
 	const email = useSignal('');
@@ -9,16 +8,10 @@ export default component$(() => {
 	const success = useSignal(false);
 
 	const reset = $(async () => {
-		const { requestPasswordReset } = await execute<{
-			requestPasswordReset: {
-				emailAddress: string;
-				success: boolean;
-				message: string;
-			};
-		}>(requestPasswordResetMutation(email.value));
-		requestPasswordReset.success
+		const requestPasswordReset = await requestPasswordResetMutation(email.value);
+		requestPasswordReset?.__typename === 'Success'
 			? (success.value = true)
-			: (error.value = requestPasswordReset.message);
+			: (error.value = requestPasswordReset?.message ?? 'Reset password error');
 	});
 	return (
 		<div class="flex flex-col justify-center py-12 sm:px-6 lg:px-8">

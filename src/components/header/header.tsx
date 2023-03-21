@@ -1,7 +1,6 @@
 import { $, component$, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
-import { logoutMutation } from '~/graphql/mutations';
 import { getActiveCustomerQuery } from '~/graphql/queries';
 import { ActiveCustomer } from '~/types';
 import { execute } from '~/utils/api';
@@ -10,6 +9,7 @@ import LogoutIcon from '../icons/LogoutIcon';
 import ShoppingBagIcon from '../icons/ShoppingBagIcon';
 import UserIcon from '../icons/UserIcon';
 import SearchBar from '../search-bar/SearchBar';
+import { logoutMutation } from '~/providers/account/account';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
@@ -39,7 +39,7 @@ export default component$(() => {
 	});
 
 	const logout = $(async () => {
-		await execute(logoutMutation());
+		await logoutMutation();
 		// force hard refresh
 		window.location.href = '/';
 	});

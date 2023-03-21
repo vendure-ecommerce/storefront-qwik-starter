@@ -1,8 +1,7 @@
 import { $, component$, useSignal } from '@builder.io/qwik';
 import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import XCircleIcon from '~/components/icons/XCircleIcon';
-import { resetPasswordMutation } from '~/graphql/mutations';
-import { execute } from '~/utils/api';
+import { resetPasswordMutation } from '~/providers/account/account';
 
 export default component$(() => {
 	const password = useSignal('');
@@ -11,14 +10,10 @@ export default component$(() => {
 	const navigate = useNavigate();
 
 	const reset = $(async () => {
-		const { resetPassword } = await execute<{
-			resetPassword: {
-				token: string;
-				password: string;
-				__typename: string;
-				message: string;
-			};
-		}>(resetPasswordMutation(location.url.href.split('=')[1], password.value));
+		const resetPassword = await resetPasswordMutation(
+			location.url.href.split('=')[1],
+			password.value
+		);
 
 		resetPassword.__typename !== 'CurrentUser'
 			? (error.value = resetPassword.message)

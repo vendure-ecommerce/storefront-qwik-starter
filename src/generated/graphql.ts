@@ -3218,6 +3218,122 @@ export type Zone = Node & {
 	updatedAt: Scalars['DateTime'];
 };
 
+export type LoginMutationVariables = Exact<{
+	email: Scalars['String'];
+	password: Scalars['String'];
+	rememberMe?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+export type LoginMutation = {
+	__typename?: 'Mutation';
+	login:
+		| { __typename: 'CurrentUser'; id: string; identifier: string }
+		| { __typename: 'InvalidCredentialsError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'NativeAuthStrategyError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'NotVerifiedError'; errorCode: ErrorCode; message: string };
+};
+
+export type LogoutMutationVariables = Exact<{ [key: string]: never }>;
+
+export type LogoutMutation = {
+	__typename?: 'Mutation';
+	logout: { __typename?: 'Success'; success: boolean };
+};
+
+export type RegisterCustomerAccountMutationVariables = Exact<{
+	input: RegisterCustomerInput;
+}>;
+
+export type RegisterCustomerAccountMutation = {
+	__typename?: 'Mutation';
+	registerCustomerAccount:
+		| { __typename: 'MissingPasswordError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'NativeAuthStrategyError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'PasswordValidationError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'Success'; success: boolean };
+};
+
+export type VerifyCustomerAccountMutationVariables = Exact<{
+	token: Scalars['String'];
+	password?: InputMaybe<Scalars['String']>;
+}>;
+
+export type VerifyCustomerAccountMutation = {
+	__typename?: 'Mutation';
+	verifyCustomerAccount:
+		| { __typename: 'CurrentUser'; id: string; identifier: string }
+		| { __typename: 'MissingPasswordError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'NativeAuthStrategyError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'PasswordAlreadySetError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'PasswordValidationError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'VerificationTokenExpiredError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'VerificationTokenInvalidError'; errorCode: ErrorCode; message: string };
+};
+
+export type UpdateCustomerMutationVariables = Exact<{
+	input: UpdateCustomerInput;
+}>;
+
+export type UpdateCustomerMutation = {
+	__typename?: 'Mutation';
+	updateCustomer: { __typename: 'Customer' };
+};
+
+export type RequestUpdateCustomerEmailAddressMutationVariables = Exact<{
+	password: Scalars['String'];
+	newEmailAddress: Scalars['String'];
+}>;
+
+export type RequestUpdateCustomerEmailAddressMutation = {
+	__typename?: 'Mutation';
+	requestUpdateCustomerEmailAddress:
+		| { __typename: 'EmailAddressConflictError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'InvalidCredentialsError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'NativeAuthStrategyError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'Success' };
+};
+
+export type UpdateCustomerEmailAddressMutationVariables = Exact<{
+	token: Scalars['String'];
+}>;
+
+export type UpdateCustomerEmailAddressMutation = {
+	__typename?: 'Mutation';
+	updateCustomerEmailAddress:
+		| { __typename: 'IdentifierChangeTokenExpiredError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'IdentifierChangeTokenInvalidError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'NativeAuthStrategyError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'Success' };
+};
+
+export type ResetPasswordMutationVariables = Exact<{
+	token: Scalars['String'];
+	password: Scalars['String'];
+}>;
+
+export type ResetPasswordMutation = {
+	__typename?: 'Mutation';
+	resetPassword:
+		| { __typename: 'CurrentUser'; id: string; identifier: string }
+		| { __typename: 'NativeAuthStrategyError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'NotVerifiedError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'PasswordResetTokenExpiredError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'PasswordResetTokenInvalidError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'PasswordValidationError'; errorCode: ErrorCode; message: string };
+};
+
+export type RequestPasswordResetMutationVariables = Exact<{
+	emailAddress: Scalars['String'];
+}>;
+
+export type RequestPasswordResetMutation = {
+	__typename?: 'Mutation';
+	requestPasswordReset?:
+		| { __typename: 'NativeAuthStrategyError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'Success'; success: boolean }
+		| null;
+};
+
 export type CollectionsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type CollectionsQuery = {
@@ -3460,6 +3576,115 @@ export const ListedProductFragmentDoc = gql`
 		}
 	}
 `;
+export const LoginDocument = gql`
+	mutation login($email: String!, $password: String!, $rememberMe: Boolean) {
+		login(username: $email, password: $password, rememberMe: $rememberMe) {
+			__typename
+			... on CurrentUser {
+				id
+				identifier
+			}
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+`;
+export const LogoutDocument = gql`
+	mutation logout {
+		logout {
+			success
+		}
+	}
+`;
+export const RegisterCustomerAccountDocument = gql`
+	mutation registerCustomerAccount($input: RegisterCustomerInput!) {
+		registerCustomerAccount(input: $input) {
+			__typename
+			... on Success {
+				success
+			}
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+`;
+export const VerifyCustomerAccountDocument = gql`
+	mutation verifyCustomerAccount($token: String!, $password: String) {
+		verifyCustomerAccount(token: $token, password: $password) {
+			__typename
+			... on CurrentUser {
+				id
+				identifier
+			}
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+`;
+export const UpdateCustomerDocument = gql`
+	mutation updateCustomer($input: UpdateCustomerInput!) {
+		updateCustomer(input: $input) {
+			__typename
+		}
+	}
+`;
+export const RequestUpdateCustomerEmailAddressDocument = gql`
+	mutation requestUpdateCustomerEmailAddress($password: String!, $newEmailAddress: String!) {
+		requestUpdateCustomerEmailAddress(password: $password, newEmailAddress: $newEmailAddress) {
+			__typename
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+`;
+export const UpdateCustomerEmailAddressDocument = gql`
+	mutation updateCustomerEmailAddress($token: String!) {
+		updateCustomerEmailAddress(token: $token) {
+			__typename
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+`;
+export const ResetPasswordDocument = gql`
+	mutation resetPassword($token: String!, $password: String!) {
+		resetPassword(token: $token, password: $password) {
+			__typename
+			... on CurrentUser {
+				id
+				identifier
+			}
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+`;
+export const RequestPasswordResetDocument = gql`
+	mutation requestPasswordReset($emailAddress: String!) {
+		requestPasswordReset(emailAddress: $emailAddress) {
+			__typename
+			... on Success {
+				success
+			}
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+`;
 export const CollectionsDocument = gql`
 	query collections {
 		collections {
@@ -3538,6 +3763,96 @@ export type Requester<C = {}, E = unknown> = <R, V>(
 ) => Promise<R> | AsyncIterable<R>;
 export function getSdk<C, E>(requester: Requester<C, E>) {
 	return {
+		login(variables: LoginMutationVariables, options?: C): Promise<LoginMutation> {
+			return requester<LoginMutation, LoginMutationVariables>(
+				LoginDocument,
+				variables,
+				options
+			) as Promise<LoginMutation>;
+		},
+		logout(variables?: LogoutMutationVariables, options?: C): Promise<LogoutMutation> {
+			return requester<LogoutMutation, LogoutMutationVariables>(
+				LogoutDocument,
+				variables,
+				options
+			) as Promise<LogoutMutation>;
+		},
+		registerCustomerAccount(
+			variables: RegisterCustomerAccountMutationVariables,
+			options?: C
+		): Promise<RegisterCustomerAccountMutation> {
+			return requester<RegisterCustomerAccountMutation, RegisterCustomerAccountMutationVariables>(
+				RegisterCustomerAccountDocument,
+				variables,
+				options
+			) as Promise<RegisterCustomerAccountMutation>;
+		},
+		verifyCustomerAccount(
+			variables: VerifyCustomerAccountMutationVariables,
+			options?: C
+		): Promise<VerifyCustomerAccountMutation> {
+			return requester<VerifyCustomerAccountMutation, VerifyCustomerAccountMutationVariables>(
+				VerifyCustomerAccountDocument,
+				variables,
+				options
+			) as Promise<VerifyCustomerAccountMutation>;
+		},
+		updateCustomer(
+			variables: UpdateCustomerMutationVariables,
+			options?: C
+		): Promise<UpdateCustomerMutation> {
+			return requester<UpdateCustomerMutation, UpdateCustomerMutationVariables>(
+				UpdateCustomerDocument,
+				variables,
+				options
+			) as Promise<UpdateCustomerMutation>;
+		},
+		requestUpdateCustomerEmailAddress(
+			variables: RequestUpdateCustomerEmailAddressMutationVariables,
+			options?: C
+		): Promise<RequestUpdateCustomerEmailAddressMutation> {
+			return requester<
+				RequestUpdateCustomerEmailAddressMutation,
+				RequestUpdateCustomerEmailAddressMutationVariables
+			>(
+				RequestUpdateCustomerEmailAddressDocument,
+				variables,
+				options
+			) as Promise<RequestUpdateCustomerEmailAddressMutation>;
+		},
+		updateCustomerEmailAddress(
+			variables: UpdateCustomerEmailAddressMutationVariables,
+			options?: C
+		): Promise<UpdateCustomerEmailAddressMutation> {
+			return requester<
+				UpdateCustomerEmailAddressMutation,
+				UpdateCustomerEmailAddressMutationVariables
+			>(
+				UpdateCustomerEmailAddressDocument,
+				variables,
+				options
+			) as Promise<UpdateCustomerEmailAddressMutation>;
+		},
+		resetPassword(
+			variables: ResetPasswordMutationVariables,
+			options?: C
+		): Promise<ResetPasswordMutation> {
+			return requester<ResetPasswordMutation, ResetPasswordMutationVariables>(
+				ResetPasswordDocument,
+				variables,
+				options
+			) as Promise<ResetPasswordMutation>;
+		},
+		requestPasswordReset(
+			variables: RequestPasswordResetMutationVariables,
+			options?: C
+		): Promise<RequestPasswordResetMutation> {
+			return requester<RequestPasswordResetMutation, RequestPasswordResetMutationVariables>(
+				RequestPasswordResetDocument,
+				variables,
+				options
+			) as Promise<RequestPasswordResetMutation>;
+		},
 		collections(variables?: CollectionsQueryVariables, options?: C): Promise<CollectionsQuery> {
 			return requester<CollectionsQuery, CollectionsQueryVariables>(
 				CollectionsDocument,
