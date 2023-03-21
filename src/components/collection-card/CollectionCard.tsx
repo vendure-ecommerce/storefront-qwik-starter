@@ -1,7 +1,8 @@
 import { component$ } from '@builder.io/qwik';
+import { Link } from '@builder.io/qwik-city';
 import { IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
-import { Image } from '../image/Image';
 import { Collection } from '~/generated/graphql';
+import { Image } from '../image/Image';
 
 interface IProps {
 	collection: Collection;
@@ -9,7 +10,7 @@ interface IProps {
 
 export default component$(({ collection }: IProps) => {
 	return (
-		<a href={'/collections/' + collection.slug} key={collection.id}>
+		<Link href={`/collections/${collection.slug}`} key={collection.id}>
 			<div class="max-w-[300px] relative rounded-lg overflow-hidden hover:opacity-75 xl:w-auto mx-auto">
 				<div class="w-full h-full object-center object-cover">
 					<Image
@@ -26,6 +27,6 @@ export default component$(({ collection }: IProps) => {
 					{collection.name}
 				</span>
 			</div>
-		</a>
+		</Link>
 	);
 });
