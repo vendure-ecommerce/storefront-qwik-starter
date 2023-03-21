@@ -1,10 +1,20 @@
-import { $, QwikKeyboardEvent, component$, useStore, useVisibleTask$ } from '@builder.io/qwik';
+import {
+	$,
+	QwikKeyboardEvent,
+	component$,
+	useStore,
+	useTask$,
+	useVisibleTask$,
+} from '@builder.io/qwik';
 import { routeLoader$, useLocation } from '@builder.io/qwik-city';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
+import { SearchResponse } from '~/generated/graphql';
+import { getCollectionBySlug } from '~/providers/collections/collections';
+import { searchQueryWithCollectionSlug, searchQueryWithTerm } from '~/providers/products/products';
 import { FacetWithValues } from '~/types';
 import {
 	changeUrlParamsWithoutRefresh,
@@ -13,9 +23,6 @@ import {
 	groupFacetValues,
 	scrollToTop,
 } from '~/utils';
-import { getCollectionBySlug } from '~/providers/collections/collections';
-import { searchQueryWithCollectionSlug, searchQueryWithTerm } from '~/providers/products/products';
-import { SearchResponse } from '~/generated/graphql';
 
 export const useCollectionLoader = routeLoader$(async ({ params }) => {
 	return await getCollectionBySlug(params.slug);
@@ -51,6 +58,16 @@ export default component$(() => {
 
 	useVisibleTask$(async () => {
 		scrollToTop();
+	});
+
+	useTask$(async ({ track }) => {
+		track(() => collectionSignal.value.slug);
+		params.slug = cleanUpParams(p).slug;
+		state.facetValueIds = url.searchParams.get('f')?.split('-') || [];
+		state.search = state.facetValueIds.length
+			? await searchQueryWithTerm(params.slug, '', state.facetValueIds)
+			: await searchQueryWithCollectionSlug(params.slug);
+		state.facedValues = groupFacetValues(state.search as SearchResponse, state.facetValueIds);
 	});
 
 	const onFilterChange = $(async (id: string) => {
