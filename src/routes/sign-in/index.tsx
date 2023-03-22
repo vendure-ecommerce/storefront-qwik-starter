@@ -1,9 +1,7 @@
 import { $, component$, useSignal } from '@builder.io/qwik';
 import { Link, useNavigate } from '@builder.io/qwik-city';
 import XCircleIcon from '~/components/icons/XCircleIcon';
-import { loginMutation } from '~/graphql/mutations';
-import { Login } from '~/types';
-import { execute } from '~/utils/api';
+import { loginMutation } from '~/providers/account/account';
 
 export default component$(() => {
 	const navigate = useNavigate();
@@ -13,9 +11,7 @@ export default component$(() => {
 	const error = useSignal('');
 
 	const login = $(async () => {
-		const { login } = await execute<{ login: Login }>(
-			loginMutation(email.value, password.value, rememberMe.value)
-		);
+		const { login } = await loginMutation(email.value, password.value, rememberMe.value);
 		if (login.__typename === 'CurrentUser') {
 			navigate('/account');
 		} else {
