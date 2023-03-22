@@ -3,6 +3,8 @@ import { useLocation } from '@builder.io/qwik-city';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
+import { SearchResponse } from '~/generated/graphql';
+import { searchQueryWithTerm } from '~/providers/products/products';
 import { FacetWithValues } from '~/types';
 import {
 	changeUrlParamsWithoutRefresh,
@@ -10,8 +12,6 @@ import {
 	groupFacetValues,
 	scrollToTop,
 } from '~/utils';
-import { searchQueryWithTerm } from '~/providers/products/products';
-import { SearchResponse } from '~/generated/graphql';
 
 export default component$(() => {
 	const state = useStore<{
@@ -56,6 +56,15 @@ export default component$(() => {
 		state.search = await executeQuery(term, state.facetValueIds);
 	});
 
+	const onOpenCloseFilter = $((id: string) => {
+		state.facedValues = state.facedValues.map((f) => {
+			if (f.id === id) {
+				f.open = !f.open;
+			}
+			return f;
+		});
+	});
+
 	return (
 		<div
 			class="max-w-6xl mx-auto px-4 py-10"
@@ -87,6 +96,7 @@ export default component$(() => {
 							state.showMenu = !state.showMenu;
 						}}
 						onFilterChange$={onFilterChange}
+						onOpenCloseFilter$={onOpenCloseFilter}
 					/>
 				)}
 				<div class="sm:col-span-5 lg:col-span-4">

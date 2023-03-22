@@ -20,7 +20,7 @@ An e-commerce storefront for [Vendure](https://www.vendure.io) built with [Qwik]
 - Login ✅
 - Account creation ✅
 - Customer account management ✅
-- SPA-mode navigation
+- SPA-mode navigation ✅
 - Set up GraphQL code generation
 
 **Contributions welcome!**

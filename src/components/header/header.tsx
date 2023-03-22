@@ -1,7 +1,6 @@
-import { $, component$, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { $, component$, useContext, useVisibleTask$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
-import { logoutMutation } from '~/graphql/mutations';
 import { getActiveCustomerQuery } from '~/graphql/queries';
 import { ActiveCustomer } from '~/types';
 import { execute } from '~/utils/api';
@@ -10,10 +9,10 @@ import LogoutIcon from '../icons/LogoutIcon';
 import ShoppingBagIcon from '../icons/ShoppingBagIcon';
 import UserIcon from '../icons/UserIcon';
 import SearchBar from '../search-bar/SearchBar';
+import { logoutMutation } from '~/providers/account/account';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
-	const canBeVisible = useSignal(false);
 	const collections = useContext(APP_STATE).collections.filter(
 		(item) => item.parent?.name === '__root_collection__' && !!item.featuredAsset
 	);
@@ -30,16 +29,12 @@ export default component$(() => {
 			);
 			if (activeCustomer) {
 				appState.customer = activeCustomer;
-				canBeVisible.value = true;
-				// temp fix to prevent sign in / my account flashing between route changes
-			} else {
-				canBeVisible.value = true;
 			}
 		}
 	});
 
 	const logout = $(async () => {
-		await execute(logoutMutation());
+		await logoutMutation();
 		// force hard refresh
 		window.location.href = '/';
 	});
@@ -64,31 +59,25 @@ export default component$(() => {
 									</a>
 								</p>
 							</div>
-							{!!appState.customer && canBeVisible.value ? (
-								<div class="flex">
-									<a
-										href={
-											appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? '/account' : '/sign-in'
-										}
-										class="flex items-center space-x-1 pb-1 pr-2"
-									>
-										<UserIcon />
-										<span class="mt-1 text-gray-700">
-											{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? 'My Account' : 'Sign In'}
-										</span>
-									</a>
-									{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID && (
-										<button onClick$={logout} class="text-gray-700">
-											<div class="flex items-center cursor-pointer">
-												<span class="mr-2">Logout</span>
-												<LogoutIcon />
-											</div>
-										</button>
-									)}
-								</div>
-							) : (
-								<></>
-							)}
+							<div class="flex">
+								<Link
+									href={appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? '/account' : '/sign-in'}
+									class="flex items-center space-x-1 pb-1 pr-2"
+								>
+									<UserIcon />
+									<span class="mt-1 text-gray-700">
+										{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? 'My Account' : 'Sign In'}
+									</span>
+								</Link>
+								{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID && (
+									<button onClick$={logout} class="text-gray-700">
+										<div class="flex items-center cursor-pointer">
+											<span class="mr-2">Logout</span>
+											<LogoutIcon />
+										</div>
+									</button>
+								)}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -100,13 +89,13 @@ export default component$(() => {
 					</h1>
 					<div class="flex space-x-4 sm:block">
 						{collections.map((collection) => (
-							<a
+							<Link
 								class="text-sm md:text-base text-gray-200 hover:text-white"
-								href={'/collections/' + collection.slug}
+								href={`/collections/${collection.slug}`}
 								key={collection.id}
 							>
 								{collection.name}
-							</a>
+							</Link>
 						))}
 					</div>
 					<div class="flex-1 hidden sm:block md:pr-8">

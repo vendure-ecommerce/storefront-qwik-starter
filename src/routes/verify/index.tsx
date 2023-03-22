@@ -1,8 +1,7 @@
 import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import XCircleIcon from '~/components/icons/XCircleIcon';
-import { verifyCustomerAccountMutation } from '~/graphql/mutations';
-import { execute } from '~/utils/api';
+import { verifyCustomerAccountMutation } from '~/providers/account/account';
 
 export default component$(() => {
 	const error = useSignal('');
@@ -10,13 +9,9 @@ export default component$(() => {
 	const navigate = useNavigate();
 
 	useVisibleTask$(async () => {
-		const { verifyCustomerAccount } = await execute<{
-			verifyCustomerAccount: {
-				token: string;
-				__typename: string;
-				message: string;
-			};
-		}>(verifyCustomerAccountMutation(location.url.href.split('=')[1]));
+		const { verifyCustomerAccount } = await verifyCustomerAccountMutation(
+			location.url.href.split('=')[1]
+		);
 
 		verifyCustomerAccount.__typename !== 'CurrentUser'
 			? (error.value = verifyCustomerAccount.message)

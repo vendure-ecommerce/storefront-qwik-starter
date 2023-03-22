@@ -17,14 +17,14 @@ import XMarkIcon from '~/components/icons/XMarkIcon';
 import { Image } from '~/components/image/Image';
 import { Modal } from '~/components/modal/Modal';
 import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
-import {
-	requestUpdateCustomerEmailAddressMutation,
-	updateCustomerMutation,
-} from '~/graphql/mutations';
 import { getActiveCustomerQuery } from '~/graphql/queries';
 import { ActiveCustomer } from '~/types';
 import { scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
+import {
+	requestUpdateCustomerEmailAddressMutation,
+	updateCustomerMutation,
+} from '~/providers/account/account';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
@@ -47,9 +47,7 @@ export default component$(() => {
 	});
 
 	const updateCustomer = $(async (): Promise<void> => {
-		await execute<{
-			updateCustomer: ActiveCustomer;
-		}>(updateCustomerMutation(appState.customer));
+		await updateCustomerMutation(appState.customer);
 
 		appState.customer.emailAddress !== newEmail.value
 			? (showModal.value = true)
@@ -57,14 +55,10 @@ export default component$(() => {
 	});
 
 	const updateEmail = $(async (password: string, newEmail: string) => {
-		const { requestUpdateCustomerEmailAddress } = await execute<{
-			requestUpdateCustomerEmailAddress: {
-				password: string;
-				newEmail: string;
-				__typename: string;
-				message?: string;
-			};
-		}>(requestUpdateCustomerEmailAddressMutation(password, newEmail));
+		const { requestUpdateCustomerEmailAddress } = await requestUpdateCustomerEmailAddressMutation(
+			password,
+			newEmail
+		);
 		if (requestUpdateCustomerEmailAddress.__typename === 'InvalidCredentialsError') {
 			errorMessage.value = requestUpdateCustomerEmailAddress.message || '';
 		} else {

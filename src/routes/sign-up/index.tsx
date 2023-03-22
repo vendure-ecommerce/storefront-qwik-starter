@@ -1,9 +1,7 @@
 import { $, component$, useSignal } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import XCircleIcon from '~/components/icons/XCircleIcon';
-import { registerCustomerAccountMutation } from '~/graphql/mutations';
-import { RegisterCustomer } from '~/types';
-import { execute } from '~/utils/api';
+import { registerCustomerAccountMutation } from '~/providers/account/account';
 
 export default component$(() => {
 	const email = useSignal('');
@@ -28,19 +26,19 @@ export default component$(() => {
 			error.value = '';
 			successSignal.value = false;
 
-			const { registerCustomerAccount } = await execute<{
-				registerCustomerAccount: RegisterCustomer;
-			}>(
-				registerCustomerAccountMutation({
+			const { registerCustomerAccount } = await registerCustomerAccountMutation({
+				input: {
 					emailAddress: email.value,
 					firstName: firstName.value,
 					lastName: lastName.value,
 					password: password.value,
-				})
-			);
-			registerCustomerAccount.success
-				? (successSignal.value = true)
-				: (error.value = registerCustomerAccount.message as string);
+				},
+			});
+			if (registerCustomerAccount.__typename === 'Success') {
+				successSignal.value = true;
+			} else {
+				error.value = registerCustomerAccount.message;
+			}
 		}
 	});
 

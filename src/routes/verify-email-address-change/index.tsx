@@ -1,8 +1,7 @@
 import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import XCircleIcon from '~/components/icons/XCircleIcon';
-import { updateCustomerEmailAddressMutation } from '~/graphql/mutations';
-import { execute } from '~/utils/api';
+import { updateCustomerEmailAddressMutation } from '~/providers/account/account';
 
 export default component$(() => {
 	const error = useSignal('');
@@ -10,15 +9,11 @@ export default component$(() => {
 	const navigate = useNavigate();
 
 	useVisibleTask$(async () => {
-		const { updateCustomerEmailAddress } = await execute<{
-			updateCustomerEmailAddress: {
-				token: string;
-				success: boolean;
-				message: string;
-			};
-		}>(updateCustomerEmailAddressMutation(location.url.href.split('=')[1]));
+		const updateCustomerEmailAddress = await updateCustomerEmailAddressMutation(
+			location.url.href.split('=')[1]
+		);
 
-		updateCustomerEmailAddress.success
+		updateCustomerEmailAddress.__typename === 'Success'
 			? navigate('/account')
 			: (error.value = updateCustomerEmailAddress.message);
 	});
