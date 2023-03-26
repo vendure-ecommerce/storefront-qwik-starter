@@ -10,13 +10,15 @@ import {
 import { routeLoader$ } from '@builder.io/qwik-city';
 import { ImageTransformerProps, useImageProvider } from '~/components/image/Image';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, IMAGE_RESOLUTIONS } from '~/constants';
-import { getActiveOrderQuery, getAvailableCountriesQuery } from '~/graphql/queries';
-import { ActiveCustomer, ActiveOrder, AppState, Country } from '~/types';
+import { getAvailableCountriesQuery } from '~/graphql/queries';
+import { ActiveCustomer, AppState, Country } from '~/types';
 import { scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
 import { getCollections } from '~/providers/collections/collections';
+import { Order } from '~/generated/graphql';
+import { getActiveOrderQuery } from '~/providers/orders/order';
 
 export const useCollectionsLoader = routeLoader$(async () => {
 	return await getCollections();
@@ -46,7 +48,7 @@ export default component$(() => {
 	const state = useStore<AppState>({
 		showCart: false,
 		customer: { id: CUSTOMER_NOT_DEFINED_ID, firstName: '', lastName: '' } as ActiveCustomer,
-		activeOrder: {} as ActiveOrder,
+		activeOrder: {} as Order,
 		collections: collectionsSignal.value || [],
 		availableCountries: availableCountriesSignal.value || [],
 		shippingAddress: {
@@ -68,8 +70,7 @@ export default component$(() => {
 
 	useVisibleTask$(async () => {
 		scrollToTop();
-		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
-		state.activeOrder = activeOrder;
+		state.activeOrder = await getActiveOrderQuery();
 	});
 
 	useOn(

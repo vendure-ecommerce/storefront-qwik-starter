@@ -7,7 +7,6 @@ import Payment from '~/components/payment/Payment';
 import Shipping from '~/components/shipping/Shipping';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import {
-	addPaymentToOrderMutation,
 	setCustomerForOrderMutation,
 	setOrderShippingAddressMutation,
 	transitionOrderToStateMutation,
@@ -15,6 +14,7 @@ import {
 import { ActiveCustomer, ActiveOrder, ShippingAddress } from '~/types';
 import { isEnvVariableEnabled, scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
+import { addPaymentToOrderMutation } from '~/providers/checkout/checkout';
 
 type Step = 'SHIPPING' | 'PAYMENT' | 'CONFIRMATION';
 
@@ -38,9 +38,7 @@ export default component$(() => {
 
 	const confirmPayment = $(async () => {
 		await execute(transitionOrderToStateMutation());
-		const { addPaymentToOrder: activeOrder } = await execute<{
-			addPaymentToOrder: ActiveOrder;
-		}>(addPaymentToOrderMutation());
+		const activeOrder = await addPaymentToOrderMutation();
 		appState.activeOrder = activeOrder;
 		scrollToTop();
 		navigate(`/checkout/confirmation/${activeOrder.code}`);

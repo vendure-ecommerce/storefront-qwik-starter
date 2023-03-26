@@ -1,11 +1,11 @@
 import { component$, useContext, useStore, useTask$ } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
-import { setOrderShippingMethodMutation } from '~/graphql/mutations';
 import { getEligibleShippingMethodsQuery } from '~/graphql/queries';
-import { ActiveOrder, EligibleShippingMethods } from '~/types';
+import { EligibleShippingMethods } from '~/types';
 import { formatPrice } from '~/utils';
 import { execute } from '~/utils/api';
 import CheckCircleIcon from '../icons/CheckCircleIcon';
+import { setOrderShippingMethodMutation } from '~/providers/orders/order';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
@@ -24,10 +24,7 @@ export default component$(() => {
 
 	useTask$(async (tracker) => {
 		const selected = tracker.track(() => state.selected);
-		const { setOrderShippingMethod: activeOrder } = await execute<{
-			setOrderShippingMethod: ActiveOrder;
-		}>(setOrderShippingMethodMutation(selected.toString()));
-		appState.activeOrder = activeOrder;
+		appState.activeOrder = await setOrderShippingMethodMutation(selected.toString());
 	});
 
 	return (
