@@ -626,6 +626,15 @@ export const transitionOrderToStateMutation = (state = 'ArrangingPayment') => ({
 `,
 });
 
+export const createStripePaymentIntentMutation = () => ({
+	vatiables: {},
+	query: `
+    mutation createStripePaymentIntent {
+        createStripePaymentIntent
+    }
+`,
+});
+
 export const addPaymentToOrderMutation = (
 	input = { method: 'standard-payment', metadata: {} }
 ) => ({

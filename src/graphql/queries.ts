@@ -238,6 +238,19 @@ export const getActiveOrderQuery = () => ({
 `,
 });
 
+export const getEligiblePaymentMethodsQuery = () => ({
+	vatiables: {},
+	query: `
+    query eligiblePaymentMethods {
+        eligiblePaymentMethods {
+          name
+          code
+          isEligible
+        }
+    }
+`,
+});
+
 // customer
 
 export const getActiveCustomerQuery = () => ({
