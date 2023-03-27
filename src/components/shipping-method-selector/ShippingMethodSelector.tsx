@@ -36,6 +36,7 @@ export default component$(() => {
 			<div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
 				{state.methods.map((method, index) => (
 					<div
+						key={index}
 						class={`relative bg-white border rounded-lg shadow-sm p-4 flex cursor-pointer focus:outline-none`}
 						onClick$={() => (state.selected = index + 1)}
 					>
