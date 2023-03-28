@@ -214,6 +214,47 @@ export default component$<IProps>(({ shippingAddress }) => {
 							/>
 						</div>
 					</div>
+					<div class="sm:col-span-1">
+						<label
+							html-for="defaultShippingAddress"
+							class="block text-sm font-medium text-gray-700"
+						>
+							Default Shipping Address
+						</label>
+						<div class="mt-1">
+							<input
+								type="checkbox"
+								name="defaultShippingAddress"
+								id="defaultShippingAddress"
+								checked={shippingAddress.defaultShippingAddress}
+								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+									appState.shippingAddress = {
+										...appState.shippingAddress,
+										defaultShippingAddress: e.target.checked,
+									};
+								}}
+							/>
+						</div>
+					</div>
+					<div class="sm:col-span-1">
+						<label html-for="defaultBillingAddress" class="block text-sm font-medium text-gray-700">
+							Default Billing Address
+						</label>
+						<div class="mt-1">
+							<input
+								type="checkbox"
+								name="defaultBillingAddress"
+								id="defaultBillingAddress"
+								checked={shippingAddress.defaultBillingAddress}
+								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+									appState.shippingAddress = {
+										...appState.shippingAddress,
+										defaultBillingAddress: e.target.checked,
+									};
+								}}
+							/>
+						</div>
+					</div>
 				</div>
 			)}
 		</div>
