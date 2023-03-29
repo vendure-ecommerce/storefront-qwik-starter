@@ -22,8 +22,8 @@
 		"generate": "graphql-codegen --config codegen.yml"
 	},
 	"devDependencies": {
-		"@builder.io/qwik": "0.24.0",
-		"@builder.io/qwik-city": "0.7.0",
+		"@builder.io/qwik": "0.21.0",
+		"@builder.io/qwik-city": "0.5.3",
 		"@graphql-codegen/cli": "^3.2.2",
 		"@graphql-codegen/introspection": "^3.0.1",
 		"@graphql-codegen/typescript": "^3.0.2",
