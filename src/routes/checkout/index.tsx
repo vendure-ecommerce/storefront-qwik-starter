@@ -59,7 +59,7 @@ export default component$(() => {
 						<nav class="hidden sm:block pb-8 mb-8 border-b">
 							<ol class="flex space-x-4 justify-center">
 								{steps.map((step, index) => (
-									<>
+									<div key={index}>
 										{(isEnvVariableEnabled('VITE_SHOW_PAYMENT_STEP') ||
 											step.state !== 'PAYMENT') && (
 											<li key={step.name} class="flex items-center">
@@ -69,7 +69,7 @@ export default component$(() => {
 												{index !== steps.length - 1 ? <ChevronRightIcon /> : null}
 											</li>
 										)}
-									</>
+									</div>
 								))}
 							</ol>
 						</nav>

@@ -227,6 +227,12 @@ export type EligibleShippingMethods = {
 	priceWithTax: number;
 };
 
+export type EligiblePaymentMethods = {
+	name: string;
+	code: string;
+	isEligible: boolean;
+};
+
 export type Country = {
 	id: string;
 	code: string;

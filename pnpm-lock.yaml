@@ -8,6 +8,7 @@ specifiers:
   '@graphql-codegen/typescript': ^3.0.2
   '@graphql-codegen/typescript-generic-sdk': ^3.1.0
   '@graphql-codegen/typescript-operations': ^3.0.2
+  '@stripe/stripe-js': ^1.52.0
   '@tailwindcss/forms': ^0.5.3
   '@types/eslint': 8.21.3
   '@types/node': latest
@@ -34,6 +35,7 @@ specifiers:
 
 dependencies:
   '@graphql-codegen/typescript-generic-sdk': 3.1.0_sy4knu3obj4ys7pjcqbyfxmqle
+  '@stripe/stripe-js': 1.52.0
   graphql: 16.6.0
   graphql-tag: 2.12.6_graphql@16.6.0
   undici: 5.21.0
@@ -2562,6 +2564,13 @@ packages:
         integrity: sha512-AW8PKd6iX3vAZ0vA43nOUOnbq/X5ihgU+mSXXqunMkeQADGiqw/PY0JNeYtD5sr0PAy51YPgAPbDoeapv9r8WA==,
       }
     dev: true
+
+  /@stripe/stripe-js/1.52.0:
+    resolution:
+      {
+        integrity: sha512-Ja2VlaTf3kM5tN4Y0sC8T3ibZAnfGUU/QzMAlk/G+Adz2fF1ycTabtSkdSuVP4/adXox8NkPPV4Xndx/EP4fMg==,
+      }
+    dev: false
 
   /@tailwindcss/forms/0.5.3_tailwindcss@3.2.7:
     resolution:
