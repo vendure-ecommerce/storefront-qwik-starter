@@ -1,5 +1,12 @@
-import { $, QwikKeyboardEvent, component$, useStore, useVisibleTask$ } from '@builder.io/qwik';
-import { useLocation } from '@builder.io/qwik-city';
+import {
+	$,
+	QwikKeyboardEvent,
+	component$,
+	useStore,
+	useTask$,
+	useVisibleTask$,
+} from '@builder.io/qwik';
+import { routeLoader$, useLocation } from '@builder.io/qwik-city';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
@@ -13,7 +20,24 @@ import {
 	scrollToTop,
 } from '~/utils';
 
+export const executeQuery = $(
+	async (term: string, activeFacetValueIds: string[]) =>
+		await searchQueryWithTerm('', term, activeFacetValueIds)
+);
+
+export const useSearchLoader = routeLoader$(async ({ query }) => {
+	const term = query.get('q') || '';
+	const activeFacetValueIds: string[] = query.get('f')?.split('-') || [];
+	const search = await executeQuery(term, activeFacetValueIds);
+	return { search, query };
+});
+
 export default component$(() => {
+	const { url } = useLocation();
+	const searchLoader = useSearchLoader();
+
+	const term = url.searchParams.get('q') || '';
+
 	const state = useStore<{
 		showMenu: boolean;
 		search: SearchResponse;
@@ -26,17 +50,16 @@ export default component$(() => {
 		facetValueIds: [],
 	});
 
-	const { url } = useLocation();
-	const term = url.searchParams.get('q') || '';
-	const activeFacetValueIds: string[] = url.searchParams.get('f')?.split('-') || [];
-
-	const executeQuery = $(
-		async (term: string, activeFacetValueIds: string[]) =>
-			await searchQueryWithTerm('', term, activeFacetValueIds)
-	);
-
 	useVisibleTask$(async () => {
 		scrollToTop();
+	});
+
+	useTask$(async ({ track }) => {
+		track(() => searchLoader.value.query);
+
+		const term = searchLoader.value.query.get('q') || '';
+		const activeFacetValueIds: string[] = searchLoader.value.query.get('f')?.split('-') || [];
+
 		state.search = await executeQuery(term, activeFacetValueIds);
 		state.facedValues = groupFacetValues(state.search, activeFacetValueIds);
 		state.facetValueIds = activeFacetValueIds;

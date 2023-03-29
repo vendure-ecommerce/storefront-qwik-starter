@@ -60,12 +60,14 @@ export const enableDisableFacetValues = (_facedValues: FacetWithValues[], ids: s
 	return { facedValues, facetValueIds };
 };
 
-export const changeUrlParamsWithoutRefresh = (term: string, facetValueIds: string[]) =>
-	window.history.pushState(
+export const changeUrlParamsWithoutRefresh = (term: string, facetValueIds: string[]) => {
+	const f = facetValueIds.join('-');
+	return window.history.pushState(
 		'',
 		'',
-		`${window.location.origin}${window.location.pathname}?q=${term}&f=${facetValueIds.join('-')}`
+		`${window.location.origin}${window.location.pathname}?q=${term}${f ? `&f=${f}` : ''}`
 	);
+};
 
 export const scrollToTop = () => {
 	if (isBrowser) {
