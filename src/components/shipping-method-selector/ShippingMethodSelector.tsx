@@ -21,6 +21,7 @@ export default component$(() => {
 			eligibleShippingMethods: EligibleShippingMethods[];
 		}>(getEligibleShippingMethodsQuery());
 		state.methods = eligibleShippingMethods;
+		state.selectedMethodId = state.methods[0].id;
 	});
 
 	useTask$(async (tracker) => {
