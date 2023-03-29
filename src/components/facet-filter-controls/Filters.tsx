@@ -43,10 +43,10 @@ export default component$<{
 								<div class="pt-6">
 									<div class="space-y-4">
 										{facet.values.map((value) => (
-											<div key={value.id} class="flex items-center">
+											<div key={value.id} class="flex items-center cursor-pointer">
 												<label class="text-sm text-gray-600">
 													<input
-														class="h-4 w-4 border-gray-300 rounded text-primary-600 focus:ring-primary-500"
+														class="h-4 w-4 border-gray-300 rounded text-primary-600 focus:ring-primary-500 cursor-pointer"
 														type="checkbox"
 														checked={value.selected}
 														onClick$={() => onFilterChange$(value.id)}
@@ -102,9 +102,9 @@ export default component$<{
 												<div class="pt-6">
 													<div class="space-y-6">
 														{facet.values.map((value) => (
-															<div key={value.id} class="flex items-center">
+															<div key={value.id} class="flex items-center cursor-pointer">
 																<input
-																	class="h-4 w-4 border-gray-300 rounded text-primary-600 focus:ring-primary-500"
+																	class="h-4 w-4 border-gray-300 rounded text-primary-600 focus:ring-primary-500 cursor-pointer"
 																	type="checkbox"
 																	checked={value.selected}
 																	onClick$={() => onFilterChange$(value.id)}
