@@ -58,6 +58,8 @@ export default component$(() => {
 
 	const useSubmitFormAction = globalAction$(
 		async (data, { cookie, redirect, url }) => {
+			data.defaultShippingAddress = data.defaultShippingAddress ? true : false;
+			data.defaultBillingAddress = data.defaultBillingAddress ? true : false;
 			const id = url.pathname.split('/').slice(-2, -1)[0];
 			const authToken = cookie.get(AUTH_TOKEN)?.value;
 			appState.shippingAddress = { ...appState.shippingAddress, ...data };
@@ -75,6 +77,8 @@ export default component$(() => {
 			province: z.string().nonempty(),
 			postalCode: z.string().nonempty(),
 			phoneNumber: z.string(),
+			defaultShippingAddress: z.coerce.boolean().optional(),
+			defaultBillingAddress: z.coerce.boolean().optional(),
 		})
 	);
 	const action = useSubmitFormAction();
@@ -95,8 +99,8 @@ export default component$(() => {
 										We ran into a problem updating your address!
 									</h3>
 
-									{Object.entries(action?.value?.fieldErrors || {}).map(([field, error]) => (
-										<p class="text-sm text-red-700 mt-2">
+									{Object.entries(action?.value?.fieldErrors || {}).map(([field, error], index) => (
+										<p key={index} class="text-sm text-red-700 mt-2">
 											{field} - {error}
 										</p>
 									))}

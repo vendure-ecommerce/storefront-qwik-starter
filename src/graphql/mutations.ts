@@ -271,6 +271,8 @@ export const updateCustomerAddressMutation = (input: ShippingAddress) => {
 		province,
 		streetLine1,
 		streetLine2,
+		defaultShippingAddress,
+		defaultBillingAddress,
 	} = input;
 	return {
 		variables: {
@@ -285,6 +287,8 @@ export const updateCustomerAddressMutation = (input: ShippingAddress) => {
 				province,
 				streetLine1,
 				streetLine2,
+				defaultShippingAddress,
+				defaultBillingAddress,
 			},
 		},
 		query: `
@@ -330,6 +334,8 @@ export const createCustomerAddressMutation = (input: ShippingAddress) => {
 		province,
 		streetLine1,
 		streetLine2,
+		defaultShippingAddress,
+		defaultBillingAddress,
 	} = input;
 	return {
 		variables: {
@@ -343,6 +349,8 @@ export const createCustomerAddressMutation = (input: ShippingAddress) => {
 				province,
 				streetLine1,
 				streetLine2,
+				defaultShippingAddress,
+				defaultBillingAddress,
 			},
 		},
 		query: `
