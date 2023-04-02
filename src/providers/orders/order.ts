@@ -4,8 +4,12 @@ import {
 	ActiveOrderQuery,
 	AddItemToOrderMutation,
 	AdjustOrderLineMutation,
+	CreateAddressInput,
+	CreateCustomerInput,
 	Order,
 	RemoveOrderLineMutation,
+	SetCustomerForOrderMutation,
+	SetOrderShippingAddressMutation,
 	SetOrderShippingMethodMutation,
 } from '~/generated/graphql';
 
@@ -31,11 +35,47 @@ export const adjustOrderLineMutation = async (lineId: string, quantity: number) 
 		.then((res: AdjustOrderLineMutation) => res.adjustOrderLine as Order);
 };
 
+export const setOrderShippingAddressMutation = async (input: CreateAddressInput) => {
+	return sdk
+		.setOrderShippingAddress({ input })
+		.then((res: SetOrderShippingAddressMutation) => res.setOrderShippingAddress);
+};
+
 export const setOrderShippingMethodMutation = async (shippingMethodId: string) => {
 	return sdk
 		.setOrderShippingMethod({ shippingMethodId })
 		.then((res: SetOrderShippingMethodMutation) => res.setOrderShippingMethod as Order);
 };
+
+export const setCustomerForOrderMutation = async (input: CreateCustomerInput) => {
+	return sdk
+		.setCustomerForOrder({ input })
+		.then((res: SetCustomerForOrderMutation) => res.setCustomerForOrder);
+};
+
+gql`
+	mutation setOrderShippingAddress($input: CreateAddressInput!) {
+		setOrderShippingAddress(input: $input) {
+			...OrderDetail
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+`;
+
+gql`
+	mutation setCustomerForOrder($input: CreateCustomerInput!) {
+		setCustomerForOrder(input: $input) {
+			...OrderDetail
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+`;
 
 gql`
 	mutation addItemToOrder($productVariantId: ID!, $quantity: Int!) {
@@ -122,13 +162,6 @@ gql`
 					slug
 				}
 			}
-		}
-		payments {
-			id
-			state
-			method
-			amount
-			metadata
 		}
 	}
 `;

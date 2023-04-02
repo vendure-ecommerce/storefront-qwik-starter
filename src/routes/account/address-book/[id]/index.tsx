@@ -7,10 +7,10 @@ import XCircleIcon from '~/components/icons/XCircleIcon';
 import XMarkIcon from '~/components/icons/XMarkIcon';
 import { APP_STATE, AUTH_TOKEN } from '~/constants';
 import { createCustomerAddressMutation, updateCustomerAddressMutation } from '~/graphql/mutations';
-import { getActiveCustomerAddressesQuery } from '~/graphql/queries';
 import { ShippingAddress } from '~/types';
 import { scrollToTop } from '~/utils';
 import { execute } from '~/utils/api';
+import { getActiveCustomerAddressesQuery } from '~/providers/customer/customer';
 
 export default component$(() => {
 	const navigate = useNavigate();
@@ -19,21 +19,32 @@ export default component$(() => {
 	const activeCustomerAddress = useSignal<ShippingAddress>();
 
 	useVisibleTask$(async () => {
-		const { activeCustomer } = await execute<{
-			activeCustomer: { id: string; addresses: ShippingAddress[] };
-		}>(getActiveCustomerAddressesQuery());
+		const activeCustomer = await getActiveCustomerAddressesQuery();
 
 		if (activeCustomer?.addresses) {
 			const [activeAddress] = activeCustomer.addresses.filter(
 				(address) => address.id === location.params.id
 			);
+			const shippingAddress: ShippingAddress = {
+				fullName: activeAddress.fullName ?? '',
+				streetLine1: activeAddress.streetLine1 ?? '',
+				streetLine2: activeAddress.streetLine2 ?? '',
+				company: activeAddress.company ?? '',
+				city: activeAddress.city ?? '',
+				province: activeAddress.province ?? '',
+				postalCode: activeAddress.postalCode ?? '',
+				countryCode: activeAddress.country.code,
+				phoneNumber: activeAddress.phoneNumber ?? '',
+				defaultShippingAddress: activeAddress.defaultShippingAddress ?? false,
+				defaultBillingAddress: activeAddress.defaultBillingAddress ?? false,
+				country: activeAddress.country.code,
+			};
 			if (activeAddress) {
-				activeAddress.countryCode = activeAddress?.country?.code;
 				appState.shippingAddress = {
 					...appState.shippingAddress,
-					...activeAddress,
+					...shippingAddress,
 				};
-				activeCustomerAddress.value = activeAddress;
+				activeCustomerAddress.value = shippingAddress;
 			} else {
 				activeCustomerAddress.value = appState.shippingAddress;
 			}

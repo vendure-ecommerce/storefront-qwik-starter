@@ -92,7 +92,7 @@ export type ShippingAddress = {
 	phoneNumber?: string;
 	defaultShippingAddress?: boolean;
 	defaultBillingAddress?: boolean;
-	country?: Country;
+	country?: string;
 };
 
 type ProductVariant = {
