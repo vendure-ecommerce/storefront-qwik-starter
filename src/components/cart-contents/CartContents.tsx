@@ -1,14 +1,14 @@
 import { component$, useContext } from '@builder.io/qwik';
 import { Link, useLocation, useNavigate } from '@builder.io/qwik-city';
 import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
-import { ActiveOrder } from '~/types';
 import { isCheckoutPage } from '~/utils';
 import { Image } from '../image/Image';
 import Price from '../products/Price';
 import { adjustOrderLineMutation, removeOrderLineMutation } from '~/providers/orders/order';
+import { Order } from '~/generated/graphql';
 
 export default component$<{
-	order?: ActiveOrder;
+	order?: Order;
 }>(({ order }) => {
 	const navigate = useNavigate();
 	const location = useLocation();

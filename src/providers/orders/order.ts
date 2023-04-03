@@ -7,6 +7,7 @@ import {
 	CreateAddressInput,
 	CreateCustomerInput,
 	Order,
+	OrderByCodeQuery,
 	RemoveOrderLineMutation,
 	SetCustomerForOrderMutation,
 	SetOrderShippingAddressMutation,
@@ -15,6 +16,10 @@ import {
 
 export const getActiveOrderQuery = async () => {
 	return sdk.activeOrder(undefined).then((res: ActiveOrderQuery) => res.activeOrder as Order);
+};
+
+export const getOrderByCodeQuery = async (code: string) => {
+	return sdk.orderByCode({ code }).then((res: OrderByCodeQuery) => res.orderByCode as Order);
 };
 
 export const addItemToOrderMutation = async (productVariantId: string, quantity: number) => {
@@ -193,6 +198,14 @@ gql`
 gql`
 	query activeOrder {
 		activeOrder {
+			...OrderDetail
+		}
+	}
+`;
+
+gql`
+	query orderByCode($code: String!) {
+		orderByCode(code: $code) {
 			...OrderDetail
 		}
 	}

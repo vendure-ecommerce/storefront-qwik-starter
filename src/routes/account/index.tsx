@@ -17,14 +17,13 @@ import XMarkIcon from '~/components/icons/XMarkIcon';
 import { Image } from '~/components/image/Image';
 import { Modal } from '~/components/modal/Modal';
 import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
-import { getActiveCustomerQuery } from '~/graphql/queries';
 import { ActiveCustomer } from '~/types';
 import { scrollToTop } from '~/utils';
-import { execute } from '~/utils/api';
 import {
 	requestUpdateCustomerEmailAddressMutation,
 	updateCustomerMutation,
 } from '~/providers/account/account';
+import { getActiveCustomerQuery } from '~/providers/customer/customer';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
@@ -38,10 +37,15 @@ export default component$(() => {
 	};
 
 	useVisibleTask$(async () => {
-		const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
-			getActiveCustomerQuery()
-		);
-		appState.customer = activeCustomer;
+		const activeCustomer = await getActiveCustomerQuery();
+		appState.customer = {
+			title: activeCustomer.title ?? '',
+			firstName: activeCustomer.firstName,
+			id: activeCustomer.id,
+			lastName: activeCustomer.lastName,
+			emailAddress: activeCustomer.emailAddress,
+			phoneNumber: activeCustomer.phoneNumber ?? '',
+		};
 		newEmail.value = activeCustomer?.emailAddress as string;
 		scrollToTop();
 	});

@@ -6,10 +6,11 @@ import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
 import Payment from '~/components/payment/Payment';
 import Shipping from '~/components/shipping/Shipping';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
-import { transitionOrderToStateMutation } from '~/graphql/mutations';
 import { isEnvVariableEnabled, scrollToTop } from '~/utils';
-import { execute } from '~/utils/api';
-import { addPaymentToOrderMutation } from '~/providers/checkout/checkout';
+import {
+	addPaymentToOrderMutation,
+	transitionOrderToStateMutation,
+} from '~/providers/checkout/checkout';
 import {
 	setCustomerForOrderMutation,
 	setOrderShippingAddressMutation,
@@ -37,7 +38,7 @@ export default component$(() => {
 	});
 
 	const confirmPayment = $(async () => {
-		await execute(transitionOrderToStateMutation());
+		await transitionOrderToStateMutation();
 		const activeOrder = await addPaymentToOrderMutation();
 		appState.activeOrder = activeOrder;
 		scrollToTop();

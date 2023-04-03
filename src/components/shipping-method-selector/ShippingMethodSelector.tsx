@@ -1,25 +1,21 @@
 import { component$, useContext, useStore, useTask$ } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
-import { getEligibleShippingMethodsQuery } from '~/graphql/queries';
-import { EligibleShippingMethods } from '~/types';
 import { formatPrice } from '~/utils';
-import { execute } from '~/utils/api';
 import CheckCircleIcon from '../icons/CheckCircleIcon';
 import { setOrderShippingMethodMutation } from '~/providers/orders/order';
+import { getEligibleShippingMethodsQuery } from '~/providers/checkout/checkout';
+import { ShippingMethodQuote } from '~/generated/graphql';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
 	const currencyCode = useContext(APP_STATE).activeOrder?.currencyCode || 'USD';
-	const state = useStore<{ selected: number; methods: EligibleShippingMethods[] }>({
+	const state = useStore<{ selected: number; methods: ShippingMethodQuote[] }>({
 		selected: 1,
 		methods: [],
 	});
 
 	useTask$(async () => {
-		const { eligibleShippingMethods } = await execute<{
-			eligibleShippingMethods: EligibleShippingMethods[];
-		}>(getEligibleShippingMethodsQuery());
-		state.methods = eligibleShippingMethods;
+		state.methods = await getEligibleShippingMethodsQuery();
 	});
 
 	useTask$(async (tracker) => {

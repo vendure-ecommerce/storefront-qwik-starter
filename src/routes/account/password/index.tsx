@@ -6,8 +6,7 @@ import CheckIcon from '~/components/icons/CheckIcon';
 import EyeIcon from '~/components/icons/EyeIcon';
 import EyeSlashIcon from '~/components/icons/EyeSlashIcon';
 import { APP_STATE } from '~/constants';
-import { updateCustomerPasswordMutation } from '~/graphql/mutations';
-import { execute } from '~/utils/api';
+import { updateCustomerPasswordMutation } from '~/providers/customer/customer';
 
 export default component$(() => {
 	const navigate = useNavigate();
@@ -21,13 +20,10 @@ export default component$(() => {
 	const updatePassword = $(async () => {
 		errorMessage.value = '';
 		if (newPassword.value === confirmPassword.value) {
-			const { updateCustomerPassword } = await execute<{
-				updateCustomerPassword: {
-					currentPassword: string;
-					newPassword: string;
-					__typename: string;
-				};
-			}>(updateCustomerPasswordMutation(currentPassword.value, newPassword.value));
+			const updateCustomerPassword = await updateCustomerPasswordMutation(
+				currentPassword.value,
+				newPassword.value
+			);
 
 			switch (updateCustomerPassword.__typename) {
 				case 'PasswordValidationError':

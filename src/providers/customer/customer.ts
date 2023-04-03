@@ -1,11 +1,53 @@
 import gql from 'graphql-tag';
 import { sdk } from '~/graphql-wrapper';
-import { ActiveCustomerAddressesQuery, Customer } from '~/generated/graphql';
+import {
+	ActiveCustomerAddressesQuery,
+	ActiveCustomerOrdersQuery,
+	ActiveCustomerOrdersQueryVariables,
+	ActiveCustomerQuery,
+	Customer,
+	UpdateCustomerPasswordMutationMutation,
+} from '~/generated/graphql';
+
+export const getActiveCustomerQuery = async () => {
+	return sdk.activeCustomer().then((res: ActiveCustomerQuery) => res.activeCustomer as Customer);
+};
 
 export const getActiveCustomerAddressesQuery = async () => {
 	return sdk
 		.activeCustomerAddresses()
 		.then((res: ActiveCustomerAddressesQuery) => res.activeCustomer as Customer);
+};
+
+export const updateCustomerPasswordMutation = async (
+	currentPassword: string,
+	newPassword: string
+) => {
+	return sdk
+		.updateCustomerPasswordMutation({ currentPassword, newPassword })
+		.then((res: UpdateCustomerPasswordMutationMutation) => res.updateCustomerPassword);
+};
+
+export const deleteCustomerAddressMutation = async (id: string) => {
+	return sdk.deleteCustomerAddress({ id });
+};
+
+export const getActiveCustomerOrdersQuery = async () => {
+	const variables: ActiveCustomerOrdersQueryVariables = {
+		options: {
+			filter: {
+				active: {
+					eq: false,
+				},
+			},
+			sort: {
+				createdAt: 'DESC',
+			},
+		},
+	};
+	return sdk
+		.activeCustomerOrders(variables)
+		.then((res: ActiveCustomerOrdersQuery) => res.activeCustomer as Customer);
 };
 
 gql`
@@ -28,6 +70,19 @@ gql`
 				defaultShippingAddress
 				defaultBillingAddress
 			}
+		}
+	}
+`;
+
+gql`
+	query activeCustomer {
+		activeCustomer {
+			id
+			title
+			firstName
+			lastName
+			emailAddress
+			phoneNumber
 		}
 	}
 `;
@@ -59,5 +114,58 @@ gql`
 		defaultShippingAddress
 		defaultBillingAddress
 		__typename
+	}
+`;
+
+gql`
+	query activeCustomerOrders($options: OrderListOptions) {
+		activeCustomer {
+			id
+			orders(options: $options) {
+				items {
+					id
+					code
+					state
+					totalWithTax
+					currencyCode
+					lines {
+						featuredAsset {
+							preview
+						}
+						productVariant {
+							name
+						}
+					}
+				}
+				totalItems
+			}
+		}
+	}
+`;
+
+gql`
+	mutation updateCustomerPasswordMutation($currentPassword: String!, $newPassword: String!) {
+		updateCustomerPassword(currentPassword: $currentPassword, newPassword: $newPassword) {
+			... on Success {
+				success
+				__typename
+			}
+			...ErrorResult
+			__typename
+		}
+	}
+
+	fragment ErrorResult on ErrorResult {
+		errorCode
+		message
+		__typename
+	}
+`;
+
+gql`
+	mutation deleteCustomerAddress($id: ID!) {
+		deleteCustomerAddress(id: $id) {
+			success
+		}
 	}
 `;

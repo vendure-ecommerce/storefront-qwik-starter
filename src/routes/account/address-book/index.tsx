@@ -4,11 +4,13 @@ import AddressCard from '~/components/account/AddressCard';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
 import PlusIcon from '~/components/icons/PlusIcon';
 import { APP_STATE } from '~/constants';
-import { deleteCustomerAddressMutation } from '~/graphql/mutations';
-import { getActiveCustomerAddressesQuery } from '~/graphql/queries';
 import { ShippingAddress } from '~/types';
 import { scrollToTop } from '~/utils';
-import { execute } from '~/utils/api';
+import {
+	deleteCustomerAddressMutation,
+	getActiveCustomerAddressesQuery,
+} from '~/providers/customer/customer';
+import { Address } from '~/generated/graphql';
 
 export default component$(() => {
 	const navigate = useNavigate();
@@ -16,15 +18,31 @@ export default component$(() => {
 	const activeCustomerAddresses = useSignal<{ id: string; addresses: ShippingAddress[] }>();
 
 	useVisibleTask$(async () => {
-		const { activeCustomer } = await execute<{
-			activeCustomer: { id: string; addresses: ShippingAddress[] };
-		}>(getActiveCustomerAddressesQuery());
-
-		activeCustomerAddresses.value = activeCustomer;
+		const activeCustomer = await getActiveCustomerAddressesQuery();
+		const { id, addresses } = activeCustomer;
+		const shippingAddresses: ShippingAddress[] = (addresses as Address[]).map(
+			(address: Address) =>
+				({
+					id: address.id,
+					fullName: address.fullName,
+					streetLine1: address.streetLine1,
+					streetLine2: address.streetLine2,
+					company: address.company,
+					city: address.city,
+					province: address.province,
+					postalCode: address.postalCode,
+					countryCode: address.country.code,
+					phoneNumber: address.phoneNumber,
+					defaultShippingAddress: address.defaultShippingAddress,
+					defaultBillingAddress: address.defaultBillingAddress,
+					country: address.country.code,
+				} as ShippingAddress)
+		);
+		activeCustomerAddresses.value = { id, addresses: shippingAddresses };
 
 		if (activeCustomer?.addresses) {
 			appState.addressBook.splice(0, appState.addressBook.length);
-			appState.addressBook.push(...activeCustomer.addresses);
+			appState.addressBook.push(...shippingAddresses);
 		}
 		scrollToTop();
 	});
@@ -37,9 +55,7 @@ export default component$(() => {
 						<AddressCard
 							address={address}
 							onDelete$={async (id) => {
-								await execute<{
-									id: string;
-								}>(deleteCustomerAddressMutation(id));
+								await deleteCustomerAddressMutation(id);
 								location.reload();
 							}}
 						/>

@@ -2,22 +2,18 @@ import { component$, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import { Image } from '~/components/image/Image';
 import { IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
-import { getOrderByCodeQuery } from '~/graphql/queries';
-import { ActiveOrder } from '~/types';
 import { formatDateTime, formatPrice, scrollToTop } from '~/utils';
-import { execute } from '~/utils/api';
+import { getOrderByCodeQuery } from '~/providers/orders/order';
+import { Order } from '~/generated/graphql';
 
 export default component$(() => {
 	const {
 		params: { code },
 	} = useLocation();
-	const store = useStore<{ order?: ActiveOrder }>({});
+	const store = useStore<{ order?: Order }>({});
 
 	useVisibleTask$(async () => {
-		const { orderByCode } = await execute<{ orderByCode: ActiveOrder }>(
-			getOrderByCodeQuery({ code })
-		);
-		store.order = orderByCode;
+		store.order = await getOrderByCodeQuery(code);
 		scrollToTop();
 	});
 
@@ -42,7 +38,7 @@ export default component$(() => {
 										height={100}
 										aspectRatio={1}
 										class="rounded object-cover max-w-max h-full"
-										src={line.featuredAsset.preview}
+										src={line.featuredAsset?.preview}
 										placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 									/>
 								</div>
