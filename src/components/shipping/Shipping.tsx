@@ -1,25 +1,25 @@
 import {
 	$,
+	component$,
 	PropFunction,
 	QwikChangeEvent,
-	component$,
 	useContext,
 	useSignal,
 	useTask$,
 	useVisibleTask$,
 } from '@builder.io/qwik';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
-import { getActiveCustomerAddressesQuery, getActiveOrderQuery } from '~/graphql/queries';
-import { ActiveCustomer, ActiveOrder, ShippingAddress } from '~/types';
 import { isActiveCustomerValid, isShippingAddressValid } from '~/utils';
-import { execute } from '~/utils/api';
 import AddressForm from '../address-form/AddressForm';
 import LockClosedIcon from '../icons/LockClosedIcon';
 import ShippingMethodSelector from '../shipping-method-selector/ShippingMethodSelector';
+import { CreateAddressInput, CreateCustomerInput } from '~/generated/graphql';
+import { getActiveOrderQuery } from '~/providers/orders/order';
+import { getActiveCustomerAddressesQuery } from '~/providers/customer/customer';
 
 type IProps = {
 	onForward$: PropFunction<
-		(customer: Omit<ActiveCustomer, 'id'>, shippingAddress: ShippingAddress) => Promise<void>
+		(customer: CreateCustomerInput, shippingAddress: CreateAddressInput) => Promise<void>
 	>;
 };
 
@@ -28,26 +28,54 @@ export default component$<IProps>(({ onForward$ }) => {
 	const isFormValidSignal = useSignal(false);
 
 	useVisibleTask$(async () => {
-		const { activeOrder } = await execute<{ activeOrder: ActiveOrder }>(getActiveOrderQuery());
+		const activeOrder = await getActiveOrderQuery();
 		if (activeOrder?.customer) {
-			appState.customer = activeOrder?.customer;
-			if (activeOrder.shippingAddress) {
-				appState.shippingAddress = activeOrder.shippingAddress;
+			const customer = activeOrder.customer;
+			appState.customer = {
+				title: customer.title ?? '',
+				firstName: customer.firstName,
+				id: customer.id,
+				lastName: customer.lastName,
+				emailAddress: customer.emailAddress,
+				phoneNumber: customer.phoneNumber ?? '',
+			};
+			const shippingAddress = activeOrder?.shippingAddress;
+			if (shippingAddress) {
+				appState.shippingAddress = {
+					city: shippingAddress.city ?? '',
+					company: shippingAddress.company ?? '',
+					country: shippingAddress.country ?? '',
+					countryCode: shippingAddress.countryCode ?? '',
+					fullName: shippingAddress.fullName ?? '',
+					phoneNumber: shippingAddress.phoneNumber ?? '',
+					postalCode: shippingAddress.postalCode ?? '',
+					province: shippingAddress.province ?? '',
+					streetLine1: shippingAddress.streetLine1 ?? '',
+					streetLine2: shippingAddress.streetLine2 ?? '',
+				};
 			}
 		}
-		const { activeCustomer } = await execute<{
-			activeCustomer: { id: string; addresses: ShippingAddress[] };
-		}>(getActiveCustomerAddressesQuery());
-
+		const activeCustomer = await getActiveCustomerAddressesQuery();
 		if (activeCustomer?.addresses) {
 			const [defaultShippingAddress] = activeCustomer.addresses.filter(
 				(address) => !!address.defaultShippingAddress
 			);
 			if (defaultShippingAddress) {
-				defaultShippingAddress.countryCode = defaultShippingAddress?.country?.code;
+				const appStateDefaultShippingAddress = {
+					city: defaultShippingAddress.city ?? '',
+					company: defaultShippingAddress.company ?? '',
+					country: defaultShippingAddress.country.code ?? '',
+					countryCode: defaultShippingAddress.country.code ?? '',
+					fullName: defaultShippingAddress.fullName ?? '',
+					phoneNumber: defaultShippingAddress.phoneNumber ?? '',
+					postalCode: defaultShippingAddress.postalCode ?? '',
+					province: defaultShippingAddress.province ?? '',
+					streetLine1: defaultShippingAddress.streetLine1 ?? '',
+					streetLine2: defaultShippingAddress.streetLine2 ?? '',
+				};
 				appState.shippingAddress = {
 					...appState.shippingAddress,
-					...defaultShippingAddress,
+					...appStateDefaultShippingAddress,
 				};
 			}
 		}
@@ -134,7 +162,41 @@ export default component$<IProps>(({ onForward$ }) => {
 				class="bg-primary-600 hover:bg-primary-700 flex w-full items-center justify-center space-x-2 mt-24 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:bg-slate-300"
 				onClick$={$(() => {
 					if (isFormValidSignal.value) {
-						onForward$(appState.customer, appState.shippingAddress);
+						const { emailAddress, firstName, lastName, phoneNumber, title } = appState.customer;
+						const {
+							fullName,
+							streetLine1,
+							streetLine2,
+							company,
+							city,
+							province,
+							postalCode,
+							countryCode,
+							phoneNumber: shippingAddressPhone,
+							defaultShippingAddress,
+							defaultBillingAddress,
+						} = appState.shippingAddress;
+						const createCustomerInput: CreateCustomerInput = {
+							emailAddress: emailAddress ?? '',
+							firstName,
+							lastName,
+							phoneNumber,
+							title,
+						};
+						const createShippingInput: CreateAddressInput = {
+							fullName,
+							streetLine1: streetLine1 ?? '',
+							streetLine2,
+							company,
+							city,
+							province,
+							postalCode,
+							countryCode: countryCode ?? '',
+							phoneNumber: shippingAddressPhone ?? '',
+							defaultShippingAddress,
+							defaultBillingAddress,
+						};
+						onForward$(createCustomerInput, createShippingInput);
 					}
 				})}
 				disabled={!isFormValidSignal.value}

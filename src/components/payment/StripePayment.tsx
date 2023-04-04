@@ -7,13 +7,12 @@ import {
 	useVisibleTask$,
 } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
-import { Stripe, StripeElements, loadStripe } from '@stripe/stripe-js';
+import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js';
 import { APP_STATE } from '~/constants';
 import { ENV_VARIABLES } from '~/env';
-import { createStripePaymentIntentMutation } from '~/graphql/mutations';
-import { execute } from '~/utils/api';
 import CreditCardIcon from '../icons/CreditCardIcon';
 import XCircleIcon from '../icons/XCircleIcon';
+import { createStripePaymentIntentMutation } from '~/providers/checkout/checkout';
 
 let _stripe: Promise<Stripe | null>;
 function getStripe(publishableKey: string) {
@@ -35,11 +34,7 @@ export default component$(() => {
 	});
 
 	useVisibleTask$(async () => {
-		const { createStripePaymentIntent } = await execute<{
-			createStripePaymentIntent: string;
-		}>(createStripePaymentIntentMutation());
-
-		store.clientSecret = createStripePaymentIntent;
+		store.clientSecret = await createStripePaymentIntentMutation();
 
 		await stripePromise.then((stripe) => {
 			store.resolvedStripe = noSerialize(stripe as Stripe);

@@ -1,15 +1,13 @@
 import { $, component$, useContext, useVisibleTask$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
-import { getActiveCustomerQuery } from '~/graphql/queries';
-import { ActiveCustomer } from '~/types';
-import { execute } from '~/utils/api';
 import Cart from '../cart/Cart';
 import LogoutIcon from '../icons/LogoutIcon';
 import ShoppingBagIcon from '../icons/ShoppingBagIcon';
 import UserIcon from '../icons/UserIcon';
 import SearchBar from '../search-bar/SearchBar';
 import { logoutMutation } from '~/providers/account/account';
+import { getActiveCustomerQuery } from '~/providers/customer/customer';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
@@ -24,11 +22,16 @@ export default component$(() => {
 
 	useVisibleTask$(async () => {
 		if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
-			const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
-				getActiveCustomerQuery()
-			);
+			const activeCustomer = await getActiveCustomerQuery();
 			if (activeCustomer) {
-				appState.customer = activeCustomer;
+				appState.customer = {
+					title: activeCustomer.title ?? '',
+					firstName: activeCustomer.firstName,
+					id: activeCustomer.id,
+					lastName: activeCustomer.lastName,
+					emailAddress: activeCustomer.emailAddress,
+					phoneNumber: activeCustomer.phoneNumber ?? '',
+				};
 			}
 		}
 	});

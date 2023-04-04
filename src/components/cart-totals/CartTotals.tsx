@@ -1,9 +1,9 @@
 import { component$ } from '@builder.io/qwik';
-import { ActiveOrder } from '~/types';
 import CartPrice from './CartPrice';
+import { Order } from '~/generated/graphql';
 
 export default component$<{
-	order?: ActiveOrder;
+	order?: Order;
 }>(({ order }) => {
 	return (
 		<dl class="border-t mt-6 border-gray-200 py-6 space-y-6">

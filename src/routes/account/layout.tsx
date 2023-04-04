@@ -1,20 +1,23 @@
 import { Slot, component$, useContext, useVisibleTask$ } from '@builder.io/qwik';
 import { TabsContainer } from '~/components/account/TabsContainer';
 import { APP_STATE } from '~/constants';
-import { getActiveCustomerQuery } from '~/graphql/queries';
-import { ActiveCustomer } from '~/types';
 import { fullNameWithTitle } from '~/utils';
-import { execute } from '~/utils/api';
+import { getActiveCustomerQuery } from '~/providers/customer/customer';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
 
 	useVisibleTask$(async () => {
-		const { activeCustomer } = await execute<{ activeCustomer: ActiveCustomer }>(
-			getActiveCustomerQuery()
-		);
+		const activeCustomer = await getActiveCustomerQuery();
 		if (activeCustomer) {
-			appState.customer = activeCustomer;
+			appState.customer = {
+				title: activeCustomer.title ?? '',
+				firstName: activeCustomer.firstName,
+				id: activeCustomer.id,
+				lastName: activeCustomer.lastName,
+				emailAddress: activeCustomer.emailAddress,
+				phoneNumber: activeCustomer.phoneNumber ?? '',
+			};
 		} else {
 			window.location.href = '/';
 		}

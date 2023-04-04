@@ -1,12 +1,12 @@
 import { component$ } from '@builder.io/qwik';
 import { useNavigate } from '@builder.io/qwik-city';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
-import { ActiveCustomerOrder } from '~/types';
 import { formatPrice } from '~/utils';
 import { Image } from '../image/Image';
+import { Order } from '~/generated/graphql';
 
 type IProps = {
-	order: ActiveCustomerOrder;
+	order: Order;
 };
 
 export default component$<IProps>(({ order }) => {

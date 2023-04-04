@@ -4,9 +4,8 @@ import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
 import CheckCircleIcon from '~/components/icons/CheckCircleIcon';
 import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
-import { getOrderByCodeQuery } from '~/graphql/queries';
-import { ActiveOrder } from '~/types';
-import { execute } from '~/utils/api';
+import { Order } from '~/generated/graphql';
+import { getOrderByCodeQuery } from '~/providers/orders/order';
 
 type Step = 'SHIPPING' | 'PAYMENT' | 'CONFIRMATION';
 
@@ -14,7 +13,7 @@ export default component$<{ onForward$: PropFunction<() => void> }>(() => {
 	const {
 		params: { code },
 	} = useLocation();
-	const store = useStore<{ order?: ActiveOrder }>({});
+	const store = useStore<{ order?: Order }>({});
 
 	const steps: { name: string; state: Step }[] = [
 		{ name: 'Shipping', state: 'SHIPPING' },
@@ -23,10 +22,7 @@ export default component$<{ onForward$: PropFunction<() => void> }>(() => {
 	];
 
 	useVisibleTask$(async () => {
-		const { orderByCode } = await execute<{ orderByCode: ActiveOrder }>(
-			getOrderByCodeQuery({ code })
-		);
-		store.order = orderByCode;
+		store.order = await getOrderByCodeQuery(code);
 	});
 
 	return (

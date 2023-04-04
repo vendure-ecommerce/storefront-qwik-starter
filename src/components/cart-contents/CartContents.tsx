@@ -1,15 +1,14 @@
 import { component$, useContext } from '@builder.io/qwik';
 import { Link, useLocation, useNavigate } from '@builder.io/qwik-city';
 import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
-import { adjustOrderLineMutation, removeOrderLineMutation } from '~/graphql/mutations';
-import { ActiveOrder } from '~/types';
 import { isCheckoutPage } from '~/utils';
-import { execute } from '~/utils/api';
 import { Image } from '../image/Image';
 import Price from '../products/Price';
+import { adjustOrderLineMutation, removeOrderLineMutation } from '~/providers/orders/order';
+import { Order } from '~/generated/graphql';
 
 export default component$<{
-	order?: ActiveOrder;
+	order?: Order;
 }>(({ order }) => {
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -62,10 +61,10 @@ export default component$<{
 											name={`quantity-${line.id}`}
 											value={line.quantity}
 											onChange$={async (e: any) => {
-												const { adjustOrderLine } = await execute<{ adjustOrderLine: ActiveOrder }>(
-													adjustOrderLineMutation(line.id, +e.target?.value)
+												appState.activeOrder = await adjustOrderLineMutation(
+													line.id,
+													+e.target?.value
 												);
-												appState.activeOrder = adjustOrderLine;
 											}}
 											class="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 										>
@@ -92,10 +91,7 @@ export default component$<{
 											value={line.id}
 											class="font-medium text-primary-600 hover:text-primary-500"
 											onClick$={async () => {
-												const { removeOrderLine } = await execute<{ removeOrderLine: ActiveOrder }>(
-													removeOrderLineMutation(line.id)
-												);
-												appState.activeOrder = removeOrderLine;
+												appState.activeOrder = await removeOrderLineMutation(line.id);
 												if (
 													appState.activeOrder?.lines?.length === 0 &&
 													isCheckoutPage(location.url.toString())

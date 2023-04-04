@@ -9,12 +9,11 @@ import Price from '~/components/products/Price';
 import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import TopReviews from '~/components/top-reviews/TopReviews';
 import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
-import { addItemToOrderMutation } from '~/graphql/mutations';
-import { ActiveOrder, Line, Variant } from '~/types';
+import { Variant } from '~/types';
 import { cleanUpParams, isEnvVariableEnabled, scrollToTop } from '~/utils';
-import { execute } from '~/utils/api';
 import { getProductBySlug } from '~/providers/products/products';
-import { Product } from '~/generated/graphql';
+import { Order, OrderLine, Product } from '~/generated/graphql';
+import { addItemToOrderMutation } from '~/providers/orders/order';
 
 export const useProductLoader = routeLoader$(async ({ params }) => {
 	const { slug } = cleanUpParams(params);
@@ -41,7 +40,7 @@ export default component$(() => {
 		state.quantity = {};
 		(product.variants || []).forEach((variant: Variant) => {
 			const orderLine = (appState.activeOrder?.lines || []).find(
-				(l: Line) =>
+				(l: OrderLine) =>
 					l.productVariant.id === variant.id && l.productVariant.product.id === product.id
 			);
 			state.quantity[variant.id] = orderLine?.quantity || 0;
@@ -137,13 +136,14 @@ export default component$(() => {
 									focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full`}
 										onClick$={async () => {
 											if (state.quantity[state.selectedVariantId] <= 7) {
-												const { addItemToOrder: order } = await execute<{
-													addItemToOrder: ActiveOrder;
-												}>(addItemToOrderMutation(state.selectedVariantId, 1));
-												if (order.errorCode) {
-													state.addItemToOrderError = order.errorCode;
+												const addItemToOrder = await addItemToOrderMutation(
+													state.selectedVariantId,
+													1
+												);
+												if (addItemToOrder.__typename !== 'Order') {
+													state.addItemToOrderError = addItemToOrder.errorCode;
 												} else {
-													appState.activeOrder = order;
+													appState.activeOrder = addItemToOrder as Order;
 												}
 											}
 										}}
