@@ -3500,6 +3500,28 @@ export type TransitionOrderToStateMutation = {
 		| null;
 };
 
+export type EligiblePaymentMethodsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type EligiblePaymentMethodsQuery = {
+	__typename?: 'Query';
+	eligiblePaymentMethods: Array<{
+		__typename?: 'PaymentMethodQuote';
+		id: string;
+		code: string;
+		name: string;
+		description: string;
+		eligibilityMessage?: string | null;
+		isEligible: boolean;
+	}>;
+};
+
+export type CreateStripePaymentIntentMutationVariables = Exact<{ [key: string]: never }>;
+
+export type CreateStripePaymentIntentMutation = {
+	__typename?: 'Mutation';
+	createStripePaymentIntent?: string | null;
+};
+
 export type CollectionsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type CollectionsQuery = {
@@ -3872,6 +3894,52 @@ export type DeleteCustomerAddressMutationVariables = Exact<{
 export type DeleteCustomerAddressMutation = {
 	__typename?: 'Mutation';
 	deleteCustomerAddress: { __typename?: 'Success'; success: boolean };
+};
+
+export type UpdateCustomerAddressMutationMutationVariables = Exact<{
+	input: UpdateAddressInput;
+}>;
+
+export type UpdateCustomerAddressMutationMutation = {
+	__typename?: 'Mutation';
+	updateCustomerAddress: {
+		__typename: 'Address';
+		id: string;
+		fullName?: string | null;
+		company?: string | null;
+		streetLine1: string;
+		streetLine2?: string | null;
+		city?: string | null;
+		province?: string | null;
+		postalCode?: string | null;
+		phoneNumber?: string | null;
+		defaultShippingAddress?: boolean | null;
+		defaultBillingAddress?: boolean | null;
+		country: { __typename: 'Country'; id: string; code: string; name: string };
+	};
+};
+
+export type CreateCustomerAddressMutationMutationVariables = Exact<{
+	input: CreateAddressInput;
+}>;
+
+export type CreateCustomerAddressMutationMutation = {
+	__typename?: 'Mutation';
+	createCustomerAddress: {
+		__typename: 'Address';
+		id: string;
+		fullName?: string | null;
+		company?: string | null;
+		streetLine1: string;
+		streetLine2?: string | null;
+		city?: string | null;
+		province?: string | null;
+		postalCode?: string | null;
+		phoneNumber?: string | null;
+		defaultShippingAddress?: boolean | null;
+		defaultBillingAddress?: boolean | null;
+		country: { __typename: 'Country'; id: string; code: string; name: string };
+	};
 };
 
 export type SetOrderShippingAddressMutationVariables = Exact<{
@@ -4936,6 +5004,23 @@ export const TransitionOrderToStateDocument = gql`
 	}
 	${OrderDetailFragmentDoc}
 `;
+export const EligiblePaymentMethodsDocument = gql`
+	query eligiblePaymentMethods {
+		eligiblePaymentMethods {
+			id
+			code
+			name
+			description
+			eligibilityMessage
+			isEligible
+		}
+	}
+`;
+export const CreateStripePaymentIntentDocument = gql`
+	mutation createStripePaymentIntent {
+		createStripePaymentIntent
+	}
+`;
 export const CollectionsDocument = gql`
 	query collections {
 		collections {
@@ -5065,6 +5150,24 @@ export const DeleteCustomerAddressDocument = gql`
 			success
 		}
 	}
+`;
+export const UpdateCustomerAddressMutationDocument = gql`
+	mutation updateCustomerAddressMutation($input: UpdateAddressInput!) {
+		updateCustomerAddress(input: $input) {
+			...Address
+			__typename
+		}
+	}
+	${AddressFragmentDoc}
+`;
+export const CreateCustomerAddressMutationDocument = gql`
+	mutation createCustomerAddressMutation($input: CreateAddressInput!) {
+		createCustomerAddress(input: $input) {
+			...Address
+			__typename
+		}
+	}
+	${AddressFragmentDoc}
 `;
 export const SetOrderShippingAddressDocument = gql`
 	mutation setOrderShippingAddress($input: CreateAddressInput!) {
@@ -5321,6 +5424,29 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
 				options
 			) as Promise<TransitionOrderToStateMutation>;
 		},
+		eligiblePaymentMethods(
+			variables?: EligiblePaymentMethodsQueryVariables,
+			options?: C
+		): Promise<EligiblePaymentMethodsQuery> {
+			return requester<EligiblePaymentMethodsQuery, EligiblePaymentMethodsQueryVariables>(
+				EligiblePaymentMethodsDocument,
+				variables,
+				options
+			) as Promise<EligiblePaymentMethodsQuery>;
+		},
+		createStripePaymentIntent(
+			variables?: CreateStripePaymentIntentMutationVariables,
+			options?: C
+		): Promise<CreateStripePaymentIntentMutation> {
+			return requester<
+				CreateStripePaymentIntentMutation,
+				CreateStripePaymentIntentMutationVariables
+			>(
+				CreateStripePaymentIntentDocument,
+				variables,
+				options
+			) as Promise<CreateStripePaymentIntentMutation>;
+		},
 		collections(variables?: CollectionsQueryVariables, options?: C): Promise<CollectionsQuery> {
 			return requester<CollectionsQuery, CollectionsQueryVariables>(
 				CollectionsDocument,
@@ -5397,6 +5523,32 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
 				variables,
 				options
 			) as Promise<DeleteCustomerAddressMutation>;
+		},
+		updateCustomerAddressMutation(
+			variables: UpdateCustomerAddressMutationMutationVariables,
+			options?: C
+		): Promise<UpdateCustomerAddressMutationMutation> {
+			return requester<
+				UpdateCustomerAddressMutationMutation,
+				UpdateCustomerAddressMutationMutationVariables
+			>(
+				UpdateCustomerAddressMutationDocument,
+				variables,
+				options
+			) as Promise<UpdateCustomerAddressMutationMutation>;
+		},
+		createCustomerAddressMutation(
+			variables: CreateCustomerAddressMutationMutationVariables,
+			options?: C
+		): Promise<CreateCustomerAddressMutationMutation> {
+			return requester<
+				CreateCustomerAddressMutationMutation,
+				CreateCustomerAddressMutationMutationVariables
+			>(
+				CreateCustomerAddressMutationDocument,
+				variables,
+				options
+			) as Promise<CreateCustomerAddressMutationMutation>;
 		},
 		setOrderShippingAddress(
 			variables: SetOrderShippingAddressMutationVariables,

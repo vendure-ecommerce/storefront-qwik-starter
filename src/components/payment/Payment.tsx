@@ -1,18 +1,14 @@
 import { $, component$, PropFunction, useSignal, useVisibleTask$ } from '@builder.io/qwik';
-import { getEligiblePaymentMethodsQuery } from '~/graphql/queries';
 import { EligiblePaymentMethods } from '~/types';
-import { execute } from '~/utils/api';
 import CreditCardIcon from '../icons/CreditCardIcon';
 import StripePayment from './StripePayment';
+import { getEligiblePaymentMethodsQuery } from '~/providers/checkout/checkout';
 
 export default component$<{ onForward$: PropFunction<() => void> }>(({ onForward$ }) => {
 	const paymentMethods = useSignal<EligiblePaymentMethods[]>();
 
 	useVisibleTask$(async () => {
-		const { eligiblePaymentMethods } = await execute<{
-			eligiblePaymentMethods: EligiblePaymentMethods[];
-		}>(getEligiblePaymentMethodsQuery());
-		paymentMethods.value = eligiblePaymentMethods;
+		paymentMethods.value = await getEligiblePaymentMethodsQuery();
 	});
 
 	return (

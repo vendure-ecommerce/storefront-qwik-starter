@@ -8,7 +8,6 @@ type IProps = {
 
 export default component$<IProps>(({ shippingAddress }) => {
 	const appState = useContext(APP_STATE);
-	console.log(shippingAddress);
 	return (
 		<div>
 			{shippingAddress.countryCode && (

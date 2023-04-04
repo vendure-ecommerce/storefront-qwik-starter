@@ -5,7 +5,9 @@ import {
 	ActiveCustomerOrdersQuery,
 	ActiveCustomerOrdersQueryVariables,
 	ActiveCustomerQuery,
+	CreateAddressInput,
 	Customer,
+	UpdateAddressInput,
 	UpdateCustomerPasswordMutationMutation,
 } from '~/generated/graphql';
 
@@ -48,6 +50,21 @@ export const getActiveCustomerOrdersQuery = async () => {
 	return sdk
 		.activeCustomerOrders(variables)
 		.then((res: ActiveCustomerOrdersQuery) => res.activeCustomer as Customer);
+};
+
+export const updateCustomerAddressMutation = async (
+	input: UpdateAddressInput,
+	token: string | undefined
+) => {
+	console.log(token);
+	return sdk.updateCustomerAddressMutation({ input }, { token });
+};
+
+export const createCustomerAddressMutation = (
+	input: CreateAddressInput,
+	token: string | undefined
+) => {
+	return sdk.createCustomerAddressMutation({ input }, { token });
 };
 
 gql`
@@ -167,5 +184,65 @@ gql`
 		deleteCustomerAddress(id: $id) {
 			success
 		}
+	}
+`;
+
+gql`
+	mutation updateCustomerAddressMutation($input: UpdateAddressInput!) {
+		updateCustomerAddress(input: $input) {
+			...Address
+			__typename
+		}
+	}
+
+	fragment Address on Address {
+		id
+		fullName
+		company
+		streetLine1
+		streetLine2
+		city
+		province
+		postalCode
+		country {
+			id
+			code
+			name
+			__typename
+		}
+		phoneNumber
+		defaultShippingAddress
+		defaultBillingAddress
+		__typename
+	}
+`;
+
+gql`
+	mutation createCustomerAddressMutation($input: CreateAddressInput!) {
+		createCustomerAddress(input: $input) {
+			...Address
+			__typename
+		}
+	}
+
+	fragment Address on Address {
+		id
+		fullName
+		company
+		streetLine1
+		streetLine2
+		city
+		province
+		postalCode
+		country {
+			id
+			code
+			name
+			__typename
+		}
+		phoneNumber
+		defaultShippingAddress
+		defaultBillingAddress
+		__typename
 	}
 `;

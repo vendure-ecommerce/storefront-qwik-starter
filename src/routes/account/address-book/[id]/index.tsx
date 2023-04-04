@@ -6,11 +6,14 @@ import CheckIcon from '~/components/icons/CheckIcon';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import XMarkIcon from '~/components/icons/XMarkIcon';
 import { APP_STATE, AUTH_TOKEN } from '~/constants';
-import { createCustomerAddressMutation, updateCustomerAddressMutation } from '~/graphql/mutations';
 import { ShippingAddress } from '~/types';
 import { scrollToTop } from '~/utils';
-import { execute } from '~/utils/api';
-import { getActiveCustomerAddressesQuery } from '~/providers/customer/customer';
+import {
+	createCustomerAddressMutation,
+	getActiveCustomerAddressesQuery,
+	updateCustomerAddressMutation,
+} from '~/providers/customer/customer';
+import { CreateAddressInput, UpdateAddressInput } from '~/generated/graphql';
 
 export default component$(() => {
 	const navigate = useNavigate();
@@ -25,21 +28,21 @@ export default component$(() => {
 			const [activeAddress] = activeCustomer.addresses.filter(
 				(address) => address.id === location.params.id
 			);
-			const shippingAddress: ShippingAddress = {
-				fullName: activeAddress.fullName ?? '',
-				streetLine1: activeAddress.streetLine1 ?? '',
-				streetLine2: activeAddress.streetLine2 ?? '',
-				company: activeAddress.company ?? '',
-				city: activeAddress.city ?? '',
-				province: activeAddress.province ?? '',
-				postalCode: activeAddress.postalCode ?? '',
-				countryCode: activeAddress.country.code,
-				phoneNumber: activeAddress.phoneNumber ?? '',
-				defaultShippingAddress: activeAddress.defaultShippingAddress ?? false,
-				defaultBillingAddress: activeAddress.defaultBillingAddress ?? false,
-				country: activeAddress.country.code,
-			};
 			if (activeAddress) {
+				const shippingAddress: ShippingAddress = {
+					fullName: activeAddress.fullName ?? '',
+					streetLine1: activeAddress.streetLine1 ?? '',
+					streetLine2: activeAddress.streetLine2 ?? '',
+					company: activeAddress.company ?? '',
+					city: activeAddress.city ?? '',
+					province: activeAddress.province ?? '',
+					postalCode: activeAddress.postalCode ?? '',
+					countryCode: activeAddress.country.code,
+					phoneNumber: activeAddress.phoneNumber ?? '',
+					defaultShippingAddress: activeAddress.defaultShippingAddress ?? false,
+					defaultBillingAddress: activeAddress.defaultBillingAddress ?? false,
+					country: activeAddress.country.code,
+				};
 				appState.shippingAddress = {
 					...appState.shippingAddress,
 					...shippingAddress,
@@ -56,14 +59,25 @@ export default component$(() => {
 
 	const createOrUpdateAddress = $(async (id: string | undefined, authToken: string | undefined) => {
 		delete appState.shippingAddress.country;
+		const { shippingAddress } = appState;
+		const addressInput: UpdateAddressInput | CreateAddressInput = {
+			city: shippingAddress.city ?? '',
+			company: shippingAddress.company ?? '',
+			countryCode: shippingAddress.countryCode ?? '',
+			defaultBillingAddress: shippingAddress.defaultBillingAddress,
+			defaultShippingAddress: shippingAddress.defaultShippingAddress,
+			fullName: shippingAddress.fullName ?? '',
+			phoneNumber: shippingAddress.phoneNumber ?? '',
+			postalCode: shippingAddress.postalCode ?? '',
+			province: shippingAddress.province ?? '',
+			streetLine1: shippingAddress.streetLine1 ?? '',
+			streetLine2: shippingAddress.streetLine2 ?? '',
+		};
 		if (id === 'add') {
-			await execute<{
-				createCustomerAddress: ShippingAddress;
-			}>(createCustomerAddressMutation(appState.shippingAddress), authToken);
+			await createCustomerAddressMutation(addressInput as CreateAddressInput, authToken);
 		} else {
-			await execute<{
-				updateCustomerAddress: ShippingAddress;
-			}>(updateCustomerAddressMutation(appState.shippingAddress), authToken);
+			(addressInput as UpdateAddressInput).id = shippingAddress.id ?? '';
+			await updateCustomerAddressMutation(addressInput as UpdateAddressInput, authToken);
 		}
 	});
 

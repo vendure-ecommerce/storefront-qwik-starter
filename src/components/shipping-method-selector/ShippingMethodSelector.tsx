@@ -46,7 +46,7 @@ export default component$(() => {
 						</span>
 						{state.selectedMethodId === method.id && <CheckCircleIcon />}
 						<span
-							className={`border-2 ${
+							class={`border-2 ${
 								state.selectedMethodId === method.id ? 'border-primary-500' : ''
 							} absolute -inset-px rounded-lg pointer-events-none`}
 						></span>

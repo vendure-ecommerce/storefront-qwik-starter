@@ -4,9 +4,12 @@ import {
 	AddPaymentToOrderMutation,
 	AvailableCountriesQuery,
 	Country,
+	CreateStripePaymentIntentMutation,
+	EligiblePaymentMethodsQuery,
 	EligibleShippingMethodsQuery,
 	Order,
 	PaymentInput,
+	PaymentMethodQuote,
 	ShippingMethodQuote,
 } from '~/generated/graphql';
 
@@ -34,6 +37,18 @@ export const getEligibleShippingMethodsQuery = async () => {
 		.then(
 			(res: EligibleShippingMethodsQuery) => res.eligibleShippingMethods as ShippingMethodQuote[]
 		);
+};
+
+export const getEligiblePaymentMethodsQuery = async () => {
+	return sdk
+		.eligiblePaymentMethods({})
+		.then((res: EligiblePaymentMethodsQuery) => res.eligiblePaymentMethods as PaymentMethodQuote[]);
+};
+
+export const createStripePaymentIntentMutation = async () => {
+	return sdk
+		.createStripePaymentIntent()
+		.then((res: CreateStripePaymentIntentMutation) => res.createStripePaymentIntent as string);
 };
 
 gql`
@@ -80,5 +95,24 @@ gql`
 				message
 			}
 		}
+	}
+`;
+
+gql`
+	query eligiblePaymentMethods {
+		eligiblePaymentMethods {
+			id
+			code
+			name
+			description
+			eligibilityMessage
+			isEligible
+		}
+	}
+`;
+
+gql`
+	mutation createStripePaymentIntent {
+		createStripePaymentIntent
 	}
 `;

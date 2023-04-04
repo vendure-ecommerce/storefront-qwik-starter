@@ -9,11 +9,15 @@ type ResponseProps<T> = { token: string; data: T };
 type ExecuteProps<V> = { query: string; variables?: V };
 type Options = { method: string; headers: Record<string, string>; body: string };
 
-export const requester = async <R, V>(doc: DocumentNode, vars?: V): Promise<R> => {
-	return execute<R, V>({ query: print(doc), variables: vars });
+export const requester = async <R, V>(
+	doc: DocumentNode,
+	vars?: V,
+	options: { token?: string } = { token: '' }
+): Promise<R> => {
+	return execute<R, V>({ query: print(doc), variables: vars }, options.token);
 };
 
-export const execute = async <R, V = Record<string, any>>(
+const execute = async <R, V = Record<string, any>>(
 	body: ExecuteProps<V>,
 	authToken: string = ''
 ): Promise<R> => {
