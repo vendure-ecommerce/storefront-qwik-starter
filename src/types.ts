@@ -221,8 +221,16 @@ export type RegisterCustomer = Omit<ActiveCustomer, 'id'> & {
 };
 
 export type EligibleShippingMethods = {
+	id: string;
 	name: string;
 	price: number;
+	priceWithTax: number;
+};
+
+export type EligiblePaymentMethods = {
+	name: string;
+	code: string;
+	isEligible: boolean;
 };
 
 export type Country = {
