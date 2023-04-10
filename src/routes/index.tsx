@@ -1,7 +1,14 @@
 import { component$, useContext } from '@builder.io/qwik';
+import { DocumentHead } from '@builder.io/qwik-city';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import { Image } from '~/components/image/Image';
-import { APP_STATE, HOMEPAGE_IMAGE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
+import {
+	APP_STATE,
+	HOMEPAGE_IMAGE,
+	IMAGE_PLACEHOLDER_BACKGROUND,
+	OG_METATAGS,
+	TWITTER_METATAGS,
+} from '~/constants';
 import { t } from '~/locales';
 
 export default component$(() => {
@@ -69,3 +76,9 @@ export default component$(() => {
 		</div>
 	);
 });
+
+export const head: DocumentHead = () => {
+	return {
+		meta: [...OG_METATAGS, ...TWITTER_METATAGS],
+	};
+};
