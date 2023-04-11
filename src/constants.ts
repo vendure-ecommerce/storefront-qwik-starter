@@ -16,7 +16,7 @@ export const OG_METATAGS = [
 	{ property: 'og:title', content: 'Vendure Qwik Storefront' },
 	{
 		property: 'og:description',
-		content: 'Qwik, Vendure, e-commerce, starter-kit',
+		content: 'A headless commerce storefront starter kit built with Vendure & Qwik',
 	},
 	{
 		property: 'og:image',
@@ -29,7 +29,7 @@ export const TWITTER_METATAGS = [
 	{ property: 'twitter:title', content: 'Vendure Qwik Storefront' },
 	{
 		property: 'twitter:description',
-		content: 'Qwik, Vendure, e-commerce, starter-kit',
+		content: 'A headless commerce storefront starter kit built with Vendure & Qwik',
 	},
 	{
 		property: 'twitter:image',
