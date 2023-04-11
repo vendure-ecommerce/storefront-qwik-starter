@@ -160,12 +160,14 @@ export const generateDocumentHead = (
 	const OG_METATAGS = [
 		{ property: 'og:type', content: 'website' },
 		{ property: 'og:url', content: url },
-		{ property: 'og:title', content: title },
+		{ name: 'title', property: 'og:title', content: title },
 		{
+			name: 'description',
 			property: 'og:description',
 			content: description,
 		},
 		{
+			name: 'image',
 			property: 'og:image',
 			content: image,
 		},
@@ -173,12 +175,14 @@ export const generateDocumentHead = (
 	const TWITTER_METATAGS = [
 		{ property: 'twitter:card', content: 'summary_large_image' },
 		{ property: 'twitter:url', content: url },
-		{ property: 'twitter:title', content: title },
+		{ name: 'title', property: 'twitter:title', content: title },
 		{
+			name: 'description',
 			property: 'twitter:description',
 			content: description,
 		},
 		{
+			name: 'image',
 			property: 'twitter:image',
 			content: image,
 		},
