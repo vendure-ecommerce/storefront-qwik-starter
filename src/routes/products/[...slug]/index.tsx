@@ -207,6 +207,10 @@ export default component$(() => {
 
 export const head: DocumentHead = ({ resolveValue, url }) => {
 	const product = resolveValue(useProductLoader);
-	const image = product.featuredAsset?.preview + '?w=400&h=400' || undefined;
-	return generateDocumentHead(url.href, product.name, product.description, image);
+	return generateDocumentHead(
+		url.href,
+		product.name,
+		product.description,
+		product.featuredAsset?.preview
+	);
 };

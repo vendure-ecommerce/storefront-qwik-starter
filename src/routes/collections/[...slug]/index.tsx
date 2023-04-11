@@ -170,10 +170,5 @@ export const head: DocumentHead = ({ resolveValue, url }) => {
 		const search = resolveValue(useSearchLoader);
 		image = search.items?.[0]?.productAsset?.preview || undefined;
 	}
-	return generateDocumentHead(
-		url.href,
-		collection.name,
-		undefined,
-		image ? image + '?w=400&h=400' : undefined
-	);
+	return generateDocumentHead(url.href, collection.name, undefined, image);
 };
