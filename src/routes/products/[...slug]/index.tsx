@@ -1,4 +1,12 @@
-import { $, component$, useContext, useStore, useTask$, useVisibleTask$ } from '@builder.io/qwik';
+import {
+	$,
+	component$,
+	useComputed$,
+	useContext,
+	useSignal,
+	useTask$,
+	useVisibleTask$,
+} from '@builder.io/qwik';
 import { routeLoader$ } from '@builder.io/qwik-city';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
@@ -9,11 +17,11 @@ import Price from '~/components/products/Price';
 import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import TopReviews from '~/components/top-reviews/TopReviews';
 import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
-import { Variant } from '~/types';
-import { cleanUpParams, isEnvVariableEnabled, scrollToTop } from '~/utils';
-import { getProductBySlug } from '~/providers/products/products';
 import { Order, OrderLine, Product } from '~/generated/graphql';
 import { addItemToOrderMutation } from '~/providers/orders/order';
+import { getProductBySlug } from '~/providers/products/products';
+import { Variant } from '~/types';
+import { cleanUpParams, isEnvVariableEnabled, scrollToTop } from '~/utils';
 
 export const useProductLoader = routeLoader$(async ({ params }) => {
 	const { slug } = cleanUpParams(params);
@@ -21,56 +29,48 @@ export const useProductLoader = routeLoader$(async ({ params }) => {
 });
 
 export default component$(() => {
-	const productSignal = useProductLoader();
-
 	const appState = useContext(APP_STATE);
-	const state = useStore<{
-		product: Product;
-		selectedVariantId: string;
-		quantity: Record<string, number>;
-		addItemToOrderError: string;
-	}>({
-		product: productSignal.value,
-		selectedVariantId: productSignal.value.variants[0].id,
-		quantity: {},
-		addItemToOrderError: '',
-	});
 
 	const calculateQuantities = $((product: Product) => {
-		state.quantity = {};
+		const result: Record<string, number> = {};
 		(product.variants || []).forEach((variant: Variant) => {
 			const orderLine = (appState.activeOrder?.lines || []).find(
 				(l: OrderLine) =>
 					l.productVariant.id === variant.id && l.productVariant.product.id === product.id
 			);
-			state.quantity[variant.id] = orderLine?.quantity || 0;
+			result[variant.id] = orderLine?.quantity || 0;
 		});
+		return result;
 	});
 
-	calculateQuantities(state.product);
+	const productSignal = useProductLoader();
+	const selectedVariantIdSignal = useSignal(productSignal.value.variants[0].id);
+	const selectedVariantSignal = useComputed$(() =>
+		productSignal.value.variants.find((v) => v.id === selectedVariantIdSignal.value)
+	);
+	const addItemToOrderErrorSignal = useSignal('');
+	const quantitySignal = useSignal<Record<string, number>>({});
 
 	useVisibleTask$(() => {
 		scrollToTop();
 	});
 
-	useTask$((tracker) => {
+	useTask$(async (tracker) => {
 		tracker.track(() => appState.activeOrder);
-		calculateQuantities(state.product);
+		quantitySignal.value = await calculateQuantities(productSignal.value);
 	});
-
-	const findVariantById = (id: string) => state.product.variants.find((v) => v.id === id);
-	const selectedVariant = () => findVariantById(state.selectedVariantId);
 
 	return (
 		<div>
 			<div class="max-w-6xl mx-auto px-4 py-10">
 				<div>
 					<h2 class="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
-						{state.product.name}
+						{productSignal.value.name}
 					</h2>
 					<Breadcrumbs
 						items={
-							state.product.collections[state.product.collections.length - 1]?.breadcrumbs ?? []
+							productSignal.value.collections[productSignal.value.collections.length - 1]
+								?.breadcrumbs ?? []
 						}
 					></Breadcrumbs>
 					<div class="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start mt-4 md:mt-12">
@@ -82,8 +82,8 @@ export default component$(() => {
 										class="object-center object-cover rounded-lg"
 										width="400"
 										height="400"
-										src={state.product.featuredAsset?.preview + '?w=400&h=400'}
-										alt={state.product.name}
+										src={productSignal.value.featuredAsset?.preview + '?w=400&h=400'}
+										alt={productSignal.value.name}
 										placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 									/>
 								</div>
@@ -94,22 +94,22 @@ export default component$(() => {
 								<h3 class="sr-only">Description</h3>
 								<div
 									class="text-base text-gray-700"
-									dangerouslySetInnerHTML={state.product.description}
+									dangerouslySetInnerHTML={productSignal.value.description}
 								/>
 							</div>
-							{1 < state.product.variants.length && (
+							{1 < productSignal.value.variants.length && (
 								<div class="mt-4">
 									<label class="block text-sm font-medium text-gray-700">Select option</label>
 									<select
 										class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
-										value={state.selectedVariantId}
-										onChange$={(e: any) => (state.selectedVariantId = e.target.value)}
+										value={selectedVariantIdSignal.value}
+										onChange$={(e: any) => (selectedVariantIdSignal.value = e.target.value)}
 									>
-										{state.product.variants.map((variant) => (
+										{productSignal.value.variants.map((variant) => (
 											<option
 												key={variant.id}
 												value={variant.id}
-												selected={state.selectedVariantId === variant.id}
+												selected={selectedVariantIdSignal.value === variant.id}
 											>
 												{variant.name}
 											</option>
@@ -119,45 +119,44 @@ export default component$(() => {
 							)}
 							<div class="mt-10 flex flex-col sm:flex-row sm:items-center">
 								<Price
-									priceWithTax={selectedVariant()?.priceWithTax}
-									currencyCode={selectedVariant()?.currencyCode}
+									priceWithTax={selectedVariantSignal.value?.priceWithTax}
+									currencyCode={selectedVariantSignal.value?.currencyCode}
 									forcedClass="text-3xl text-gray-900 mr-4"
 								></Price>
 								<div class="flex sm:flex-col1 align-baseline">
 									<button
 										class={`max-w-xs flex-1 ${
-											state.quantity[state.selectedVariantId] > 7
+											quantitySignal.value[selectedVariantIdSignal.value] > 7
 												? 'bg-gray-600 cursor-not-allowed'
-												: state.quantity[state.selectedVariantId] === 0
+												: quantitySignal.value[selectedVariantIdSignal.value] === 0
 												? 'bg-primary-600 hover:bg-primary-700'
 												: 'bg-green-600 active:bg-green-700 hover:bg-green-700'
 										} transition-colors border border-transparent rounded-md py-3 px-8 flex items-center 
 									justify-center text-base font-medium text-white focus:outline-none 
 									focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full`}
 										onClick$={async () => {
-											if (state.quantity[state.selectedVariantId] <= 7) {
+											if (quantitySignal.value[selectedVariantIdSignal.value] <= 7) {
 												const addItemToOrder = await addItemToOrderMutation(
-													state.selectedVariantId,
+													selectedVariantIdSignal.value,
 													1
 												);
 												if (addItemToOrder.__typename !== 'Order') {
-													state.addItemToOrderError = addItemToOrder.errorCode;
+													addItemToOrderErrorSignal.value = addItemToOrder.errorCode;
 												} else {
 													appState.activeOrder = addItemToOrder as Order;
 												}
 											}
 										}}
 									>
-										{state.quantity[state.selectedVariantId] ? (
+										{quantitySignal.value[selectedVariantIdSignal.value] ? (
 											<span class="flex items-center">
 												<CheckIcon />
-												{state.quantity[state.selectedVariantId]} in cart
+												{quantitySignal.value[selectedVariantIdSignal.value]} in cart
 											</span>
 										) : (
 											`Add to cart`
 										)}
 									</button>
-
 									<button
 										type="button"
 										class="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500"
@@ -168,12 +167,12 @@ export default component$(() => {
 								</div>
 							</div>
 							<div class="mt-2 flex items-center space-x-2">
-								<span class="text-gray-500">{selectedVariant()?.sku}</span>
-								<StockLevelLabel stockLevel={selectedVariant()?.stockLevel} />
+								<span class="text-gray-500">{selectedVariantSignal.value?.sku}</span>
+								<StockLevelLabel stockLevel={selectedVariantSignal.value?.stockLevel} />
 							</div>
-							{!!state.addItemToOrderError && (
+							{!!addItemToOrderErrorSignal.value && (
 								<div class="mt-4">
-									<Alert message={state.addItemToOrderError} />
+									<Alert message={addItemToOrderErrorSignal.value} />
 								</div>
 							)}
 
