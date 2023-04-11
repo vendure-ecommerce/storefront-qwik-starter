@@ -6,7 +6,7 @@ import {
 	useTask$,
 	useVisibleTask$,
 } from '@builder.io/qwik';
-import { routeLoader$, useLocation } from '@builder.io/qwik-city';
+import { DocumentHead, routeLoader$, useLocation } from '@builder.io/qwik-city';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import Filters from '~/components/facet-filter-controls/Filters';
@@ -20,6 +20,7 @@ import {
 	changeUrlParamsWithoutRefresh,
 	cleanUpParams,
 	enableDisableFacetValues,
+	generateDocumentHead,
 	groupFacetValues,
 	scrollToTop,
 } from '~/utils';
@@ -161,3 +162,18 @@ export default component$(() => {
 		</div>
 	);
 });
+
+export const head: DocumentHead = ({ resolveValue, url }) => {
+	const collection = resolveValue(useCollectionLoader);
+	let image = collection.children?.[0]?.featuredAsset?.preview || undefined;
+	if (!image) {
+		const search = resolveValue(useSearchLoader);
+		image = search.items?.[0]?.productAsset?.preview || undefined;
+	}
+	return generateDocumentHead(
+		url.href,
+		collection.name,
+		undefined,
+		image ? image + '?w=400&h=400' : undefined
+	);
+};
