@@ -10,14 +10,14 @@ import {
 import { routeLoader$ } from '@builder.io/qwik-city';
 import { ImageTransformerProps, useImageProvider } from '~/components/image/Image';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, IMAGE_RESOLUTIONS } from '~/constants';
+import { Order } from '~/generated/graphql';
+import { getAvailableCountriesQuery } from '~/providers/checkout/checkout';
+import { getCollections } from '~/providers/collections/collections';
+import { getActiveOrderQuery } from '~/providers/orders/order';
 import { ActiveCustomer, AppState } from '~/types';
 import { scrollToTop } from '~/utils';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
-import { getCollections } from '~/providers/collections/collections';
-import { Order } from '~/generated/graphql';
-import { getActiveOrderQuery } from '~/providers/orders/order';
-import { getAvailableCountriesQuery } from '~/providers/checkout/checkout';
 
 export const useCollectionsLoader = routeLoader$(async () => {
 	return await getCollections();

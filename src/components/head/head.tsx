@@ -1,9 +1,12 @@
 import { component$ } from '@builder.io/qwik';
 import { useDocumentHead, useLocation } from '@builder.io/qwik-city';
 import { DEFAULT_METADATA_TITLE } from '~/constants';
+import { generateDocumentHead } from '~/utils';
 
 export const Head = component$(() => {
-	const head = useDocumentHead();
+	const documentHead = useDocumentHead();
+	const head =
+		documentHead.meta.length > 0 ? documentHead : { ...documentHead, ...generateDocumentHead() };
 	const loc = useLocation();
 
 	return (
