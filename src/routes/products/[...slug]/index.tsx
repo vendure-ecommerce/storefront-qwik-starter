@@ -7,7 +7,7 @@ import {
 	useTask$,
 	useVisibleTask$,
 } from '@builder.io/qwik';
-import { routeLoader$ } from '@builder.io/qwik-city';
+import { DocumentHead, routeLoader$ } from '@builder.io/qwik-city';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CheckIcon from '~/components/icons/CheckIcon';
@@ -21,7 +21,7 @@ import { Order, OrderLine, Product } from '~/generated/graphql';
 import { addItemToOrderMutation } from '~/providers/orders/order';
 import { getProductBySlug } from '~/providers/products/products';
 import { Variant } from '~/types';
-import { cleanUpParams, isEnvVariableEnabled, scrollToTop } from '~/utils';
+import { cleanUpParams, generateDocumentHead, isEnvVariableEnabled, scrollToTop } from '~/utils';
 
 export const useProductLoader = routeLoader$(async ({ params }) => {
 	const { slug } = cleanUpParams(params);
@@ -204,3 +204,9 @@ export default component$(() => {
 		</div>
 	);
 });
+
+export const head: DocumentHead = ({ resolveValue, url }) => {
+	const product = resolveValue(useProductLoader);
+	const image = product.featuredAsset?.preview + '?w=400&h=400' || undefined;
+	return generateDocumentHead(url.href, product.name, product.description, image);
+};

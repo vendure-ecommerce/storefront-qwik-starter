@@ -1,7 +1,13 @@
 import { isBrowser } from '@builder.io/qwik/build';
+import {
+	DEFAULT_METADATA_DESCRIPTION,
+	DEFAULT_METADATA_IMAGE,
+	DEFAULT_METADATA_TITLE,
+	DEFAULT_METADATA_URL,
+} from '~/constants';
 import { ENV_VARIABLES } from '~/env';
-import { ActiveCustomer, FacetWithValues, ShippingAddress } from '~/types';
 import { SearchResponse } from '~/generated/graphql';
+import { ActiveCustomer, FacetWithValues, ShippingAddress } from '~/types';
 
 export const getRandomInt = (max: number) => Math.floor(Math.random() * max);
 
@@ -144,3 +150,38 @@ export const formatDateTime = (dateToConvert: Date) => {
 };
 
 export const isCheckoutPage = (url: string) => url.indexOf('/checkout/') >= 0;
+
+export const generateDocumentHead = (
+	url = DEFAULT_METADATA_URL,
+	title = DEFAULT_METADATA_TITLE,
+	description = DEFAULT_METADATA_DESCRIPTION,
+	image = DEFAULT_METADATA_IMAGE
+) => {
+	const OG_METATAGS = [
+		{ property: 'og:type', content: 'website' },
+		{ property: 'og:url', content: url },
+		{ property: 'og:title', content: title },
+		{
+			property: 'og:description',
+			content: description,
+		},
+		{
+			property: 'og:image',
+			content: image,
+		},
+	];
+	const TWITTER_METATAGS = [
+		{ property: 'twitter:card', content: 'summary_large_image' },
+		{ property: 'twitter:url', content: url },
+		{ property: 'twitter:title', content: title },
+		{
+			property: 'twitter:description',
+			content: description,
+		},
+		{
+			property: 'twitter:image',
+			content: image,
+		},
+	];
+	return { title, meta: [...OG_METATAGS, ...TWITTER_METATAGS] };
+};
