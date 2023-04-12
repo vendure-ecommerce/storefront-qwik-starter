@@ -1,11 +1,11 @@
-import { component$, useContext } from '@builder.io/qwik';
+import { component$, useContext, useSignal } from '@builder.io/qwik';
 import { Link, useLocation, useNavigate } from '@builder.io/qwik-city';
 import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
+import { Order } from '~/generated/graphql';
+import { adjustOrderLineMutation, removeOrderLineMutation } from '~/providers/orders/order';
 import { isCheckoutPage } from '~/utils';
 import { Image } from '../image/Image';
 import Price from '../products/Price';
-import { adjustOrderLineMutation, removeOrderLineMutation } from '~/providers/orders/order';
-import { Order } from '~/generated/graphql';
 
 export default component$<{
 	order?: Order;
@@ -13,6 +13,7 @@ export default component$<{
 	const navigate = useNavigate();
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
+	const timeoutSignal = useSignal<NodeJS.Timeout>();
 	const rows = order?.lines || appState.activeOrder?.lines || [];
 	const isInEditableUrl = !isCheckoutPage(location.url.toString()) || !order;
 	const currencyCode = order?.currencyCode || appState.activeOrder?.currencyCode || 'USD';
@@ -61,9 +62,16 @@ export default component$<{
 											name={`quantity-${line.id}`}
 											value={line.quantity}
 											onChange$={async (e: any) => {
-												appState.activeOrder = await adjustOrderLineMutation(
-													line.id,
-													+e.target?.value
+												if (timeoutSignal.value) {
+													clearTimeout(timeoutSignal.value);
+												}
+												timeoutSignal.value = setTimeout(
+													async () =>
+														(appState.activeOrder = await adjustOrderLineMutation(
+															line.id,
+															+e.target?.value
+														)),
+													300
 												);
 											}}
 											class="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
