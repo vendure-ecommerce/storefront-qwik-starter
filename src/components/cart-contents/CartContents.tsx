@@ -1,4 +1,11 @@
-import { QwikChangeEvent, component$, useContext, useSignal, useTask$ } from '@builder.io/qwik';
+import {
+	QwikChangeEvent,
+	component$,
+	useComputed$,
+	useContext,
+	useSignal,
+	useTask$,
+} from '@builder.io/qwik';
 import { Link, useLocation, useNavigate } from '@builder.io/qwik-city';
 import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
 import { Order } from '~/generated/graphql';
@@ -14,7 +21,7 @@ export default component$<{
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
 	const currentOrderLineSignal = useSignal<{ id: string; value: number }>();
-	const rows = order?.lines || appState.activeOrder?.lines || [];
+	const rowsSignal = useComputed$(() => order?.lines || appState.activeOrder?.lines || []);
 	const isInEditableUrl = !isCheckoutPage(location.url.toString()) || !order;
 	const currencyCode = order?.currencyCode || appState.activeOrder?.currencyCode || 'USD';
 
@@ -39,8 +46,8 @@ export default component$<{
 	return (
 		<div class="flow-root">
 			<ul class="-my-6 divide-y divide-gray-200">
-				{(rows ?? []).map((line) => (
-					<li key={line.id} class="py-6 flex">
+				{rowsSignal.value.map(({ linePriceWithTax, ...line }, key) => (
+					<li key={key} class="py-6 flex">
 						<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
 							<Image
 								layout="fixed"
@@ -62,7 +69,7 @@ export default component$<{
 										</Link>
 									</h3>
 									<Price
-										priceWithTax={line.linePriceWithTax}
+										priceWithTax={linePriceWithTax}
 										currencyCode={currencyCode}
 										forcedClass="ml-4"
 									></Price>
