@@ -1,12 +1,13 @@
-import type { QRL, QwikIntrinsicElements } from '@builder.io/qwik';
 import {
+	QRL,
+	QwikIntrinsicElements,
 	component$,
 	createContextId,
 	useContext,
 	useContextProvider,
 	useId,
 	useSignal,
-	useTask$,
+	useVisibleTask$,
 } from '@builder.io/qwik';
 
 export const DEFAULT_RESOLUTIONS = [3840, 1920, 1280, 960, 640];
@@ -200,7 +201,7 @@ export const Image = component$<ImageProps>((props) => {
 	const srcSetSignal = useSignal('');
 
 	const { src, width, height, aspectRatio, layout } = props;
-	useTask$(async () => {
+	useVisibleTask$(async () => {
 		srcSetSignal.value = await getSrcSet({
 			src,
 			width,
