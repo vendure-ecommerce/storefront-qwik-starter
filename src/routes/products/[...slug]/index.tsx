@@ -1,12 +1,4 @@
-import {
-	$,
-	component$,
-	useComputed$,
-	useContext,
-	useSignal,
-	useTask$,
-	useVisibleTask$,
-} from '@builder.io/qwik';
+import { $, component$, useComputed$, useContext, useSignal, useTask$ } from '@builder.io/qwik';
 import { DocumentHead, routeLoader$ } from '@builder.io/qwik-city';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
@@ -21,7 +13,7 @@ import { Order, OrderLine, Product } from '~/generated/graphql';
 import { addItemToOrderMutation } from '~/providers/orders/order';
 import { getProductBySlug } from '~/providers/products/products';
 import { Variant } from '~/types';
-import { cleanUpParams, generateDocumentHead, isEnvVariableEnabled, scrollToTop } from '~/utils';
+import { cleanUpParams, generateDocumentHead, isEnvVariableEnabled } from '~/utils';
 
 export const useProductLoader = routeLoader$(async ({ params }) => {
 	const { slug } = cleanUpParams(params);
@@ -50,10 +42,6 @@ export default component$(() => {
 	);
 	const addItemToOrderErrorSignal = useSignal('');
 	const quantitySignal = useSignal<Record<string, number>>({});
-
-	useVisibleTask$(() => {
-		scrollToTop();
-	});
 
 	useTask$(async (tracker) => {
 		tracker.track(() => appState.activeOrder);

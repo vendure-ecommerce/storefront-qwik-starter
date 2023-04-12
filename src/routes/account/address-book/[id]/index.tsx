@@ -6,14 +6,13 @@ import CheckIcon from '~/components/icons/CheckIcon';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import XMarkIcon from '~/components/icons/XMarkIcon';
 import { APP_STATE, AUTH_TOKEN } from '~/constants';
-import { ShippingAddress } from '~/types';
-import { scrollToTop } from '~/utils';
+import { CreateAddressInput, UpdateAddressInput } from '~/generated/graphql';
 import {
 	createCustomerAddressMutation,
 	getActiveCustomerAddressesQuery,
 	updateCustomerAddressMutation,
 } from '~/providers/customer/customer';
-import { CreateAddressInput, UpdateAddressInput } from '~/generated/graphql';
+import { ShippingAddress } from '~/types';
 
 export default component$(() => {
 	const navigate = useNavigate();
@@ -54,7 +53,6 @@ export default component$(() => {
 		} else {
 			activeCustomerAddress.value = appState.shippingAddress;
 		}
-		scrollToTop();
 	});
 
 	const createOrUpdateAddress = $(async (id: string | undefined, authToken: string | undefined) => {

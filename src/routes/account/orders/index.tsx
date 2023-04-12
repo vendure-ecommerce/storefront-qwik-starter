@@ -1,15 +1,13 @@
 import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import OrderCard from '~/components/account/OrderCard';
-import { scrollToTop } from '~/utils';
-import { getActiveCustomerOrdersQuery } from '~/providers/customer/customer';
 import { Customer, Order } from '~/generated/graphql';
+import { getActiveCustomerOrdersQuery } from '~/providers/customer/customer';
 
 export default component$(() => {
 	const activeCustomerOrdersSignal = useSignal<Customer>();
 
 	useVisibleTask$(async () => {
 		activeCustomerOrdersSignal.value = await getActiveCustomerOrdersQuery();
-		scrollToTop();
 	});
 
 	return activeCustomerOrdersSignal.value ? (

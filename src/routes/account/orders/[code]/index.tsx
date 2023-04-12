@@ -2,9 +2,9 @@ import { component$, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import { Image } from '~/components/image/Image';
 import { IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
-import { formatDateTime, formatPrice, scrollToTop } from '~/utils';
-import { getOrderByCodeQuery } from '~/providers/orders/order';
 import { Order } from '~/generated/graphql';
+import { getOrderByCodeQuery } from '~/providers/orders/order';
+import { formatDateTime, formatPrice } from '~/utils';
 
 export default component$(() => {
 	const {
@@ -14,7 +14,6 @@ export default component$(() => {
 
 	useVisibleTask$(async () => {
 		store.order = await getOrderByCodeQuery(code);
-		scrollToTop();
 	});
 
 	return store.order ? (

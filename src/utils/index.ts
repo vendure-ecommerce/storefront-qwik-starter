@@ -1,4 +1,3 @@
-import { isBrowser } from '@builder.io/qwik/build';
 import {
 	DEFAULT_METADATA_DESCRIPTION,
 	DEFAULT_METADATA_IMAGE,
@@ -73,12 +72,6 @@ export const changeUrlParamsWithoutRefresh = (term: string, facetValueIds: strin
 		'',
 		`${window.location.origin}${window.location.pathname}?q=${term}${f ? `&f=${f}` : ''}`
 	);
-};
-
-export const scrollToTop = () => {
-	if (isBrowser) {
-		window.scrollTo(0, 0);
-	}
 };
 
 export const setCookie = (name: string, value: string, days: number) => {

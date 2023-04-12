@@ -17,13 +17,12 @@ import XMarkIcon from '~/components/icons/XMarkIcon';
 import { Image } from '~/components/image/Image';
 import { Modal } from '~/components/modal/Modal';
 import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
-import { ActiveCustomer } from '~/types';
-import { scrollToTop } from '~/utils';
 import {
 	requestUpdateCustomerEmailAddressMutation,
 	updateCustomerMutation,
 } from '~/providers/account/account';
 import { getActiveCustomerQuery } from '~/providers/customer/customer';
+import { ActiveCustomer } from '~/types';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
@@ -47,7 +46,6 @@ export default component$(() => {
 			phoneNumber: activeCustomer.phoneNumber ?? '',
 		};
 		newEmail.value = activeCustomer?.emailAddress as string;
-		scrollToTop();
 	});
 
 	const updateCustomer = $(async (): Promise<void> => {
@@ -248,7 +246,6 @@ export default component$(() => {
 								onClick$={() => {
 									appState.customer = { ...appState.customer, ...update.customer };
 									updateCustomer();
-									scrollToTop();
 								}}
 							>
 								<CheckIcon /> &nbsp; Save
@@ -257,7 +254,6 @@ export default component$(() => {
 							<Button
 								onClick$={() => {
 									isEditing.value = false;
-									scrollToTop();
 								}}
 							>
 								<XMarkIcon forcedClass="w-4 h-4" /> &nbsp; Cancel

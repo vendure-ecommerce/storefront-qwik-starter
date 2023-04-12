@@ -15,7 +15,6 @@ import { getAvailableCountriesQuery } from '~/providers/checkout/checkout';
 import { getCollections } from '~/providers/collections/collections';
 import { getActiveOrderQuery } from '~/providers/orders/order';
 import { ActiveCustomer, AppState } from '~/types';
-import { scrollToTop } from '~/utils';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
 
@@ -65,7 +64,6 @@ export default component$(() => {
 	useContextProvider(APP_STATE, state);
 
 	useVisibleTask$(async () => {
-		scrollToTop();
 		state.activeOrder = await getActiveOrderQuery();
 	});
 
