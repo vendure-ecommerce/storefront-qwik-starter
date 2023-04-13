@@ -81,7 +81,8 @@ export const setCookie = (name: string, value: string, days: number) => {
 		date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
 		expires = '; expires=' + date.toUTCString();
 	}
-	document.cookie = name + '=' + (value || '') + expires + '; Secure; SameSite=Strict; path=/';
+	const sameSite = isEnvVariableEnabled('VITE_COOKIE_SAME_SITE') ? ' SameSite=Strict;' : '';
+	document.cookie = name + '=' + (value || '') + expires + `; Secure;${sameSite} path=/`;
 };
 
 export const getCookie = (name: string) => {
