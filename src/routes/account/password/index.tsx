@@ -61,7 +61,7 @@ export default component$(() => {
 
 	return appState.customer ? (
 		<div class="max-w-6xl m-auto rounded-lg p-4 space-y-4 flex justify-center">
-			<div class="bg-white shadow-lg rounded-lg w-[20rem] py-4 px-6">
+			<form class="bg-white shadow-lg rounded-lg w-[20rem] py-4 px-6">
 				<div class="p-4">
 					<h3 class="text-sm text-gray-500">Current Password</h3>
 					<input
@@ -69,6 +69,7 @@ export default component$(() => {
 						onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
 							currentPassword.value = event.target.value;
 						})}
+						autoComplete="current-password"
 						class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 					/>
 				</div>
@@ -79,6 +80,7 @@ export default component$(() => {
 						onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
 							newPassword.value = event.target.value;
 						})}
+						autoComplete="new-password"
 						class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 					/>
 				</div>
@@ -89,6 +91,7 @@ export default component$(() => {
 						onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
 							confirmPassword.value = event.target.value;
 						})}
+						autoComplete="new-password"
 						class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 					/>
 				</div>
@@ -110,7 +113,7 @@ export default component$(() => {
 						/>
 					</div>
 				)}
-			</div>
+			</form>
 		</div>
 	) : (
 		<div class="h-[100vh]" />
