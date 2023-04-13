@@ -81,8 +81,10 @@ export const setCookie = (name: string, value: string, days: number) => {
 		date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
 		expires = '; expires=' + date.toUTCString();
 	}
-	const sameSite = isEnvVariableEnabled('VITE_COOKIE_SAME_SITE') ? ' SameSite=Strict;' : '';
-	document.cookie = name + '=' + (value || '') + expires + `; Secure;${sameSite} path=/`;
+	const secureCookie = isEnvVariableEnabled('VITE_SECURE_COOKIE')
+		? ' Secure; SameSite=Strict;'
+		: '';
+	document.cookie = name + '=' + (value || '') + expires + `;${secureCookie} path=/`;
 };
 
 export const getCookie = (name: string) => {
