@@ -160,7 +160,7 @@ export const generateDocumentHead = (
 		},
 		{
 			property: 'og:image',
-			content: image ? image + '?w=800&h=800' : undefined,
+			content: image ? image + '?w=800&h=800&format=webp' : undefined,
 		},
 	];
 	const TWITTER_METATAGS = [
@@ -173,7 +173,7 @@ export const generateDocumentHead = (
 		},
 		{
 			property: 'twitter:image',
-			content: image ? image + '?w=800&h=800' : undefined,
+			content: image ? image + '?w=800&h=800&format=webp' : undefined,
 		},
 	];
 	return { title, meta: [...OG_METATAGS, ...TWITTER_METATAGS] };

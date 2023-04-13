@@ -13,7 +13,7 @@ export default component$(
 					class="rounded-xl flex-grow object-cover aspect-[7/8]"
 					width="200"
 					height="200"
-					src={productAsset?.preview + '?w=300&h=400'}
+					src={productAsset?.preview + '?w=300&h=400&format=webp'}
 					alt={productName}
 					placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 				/>

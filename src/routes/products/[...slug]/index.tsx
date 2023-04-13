@@ -70,7 +70,7 @@ export default component$(() => {
 										class="object-center object-cover rounded-lg"
 										width="400"
 										height="400"
-										src={productSignal.value.featuredAsset?.preview + '?w=400&h=400'}
+										src={productSignal.value.featuredAsset?.preview + '?w=400&h=400&format=webp'}
 										alt={productSignal.value.name}
 										placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 									/>
