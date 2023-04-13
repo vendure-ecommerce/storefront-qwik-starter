@@ -32,6 +32,8 @@ export const Head = component$(() => {
 			{head.styles.map((s, key) => (
 				<style key={key} {...s.props} dangerouslySetInnerHTML={s.style} />
 			))}
+
+			<meta name="description" content="Vendure Qwik Storefront" />
 		</head>
 	);
 });
