@@ -221,7 +221,7 @@ export const Image = component$<ImageProps>((props) => {
 			style={style}
 			width={['fullWidth', 'constrained'].includes(layout) ? undefined : width}
 			height={['fullWidth', 'constrained'].includes(layout) ? undefined : height}
-			// srcSet={srcSetSignal.value}
+			srcSet={srcSetSignal.value}
 			sizes={sizes}
 		/>
 	);
