@@ -7,7 +7,7 @@ import {
 	useContextProvider,
 	useId,
 	useSignal,
-	useVisibleTask$,
+	useTask$,
 } from '@builder.io/qwik';
 
 export const DEFAULT_RESOLUTIONS = [3840, 1920, 1280, 960, 640];
@@ -201,7 +201,7 @@ export const Image = component$<ImageProps>((props) => {
 	const srcSetSignal = useSignal('');
 
 	const { src, width, height, aspectRatio, layout } = props;
-	useVisibleTask$(async () => {
+	useTask$(async () => {
 		srcSetSignal.value = await getSrcSet({
 			src,
 			width,
@@ -221,7 +221,7 @@ export const Image = component$<ImageProps>((props) => {
 			style={style}
 			width={['fullWidth', 'constrained'].includes(layout) ? undefined : width}
 			height={['fullWidth', 'constrained'].includes(layout) ? undefined : height}
-			srcSet={srcSetSignal.value}
+			// srcSet={srcSetSignal.value}
 			sizes={sizes}
 		/>
 	);

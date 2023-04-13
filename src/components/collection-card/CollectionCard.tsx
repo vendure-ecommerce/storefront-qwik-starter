@@ -11,12 +11,12 @@ interface IProps {
 export default component$(({ collection }: IProps) => {
 	return (
 		<Link href={`/collections/${collection.slug}`} key={collection.id}>
-			<div class="max-w-[150px] max-h-[150px] relative rounded-lg overflow-hidden hover:opacity-75 xl:w-auto mx-auto">
+			<div class="max-w-[300px] relative rounded-lg overflow-hidden hover:opacity-75 xl:w-auto mx-auto">
 				<div class="w-full h-full object-center object-cover">
 					<Image
 						layout="fixed"
-						height="150"
-						width="150"
+						width="300"
+						height="300"
 						src={collection.featuredAsset?.preview}
 						alt={collection.name}
 						placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
