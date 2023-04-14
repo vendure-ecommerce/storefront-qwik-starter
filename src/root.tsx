@@ -3,6 +3,7 @@ import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from '@builder.
 import { Head } from './components/head/head';
 
 import globalStyles from './global.css?inline';
+import { useI18n } from './utils/i18n';
 
 export default component$(() => {
 	/**
@@ -12,6 +13,7 @@ export default component$(() => {
 	 * Don't remove the `<head>` and `<body>` elements.
 	 */
 	useStyles$(globalStyles);
+	useI18n();
 
 	return (
 		<QwikCityProvider>

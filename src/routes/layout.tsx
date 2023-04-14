@@ -7,7 +7,7 @@ import {
 	useStore,
 	useVisibleTask$,
 } from '@builder.io/qwik';
-import { routeLoader$ } from '@builder.io/qwik-city';
+import { RequestHandler, routeLoader$ } from '@builder.io/qwik-city';
 import { ImageTransformerProps, useImageProvider } from '~/components/image/Image';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, IMAGE_RESOLUTIONS } from '~/constants';
 import { Order } from '~/generated/graphql';
@@ -16,6 +16,7 @@ import { getCollections } from '~/providers/collections/collections';
 import { getActiveOrderQuery } from '~/providers/orders/order';
 import { ActiveCustomer, AppState } from '~/types';
 import { scrollToTop } from '~/utils';
+import { extractLang } from '~/utils/i18n';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
 
@@ -26,6 +27,10 @@ export const useCollectionsLoader = routeLoader$(async () => {
 export const useAvailableCountriesLoader = routeLoader$(async () => {
 	return await getAvailableCountriesQuery();
 });
+
+export const onRequest: RequestHandler = ({ request, locale }) => {
+	locale(extractLang(request.headers.get("accept-language"), request.url));
+};
 
 export default component$(() => {
 	const imageTransformer$ = $(({ src, width, height }: ImageTransformerProps): string => {

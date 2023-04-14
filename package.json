@@ -14,6 +14,8 @@
 		"dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
 		"fmt": "prettier --write .",
 		"fmt.check": "prettier --check .",
+		"i18n-extract": "node_modules/.bin/localize-extract -s \"dist/build/*.js\" -f json -o src/locales/message.en.json",
+		"i18n-translate": "node_modules/.bin/localize-translate -s \"*.js\" -t src/locales/message.*.json -o dist/build/{{LOCALE}} -r ./dist/build",
 		"lint": "eslint \"src/**/*.ts*\"",
 		"prepare": "husky install",
 		"preview": "qwik build preview && vite preview --open",
@@ -22,8 +24,10 @@
 		"generate": "graphql-codegen --config codegen.yml"
 	},
 	"devDependencies": {
-		"@builder.io/qwik": "0.21.0",
-		"@builder.io/qwik-city": "0.5.3",
+		"@angular/compiler": "^15.2.6",
+		"@angular/compiler-cli": "^15.2.6",
+		"@builder.io/qwik": "0.22.0",
+		"@builder.io/qwik-city": "0.6.0",
 		"@graphql-codegen/cli": "^3.2.2",
 		"@graphql-codegen/introspection": "^3.0.1",
 		"@graphql-codegen/typescript": "^3.0.2",
@@ -56,6 +60,7 @@
 	"private": true,
 	"type": "module",
 	"dependencies": {
+		"@angular/localize": "^15.2.6",
 		"@graphql-codegen/typescript-generic-sdk": "^3.1.0",
 		"@stripe/stripe-js": "^1.52.0",
 		"graphql": "^16.6.0",
