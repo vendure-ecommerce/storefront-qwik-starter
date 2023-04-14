@@ -6,7 +6,7 @@ import '@angular/localize/init';
 import { $, getLocale, useOnDocument, withLocale } from '@builder.io/qwik';
 import type { RenderOptions } from '@builder.io/qwik/server';
 import EN from '../locales/message.en.json';
-import SP from '../locales/message.sp.json';
+import ES from '../locales/message.es.json';
 
 /**
  * This file is left for the developer to customize to get the behavior they want for localization.
@@ -43,7 +43,7 @@ if (!$localizeFn.TRANSLATION_BY_LOCALE) {
  */
 export function initTranslations() {
   console.log("Loading translations...");
-  [EN, SP].forEach(({ translations, locale }) => {
+  [EN, ES].forEach(({ translations, locale }) => {
     withLocale(locale, () => loadTranslations(translations));
   });
 }
@@ -72,9 +72,6 @@ export function extractLang(
       }
     }
   }
-
-  console.log('locale', locale);
-
   return locale || "";
 }
 
