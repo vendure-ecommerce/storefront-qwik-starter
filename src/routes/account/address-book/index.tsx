@@ -4,13 +4,12 @@ import AddressCard from '~/components/account/AddressCard';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
 import PlusIcon from '~/components/icons/PlusIcon';
 import { APP_STATE } from '~/constants';
-import { ShippingAddress } from '~/types';
-import { scrollToTop } from '~/utils';
+import { Address } from '~/generated/graphql';
 import {
 	deleteCustomerAddressMutation,
 	getActiveCustomerAddressesQuery,
 } from '~/providers/customer/customer';
-import { Address } from '~/generated/graphql';
+import { ShippingAddress } from '~/types';
 
 export default component$(() => {
 	const navigate = useNavigate();
@@ -44,7 +43,6 @@ export default component$(() => {
 			appState.addressBook.splice(0, appState.addressBook.length);
 			appState.addressBook.push(...shippingAddresses);
 		}
-		scrollToTop();
 	});
 
 	return activeCustomerAddresses.value ? (

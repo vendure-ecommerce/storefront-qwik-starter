@@ -1,4 +1,3 @@
-import { isBrowser } from '@builder.io/qwik/build';
 import {
 	DEFAULT_METADATA_DESCRIPTION,
 	DEFAULT_METADATA_IMAGE,
@@ -75,12 +74,6 @@ export const changeUrlParamsWithoutRefresh = (term: string, facetValueIds: strin
 	);
 };
 
-export const scrollToTop = () => {
-	if (isBrowser) {
-		window.scrollTo(0, 0);
-	}
-};
-
 export const setCookie = (name: string, value: string, days: number) => {
 	let expires = '';
 	if (days) {
@@ -88,7 +81,10 @@ export const setCookie = (name: string, value: string, days: number) => {
 		date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
 		expires = '; expires=' + date.toUTCString();
 	}
-	document.cookie = name + '=' + (value || '') + expires + '; Secure; SameSite=Strict; path=/';
+	const secureCookie = isEnvVariableEnabled('VITE_SECURE_COOKIE')
+		? ' Secure; SameSite=Strict;'
+		: '';
+	document.cookie = name + '=' + (value || '') + expires + `;${secureCookie} path=/`;
 };
 
 export const getCookie = (name: string) => {
@@ -167,7 +163,7 @@ export const generateDocumentHead = (
 		},
 		{
 			property: 'og:image',
-			content: image ? image + '?w=800&h=800' : undefined,
+			content: image ? image + '?w=800&h=800&format=webp' : undefined,
 		},
 	];
 	const TWITTER_METATAGS = [
@@ -180,7 +176,7 @@ export const generateDocumentHead = (
 		},
 		{
 			property: 'twitter:image',
-			content: image ? image + '?w=800&h=800' : undefined,
+			content: image ? image + '?w=800&h=800&format=webp' : undefined,
 		},
 	];
 	return { title, meta: [...OG_METATAGS, ...TWITTER_METATAGS] };

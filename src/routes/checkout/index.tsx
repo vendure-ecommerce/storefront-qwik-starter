@@ -6,7 +6,7 @@ import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
 import Payment from '~/components/payment/Payment';
 import Shipping from '~/components/shipping/Shipping';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
-import { isEnvVariableEnabled, scrollToTop } from '~/utils';
+import { CreateAddressInput, CreateCustomerInput } from '~/generated/graphql';
 import {
 	addPaymentToOrderMutation,
 	transitionOrderToStateMutation,
@@ -15,7 +15,7 @@ import {
 	setCustomerForOrderMutation,
 	setOrderShippingAddressMutation,
 } from '~/providers/orders/order';
-import { CreateAddressInput, CreateCustomerInput } from '~/generated/graphql';
+import { isEnvVariableEnabled } from '~/utils';
 
 type Step = 'SHIPPING' | 'PAYMENT' | 'CONFIRMATION';
 
@@ -30,7 +30,6 @@ export default component$(() => {
 	];
 
 	useVisibleTask$(async () => {
-		scrollToTop();
 		appState.showCart = false;
 		if (appState.activeOrder?.lines?.length === 0) {
 			navigate('/');
@@ -41,7 +40,6 @@ export default component$(() => {
 		await transitionOrderToStateMutation();
 		const activeOrder = await addPaymentToOrderMutation();
 		appState.activeOrder = activeOrder;
-		scrollToTop();
 		navigate(`/checkout/confirmation/${activeOrder.code}`);
 	});
 
@@ -105,7 +103,6 @@ export default component$(() => {
 											} else {
 												setOrderShippingAddress();
 											}
-											scrollToTop();
 										}}
 									/>
 								) : state.step === 'PAYMENT' ? (

@@ -1,11 +1,4 @@
-import {
-	$,
-	QwikKeyboardEvent,
-	component$,
-	useStore,
-	useTask$,
-	useVisibleTask$,
-} from '@builder.io/qwik';
+import { $, QwikKeyboardEvent, component$, useStore, useTask$ } from '@builder.io/qwik';
 import { routeLoader$, useLocation } from '@builder.io/qwik-city';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
@@ -13,12 +6,7 @@ import ProductCard from '~/components/products/ProductCard';
 import { SearchResponse } from '~/generated/graphql';
 import { searchQueryWithTerm } from '~/providers/products/products';
 import { FacetWithValues } from '~/types';
-import {
-	changeUrlParamsWithoutRefresh,
-	enableDisableFacetValues,
-	groupFacetValues,
-	scrollToTop,
-} from '~/utils';
+import { changeUrlParamsWithoutRefresh, enableDisableFacetValues, groupFacetValues } from '~/utils';
 
 export const executeQuery = $(
 	async (term: string, activeFacetValueIds: string[]) =>
@@ -48,10 +36,6 @@ export default component$(() => {
 		search: {} as SearchResponse,
 		facedValues: [],
 		facetValueIds: [],
-	});
-
-	useVisibleTask$(async () => {
-		scrollToTop();
 	});
 
 	useTask$(async ({ track }) => {

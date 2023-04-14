@@ -1,11 +1,4 @@
-import {
-	$,
-	QwikKeyboardEvent,
-	component$,
-	useStore,
-	useTask$,
-	useVisibleTask$,
-} from '@builder.io/qwik';
+import { $, QwikKeyboardEvent, component$, useStore, useTask$ } from '@builder.io/qwik';
 import { DocumentHead, routeLoader$, useLocation } from '@builder.io/qwik-city';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CollectionCard from '~/components/collection-card/CollectionCard';
@@ -22,7 +15,6 @@ import {
 	enableDisableFacetValues,
 	generateDocumentHead,
 	groupFacetValues,
-	scrollToTop,
 } from '~/utils';
 
 export const useCollectionLoader = routeLoader$(async ({ params }) => {
@@ -55,10 +47,6 @@ export default component$(() => {
 		search: searchSignal.value as SearchResponse,
 		facedValues: groupFacetValues(searchSignal.value as SearchResponse, activeFacetValueIds),
 		facetValueIds: activeFacetValueIds,
-	});
-
-	useVisibleTask$(async () => {
-		scrollToTop();
 	});
 
 	useTask$(async ({ track }) => {

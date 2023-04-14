@@ -1,5 +1,6 @@
-import type { QRL, QwikIntrinsicElements } from '@builder.io/qwik';
 import {
+	QRL,
+	QwikIntrinsicElements,
 	component$,
 	createContextId,
 	useContext,

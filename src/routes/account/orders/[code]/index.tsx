@@ -2,9 +2,9 @@ import { component$, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import { Image } from '~/components/image/Image';
 import { IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
-import { formatDateTime, formatPrice, scrollToTop } from '~/utils';
-import { getOrderByCodeQuery } from '~/providers/orders/order';
 import { Order } from '~/generated/graphql';
+import { getOrderByCodeQuery } from '~/providers/orders/order';
+import { formatDateTime, formatPrice } from '~/utils';
 
 export default component$(() => {
 	const {
@@ -14,7 +14,6 @@ export default component$(() => {
 
 	useVisibleTask$(async () => {
 		store.order = await getOrderByCodeQuery(code);
-		scrollToTop();
 	});
 
 	return store.order ? (
@@ -28,9 +27,9 @@ export default component$(() => {
 					<span class="text-xl font-semibold">{formatDateTime(store.order?.createdAt)}</span>
 				</p>
 				<ul class="divide-y divide-gray-200">
-					{store.order?.lines.map((line) => {
+					{store.order?.lines.map((line, key) => {
 						return (
-							<li class="py-6 flex">
+							<li key={key} class="py-6 flex">
 								<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
 									<Image
 										layout="fixed"
