@@ -60,7 +60,7 @@ export function extractLang(
   url: string
 ): string {
   let locale =
-    (url && new URL(url).searchParams.get("locale")) ||
+    (url && new URL(url).searchParams.get("lang")) ||
     acceptLanguage?.split(",")[0];
   if (locale) {
     // If we have a locale, make sure it's in the list of supported locales.
