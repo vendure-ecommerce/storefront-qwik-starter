@@ -28,7 +28,7 @@ export default component$(() => {
 					<div class="grid grid-cols-2 gap-8 xl:col-span-2">
 						<div class="md:grid md:grid-cols-2 md:gap-8">
 							<div>
-								<h3 class="text-sm font-semibold text-gray-500 tracking-wider uppercase">Shop</h3>
+								<h3 class="text-sm font-semibold text-gray-500 tracking-wider uppercase">{$localize`Shop`}</h3>
 								<ul class="mt-4 space-y-4">
 									{collections.map((collection) => (
 										<li key={collection.id}>
@@ -45,7 +45,7 @@ export default component$(() => {
 							</div>
 							<div class="mt-12 md:mt-0">
 								<h3 class="text-sm font-semibold text-gray-500 tracking-wider uppercase">
-									Support
+									{$localize`Support`}
 								</h3>
 								<ul class="mt-4 space-y-4">
 									{navigation.support.map((item) => (
@@ -61,7 +61,7 @@ export default component$(() => {
 						<div class="md:grid md:grid-cols-2 md:gap-8">
 							<div>
 								<h3 class="text-sm font-semibold text-gray-500 tracking-wider uppercase">
-									Company
+									{$localize`Company`}
 								</h3>
 								<ul class="mt-4 space-y-4">
 									{navigation.company.map((item) => (
@@ -77,10 +77,10 @@ export default component$(() => {
 					</div>
 					<div class="mt-8 xl:mt-0">
 						<h3 class="text-sm font-semibold text-gray-500 tracking-wider uppercase">
-							Subscribe to our newsletter
+							{$localize`Subscribe to our newsletter`}
 						</h3>
 						<p class="mt-4 text-base text-gray-500">
-							Be the first to know about exclusive offers & deals.
+							{$localize`Be the first to know about exclusive offers & deals.`}
 						</p>
 						<div class="mt-4 sm:flex sm:max-w-md">
 							<label id="email-subscription" class="sr-only">
@@ -91,12 +91,12 @@ export default component$(() => {
 								autoComplete="email"
 								required
 								class="input-text"
-								placeholder="Enter your email"
+								placeholder={$localize`Enter your email`}
 								aria-labelledby="email-subscription"
 							/>
 							<div class="mt-3 rounded-md sm:mt-0 sm:ml-3 sm:flex-shrink-0">
-								<button class="btn-primary" onClick$={() => {}}>
-									Subscribe
+								<button class="btn-primary" onClick$={() => { }}>
+									{$localize`Subscribe`}
 								</button>
 							</div>
 						</div>

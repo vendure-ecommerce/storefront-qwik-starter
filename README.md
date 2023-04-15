@@ -51,6 +51,40 @@ The production build will generate client and server modules by running both cli
 npm run build # or `yarn build`
 ```
 
+## i18n
+
+### Marking string for translation
+
+Any string can be marked for translation by using the `$localize` template function like so:
+
+```typescript
+export default component$((props: { name: string }) => {
+  return <span>{$localize`Hello ${props.name}!`}</span>;
+});
+```
+
+### Extracting string for translation
+
+The first step in translation is to build the application. Once the artifacts are build the strings can be extracted for translation.
+
+```bash
+npm run build.client
+npm run i18n-extract
+```
+
+The result of the commands is `src/locale/message.en.json`.
+
+### Translating strings
+
+Take the resulting string and send them for translation. Produce a file for each language. For example:
+
+```bash
+src/locale/message.en.json    # Original strings
+src/locale/message.es.json
+```
+
+The resulting language should match your browser language. You can also override the language by adding ?lang=es to the URL.
+
 ---
 
 ## Related

@@ -84,11 +84,11 @@ export function extractLang(
  *
  * @returns The base URL to use for loading the chunks in the browser.
  */
-export function extractBase({ envData }: RenderOptions): string {
+export function extractBase({ serverData }: RenderOptions): string {
   if (import.meta.env.DEV) {
     return "/build";
   } else {
-    return "/build/" + envData!.locale;
+    return "/build/" + serverData!.locale;
   }
 }
 
