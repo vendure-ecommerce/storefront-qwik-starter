@@ -31,11 +31,11 @@ devDependencies:
     specifier: ^15.2.6
     version: 15.2.6(@angular/compiler@15.2.6)(typescript@5.0.4)
   '@builder.io/qwik':
-    specifier: 0.101.0
-    version: 0.101.0(undici@5.21.2)
+    specifier: 0.102.0
+    version: 0.102.0(undici@5.21.2)
   '@builder.io/qwik-city':
-    specifier: 0.101.0
-    version: 0.101.0(@builder.io/qwik@0.101.0)
+    specifier: 0.102.0
+    version: 0.102.0(@builder.io/qwik@0.102.0)
   '@graphql-codegen/cli':
     specifier: ^3.3.0
     version: 3.3.0(@babel/core@7.21.4)(@types/node@18.15.11)(graphql@16.6.0)
@@ -752,13 +752,13 @@ packages:
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
 
-  /@builder.io/qwik-city@0.101.0(@builder.io/qwik@0.101.0):
-    resolution: {integrity: sha512-26hoEbBQ5yEn13zjt5YCL/eULAptSoTPwylFSKrHPQd/3iafjGFr+DjiwpHUEodW3io1MsqZ0Uu9PIDKnGJbOg==}
+  /@builder.io/qwik-city@0.102.0(@builder.io/qwik@0.102.0):
+    resolution: {integrity: sha512-41MnJVr/YNTvPR6Sl5xh8hQFRwIy30L517qWh/XjFMUHb1IXz3HLF+ER5l692YKl372CElGzPEkf31IFcdxlnA==}
     engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
     peerDependencies:
       '@builder.io/qwik': '>=0.22.0'
     dependencies:
-      '@builder.io/qwik': 0.101.0(undici@5.21.2)
+      '@builder.io/qwik': 0.102.0(undici@5.21.2)
       '@mdx-js/mdx': 2.3.0
       '@types/mdx': 2.0.4
       source-map: 0.7.4
@@ -768,8 +768,8 @@ packages:
       - supports-color
     dev: true
 
-  /@builder.io/qwik@0.101.0(undici@5.21.2):
-    resolution: {integrity: sha512-uXeN5tlquw8OKsRp/tQie2tEKv5h6AuyiVpNzdCqc6VUW5c0OEB063HnUr072u0ojL/3vPfdY1mAi+6MwMaEXQ==}
+  /@builder.io/qwik@0.102.0(undici@5.21.2):
+    resolution: {integrity: sha512-27Q6ObitiyXtT/M0YyJdrmhCHk2VKBqFAnjuxbf1N3XivD4k8+0uMuwyPvlc3ee2s6OjfbAfzmM1YMNIf3BAjQ==}
     engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
     hasBin: true
     peerDependencies:
