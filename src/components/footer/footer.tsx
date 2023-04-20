@@ -3,24 +3,26 @@ import { Link } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import GitIcon from '../icons/GitIcon';
 
-export const navigation = {
-	support: [
-		{ name: 'Help', href: '#' },
-		{ name: 'Track order', href: '#' },
-		{ name: 'Shipping', href: '#' },
-		{ name: 'Returns', href: '#' },
-	],
-	company: [
-		{ name: 'About', href: '#' },
-		{ name: 'Blog', href: '#' },
-		{ name: 'Corporate responsibility', href: '#' },
-		{ name: 'Press', href: '#' },
-	],
-};
 export default component$(() => {
 	const collections = useContext(APP_STATE).collections.filter(
 		(item) => item.parent?.name === '__root_collection__' && !!item.featuredAsset
 	);
+
+	const navigation = {
+		support: [
+			{ name: $localize`Help`, href: '#' },
+			{ name: $localize`Track order`, href: '#' },
+			{ name: $localize`Shipping`, href: '#' },
+			{ name: $localize`Returns`, href: '#' },
+		],
+		company: [
+			{ name: $localize`About`, href: '#' },
+			{ name: $localize`Blog`, href: '#' },
+			{ name: $localize`Corporate responsibility`, href: '#' },
+			{ name: $localize`Press`, href: '#' },
+		],
+	};
+
 	return (
 		<footer class="pt-6 border-t bg-gray-50 mt-12">
 			<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 ">
