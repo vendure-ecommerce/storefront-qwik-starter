@@ -1,12 +1,15 @@
 {
 	"locale": "en",
 	"translations": {
+		"4818852650817502025": "My Account",
 		"840692109692540367": "Sign In",
 		"7231011883243004281": "Shopping cart",
 		"7899540294200899574": "Your cart is empty",
 		"870418232806327600": "Subtotal",
 		"8153375882573753882": "Shipping will be calculated at checkout.",
 		"4776389683576645610": "Checkout",
+		"6762504134540024018": "Quantity",
+		"4814285799071780083": "Remove",
 		"7911416166208830577": "Help",
 		"3871924823487838355": "Track order",
 		"5972351850683239127": "Shipping",
