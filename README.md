@@ -57,7 +57,7 @@ npm run build # or `yarn build`
 
 - [Vendure Docs](https://vendure.io/docs)
 - [Vendure Github](https://github.com/vendure-ecommerce/vendure)
-- [Vendure Slack](https://join.slack.com/t/vendure-ecommerce/shared_invite/enQtNzA1NTcyMDY3NTg0LTMzZGQzNDczOWJiMTU2YjAyNWJlMzdmZGE3ZDY5Y2RjMGYxZWNlYTI4NmU4Y2Q1MDNlYzE4MzQ5ODcyYTdmMGU)
+- [Vendure Slack](https://vendure.io/slack)
 - [Qwik Docs](https://qwik.builder.io/)
 - [Qwik Github](https://github.com/BuilderIO/qwik)
 - [@QwikDev](https://twitter.com/QwikDev)
