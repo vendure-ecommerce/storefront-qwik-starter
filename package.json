@@ -3,7 +3,7 @@
 	"description": "File based routing and MDX support Vite.js tooling. Cloudflare Pages. Prettier code formatter. Tailwind CSS framework.",
 	"scripts": {
 		"build": "qwik build",
-		"build.client": "vite build && pnpm run i18n-translate",
+		"build.client": "vite build && npm run i18n-translate",
 		"build.preview": "vite build --ssr src/entry.preview.tsx",
 		"build.server": "vite build -c adapters/cloudflare-pages/vite.config.ts",
 		"build.types": "tsc --incremental --noEmit",
