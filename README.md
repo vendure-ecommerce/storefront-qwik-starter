@@ -59,7 +59,7 @@ Any string can be marked for translation by using the `$localize` template funct
 
 ```typescript
 export default component$((props: { name: string }) => {
-  return <span>{$localize`Hello ${props.name}!`}</span>;
+	return <span>{$localize`Hello ${props.name}!`}</span>;
 });
 ```
 
@@ -82,6 +82,18 @@ Take the resulting string and send them for translation. Produce a file for each
 src/locale/message.en.json    # Original strings
 src/locale/message.es.json
 ```
+
+### Sorting translations
+
+Qwik hashes bundles based on the content of the files. This means that if a file changes, the order of i18n translations will be lost and can be difficult to manage manually.
+
+```bash
+npm run i18n-sort
+```
+
+The `i18n-sort` script will sort by first appearance in the src folder to keep a consistent order.
+
+### Testing translations
 
 The resulting language should match your browser language. You can also override the language by adding ?lang=es to the URL.
 
