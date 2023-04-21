@@ -68,5 +68,10 @@
 		"graphql-tag": "^2.12.6",
 		"undici": "^5.21.2",
 		"zod": "^3.21.4"
+	},
+	"overrides": {
+		"@angular/compiler-cli": {
+			"typescript": "5.0.4"
+		}
 	}
 }
