@@ -21,6 +21,13 @@ export default component$<Props>(({ appState }) => {
 		state.selectedMethodId = state.methods[0].id;
 	});
 
+	useTask$(async (tracker) => {
+		const selected = tracker.track(() => state.selectedMethodId);
+		if (selected) {
+			appState.activeOrder = await setOrderShippingMethodMutation(selected);
+		}
+	});
+
 	return (
 		<div>
 			<label class="text-lg font-medium text-gray-900">Delivery method</label>
@@ -29,10 +36,7 @@ export default component$<Props>(({ appState }) => {
 					<div
 						key={method.id}
 						class={`relative bg-white border rounded-lg shadow-sm p-4 flex cursor-pointer focus:outline-none`}
-						onClick$={async () => {
-							state.selectedMethodId = state.methods[index].id;
-							appState.activeOrder = await setOrderShippingMethodMutation(state.selectedMethodId);
-						}}
+						onClick$={() => (state.selectedMethodId = state.methods[index].id)}
 					>
 						<span class="flex-1 flex">
 							<span class="flex flex-col">
