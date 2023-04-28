@@ -22,8 +22,8 @@
 		"generate": "graphql-codegen --config codegen.yml"
 	},
 	"devDependencies": {
-		"@builder.io/qwik": "0.104.0",
-		"@builder.io/qwik-city": "0.104.0",
+		"@builder.io/qwik": "0.105.0",
+		"@builder.io/qwik-city": "0.105.0",
 		"@graphql-codegen/cli": "^3.3.1",
 		"@graphql-codegen/introspection": "^3.0.1",
 		"@graphql-codegen/typescript": "^3.0.4",
@@ -36,7 +36,7 @@
 		"autoprefixer": "10.4.14",
 		"concurrently": "8.0.1",
 		"eslint": "8.39.0",
-		"eslint-plugin-qwik": "0.104.0",
+		"eslint-plugin-qwik": "0.105.0",
 		"husky": "^8.0.3",
 		"node-fetch": "3.3.1",
 		"postcss": "8.4.23",
