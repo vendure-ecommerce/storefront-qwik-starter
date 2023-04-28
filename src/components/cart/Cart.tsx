@@ -49,7 +49,7 @@ export default component$(() => {
 											<div class="flex justify-between text-base font-medium text-gray-900">
 												<p>Subtotal</p>
 												<p>
-													<CartPrice field={'subTotalWithTax'} />
+													<CartPrice field={'subTotalWithTax'} order={appState.activeOrder} />
 												</p>
 											</div>
 											<p class="mt-0.5 text-sm text-gray-500">

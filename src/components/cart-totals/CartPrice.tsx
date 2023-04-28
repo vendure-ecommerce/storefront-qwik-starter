@@ -1,14 +1,16 @@
-import { component$, useContext } from '@builder.io/qwik';
-import { APP_STATE } from '~/constants';
+import { component$ } from '@builder.io/qwik';
+import { Order } from '~/generated/graphql';
 import type { OrderPriceFields } from '~/types';
 import { formatPrice } from '~/utils';
-import { Order } from '~/generated/graphql';
 
-export default component$(
-	(props: { field: OrderPriceFields; forcedClass?: string; completedOrder?: Order }) => {
-		const order = useContext(APP_STATE).activeOrder || props.completedOrder;
-		const currencyCode = useContext(APP_STATE).activeOrder?.currencyCode || 'USD';
-		const priceWithTax = order ? order[props.field] : 0;
-		return <div class={props.forcedClass}>{formatPrice(priceWithTax, currencyCode)}</div>;
-	}
-);
+type Props = {
+	field: OrderPriceFields;
+	forcedClass?: string;
+	order?: Order;
+};
+
+export default component$<Props>(({ field, forcedClass, order }) => {
+	const currencyCode = order?.currencyCode || 'USD';
+	const priceWithTax = order?.[field] || 0;
+	return <div class={forcedClass}>{formatPrice(priceWithTax, currencyCode)}</div>;
+});
