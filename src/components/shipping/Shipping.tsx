@@ -155,7 +155,7 @@ export default component$<IProps>(({ onForward$ }) => {
 			<AddressForm shippingAddress={appState.shippingAddress} />
 
 			<div class="mt-10 border-t border-gray-200 pt-10">
-				<ShippingMethodSelector />
+				<ShippingMethodSelector appState={appState} />
 			</div>
 
 			<button

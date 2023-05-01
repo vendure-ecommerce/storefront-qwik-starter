@@ -1,14 +1,16 @@
-import { component$, useContext, useStore, useTask$ } from '@builder.io/qwik';
-import { APP_STATE } from '~/constants';
-import { setOrderShippingMethodMutation } from '~/providers/orders/order';
+import { component$, useStore, useTask$ } from '@builder.io/qwik';
 import { getEligibleShippingMethodsQuery } from '~/providers/checkout/checkout';
-import { EligibleShippingMethods } from '~/types';
+import { setOrderShippingMethodMutation } from '~/providers/orders/order';
+import { AppState, EligibleShippingMethods } from '~/types';
 import { formatPrice } from '~/utils';
 import CheckCircleIcon from '../icons/CheckCircleIcon';
 
-export default component$(() => {
-	const appState = useContext(APP_STATE);
-	const currencyCode = useContext(APP_STATE).activeOrder?.currencyCode || 'USD';
+type Props = {
+	appState: AppState;
+};
+
+export default component$<Props>(({ appState }) => {
+	const currencyCode = appState.activeOrder.currencyCode || 'USD';
 	const state = useStore<{ selectedMethodId: string; methods: EligibleShippingMethods[] }>({
 		selectedMethodId: '',
 		methods: [],
