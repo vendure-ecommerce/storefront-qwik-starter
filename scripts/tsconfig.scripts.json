@@ -1,0 +1,11 @@
+{
+	"ts-node": {
+		"esm": true,
+		"compilerOptions": {
+			"esModuleInterop": true,
+			"moduleResolution": "node",
+			"module": "es6"
+		},
+		"exclude": ["node_modules"]
+	}
+}

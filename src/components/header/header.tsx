@@ -1,13 +1,13 @@
 import { $, component$, useContext, useVisibleTask$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
+import { logoutMutation } from '~/providers/account/account';
+import { getActiveCustomerQuery } from '~/providers/customer/customer';
 import Cart from '../cart/Cart';
 import LogoutIcon from '../icons/LogoutIcon';
 import ShoppingBagIcon from '../icons/ShoppingBagIcon';
 import UserIcon from '../icons/UserIcon';
 import SearchBar from '../search-bar/SearchBar';
-import { logoutMutation } from '~/providers/account/account';
-import { getActiveCustomerQuery } from '~/providers/customer/customer';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
@@ -52,13 +52,13 @@ export default component$(() => {
 						<div class="flex justify-between items-center w-full">
 							<div>
 								<p class="hidden sm:block">
-									Exclusive: Get your own{' '}
+									{$localize`Exclusive: Get your own`}{' '}
 									<a
 										href="https://github.com/vendure-ecommerce/storefront-qwik-starter"
 										target="_blank"
 										class="underline"
 									>
-										FREE storefront starter kit
+										{$localize`FREE storefront starter kit`}
 									</a>
 								</p>
 							</div>
@@ -69,13 +69,13 @@ export default component$(() => {
 								>
 									<UserIcon />
 									<span class="mt-1 text-gray-700">
-										{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? 'My Account' : 'Sign In'}
+										{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? $localize`My Account` : $localize`Sign In`}
 									</span>
 								</Link>
 								{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID && (
 									<button onClick$={logout} class="text-gray-700">
 										<div class="flex items-center cursor-pointer">
-											<span class="mr-2">Logout</span>
+											<span class="mr-2">{$localize`Logout`}</span>
 											<LogoutIcon />
 										</div>
 									</button>

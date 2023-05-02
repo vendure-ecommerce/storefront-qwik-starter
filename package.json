@@ -3,7 +3,7 @@
 	"description": "File based routing and MDX support Vite.js tooling. Cloudflare Pages. Prettier code formatter. Tailwind CSS framework.",
 	"scripts": {
 		"build": "qwik build",
-		"build.client": "vite build",
+		"build.client": "vite build && npm run i18n-translate",
 		"build.preview": "vite build --ssr src/entry.preview.tsx",
 		"build.server": "vite build -c adapters/cloudflare-pages/vite.config.ts",
 		"build.types": "tsc --incremental --noEmit",
@@ -14,6 +14,9 @@
 		"dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
 		"fmt": "prettier --write .",
 		"fmt.check": "prettier --check .",
+		"i18n-extract": "node_modules/.bin/localize-extract -s \"dist/build/*.js\" -f json -o src/locales/message.en.json",
+		"i18n-translate": "node_modules/.bin/localize-translate -s \"*.js\" -t src/locales/message.*.json -o dist/build/{{LOCALE}} -r ./dist/build",
+		"i18n-sort": "ts-node --project scripts/tsconfig.scripts.json scripts/sort-i18n.ts src/locales",
 		"lint": "eslint \"src/**/*.ts*\"",
 		"prepare": "husky install",
 		"preview": "qwik build preview && vite preview --open",
@@ -22,6 +25,8 @@
 		"generate": "graphql-codegen --config codegen.yml"
 	},
 	"devDependencies": {
+		"@angular/compiler": "^15.2.6",
+		"@angular/compiler-cli": "^15.2.6",
 		"@builder.io/qwik": "1.0.0",
 		"@builder.io/qwik-city": "1.0.0",
 		"@graphql-codegen/cli": "^3.3.1",
@@ -56,11 +61,17 @@
 	"private": true,
 	"type": "module",
 	"dependencies": {
+		"@angular/localize": "^15.2.6",
 		"@graphql-codegen/typescript-generic-sdk": "^3.1.0",
 		"@stripe/stripe-js": "^1.52.1",
 		"graphql": "^16.6.0",
 		"graphql-tag": "^2.12.6",
 		"undici": "^5.22.0",
 		"zod": "^3.21.4"
+	},
+	"overrides": {
+		"@angular/compiler-cli": {
+			"typescript": "5.0.4"
+		}
 	}
 }
