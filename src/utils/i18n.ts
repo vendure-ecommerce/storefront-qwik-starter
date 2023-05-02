@@ -3,7 +3,7 @@
  */
 import { loadTranslations } from '@angular/localize';
 import '@angular/localize/init';
-import { $, getLocale, useOnDocument, withLocale } from '@builder.io/qwik';
+import { getLocale, withLocale } from '@builder.io/qwik';
 import type { RenderOptions } from '@builder.io/qwik/server';
 import EN from '../locales/message.en.json';
 import ES from '../locales/message.es.json';
@@ -14,8 +14,8 @@ import ES from '../locales/message.es.json';
 
 // Declare location where extra types will be stored.
 const $localizeFn = $localize as any as {
-  TRANSLATIONS: Record<string, any>;
-  TRANSLATION_BY_LOCALE: Map<string, Record<string, any>>;
+	TRANSLATIONS: Record<string, any>;
+	TRANSLATION_BY_LOCALE: Map<string, Record<string, any>>;
 };
 
 /**
@@ -25,27 +25,27 @@ const $localizeFn = $localize as any as {
  * appropriate translation based on the current locale which is store in the `usEnvDate('local')`.
  */
 if (!$localizeFn.TRANSLATION_BY_LOCALE) {
-  $localizeFn.TRANSLATION_BY_LOCALE = new Map([["", {}]]);
-  Object.defineProperty($localize, "TRANSLATIONS", {
-    get: function () {
-      const locale = getLocale();
-      let translations = $localizeFn.TRANSLATION_BY_LOCALE.get(locale);
-      if (!translations) {
-        $localizeFn.TRANSLATION_BY_LOCALE.set(locale, (translations = {}));
-      }
-      return translations;
-    },
-  });
+	$localizeFn.TRANSLATION_BY_LOCALE = new Map([['', {}]]);
+	Object.defineProperty($localize, 'TRANSLATIONS', {
+		get: function () {
+			const locale = getLocale();
+			let translations = $localizeFn.TRANSLATION_BY_LOCALE.get(locale);
+			if (!translations) {
+				$localizeFn.TRANSLATION_BY_LOCALE.set(locale, (translations = {}));
+			}
+			return translations;
+		},
+	});
 }
 
 /**
  * Function used to load all translations variants.
  */
 export function initTranslations() {
-  console.log("Loading translations...");
-  [EN, ES].forEach(({ translations, locale }) => {
-    withLocale(locale, () => loadTranslations(translations));
-  });
+	console.log('Loading translations...');
+	[EN, ES].forEach(({ translations, locale }) => {
+		withLocale(locale, () => loadTranslations(translations));
+	});
 }
 
 /**
@@ -55,24 +55,19 @@ export function initTranslations() {
  *
  * @returns The locale to use which will be stored in the `useEnvData('locale')`.
  */
-export function extractLang(
-  acceptLanguage: string | undefined | null,
-  url: string
-): string {
-  let locale =
-    (url && new URL(url).searchParams.get("lang")) ||
-    acceptLanguage?.split(",")[0];
-  if (locale) {
-    // If we have a locale, make sure it's in the list of supported locales.
-    if (!$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
-      // If not, try to remove sub-locale. (e.g. `en-US` -> `en`)
-      locale = locale.split("-")[0];
-      if (!$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
-        locale = ""; // If not, give up and don't translate.
-      }
-    }
-  }
-  return locale || "";
+export function extractLang(acceptLanguage: string | undefined | null, url: string): string {
+	let locale = (url && new URL(url).searchParams.get('lang')) || acceptLanguage?.split(',')[0];
+	if (locale) {
+		// If we have a locale, make sure it's in the list of supported locales.
+		if (!$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
+			// If not, try to remove sub-locale. (e.g. `en-US` -> `en`)
+			locale = locale.split('-')[0];
+			if (!$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
+				locale = ''; // If not, give up and don't translate.
+			}
+		}
+	}
+	return locale || '';
 }
 
 /**
@@ -85,17 +80,20 @@ export function extractLang(
  * @returns The base URL to use for loading the chunks in the browser.
  */
 export function extractBase({ serverData }: RenderOptions): string {
-  if (import.meta.env.DEV) {
-    return "/build";
-  } else {
-    return "/build/" + serverData!.locale;
-  }
+	if (import.meta.env.DEV) {
+		return '/build';
+	} else {
+		return '/build/' + serverData!.locale;
+	}
 }
 
 export function useI18n() {
-  if (import.meta.env.DEV) {
-    useOnDocument("qinit", $(initTranslations));
-  }
+	// Runtime translation is used during development only.
+	if (import.meta.env.DEV) {
+		return initTranslations;
+	}
+	// Otherwise, will return a noop
+	return () => {};
 }
 
 initTranslations();
