@@ -1,9 +1,8 @@
 import { component$ } from '@builder.io/qwik';
 import { useDocumentHead, useLocation } from '@builder.io/qwik-city';
-import { DEFAULT_METADATA_TITLE } from '~/constants';
 import { generateDocumentHead } from '~/utils';
 
-export const Head = component$(() => {
+export default component$(() => {
 	const documentHead = useDocumentHead();
 	const head =
 		documentHead.meta.length > 0 ? documentHead : { ...documentHead, ...generateDocumentHead() };
@@ -14,7 +13,26 @@ export const Head = component$(() => {
 			<meta charSet="utf-8" />
 			<meta name="viewport" content="width=device-width, initial-scale=1" />
 			<meta name="theme-color" content="#1D4ED8" />
-			<title>{head.title || DEFAULT_METADATA_TITLE}</title>
+			<title>Home | Château Plaisance</title>
+
+			<link
+				rel="preload"
+				href="/fonts/kumbh-sans-v6-latin-regular.woff2"
+				as="font"
+				crossOrigin="anonymous"
+			/>
+			<link
+				rel="preload"
+				href="/fonts/italiana-v11-latin-regular.woff2"
+				as="font"
+				crossOrigin="anonymous"
+			/>
+			<link
+				rel="preload"
+				href="/fonts/kumbh-sans-v6-latin-600.woff2"
+				as="font"
+				crossOrigin="anonymous"
+			/>
 
 			<link rel="manifest" href="/manifest.json" />
 			<link rel="apple-touch-icon" href="/logo-192-192.png" />
@@ -32,8 +50,6 @@ export const Head = component$(() => {
 			{head.styles.map((s, key) => (
 				<style key={key} {...s.props} dangerouslySetInnerHTML={s.style} />
 			))}
-
-			<meta name="description" content="Vendure Qwik Storefront" />
 		</head>
 	);
 });

@@ -2,12 +2,434 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-	.btn-primary {
-		@apply w-full border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-primary-500;
-	}
+/* fonts */
+/* italiana-regular - latin */
+@font-face {
+	font-family: 'Italiana';
+	font-style: normal;
+	font-weight: 400;
+	src: url('/fonts/italiana-v11-latin-regular.eot'); /* IE9 Compat Modes */
+	src: local(''), url('/fonts/italiana-v11-latin-regular.eot?#iefix') format('embedded-opentype'),
+		/* IE6-IE8 */ url('/fonts/italiana-v11-latin-regular.woff2') format('woff2'),
+		/* Super Modern Browsers */ url('/fonts/italiana-v11-latin-regular.woff') format('woff'),
+		/* Modern Browsers */ url('/fonts/italiana-v11-latin-regular.ttf') format('truetype'),
+		/* Safari, Android, iOS */ url('/fonts/italiana-v11-latin-regular.svg#Italiana') format('svg'); /* Legacy iOS */
+	font-display: swap;
+}
+/* kumbh-sans-300 - latin */
+@font-face {
+	font-family: 'Kumbh Sans';
+	font-style: normal;
+	font-weight: 300;
+	src: url('/fonts/kumbh-sans-v6-latin-300.eot'); /* IE9 Compat Modes */
+	src: local(''), url('/fonts/kumbh-sans-v6-latin-300.eot?#iefix') format('embedded-opentype'),
+		/* IE6-IE8 */ url('/fonts/kumbh-sans-v6-latin-300.woff2') format('woff2'),
+		/* Super Modern Browsers */ url('/fonts/kumbh-sans-v6-latin-300.woff') format('woff'),
+		/* Modern Browsers */ url('/fonts/kumbh-sans-v6-latin-300.ttf') format('truetype'),
+		/* Safari, Android, iOS */ url('/fonts/kumbh-sans-v6-latin-300.svg#KumbhSans') format('svg'); /* Legacy iOS */
+	font-display: swap;
+}
+/* kumbh-sans-regular - latin */
+@font-face {
+	font-family: 'Kumbh Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: url('/fonts/kumbh-sans-v6-latin-regular.eot'); /* IE9 Compat Modes */
+	src: local(''), url('/fonts/kumbh-sans-v6-latin-regular.eot?#iefix') format('embedded-opentype'),
+		/* IE6-IE8 */ url('/fonts/kumbh-sans-v6-latin-regular.woff2') format('woff2'),
+		/* Super Modern Browsers */ url('/fonts/kumbh-sans-v6-latin-regular.woff') format('woff'),
+		/* Modern Browsers */ url('/fonts/kumbh-sans-v6-latin-regular.ttf') format('truetype'),
+		/* Safari, Android, iOS */ url('/fonts/kumbh-sans-v6-latin-regular.svg#KumbhSans') format('svg'); /* Legacy iOS */
+	font-display: swap;
+}
+/* kumbh-sans-500 - latin */
+@font-face {
+	font-family: 'Kumbh Sans';
+	font-style: normal;
+	font-weight: 500;
+	src: url('/fonts/kumbh-sans-v6-latin-500.eot'); /* IE9 Compat Modes */
+	src: local(''), url('/fonts/kumbh-sans-v6-latin-500.eot?#iefix') format('embedded-opentype'),
+		/* IE6-IE8 */ url('/fonts/kumbh-sans-v6-latin-500.woff2') format('woff2'),
+		/* Super Modern Browsers */ url('/fonts/kumbh-sans-v6-latin-500.woff') format('woff'),
+		/* Modern Browsers */ url('/fonts/kumbh-sans-v6-latin-500.ttf') format('truetype'),
+		/* Safari, Android, iOS */ url('/fonts/kumbh-sans-v6-latin-500.svg#KumbhSans') format('svg'); /* Legacy iOS */
+	font-display: swap;
+}
+/* kumbh-sans-600 - latin */
+@font-face {
+	font-family: 'Kumbh Sans';
+	font-style: normal;
+	font-weight: 600;
+	src: url('/fonts/kumbh-sans-v6-latin-600.eot'); /* IE9 Compat Modes */
+	src: local(''), url('/fonts/kumbh-sans-v6-latin-600.eot?#iefix') format('embedded-opentype'),
+		/* IE6-IE8 */ url('/fonts/kumbh-sans-v6-latin-600.woff2') format('woff2'),
+		/* Super Modern Browsers */ url('/fonts/kumbh-sans-v6-latin-600.woff') format('woff'),
+		/* Modern Browsers */ url('/fonts/kumbh-sans-v6-latin-600.ttf') format('truetype'),
+		/* Safari, Android, iOS */ url('/fonts/kumbh-sans-v6-latin-600.svg#KumbhSans') format('svg'); /* Legacy iOS */
+	font-display: swap;
+}
+/* kumbh-sans-700 - latin */
+@font-face {
+	font-family: 'Kumbh Sans';
+	font-style: normal;
+	font-weight: 700;
+	src: url('/fonts/kumbh-sans-v6-latin-700.eot'); /* IE9 Compat Modes */
+	src: local(''), url('/fonts/kumbh-sans-v6-latin-700.eot?#iefix') format('embedded-opentype'),
+		/* IE6-IE8 */ url('/fonts/kumbh-sans-v6-latin-700.woff2') format('woff2'),
+		/* Super Modern Browsers */ url('/fonts/kumbh-sans-v6-latin-700.woff') format('woff'),
+		/* Modern Browsers */ url('/fonts/kumbh-sans-v6-latin-700.ttf') format('truetype'),
+		/* Safari, Android, iOS */ url('/fonts/kumbh-sans-v6-latin-700.svg#KumbhSans') format('svg'); /* Legacy iOS */
+	font-display: swap;
+}
 
-	.input-text {
-		@apply appearance-none min-w-0 w-full bg-white border border-gray-300 rounded-md py-2 px-4 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white focus:border-white focus:placeholder-gray-400;
+@layer base {
+	/* html {
+    scroll-behavior: smooth;
+  } */
+	body {
+		@apply overflow-x-hidden bg-dark-600;
 	}
 }
+
+@layer components {
+	.hero-title {
+		@apply text-center font-heading text-3xl font-light text-white sm:text-4xl md:text-5xl lg:text-7xl;
+	}
+
+	.btn-outline {
+		@apply inline-flex cursor-pointer items-center justify-center space-x-1 border border-gray-500/50 bg-transparent px-9 py-3 text-center text-sm text-white transition duration-500 hover:border-red-700 hover:bg-red-700 focus:ring focus:ring-red-600 focus:ring-opacity-20 disabled:cursor-not-allowed disabled:opacity-80 disabled:hover:bg-transparent xl:px-12 xl:font-heading xl:text-lg;
+	}
+	.btn-outline-secondary {
+		@apply inline-flex cursor-pointer items-center justify-center space-x-1 border border-gray-500/50 bg-transparent px-9 py-3 text-center text-sm text-white transition duration-500 hover:border-gray-700 hover:bg-gray-700 focus:ring focus:ring-gray-600 focus:ring-opacity-20 disabled:cursor-not-allowed disabled:opacity-80 disabled:hover:bg-transparent xl:px-12 xl:font-heading xl:text-lg;
+	}
+
+	.btn-primary {
+		@apply inline-flex items-center justify-center rounded bg-red-800 px-3 py-2 text-gray-200 transition duration-500 hover:bg-opacity-80;
+	}
+	.input-border {
+		@apply w-full rounded border-white bg-transparent font-light text-white transition-colors duration-200 focus:ring-0;
+	}
+
+	.absolute-center {
+		@apply absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2;
+	}
+}
+
+@layer utilities {
+	@keyframes slideUp {
+		0% {
+			opacity: 0;
+			transform: translateY(var(--slide-distance));
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+	@keyframes slideDown {
+		0% {
+			opacity: 0;
+			transform: translateY(var(--slide-distance));
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes scaleWidth {
+		0% {
+			width: 0%;
+		}
+		100% {
+			width: 100%;
+		}
+	}
+
+	@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+
+	@keyframes zoomOut {
+		0% {
+			transform: scale(var(--scale-size));
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+
+	@keyframes zoomIn {
+		0% {
+			transform: scale(var(--scale-size));
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+
+	.zoom-out {
+		--scale-size: 1.2;
+		animation: zoomOut 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+	}
+	.zoom-in {
+		--scale-size: 0.8;
+		animation: zoomIn 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+	}
+	.scale-width {
+		animation: scaleWidth 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+	}
+
+	.slide-up {
+		--slide-distance: 100%;
+		--slide-time: 0.6s;
+		animation: slideUp var(--slide-time) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+	}
+	.slide-down {
+		--slide-distance: -100%;
+		--slide-time: 0.6s;
+		animation: slideDown var(--slide-time) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+	}
+	.fade-in {
+		--slide-time: 2s;
+		animation: fadeIn var(--slide-time) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+	}
+}
+
+@media screen and (min-width: 1024px) {
+	.rolldate-container .rolldate-panel {
+		top: 50% !important;
+		left: 50% !important;
+		width: 50% !important;
+		border-radius: 4px !important;
+		transition: all 0.5s ease;
+		transform: translate(-50%, -50%) !important;
+	}
+}
+
+.blog-arrow:hover {
+	animation: slideRight 0.9s ease-in forwards;
+}
+
+@supports (-webkit-touch-callout: inherit) {
+	.banner-bg {
+		background-attachment: initial !important;
+	}
+}
+/* Parallax background images */
+/* .webp #winIsAMixture .banner-bg-index {
+  background-image: url(/img/banners/banner_1.webp);
+} */
+/* .no-webp #winIsAMixture .banner-bg,
+.no-js #winIsAMixture .banner-bg {
+  background-image: url(/img/banners/banner_1.jpeg);
+}
+@media only screen and (max-width: 1536px) {
+  .webp #winIsAMixture .banner-bg {
+    background-image: url(/img/banners/banner_1_1536.webp);
+  }
+  .no-webp #winIsAMixture .banner-bg,
+  .no-js #winIsAMixture .banner-bg {
+    background-image: url(/img/banners/banner_1_1536.jpeg);
+  }
+}
+@media only screen and (max-width: 1280px) {
+  .webp #winIsAMixture .banner-bg {
+    background-image: url(/img/banners/banner_1_1280.webp);
+  }
+  .no-webp #winIsAMixture .banner-bg,
+  .no-js #winIsAMixture .banner-bg {
+    background-image: url(/img/banners/banner_1_1280.jpeg);
+  }
+}
+@media only screen and (max-width: 1024px) {
+  .webp #winIsAMixture .banner-bg {
+    background-image: url(/img/banners/banner_1_1024.webp);
+  }
+  .no-webp #winIsAMixture .banner-bg,
+  .no-js #winIsAMixture .banner-bg {
+    background-image: url(/img/banners/banner_1_1024.jpeg);
+  }
+}
+@media only screen and (max-width: 768px) {
+  .webp #winIsAMixture .banner-bg {
+    background-image: url(/img/banners/banner_1_768.webp);
+  }
+  .no-webp #winIsAMixture .banner-bg,
+  .no-js #winIsAMixture .banner-bg {
+    background-image: url(/img/banners/banner_1_768.jpeg);
+  }
+}
+@media only screen and (max-width: 640px) {
+  .webp #winIsAMixture .banner-bg {
+    background-image: url(/img/banners/banner_1_640.webp);
+  }
+  .no-webp #winIsAMixture .banner-bg,
+  .no-js #winIsAMixture .banner-bg {
+    background-image: url(/img/banners/banner_1_640.jpeg);
+  }
+} */
+
+/* .webp #trandition .banner-bg {
+  background-image: url(/img/banners/banner_2.webp);
+}
+.no-webp #trandition .banner-bg,
+.no-js #trandition .banner-bg {
+  background-image: url(/img/banners/banner_2.jpeg);
+}
+@media only screen and (max-width: 1536px) {
+  .webp #trandition .banner-bg {
+    background-image: url(/img/banners/banner_2_1536.webp);
+  }
+  .no-webp #trandition .banner-bg,
+  .no-js #trandition .banner-bg {
+    background-image: url(/img/banners/banner_2_1536.jpeg);
+  }
+}
+@media only screen and (max-width: 1280px) {
+  .webp #trandition .banner-bg {
+    background-image: url(/img/banners/banner_2_1280.webp);
+  }
+  .no-webp #trandition .banner-bg,
+  .no-js #trandition .banner-bg {
+    background-image: url(/img/banners/banner_2_1280.jpeg);
+  }
+}
+@media only screen and (max-width: 1024px) {
+  .webp #trandition .banner-bg {
+    background-image: url(/img/banners/banner_2_1024.webp);
+  }
+  .no-webp #trandition .banner-bg,
+  .no-js #trandition .banner-bg {
+    background-image: url(/img/banners/banner_2_1024.jpeg);
+  }
+}
+@media only screen and (max-width: 768px) {
+  .webp #trandition .banner-bg {
+    background-image: url(/img/banners/banner_2_768.webp);
+  }
+  .no-webp #trandition .banner-bg,
+  .no-js #trandition .banner-bg {
+    background-image: url(/img/banners/banner_2_768.jpeg);
+  }
+}
+@media only screen and (max-width: 640px) {
+  .webp #trandition .banner-bg {
+    background-image: url(/img/banners/banner_2_640.webp);
+  }
+  .no-webp #trandition .banner-bg,
+  .no-js #trandition .banner-bg {
+    background-image: url(/img/banners/banner_2_640.jpeg);
+  }
+} */
+/* 
+.webp #identity .banner-bg {
+  background-image: url(/img/banners/banner_3.webp);
+}
+.no-webp #identity .banner-bg,
+.no-js #identity .banner-bg {
+  background-image: url(/img/banners/banner_3.jpeg);
+}
+@media only screen and (max-width: 1536px) {
+  .webp #identity .banner-bg {
+    background-image: url(/img/banners/banner_3_1536.webp);
+  }
+  .no-webp #identity .banner-bg,
+  .no-js #identity .banner-bg {
+    background-image: url(/img/banners/banner_3_1536.jpeg);
+  }
+}
+@media only screen and (max-width: 1280px) {
+  .webp #identity .banner-bg {
+    background-image: url(/img/banners/banner_3_1280.webp);
+  }
+  .no-webp #identity .banner-bg,
+  .no-js #identity .banner-bg {
+    background-image: url(/img/banners/banner_3_1280.jpeg);
+  }
+}
+@media only screen and (max-width: 1024px) {
+  .webp #identity .banner-bg {
+    background-image: url(/img/banners/banner_3_1024.webp);
+  }
+  .no-webp #identity .banner-bg,
+  .no-js #identity .banner-bg {
+    background-image: url(/img/banners/banner_3_1024.jpeg);
+  }
+}
+@media only screen and (max-width: 768px) {
+  .webp #identity .banner-bg {
+    background-image: url(/img/banners/banner_3_768.webp);
+  }
+  .no-webp #identity .banner-bg,
+  .no-js #identity .banner-bg {
+    background-image: url(/img/banners/banner_3_768.jpeg);
+  }
+}
+@media only screen and (max-width: 640px) {
+  .webp #identity .banner-bg {
+    background-image: url(/img/banners/banner_3_640.webp);
+  }
+  .no-webp #identity .banner-bg,
+  .no-js #identity .banner-bg {
+    background-image: url(/img/banners/banner_3_640.jpeg);
+  }
+}
+
+.webp #flavors .banner-bg {
+  background-image: url(/img/banners/banner_4.webp);
+}
+.no-webp #flavors .banner-bg,
+.no-js #flavors .banner-bg {
+  background-image: url(/img/banners/banner_4.jpeg);
+}
+@media only screen and (max-width: 1536px) {
+  .webp #flavors .banner-bg {
+    background-image: url(/img/banners/banner_4_1536.webp);
+  }
+  .no-webp #flavors .banner-bg,
+  .no-js #flavors .banner-bg {
+    background-image: url(/img/banners/banner_4_1536.jpeg);
+  }
+}
+@media only screen and (max-width: 1280px) {
+  .webp #flavors .banner-bg {
+    background-image: url(/img/banners/banner_4_1280.webp);
+  }
+  .no-webp #flavors .banner-bg,
+  .no-js #flavors .banner-bg {
+    background-image: url(/img/banners/banner_4_1280.jpeg);
+  }
+}
+@media only screen and (max-width: 1024px) {
+  .webp #flavors .banner-bg {
+    background-image: url(/img/banners/banner_4_1024.webp);
+  }
+  .no-webp #flavors .banner-bg,
+  .no-js #flavors .banner-bg {
+    background-image: url(/img/banners/banner_4_1024.jpeg);
+  }
+}
+@media only screen and (max-width: 768px) {
+  .webp #flavors .banner-bg {
+    background-image: url(/img/banners/banner_4_768.webp);
+  }
+  .no-webp #flavors .banner-bg,
+  .no-js #flavors .banner-bg {
+    background-image: url(/img/banners/banner_4_768.jpeg);
+  }
+}
+@media only screen and (max-width: 640px) {
+  .webp #flavors .banner-bg {
+    background-image: url(/img/banners/banner_4_640.webp);
+  }
+  .no-webp #flavors .banner-bg,
+  .no-js #flavors .banner-bg {
+    background-image: url(/img/banners/banner_4_640.jpeg);
+  }
+} */

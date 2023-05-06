@@ -1,6 +1,6 @@
 import { $, component$, useOnDocument, useStyles$ } from '@builder.io/qwik';
 import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from '@builder.io/qwik-city';
-import { Head } from './components/head/head';
+import Head from './components/plaisance/base-head';
 
 import globalStyles from './global.css?inline';
 import { useI18n } from './utils/i18n';
