@@ -1,11 +1,13 @@
 {
   "editor.codeActionsOnSave": {
-    "source.organizeImports": true,
-    "source.fixAll": true
+
+    "source.organizeImports": false,
+    "source.fixAll": false
   },
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "workbench.colorCustomizations": {
     "titleBar.activeBackground": "#1d4ed8",
     "titleBar.activeForeground": "#ffffff",
   },
+  "files.refactoring.autoSave": false,
 }

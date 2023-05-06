@@ -54,8 +54,8 @@ export default component$(() => {
 				}}
 			/>
 			<OffCanvasMenu isShowMenu={isShowMenu} />
-			{/* <ParalaxSections /> */}
-			{/* <ProductsCarousel /> */}
+			<ParalaxSections />
+			<ProductsCarousel />
 			<NewsletterForm />
 			<Footer />
 		</div>
