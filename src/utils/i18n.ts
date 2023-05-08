@@ -5,6 +5,7 @@ import { loadTranslations } from '@angular/localize';
 import '@angular/localize/init';
 import { getLocale, withLocale } from '@builder.io/qwik';
 import type { RenderOptions } from '@builder.io/qwik/server';
+import { DEFAULT_LOCALE } from '~/constants';
 import EN from '../locales/message.en.json';
 import ES from '../locales/message.es.json';
 
@@ -28,7 +29,7 @@ if (!$localizeFn.TRANSLATION_BY_LOCALE) {
 	$localizeFn.TRANSLATION_BY_LOCALE = new Map([['', {}]]);
 	Object.defineProperty($localize, 'TRANSLATIONS', {
 		get: function () {
-			const locale = getLocale();
+			const locale = getLocale(DEFAULT_LOCALE);
 			let translations = $localizeFn.TRANSLATION_BY_LOCALE.get(locale);
 			if (!translations) {
 				$localizeFn.TRANSLATION_BY_LOCALE.set(locale, (translations = {}));

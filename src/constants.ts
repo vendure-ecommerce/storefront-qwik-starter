@@ -14,3 +14,4 @@ export const DEFAULT_METADATA_TITLE = 'Vendure Qwik Storefront';
 export const DEFAULT_METADATA_DESCRIPTION =
 	'A headless commerce storefront starter kit built with Vendure & Qwik';
 export const DEFAULT_METADATA_IMAGE = 'https://qwik-storefront.vendure.io/social-image.png';
+export const DEFAULT_LOCALE = 'en';
