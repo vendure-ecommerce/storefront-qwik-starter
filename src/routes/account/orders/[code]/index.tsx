@@ -1,7 +1,6 @@
 import { component$, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import { Image } from 'qwik-image';
-import { IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
 import { Order } from '~/generated/graphql';
 import { getOrderByCodeQuery } from '~/providers/orders/order';
 import { formatDateTime, formatPrice } from '~/utils';
@@ -38,7 +37,6 @@ export default component$(() => {
 										aspectRatio={1}
 										class="rounded object-cover max-w-max h-full"
 										src={line.featuredAsset?.preview}
-										placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 									/>
 								</div>
 								<div class="ml-4 flex-1 flex flex-col">

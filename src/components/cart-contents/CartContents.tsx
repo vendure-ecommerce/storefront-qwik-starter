@@ -7,12 +7,12 @@ import {
 	useTask$,
 } from '@builder.io/qwik';
 import { Link, useLocation, useNavigate } from '@builder.io/qwik-city';
-import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
+import { Image } from 'qwik-image';
+import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
 import { adjustOrderLineMutation, removeOrderLineMutation } from '~/providers/orders/order';
 import { isCheckoutPage } from '~/utils';
 import Price from '../products/Price';
-import { Image } from 'qwik-image';
 
 export default component$<{
 	order?: Order;
@@ -58,7 +58,6 @@ export default component$<{
 									class="w-full h-full object-center object-cover"
 									src={line.featuredAsset?.preview + '?preset=thumb'}
 									alt={line.productVariant.name}
-									placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 								/>
 							</div>
 

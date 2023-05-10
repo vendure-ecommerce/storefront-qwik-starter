@@ -1,7 +1,6 @@
 import { component$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import { Image } from 'qwik-image';
-import { IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
 import { Collection } from '~/generated/graphql';
 
 interface IProps {
@@ -19,7 +18,6 @@ export default component$(({ collection }: IProps) => {
 						height="300"
 						src={collection.featuredAsset?.preview}
 						alt={collection.name}
-						placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 					/>
 				</div>
 				<span class="absolute w-full bottom-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50" />

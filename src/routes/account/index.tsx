@@ -16,7 +16,7 @@ import PencilSquareIcon from '~/components/icons/PencilSquareIcon';
 import ShieldCheckIcon from '~/components/icons/ShieldCheckIcon';
 import XMarkIcon from '~/components/icons/XMarkIcon';
 import { Modal } from '~/components/modal/Modal';
-import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
+import { APP_STATE } from '~/constants';
 import {
 	requestUpdateCustomerEmailAddressMutation,
 	updateCustomerMutation,
@@ -81,7 +81,6 @@ export default component$(() => {
 								src="/account-background.png"
 								class="absolute flex h-32 w-full justify-center rounded-xl bg-cover"
 								alt="background"
-								placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 							/>
 							<div class="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400">
 								<Image
@@ -89,7 +88,6 @@ export default component$(() => {
 									class="h-full w-full rounded-full"
 									src="/user-icon.webp"
 									alt="user icon"
-									placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 								/>
 							</div>
 							<div class="absolute -bottom-12 right-0">

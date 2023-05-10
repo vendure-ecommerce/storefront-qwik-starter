@@ -8,7 +8,7 @@ import HeartIcon from '~/components/icons/HeartIcon';
 import Price from '~/components/products/Price';
 import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import TopReviews from '~/components/top-reviews/TopReviews';
-import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
+import { APP_STATE } from '~/constants';
 import { Order, OrderLine, Product } from '~/generated/graphql';
 import { addItemToOrderMutation } from '~/providers/orders/order';
 import { getProductBySlug } from '~/providers/products/products';
@@ -72,7 +72,6 @@ export default component$(() => {
 										height="400"
 										src={productSignal.value.featuredAsset?.preview + '?w=400&h=400&format=webp'}
 										alt={productSignal.value.name}
-										placeholder={IMAGE_PLACEHOLDER_BACKGROUND}
 									/>
 								</div>
 							</span>
