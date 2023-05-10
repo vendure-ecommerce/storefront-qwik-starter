@@ -1,8 +1,8 @@
 import { component$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
+import { Image } from 'qwik-image';
 import { IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
 import { Collection } from '~/generated/graphql';
-import { Image } from '../image/Image';
 
 interface IProps {
 	collection: Collection;

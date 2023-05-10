@@ -8,7 +8,7 @@ import {
 	useVisibleTask$,
 } from '@builder.io/qwik';
 import { RequestHandler, routeLoader$ } from '@builder.io/qwik-city';
-import { ImageTransformerProps, useImageProvider } from '~/components/image/Image';
+import { ImageTransformerProps, useImageProvider } from 'qwik-image';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, IMAGE_RESOLUTIONS } from '~/constants';
 import { Order } from '~/generated/graphql';
 import { getAvailableCountriesQuery } from '~/providers/checkout/checkout';
@@ -28,7 +28,7 @@ export const useAvailableCountriesLoader = routeLoader$(async () => {
 });
 
 export const onRequest: RequestHandler = ({ request, locale }) => {
-	locale(extractLang(request.headers.get("accept-language"), request.url));
+	locale(extractLang(request.headers.get('accept-language'), request.url));
 };
 
 export default component$(() => {

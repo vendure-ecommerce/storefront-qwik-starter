@@ -7,6 +7,7 @@ import {
 	useVisibleTask$,
 } from '@builder.io/qwik';
 import { isBrowser } from '@builder.io/qwik/build';
+import { Image } from 'qwik-image';
 import { Button } from '~/components/buttons/Button';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
 import { ErrorMessage } from '~/components/error-message/ErrorMessage';
@@ -14,7 +15,6 @@ import CheckIcon from '~/components/icons/CheckIcon';
 import PencilSquareIcon from '~/components/icons/PencilSquareIcon';
 import ShieldCheckIcon from '~/components/icons/ShieldCheckIcon';
 import XMarkIcon from '~/components/icons/XMarkIcon';
-import { Image } from '~/components/image/Image';
 import { Modal } from '~/components/modal/Modal';
 import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
 import {

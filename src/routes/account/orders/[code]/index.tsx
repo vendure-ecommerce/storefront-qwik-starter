@@ -1,6 +1,6 @@
 import { component$, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
-import { Image } from '~/components/image/Image';
+import { Image } from 'qwik-image';
 import { IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
 import { Order } from '~/generated/graphql';
 import { getOrderByCodeQuery } from '~/providers/orders/order';

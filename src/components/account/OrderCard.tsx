@@ -1,9 +1,9 @@
 import { component$ } from '@builder.io/qwik';
 import { useNavigate } from '@builder.io/qwik-city';
+import { Image } from 'qwik-image';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
-import { formatPrice } from '~/utils';
-import { Image } from '../image/Image';
 import { Order } from '~/generated/graphql';
+import { formatPrice } from '~/utils';
 
 type IProps = {
 	order: Order;

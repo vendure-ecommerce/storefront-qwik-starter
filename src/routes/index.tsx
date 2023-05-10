@@ -1,6 +1,6 @@
 import { component$, useContext } from '@builder.io/qwik';
+import { Image } from 'qwik-image';
 import CollectionCard from '~/components/collection-card/CollectionCard';
-import { Image } from '~/components/image/Image';
 import { APP_STATE, HOMEPAGE_IMAGE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
 
 export default component$(() => {

@@ -11,8 +11,8 @@ import { APP_STATE, IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
 import { Order } from '~/generated/graphql';
 import { adjustOrderLineMutation, removeOrderLineMutation } from '~/providers/orders/order';
 import { isCheckoutPage } from '~/utils';
-import { Image } from '../image/Image';
 import Price from '../products/Price';
+import { Image } from 'qwik-image';
 
 export default component$<{
 	order?: Order;

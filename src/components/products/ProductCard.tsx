@@ -1,8 +1,8 @@
 import { component$ } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import { IMAGE_PLACEHOLDER_BACKGROUND } from '~/constants';
-import { Image } from '../image/Image';
 import Price from './Price';
+import { Image } from 'qwik-image';
 
 export default component$(
 	({ productAsset, productName, slug, priceWithTax, currencyCode }: any) => {
