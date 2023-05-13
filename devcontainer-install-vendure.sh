@@ -1,7 +1,7 @@
 #!/bin/sh
 git config --global --add safe.directory /workspaces/storefront-qwik-starter
 pnpm install
-git clone https://github.com/vendure-ecommerce/one-click-deploy.git &> /dev/null
+git clone https://github.com/vendure-ecommerce/one-click-deploy.git
 cd one-click-deploy && yarn
 mv .env.example .env &> /dev/null
 sudo update-rc.d postgresql enable
