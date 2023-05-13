@@ -25,10 +25,10 @@
 		"generate": "graphql-codegen --config codegen.yml"
 	},
 	"devDependencies": {
-		"@angular/compiler": "^16.0.0",
-		"@angular/compiler-cli": "^16.0.0",
-		"@builder.io/qwik": "1.1.0",
-		"@builder.io/qwik-city": "1.1.0",
+		"@angular/compiler": "^16.0.1",
+		"@angular/compiler-cli": "^16.0.1",
+		"@builder.io/qwik": "1.1.2",
+		"@builder.io/qwik-city": "1.1.2",
 		"@graphql-codegen/cli": "^3.3.1",
 		"@graphql-codegen/introspection": "^3.0.1",
 		"@graphql-codegen/typescript": "^3.0.4",
@@ -41,7 +41,7 @@
 		"autoprefixer": "10.4.14",
 		"concurrently": "8.0.1",
 		"eslint": "8.40.0",
-		"eslint-plugin-qwik": "1.1.0",
+		"eslint-plugin-qwik": "1.1.2",
 		"husky": "^8.0.3",
 		"node-fetch": "3.3.1",
 		"postcss": "8.4.23",
@@ -61,13 +61,13 @@
 	"private": true,
 	"type": "module",
 	"dependencies": {
-		"@angular/localize": "^16.0.0",
+		"@angular/localize": "^16.0.1",
 		"@graphql-codegen/typescript-generic-sdk": "^3.1.0",
 		"@stripe/stripe-js": "^1.52.1",
 		"graphql": "^16.6.0",
 		"graphql-tag": "^2.12.6",
 		"qwik-image": "^0.0.4",
-		"undici": "^5.22.0",
+		"undici": "^5.22.1",
 		"zod": "^3.21.4"
 	},
 	"overrides": {
