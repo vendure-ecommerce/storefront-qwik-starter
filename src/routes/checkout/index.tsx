@@ -116,7 +116,7 @@ export default component$(() => {
 								<div class="mt-10 lg:mt-0">
 									<h2 class="text-lg font-medium text-gray-900 mb-4">Order summary</h2>
 									<CartContents />
-									<CartTotals />
+									<CartTotals order={appState.activeOrder} />
 								</div>
 							)}
 						</div>
