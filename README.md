@@ -103,7 +103,7 @@ The resulting language should match your browser language. You can also override
 
 - [Vendure Docs](https://vendure.io/docs)
 - [Vendure Github](https://github.com/vendure-ecommerce/vendure)
-- [Vendure Slack](https://vendure.io/slack)
+- [Vendure Discord](https://vendure.io/community)
 - [Qwik Docs](https://qwik.builder.io/)
 - [Qwik Github](https://github.com/BuilderIO/qwik)
 - [@QwikDev](https://twitter.com/QwikDev)
