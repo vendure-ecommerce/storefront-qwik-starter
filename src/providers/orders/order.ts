@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import { sdk } from '~/graphql-wrapper';
 import {
 	ActiveOrderQuery,
 	AddItemToOrderMutation,
@@ -13,6 +12,7 @@ import {
 	SetOrderShippingAddressMutation,
 	SetOrderShippingMethodMutation,
 } from '~/generated/graphql';
+import { sdk } from '~/graphql-wrapper';
 
 export const getActiveOrderQuery = async () => {
 	return sdk.activeOrder(undefined).then((res: ActiveOrderQuery) => res.activeOrder as Order);
@@ -46,7 +46,7 @@ export const setOrderShippingAddressMutation = async (input: CreateAddressInput)
 		.then((res: SetOrderShippingAddressMutation) => res.setOrderShippingAddress);
 };
 
-export const setOrderShippingMethodMutation = async (shippingMethodId: string) => {
+export const setOrderShippingMethodMutation = async (shippingMethodId: string[]) => {
 	return sdk
 		.setOrderShippingMethod({ shippingMethodId })
 		.then((res: SetOrderShippingMethodMutation) => res.setOrderShippingMethod as Order);
@@ -95,7 +95,7 @@ gql`
 `;
 
 gql`
-	mutation setOrderShippingMethod($shippingMethodId: ID!) {
+	mutation setOrderShippingMethod($shippingMethodId: [ID!]!) {
 		setOrderShippingMethod(shippingMethodId: $shippingMethodId) {
 			...OrderDetail
 			... on ErrorResult {
