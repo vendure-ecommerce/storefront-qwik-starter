@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import { sdk } from '~/graphql-wrapper';
 import {
 	AddPaymentToOrderMutation,
 	AvailableCountriesQuery,
@@ -7,11 +6,13 @@ import {
 	CreateStripePaymentIntentMutation,
 	EligiblePaymentMethodsQuery,
 	EligibleShippingMethodsQuery,
+	GenerateBraintreeClientTokenQuery,
 	Order,
 	PaymentInput,
 	PaymentMethodQuote,
 	ShippingMethodQuote,
 } from '~/generated/graphql';
+import { sdk } from '~/graphql-wrapper';
 
 export const getAvailableCountriesQuery = async () => {
 	return sdk
@@ -49,6 +50,15 @@ export const createStripePaymentIntentMutation = async () => {
 	return sdk
 		.createStripePaymentIntent()
 		.then((res: CreateStripePaymentIntentMutation) => res.createStripePaymentIntent as string);
+};
+
+export const generateBraintreeClientTokenQuery = async (
+	orderId: string,
+	includeCustomerId: boolean
+) => {
+	return sdk
+		.generateBraintreeClientToken({ orderId, includeCustomerId })
+		.then((res: GenerateBraintreeClientTokenQuery) => res.generateBraintreeClientToken as string);
 };
 
 gql`
@@ -114,5 +124,11 @@ gql`
 gql`
 	mutation createStripePaymentIntent {
 		createStripePaymentIntent
+	}
+`;
+
+gql`
+	query generateBraintreeClientToken($orderId: ID!, $includeCustomerId: Boolean!) {
+		generateBraintreeClientToken(orderId: $orderId, includeCustomerId: $includeCustomerId)
 	}
 `;
