@@ -24,7 +24,7 @@ export default component$<Props>(({ appState }) => {
 	useTask$(async (tracker) => {
 		const selected = tracker.track(() => state.selectedMethodId);
 		if (selected) {
-			appState.activeOrder = await setOrderShippingMethodMutation(selected);
+			appState.activeOrder = await setOrderShippingMethodMutation([selected]);
 		}
 	});
 
