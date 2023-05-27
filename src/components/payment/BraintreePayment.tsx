@@ -67,7 +67,6 @@ export default component$(() => {
 					if (!client.dropin.isPaymentMethodRequestable()) {
 						return;
 					}
-
 					const paymentResult = await client.dropin.requestPaymentMethod();
 					await transitionOrderToStateMutation();
 					const activeOrder = await addPaymentToOrderMutation({
@@ -77,6 +76,9 @@ export default component$(() => {
 					if (activeOrder.__typename === 'Order') {
 						appState.activeOrder = activeOrder;
 						navigate(`/checkout/confirmation/${activeOrder.code}`);
+					} else {
+						// @ts-ignore
+						store.error = activeOrder.message;
 					}
 				})}
 			>
