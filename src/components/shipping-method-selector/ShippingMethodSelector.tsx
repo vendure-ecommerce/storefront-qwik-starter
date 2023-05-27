@@ -18,7 +18,7 @@ export default component$<Props>(({ appState }) => {
 
 	useTask$(async () => {
 		state.methods = await getEligibleShippingMethodsQuery();
-		state.selectedMethodId = state.methods[0].id;
+		state.selectedMethodId = state.methods[0]?.id;
 	});
 
 	useTask$(async (tracker) => {
