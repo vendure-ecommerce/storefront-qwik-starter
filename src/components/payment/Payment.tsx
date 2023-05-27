@@ -1,8 +1,9 @@
 import { $, component$, PropFunction, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { getEligiblePaymentMethodsQuery } from '~/providers/checkout/checkout';
 import { EligiblePaymentMethods } from '~/types';
 import CreditCardIcon from '../icons/CreditCardIcon';
+import BraintreePayment from './BraintreePayment';
 import StripePayment from './StripePayment';
-import { getEligiblePaymentMethodsQuery } from '~/providers/checkout/checkout';
 
 export default component$<{ onForward$: PropFunction<() => void> }>(({ onForward$ }) => {
 	const paymentMethods = useSignal<EligiblePaymentMethods[]>();
@@ -32,6 +33,7 @@ export default component$<{ onForward$: PropFunction<() => void> }>(({ onForward
 						</>
 					)}
 					{method.code.includes('stripe') && <StripePayment />}
+					{method.code.includes('braintree') && <BraintreePayment />}
 				</div>
 			))}
 		</div>

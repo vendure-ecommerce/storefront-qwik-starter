@@ -2805,7 +2805,7 @@ export type Query = {
 	facet?: Maybe<Facet>;
 	/** A list of Facets available to the shop */
 	facets: FacetList;
-	generateBraintreeClientToken?: Maybe<Scalars['String']>;
+	generateBraintreeClientToken: Scalars['String'];
 	/** Returns information about the current authenticated User */
 	me?: Maybe<CurrentUser>;
 	/** Returns the possible next states that the activeOrder can transition to */
@@ -2845,6 +2845,11 @@ export type QueryFacetArgs = {
 
 export type QueryFacetsArgs = {
 	options?: InputMaybe<FacetListOptions>;
+};
+
+export type QueryGenerateBraintreeClientTokenArgs = {
+	includeCustomerId?: InputMaybe<Scalars['Boolean']>;
+	orderId?: InputMaybe<Scalars['ID']>;
 };
 
 export type QueryOrderArgs = {
@@ -3662,6 +3667,16 @@ export type CreateStripePaymentIntentMutationVariables = Exact<{ [key: string]: 
 export type CreateStripePaymentIntentMutation = {
 	__typename?: 'Mutation';
 	createStripePaymentIntent?: string | null;
+};
+
+export type GenerateBraintreeClientTokenQueryVariables = Exact<{
+	orderId: Scalars['ID'];
+	includeCustomerId: Scalars['Boolean'];
+}>;
+
+export type GenerateBraintreeClientTokenQuery = {
+	__typename?: 'Query';
+	generateBraintreeClientToken: string;
 };
 
 export type CollectionsQueryVariables = Exact<{ [key: string]: never }>;
@@ -5171,6 +5186,11 @@ export const CreateStripePaymentIntentDocument = gql`
 		createStripePaymentIntent
 	}
 `;
+export const GenerateBraintreeClientTokenDocument = gql`
+	query generateBraintreeClientToken($orderId: ID!, $includeCustomerId: Boolean!) {
+		generateBraintreeClientToken(orderId: $orderId, includeCustomerId: $includeCustomerId)
+	}
+`;
 export const CollectionsDocument = gql`
 	query collections {
 		collections {
@@ -5596,6 +5616,19 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
 				variables,
 				options
 			) as Promise<CreateStripePaymentIntentMutation>;
+		},
+		generateBraintreeClientToken(
+			variables: GenerateBraintreeClientTokenQueryVariables,
+			options?: C
+		): Promise<GenerateBraintreeClientTokenQuery> {
+			return requester<
+				GenerateBraintreeClientTokenQuery,
+				GenerateBraintreeClientTokenQueryVariables
+			>(
+				GenerateBraintreeClientTokenDocument,
+				variables,
+				options
+			) as Promise<GenerateBraintreeClientTokenQuery>;
 		},
 		collections(variables?: CollectionsQueryVariables, options?: C): Promise<CollectionsQuery> {
 			return requester<CollectionsQuery, CollectionsQueryVariables>(
