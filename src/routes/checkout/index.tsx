@@ -24,9 +24,9 @@ export default component$(() => {
 	const appState = useContext(APP_STATE);
 	const state = useStore<{ step: Step }>({ step: 'SHIPPING' });
 	const steps: { name: string; state: Step }[] = [
-		{ name: 'Shipping', state: 'SHIPPING' },
-		{ name: 'Payment', state: 'PAYMENT' },
-		{ name: 'Confirmation', state: 'CONFIRMATION' },
+		{ name: $localize`Shipping Checkout`, state: 'SHIPPING' },
+		{ name: $localize`Payment`, state: 'PAYMENT' },
+		{ name: $localize`Confirmation`, state: 'CONFIRMATION' },
 	];
 
 	useVisibleTask$(async () => {
@@ -52,7 +52,7 @@ export default component$(() => {
 							state.step === 'CONFIRMATION' ? 'lg:max-w-3xl mx-auto' : 'lg:max-w-7xl'
 						} max-w-2xl mx-auto pt-8 pb-24 px-4 sm:px-6 lg:px-8`}
 					>
-						<h2 class="sr-only">Checkout</h2>
+						<h2 class="sr-only">{$localize`Checkout`}</h2>
 						<nav class="hidden sm:block pb-8 mb-8 border-b">
 							<ol class="flex space-x-4 justify-center">
 								{steps.map((step, index) => (
@@ -114,7 +114,7 @@ export default component$(() => {
 
 							{state.step !== 'CONFIRMATION' && (
 								<div class="mt-10 lg:mt-0">
-									<h2 class="text-lg font-medium text-gray-900 mb-4">Order summary</h2>
+									<h2 class="text-lg font-medium text-gray-900 mb-4">{$localize`Order summary`}</h2>
 									<CartContents />
 									<CartTotals order={appState.activeOrder} />
 								</div>

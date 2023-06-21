@@ -7,15 +7,15 @@ export default component$<{ stockLevel?: string }>(({ stockLevel }) => {
 	let badgeClasses = 'bg-gray-100 text-gray-800';
 	switch (stockLevel as StockLevel) {
 		case 'IN_STOCK':
-			stockLevelLabel = 'In stock';
+			stockLevelLabel = $localize`In stock`;
 			badgeClasses = 'bg-green-100 text-green-800';
 			break;
 		case 'OUT_OF_STOCK':
-			stockLevelLabel = 'Out of stock';
+			stockLevelLabel = $localize`Out of stock`;
 			badgeClasses = 'bg-red-100 text-red-800';
 			break;
 		case 'LOW_STOCK':
-			stockLevelLabel = 'Low stock';
+			stockLevelLabel = $localize`Low stock`;
 			badgeClasses = 'bg-yellow-100 text-yellow-800';
 			break;
 	}

@@ -140,10 +140,10 @@ export default component$(() => {
 										{quantitySignal.value[selectedVariantIdSignal.value] ? (
 											<span class="flex items-center">
 												<CheckIcon />
-												{quantitySignal.value[selectedVariantIdSignal.value]} in cart
+												{$localize`${quantitySignal.value[selectedVariantIdSignal.value]} in cart`}
 											</span>
 										) : (
-											`Add to cart`
+											$localize`Add to cart`
 										)}
 									</button>
 									<button
@@ -151,7 +151,7 @@ export default component$(() => {
 										class="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500"
 									>
 										<HeartIcon />
-										<span class="sr-only">Add to favorites</span>
+										<span class="sr-only">{$localize`Add to favorites`}</span>
 									</button>
 								</div>
 							</div>
@@ -166,18 +166,18 @@ export default component$(() => {
 							)}
 
 							<section class="mt-12 pt-12 border-t text-xs">
-								<h3 class="text-gray-600 font-bold mb-2">Shipping & Returns</h3>
+								<h3 class="text-gray-600 font-bold mb-2">{$localize`Shipping & Returns`}</h3>
 								<div class="text-gray-500 space-y-1">
 									<p>
-										Standard shipping: 3 - 5 working days. Express shipping: 1 - 3 working days.
+										{$localize`Standard shipping: 3 - 5 working days. Express shipping: 1 - 3 working days.`}
 									</p>
 									<p>
-										Shipping costs depend on delivery address and will be calculated during
-										checkout.
+										{$localize`Shipping costs depend on delivery address and will be calculated during checkout.`}
 									</p>
 									<p>
-										Returns are subject to terms. Please see the{' '}
-										<span class="underline">returns page</span> for further information.
+										{$localize`Returns are subject to terms. Please see the`}{' '}
+										<span class="underline">{$localize`returns page`}</span>{' '}
+										{$localize`for further information`}.
 									</p>
 								</div>
 							</section>

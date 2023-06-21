@@ -16,9 +16,9 @@ export default component$<{ onForward$: PropFunction<() => void> }>(() => {
 	const store = useStore<{ order?: Order }>({});
 
 	const steps: { name: string; state: Step }[] = [
-		{ name: 'Shipping', state: 'SHIPPING' },
-		{ name: 'Payment', state: 'PAYMENT' },
-		{ name: 'Confirmation', state: 'CONFIRMATION' },
+		{ name: $localize`Shipping Checkout`, state: 'SHIPPING' },
+		{ name: $localize`Payment`, state: 'PAYMENT' },
+		{ name: $localize`Confirmation`, state: 'CONFIRMATION' },
 	];
 
 	useVisibleTask$(async () => {
@@ -30,7 +30,7 @@ export default component$<{ onForward$: PropFunction<() => void> }>(() => {
 			{store.order?.id && (
 				<div class="bg-gray-50">
 					<div class="lg:max-w-3xl mx-auto max-w-2xl pt-8 pb-24 px-4 sm:px-6 lg:px-8">
-						<h2 class="sr-only">Checkout</h2>
+						<h2 class="sr-only">{$localize`Checkout`}</h2>
 						<nav class="hidden sm:block pb-8 mb-8 border-b">
 							<ol class="flex space-x-4 justify-center">
 								{steps.map((step, index) => (
@@ -48,10 +48,11 @@ export default component$<{ onForward$: PropFunction<() => void> }>(() => {
 								<div>
 									<h2 class="text-3xl flex items-center space-x-2 sm:text-5xl font-light tracking-tight text-gray-900 my-8">
 										<CheckCircleIcon forcedClass="text-green-600 w-8 h-8 sm:w-12 sm:h-12" />
-										<span>Order Summary</span>
+										<span>{$localize`Order summary`}</span>
 									</h2>
 									<p class="text-lg text-gray-700">
-										Your order <span class="font-bold">{store.order?.code}</span> has been received!
+										{$localize`Your order`} <span class="font-bold">{store.order?.code}</span>{' '}
+										{$localize`has been received!`}
 									</p>
 									<div class="mt-12">
 										<div class="mb-6">

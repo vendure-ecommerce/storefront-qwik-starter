@@ -45,7 +45,7 @@ export const reviews: Review[] = [
 export default component$(() => {
 	return (
 		<div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-6xl lg:px-8">
-			<h2 class="text-lg font-medium text-gray-900">Recent reviews</h2>
+			<h2 class="text-lg font-medium text-gray-900">{$localize`Recent reviews`}</h2>
 			<div class="mt-6 pb-10 border-t border-gray-200 divide-y divide-gray-200 space-y-10">
 				{reviews.map((review) => (
 					<div key={review.id} class="pt-10 lg:grid lg:grid-cols-12 lg:gap-x-8">
