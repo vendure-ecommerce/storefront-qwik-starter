@@ -8,7 +8,7 @@ export default component$<{
 	return (
 		<dl class="border-t mt-6 border-gray-200 py-6 space-y-6">
 			<div class="flex items-center justify-between">
-				<dt class="text-sm">Subtotal</dt>
+				<dt class="text-sm">{$localize`Subtotal`}</dt>
 				<CartPrice
 					order={order}
 					field={'subTotalWithTax'}
@@ -16,7 +16,7 @@ export default component$<{
 				/>
 			</div>
 			<div class="flex items-center justify-between">
-				<dt class="text-sm">Shipping</dt>
+				<dt class="text-sm">{$localize`Shipping cost`}</dt>
 				<CartPrice
 					order={order}
 					field={'shippingWithTax'}
@@ -24,7 +24,7 @@ export default component$<{
 				/>
 			</div>
 			<div class="flex items-center justify-between border-t border-gray-200 pt-6">
-				<dt class="text-base font-medium">Total</dt>
+				<dt class="text-base font-medium">{$localize`Total`}</dt>
 				<CartPrice
 					order={order}
 					field={'totalWithTax'}
