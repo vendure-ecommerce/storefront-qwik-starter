@@ -63,7 +63,7 @@
 	"type": "module",
 	"dependencies": {
 		"@angular/localize": "^16.0.4",
-		"@builder.io/qwik-labs": "git://github.com/BuilderIo/qwik-labs-build#main",
+		"@builder.io/qwik-labs": "github:BuilderIo/qwik-labs-build#types",
 		"@graphql-codegen/typescript-generic-sdk": "^3.1.0",
 		"@stripe/stripe-js": "^1.54.0",
 		"braintree-web-drop-in": "^1.38.0",
