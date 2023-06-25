@@ -97,7 +97,7 @@ export default component$(() => {
 								aria-labelledby="email-subscription"
 							/>
 							<div class="mt-3 rounded-md sm:mt-0 sm:ml-3 sm:flex-shrink-0">
-								<button class="btn-primary" onClick$={() => { }}>
+								<button class="btn-primary" onClick$={() => {}}>
 									{$localize`Subscribe`}
 								</button>
 							</div>

@@ -69,7 +69,9 @@ export default component$(() => {
 								>
 									<UserIcon />
 									<span class="mt-1 text-gray-700">
-										{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? $localize`My Account` : $localize`Sign In`}
+										{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID
+											? $localize`My Account`
+											: $localize`Sign In`}
 									</span>
 								</Link>
 								{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID && (
