@@ -9,8 +9,8 @@ dependencies:
     specifier: ^16.0.4
     version: 16.0.4(@angular/compiler-cli@16.0.4)(@angular/compiler@16.0.4)
   '@builder.io/qwik-labs':
-    specifier: github:BuilderIo/qwik-labs-build#main
-    version: github.com/BuilderIo/qwik-labs-build/4eab8f61f0834d56d8729b6f29c41e64bd909590
+    specifier: git://github.com/BuilderIo/qwik-labs-build#main
+    version: github.com/BuilderIo/qwik-labs-build/3b923d361e457ea0a204583a93388357fc682f29
   '@graphql-codegen/typescript-generic-sdk':
     specifier: ^3.1.0
     version: 3.1.0(graphql-tag@2.12.6)(graphql@16.6.0)
@@ -9346,10 +9346,10 @@ packages:
       }
     dev: true
 
-  github.com/BuilderIo/qwik-labs-build/4eab8f61f0834d56d8729b6f29c41e64bd909590:
+  github.com/BuilderIo/qwik-labs-build/3b923d361e457ea0a204583a93388357fc682f29:
     resolution:
       {
-        tarball: https://codeload.github.com/BuilderIo/qwik-labs-build/tar.gz/4eab8f61f0834d56d8729b6f29c41e64bd909590,
+        tarball: https://codeload.github.com/BuilderIo/qwik-labs-build/tar.gz/3b923d361e457ea0a204583a93388357fc682f29,
       }
     name: '@builder.io/qwik-labs'
     version: 0.0.1
