@@ -19,6 +19,10 @@ import { extractLang } from '~/utils/i18n';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
 
+export const onGet: RequestHandler = async ({ cacheControl }) => {
+	cacheControl({ staleWhileRevalidate: 60 * 60 * 24 * 7, maxAge: 5 });
+};
+
 export const useCollectionsLoader = routeLoader$(async () => {
 	return await getCollections();
 });
