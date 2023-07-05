@@ -12,7 +12,7 @@ An e-commerce storefront for [Vendure](https://www.vendure.io) built with [Qwik]
 
 <br/>
 
-## To do
+## Features
 
 - Cart ✅
 - Checkout flow ✅
