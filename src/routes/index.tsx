@@ -7,11 +7,13 @@ export default component$(() => {
 	const collections = useContext(APP_STATE).collections;
 	return (
 		<div>
-			<div class="relative">
+			<div class="relative h-[600px]">
 				<div class="absolute inset-0 overflow-hidden">
 					<Image
 						layout="fullWidth"
 						class="h-full md:w-full"
+						width="800"
+						height="600"
 						src={HOMEPAGE_IMAGE}
 						alt="Background header photo of bicycle taken by Mikkel Bech"
 					/>
