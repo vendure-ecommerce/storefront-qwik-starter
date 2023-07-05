@@ -25,6 +25,15 @@ An e-commerce storefront for [Vendure](https://www.vendure.io) built with [Qwik]
 
 **Contributions welcome!**
 
+## Frequently Asked Questions
+
+- [Can I deploy the application in different environment (e.g Netlify, Fastify, etc. etc)?](#can-i-host-the-application-in-my-environment-or-is-limited-to-cloudflare)
+
+### Can I host the application in my environment or is limited to Cloudflare?
+
+We are using Cloudflare, but there isn't a specific Cloudflare feature for this application.
+If you want to deploy your application in a different environment, you can follow the [Qwik guide](https://qwik.builder.io/docs/deployments/#add-an-adapter) and customize the code base according to your needs.
+
 ## Development
 
 Development mode uses [Vite's development server](https://vitejs.dev/). During development, the `dev` command will server-side render (SSR) the output.
