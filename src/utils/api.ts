@@ -25,7 +25,7 @@ const execute = async <R, V = Record<string, any>>(
 	if (authToken !== '') {
 		options.headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken}` };
 	}
-	const response: ResponseProps<R> = isBrowser
+	const response: ResponseProps<R> = isBrowser && !import.meta.env.DEV
 		? await executeOnTheServer(options)
 		: await executeRequest(options);
 
