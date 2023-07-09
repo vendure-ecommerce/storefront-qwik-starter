@@ -54,6 +54,10 @@ const executeRequest = async (options: Options) => {
 
 const extractTokenAndData = async (response: Response) => {
 	const token = response.headers.get(HEADER_AUTH_TOKEN_KEY) || '';
-	const { data } = await response.json();
+	const { data, errors } = await response.json();
+	if (errors && !data) {
+		// e.g. API access related errors, like auth issues.
+		throw new Error(errors[0].message);
+	}
 	return { token, data };
 };
