@@ -28,11 +28,35 @@ An e-commerce storefront for [Vendure](https://www.vendure.io) built with [Qwik]
 ## Frequently Asked Questions
 
 - [Can I deploy the application in different environment (e.g Netlify, Fastify, etc. etc)?](#can-i-host-the-application-in-my-environment-or-is-limited-to-cloudflare)
+- [Why can I not reach my remote server?](#why-can-i-not-reach-my-remote-server)
+- [Why does signup or login not work?](#why-does-signup-or-login-not-work)
+- [What payment systems are supported?](#what-payment-systems-are-supported)
 
 ### Can I host the application in my environment or is limited to Cloudflare?
 
 We are using Cloudflare, but there isn't a specific Cloudflare feature for this application.
 If you want to deploy your application in a different environment, you can follow the [Qwik guide](https://qwik.builder.io/docs/deployments/#add-an-adapter) and customize the code base according to your needs.
+
+### Why can I not reach my remote server?
+
+When running the storefront make sure when in dev mode (ie: using vite) to attach it to the network by using `--host 0.0.0.0`
+For example: `"start": "vite --open --mode ssr --port 80 --host 0.0.0.0",`
+
+Also make sure your firewall allows traffic on your selected port.
+For Ubuntu: `sudo ufw status` to see what is blocked or allowed.
+
+### Why does signup or login not work?
+
+https needs to be enabled, please confirm you are using ssl. You can use apache or nginx to forward ssl traffic to your selected port.
+
+Make sure that your vendure instance is accessible and not being blocked by a firewall for example.
+
+If you see a message on signup "Account registration is not supported by the demo Vendure instance. In order to use it, please connect to your own local / production instance." This is simply a static message, it is not doing any actual check. Simply remove this message. To connect to your vendure instance simply set the .env variables to point to your vendure setup.
+
+### What payment systems are supported?
+
+Currently Braintree and Stripe are supported on the frontend, but not currently Mollie.
+For Braintree make sure to name your payment method in your vendure admin "braintree payment" and specifically code "braintree-payment".
 
 ## Development
 
