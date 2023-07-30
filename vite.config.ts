@@ -6,6 +6,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig((config) => {
 	return {
 		// Enable to analyze via source-map-explorer
+		ssr: { target: 'webworker' },
 		build: {
 			sourcemap: config.mode === 'development',
 		},
