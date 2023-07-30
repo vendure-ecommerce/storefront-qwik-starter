@@ -3676,7 +3676,7 @@ export type GenerateBraintreeClientTokenQueryVariables = Exact<{
 
 export type GenerateBraintreeClientTokenQuery = {
 	__typename?: 'Query';
-	generateBraintreeClientToken: string;
+	generateBraintreeClientToken?: string | null;
 };
 
 export type CollectionsQueryVariables = Exact<{ [key: string]: never }>;

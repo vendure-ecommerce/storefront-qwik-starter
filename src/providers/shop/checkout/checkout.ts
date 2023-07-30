@@ -58,7 +58,7 @@ export const generateBraintreeClientTokenQuery = async (
 ) => {
 	return shopSdk
 		.generateBraintreeClientToken({ orderId, includeCustomerId })
-		.then((res: GenerateBraintreeClientTokenQuery) => res.generateBraintreeClientToken as string);
+		.then((res: GenerateBraintreeClientTokenQuery) => res.generateBraintreeClientToken);
 };
 
 gql`
