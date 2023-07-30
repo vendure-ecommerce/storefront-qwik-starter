@@ -10,7 +10,7 @@ import { useLocation } from '@builder.io/qwik-city';
 import { Stripe, StripeElements, loadStripe } from '@stripe/stripe-js';
 import { APP_STATE } from '~/constants';
 import { ENV_VARIABLES } from '~/env';
-import { createStripePaymentIntentMutation } from '~/providers/checkout/checkout';
+import { createStripePaymentIntentMutation } from '~/providers/shop/checkout/checkout';
 import CreditCardIcon from '../icons/CreditCardIcon';
 import XCircleIcon from '../icons/XCircleIcon';
 

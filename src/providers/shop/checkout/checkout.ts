@@ -12,28 +12,28 @@ import {
 	PaymentMethodQuote,
 	ShippingMethodQuote,
 } from '~/generated/graphql';
-import { sdk } from '~/graphql-wrapper';
+import { shopSdk } from '~/graphql-wrapper';
 
 export const getAvailableCountriesQuery = async () => {
-	return sdk
+	return shopSdk
 		.availableCountries({})
-		.then((res: AvailableCountriesQuery) => res.availableCountries as Country[]);
+		.then((res: AvailableCountriesQuery) => res?.availableCountries as Country[]);
 };
 
 export const addPaymentToOrderMutation = async (
 	input: PaymentInput = { method: 'standard-payment', metadata: {} }
 ) => {
-	return sdk
+	return shopSdk
 		.addPaymentToOrder({ input })
 		.then((res: AddPaymentToOrderMutation) => res.addPaymentToOrder as Order);
 };
 
 export const transitionOrderToStateMutation = async (state = 'ArrangingPayment') => {
-	return sdk.transitionOrderToState({ state });
+	return shopSdk.transitionOrderToState({ state });
 };
 
 export const getEligibleShippingMethodsQuery = async () => {
-	return sdk
+	return shopSdk
 		.eligibleShippingMethods()
 		.then(
 			(res: EligibleShippingMethodsQuery) => res.eligibleShippingMethods as ShippingMethodQuote[]
@@ -41,13 +41,13 @@ export const getEligibleShippingMethodsQuery = async () => {
 };
 
 export const getEligiblePaymentMethodsQuery = async () => {
-	return sdk
+	return shopSdk
 		.eligiblePaymentMethods({})
 		.then((res: EligiblePaymentMethodsQuery) => res.eligiblePaymentMethods as PaymentMethodQuote[]);
 };
 
 export const createStripePaymentIntentMutation = async () => {
-	return sdk
+	return shopSdk
 		.createStripePaymentIntent()
 		.then((res: CreateStripePaymentIntentMutation) => res.createStripePaymentIntent as string);
 };
@@ -56,7 +56,7 @@ export const generateBraintreeClientTokenQuery = async (
 	orderId: string,
 	includeCustomerId: boolean
 ) => {
-	return sdk
+	return shopSdk
 		.generateBraintreeClientToken({ orderId, includeCustomerId })
 		.then((res: GenerateBraintreeClientTokenQuery) => res.generateBraintreeClientToken as string);
 };

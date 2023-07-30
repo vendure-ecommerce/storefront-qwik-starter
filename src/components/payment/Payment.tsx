@@ -1,5 +1,5 @@
 import { $, component$, PropFunction, useSignal, useVisibleTask$ } from '@builder.io/qwik';
-import { getEligiblePaymentMethodsQuery } from '~/providers/checkout/checkout';
+import { getEligiblePaymentMethodsQuery } from '~/providers/shop/checkout/checkout';
 import { EligiblePaymentMethods } from '~/types';
 import CreditCardIcon from '../icons/CreditCardIcon';
 import BraintreePayment from './BraintreePayment';

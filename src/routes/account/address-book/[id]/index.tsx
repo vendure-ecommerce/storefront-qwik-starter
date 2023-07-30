@@ -6,12 +6,12 @@ import CheckIcon from '~/components/icons/CheckIcon';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import XMarkIcon from '~/components/icons/XMarkIcon';
 import { APP_STATE, AUTH_TOKEN } from '~/constants';
-import { CreateAddressInput, UpdateAddressInput } from '~/generated/graphql';
+import { Address, CreateAddressInput, UpdateAddressInput } from '~/generated/graphql';
 import {
 	createCustomerAddressMutation,
 	getActiveCustomerAddressesQuery,
 	updateCustomerAddressMutation,
-} from '~/providers/customer/customer';
+} from '~/providers/shop/customer/customer';
 import { ShippingAddress } from '~/types';
 
 export default component$(() => {
@@ -25,7 +25,7 @@ export default component$(() => {
 
 		if (activeCustomer?.addresses) {
 			const [activeAddress] = activeCustomer.addresses.filter(
-				(address) => address.id === location.params.id
+				(address: Address) => address.id === location.params.id
 			);
 			if (activeAddress) {
 				const shippingAddress: ShippingAddress = {

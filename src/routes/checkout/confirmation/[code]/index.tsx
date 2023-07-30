@@ -5,7 +5,7 @@ import CartTotals from '~/components/cart-totals/CartTotals';
 import CheckCircleIcon from '~/components/icons/CheckCircleIcon';
 import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
 import { Order } from '~/generated/graphql';
-import { getOrderByCodeQuery } from '~/providers/orders/order';
+import { getOrderByCodeQuery } from '~/providers/shop/orders/order';
 
 type Step = 'SHIPPING' | 'PAYMENT' | 'CONFIRMATION';
 

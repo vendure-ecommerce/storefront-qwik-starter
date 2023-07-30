@@ -6,8 +6,11 @@ import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
 import { SearchResponse } from '~/generated/graphql';
-import { getCollectionBySlug } from '~/providers/collections/collections';
-import { searchQueryWithCollectionSlug, searchQueryWithTerm } from '~/providers/products/products';
+import { getCollectionBySlug } from '~/providers/shop/collections/collections';
+import {
+	searchQueryWithCollectionSlug,
+	searchQueryWithTerm,
+} from '~/providers/shop/products/products';
 import { FacetWithValues } from '~/types';
 import {
 	changeUrlParamsWithoutRefresh,

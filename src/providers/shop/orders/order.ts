@@ -12,48 +12,48 @@ import {
 	SetOrderShippingAddressMutation,
 	SetOrderShippingMethodMutation,
 } from '~/generated/graphql';
-import { sdk } from '~/graphql-wrapper';
+import { shopSdk } from '~/graphql-wrapper';
 
 export const getActiveOrderQuery = async () => {
-	return sdk.activeOrder(undefined).then((res: ActiveOrderQuery) => res.activeOrder as Order);
+	return shopSdk.activeOrder(undefined).then((res: ActiveOrderQuery) => res.activeOrder as Order);
 };
 
 export const getOrderByCodeQuery = async (code: string) => {
-	return sdk.orderByCode({ code }).then((res: OrderByCodeQuery) => res.orderByCode as Order);
+	return shopSdk.orderByCode({ code }).then((res: OrderByCodeQuery) => res.orderByCode as Order);
 };
 
 export const addItemToOrderMutation = async (productVariantId: string, quantity: number) => {
-	return sdk
+	return shopSdk
 		.addItemToOrder({ productVariantId, quantity })
 		.then((res: AddItemToOrderMutation) => res.addItemToOrder);
 };
 
 export const removeOrderLineMutation = async (lineId: string) => {
-	return sdk
+	return shopSdk
 		.removeOrderLine({ orderLineId: lineId })
 		.then((res: RemoveOrderLineMutation) => res.removeOrderLine as Order);
 };
 
 export const adjustOrderLineMutation = async (lineId: string, quantity: number) => {
-	return sdk
+	return shopSdk
 		.adjustOrderLine({ orderLineId: lineId, quantity })
 		.then((res: AdjustOrderLineMutation) => res.adjustOrderLine as Order);
 };
 
 export const setOrderShippingAddressMutation = async (input: CreateAddressInput) => {
-	return sdk
+	return shopSdk
 		.setOrderShippingAddress({ input })
 		.then((res: SetOrderShippingAddressMutation) => res.setOrderShippingAddress);
 };
 
 export const setOrderShippingMethodMutation = async (shippingMethodId: string[]) => {
-	return sdk
+	return shopSdk
 		.setOrderShippingMethod({ shippingMethodId })
 		.then((res: SetOrderShippingMethodMutation) => res.setOrderShippingMethod as Order);
 };
 
 export const setCustomerForOrderMutation = async (input: CreateCustomerInput) => {
-	return sdk
+	return shopSdk
 		.setCustomerForOrder({ input })
 		.then((res: SetCustomerForOrderMutation) => res.setCustomerForOrder);
 };

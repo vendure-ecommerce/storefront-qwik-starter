@@ -1,9 +1,9 @@
 import gql from 'graphql-tag';
 import { Product, ProductQuery, SearchInput, SearchResponse } from '~/generated/graphql';
-import { sdk } from '~/graphql-wrapper';
+import { shopSdk } from '~/graphql-wrapper';
 
 export const search = async (searchInput: SearchInput) => {
-	return await sdk
+	return await shopSdk
 		.search({ input: { groupByProduct: true, ...searchInput } })
 		.then((res) => res.search as SearchResponse);
 };
@@ -18,7 +18,7 @@ export const searchQueryWithTerm = async (
 ) => search({ collectionSlug, term, facetValueFilters: [{ or: facetValueIds }] });
 
 export const getProductBySlug = async (slug: string) => {
-	return sdk.product({ slug }).then((res: ProductQuery) => res.product as Product);
+	return shopSdk.product({ slug }).then((res: ProductQuery) => res.product as Product);
 };
 
 export const detailedProductFragment = gql`

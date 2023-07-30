@@ -1,7 +1,7 @@
 import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import OrderCard from '~/components/account/OrderCard';
 import { Customer, Order } from '~/generated/graphql';
-import { getActiveCustomerOrdersQuery } from '~/providers/customer/customer';
+import { getActiveCustomerOrdersQuery } from '~/providers/shop/customer/customer';
 
 export default component$(() => {
 	const activeCustomerOrdersSignal = useSignal<Customer>();

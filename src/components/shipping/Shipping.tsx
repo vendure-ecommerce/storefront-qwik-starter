@@ -9,9 +9,9 @@ import {
 	useVisibleTask$,
 } from '@builder.io/qwik';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
-import { CreateAddressInput, CreateCustomerInput } from '~/generated/graphql';
-import { getActiveCustomerAddressesQuery } from '~/providers/customer/customer';
-import { getActiveOrderQuery } from '~/providers/orders/order';
+import { Address, CreateAddressInput, CreateCustomerInput } from '~/generated/graphql';
+import { getActiveCustomerAddressesQuery } from '~/providers/shop/customer/customer';
+import { getActiveOrderQuery } from '~/providers/shop/orders/order';
 import { isActiveCustomerValid, isShippingAddressValid } from '~/utils';
 import AddressForm from '../address-form/AddressForm';
 import LockClosedIcon from '../icons/LockClosedIcon';
@@ -58,7 +58,7 @@ export default component$<IProps>(({ onForward$ }) => {
 		const activeCustomer = await getActiveCustomerAddressesQuery();
 		if (activeCustomer?.addresses) {
 			const [defaultShippingAddress] = activeCustomer.addresses.filter(
-				(address) => !!address.defaultShippingAddress
+				(address: Address) => !!address.defaultShippingAddress
 			);
 			if (defaultShippingAddress) {
 				const appStateDefaultShippingAddress = {

@@ -1,7 +1,7 @@
 import { $, component$, useSignal } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import XCircleIcon from '~/components/icons/XCircleIcon';
-import { registerCustomerAccountMutation } from '~/providers/account/account';
+import { registerCustomerAccountMutation } from '~/providers/shop/account/account';
 
 export default component$(() => {
 	const email = useSignal('');

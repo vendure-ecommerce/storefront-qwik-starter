@@ -1,6 +1,6 @@
 import { component$, useStore, useTask$ } from '@builder.io/qwik';
-import { getEligibleShippingMethodsQuery } from '~/providers/checkout/checkout';
-import { setOrderShippingMethodMutation } from '~/providers/orders/order';
+import { getEligibleShippingMethodsQuery } from '~/providers/shop/checkout/checkout';
+import { setOrderShippingMethodMutation } from '~/providers/shop/orders/order';
 import { AppState, EligibleShippingMethods } from '~/types';
 import { formatPrice } from '~/utils';
 import CheckCircleIcon from '../icons/CheckCircleIcon';

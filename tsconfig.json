@@ -7,18 +7,21 @@
 		"jsx": "react-jsx",
 		"jsxImportSource": "@builder.io/qwik",
 		"strict": true,
-		"declaration": true,
-		"declarationDir": "lib/types",
+		"forceConsistentCasingInFileNames": true,
 		"resolveJsonModule": true,
 		"moduleResolution": "node",
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"incremental": true,
 		"isolatedModules": true,
-		"types": ["vite/client"],
+		"outDir": "tmp",
+		"noEmit": true,
+		"types": ["node", "vite/client"],
 		"paths": {
 			"~/*": ["./src/*"]
 		}
 	},
-	"include": ["src"]
+	"files": ["./.eslintrc.cjs"],
+	"exclude": ["src/generated/graphql-admin.ts", "src/generated/graphql-shop.ts"],
+	"include": ["src", "tailwind.config.js", "codegen-shop.ts", "codegen-admin.ts"]
 }

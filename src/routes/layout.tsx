@@ -11,9 +11,9 @@ import { RequestHandler, routeLoader$ } from '@builder.io/qwik-city';
 import { ImageTransformerProps, useImageProvider } from 'qwik-image';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, IMAGE_RESOLUTIONS } from '~/constants';
 import { Order } from '~/generated/graphql';
-import { getAvailableCountriesQuery } from '~/providers/checkout/checkout';
-import { getCollections } from '~/providers/collections/collections';
-import { getActiveOrderQuery } from '~/providers/orders/order';
+import { getAvailableCountriesQuery } from '~/providers/shop/checkout/checkout';
+import { getCollections } from '~/providers/shop/collections/collections';
+import { getActiveOrderQuery } from '~/providers/shop/orders/order';
 import { ActiveCustomer, AppState } from '~/types';
 import { extractLang } from '~/utils/i18n';
 import Cart from '../components/cart/Cart';
@@ -60,7 +60,7 @@ export default component$(() => {
 			id: '',
 			city: '',
 			company: '',
-			countryCode: availableCountriesSignal.value[0].code,
+			countryCode: availableCountriesSignal.value ? availableCountriesSignal.value[0].code : '',
 			fullName: '',
 			phoneNumber: '',
 			postalCode: '',

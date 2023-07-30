@@ -8,7 +8,7 @@ import { Address } from '~/generated/graphql';
 import {
 	deleteCustomerAddressMutation,
 	getActiveCustomerAddressesQuery,
-} from '~/providers/customer/customer';
+} from '~/providers/shop/customer/customer';
 import { ShippingAddress } from '~/types';
 
 export default component$(() => {

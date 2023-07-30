@@ -1,7 +1,7 @@
 import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import XCircleIcon from '~/components/icons/XCircleIcon';
-import { updateCustomerEmailAddressMutation } from '~/providers/account/account';
+import { updateCustomerEmailAddressMutation } from '~/providers/shop/account/account';
 
 export default component$(() => {
 	const error = useSignal('');

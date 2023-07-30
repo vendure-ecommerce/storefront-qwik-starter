@@ -1,6 +1,6 @@
 import { $, component$, useSignal } from '@builder.io/qwik';
 import XCircleIcon from '~/components/icons/XCircleIcon';
-import { requestPasswordResetMutation } from '~/providers/account/account';
+import { requestPasswordResetMutation } from '~/providers/shop/account/account';
 
 export default component$(() => {
 	const email = useSignal('');
