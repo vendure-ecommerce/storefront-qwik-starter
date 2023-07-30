@@ -16,6 +16,7 @@ import { getCollections } from '~/providers/shop/collections/collections';
 import { getActiveOrderQuery } from '~/providers/shop/orders/order';
 import { ActiveCustomer, AppState } from '~/types';
 import { extractLang } from '~/utils/i18n';
+import Cart from '../components/cart/Cart';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
 
@@ -88,6 +89,7 @@ export default component$(() => {
 	return (
 		<div>
 			<Header />
+			<Cart />
 			<main>
 				<Slot />
 			</main>

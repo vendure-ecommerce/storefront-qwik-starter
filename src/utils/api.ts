@@ -87,7 +87,8 @@ const extractTokenAndData = async (response: Response, apiUrl: string) => {
 	}
 	const token = response.headers.get(HEADER_AUTH_TOKEN_KEY) || '';
 	const { data, errors } = await response.json();
-	if (errors) {
+	if (errors && !data) {
+		// e.g. API access related errors, like auth issues.
 		throw new Error(errors[0].message);
 	}
 	return { token, data };

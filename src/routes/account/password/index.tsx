@@ -100,7 +100,7 @@ export default component$(() => {
 						<CheckIcon /> &nbsp; Save
 					</HighlightedButton>
 					<div>
-						<button onClick$={togglePasswordFields}>
+						<button preventdefault:click onClick$={togglePasswordFields}>
 							{showPasswordAsTextSignal.value ? <EyeIcon /> : <EyeSlashIcon />}
 						</button>
 					</div>
