@@ -1,4 +1,3 @@
-import { sdk } from '~/graphql-wrapper';
 import gql from 'graphql-tag';
 import {
 	LoginMutation,
@@ -12,57 +11,58 @@ import {
 	UpdateCustomerInput,
 	VerifyCustomerAccountMutation,
 } from '~/generated/graphql';
+import { shopSdk } from '~/graphql-wrapper';
 
 export const loginMutation = async (
 	email: string,
 	password: string,
 	rememberMe: boolean
 ): Promise<LoginMutation> => {
-	return sdk.login({ email, password, rememberMe });
+	return shopSdk.login({ email, password, rememberMe });
 };
 
 export const logoutMutation = async (): Promise<Success> => {
-	return sdk.logout().then((res: LogoutMutation) => res.logout as Success);
+	return shopSdk.logout().then((res: LogoutMutation) => res.logout as Success);
 };
 
 export const registerCustomerAccountMutation = async (
 	variables: RegisterCustomerAccountMutationVariables
 ): Promise<RegisterCustomerAccountMutation> => {
-	return sdk.registerCustomerAccount(variables);
+	return shopSdk.registerCustomerAccount(variables);
 };
 
 export const verifyCustomerAccountMutation = async (
 	token: string,
 	password?: string
 ): Promise<VerifyCustomerAccountMutation> => {
-	return sdk.verifyCustomerAccount({ token, password });
+	return shopSdk.verifyCustomerAccount({ token, password });
 };
 
 export const updateCustomerMutation = async (input: UpdateCustomerInput) => {
-	return sdk.updateCustomer({ input });
+	return shopSdk.updateCustomer({ input });
 };
 
 export const requestUpdateCustomerEmailAddressMutation = async (
 	password: string,
 	newEmailAddress: string
 ) => {
-	return sdk.requestUpdateCustomerEmailAddress({ password, newEmailAddress });
+	return shopSdk.requestUpdateCustomerEmailAddress({ password, newEmailAddress });
 };
 
 export const updateCustomerEmailAddressMutation = async (token: string) => {
-	return sdk
+	return shopSdk
 		.updateCustomerEmailAddress({ token })
 		.then((res: UpdateCustomerEmailAddressMutation) => res.updateCustomerEmailAddress);
 };
 
 export const resetPasswordMutation = async (token: string, password: string) => {
-	return sdk
+	return shopSdk
 		.resetPassword({ token, password })
 		.then((res: ResetPasswordMutation) => res.resetPassword);
 };
 
 export const requestPasswordResetMutation = (emailAddress: string) => {
-	return sdk
+	return shopSdk
 		.requestPasswordReset({ emailAddress })
 		.then((res: RequestPasswordResetMutation) => res.requestPasswordReset);
 };

@@ -6,7 +6,7 @@ import CheckIcon from '~/components/icons/CheckIcon';
 import EyeIcon from '~/components/icons/EyeIcon';
 import EyeSlashIcon from '~/components/icons/EyeSlashIcon';
 import { APP_STATE } from '~/constants';
-import { updateCustomerPasswordMutation } from '~/providers/customer/customer';
+import { updateCustomerPasswordMutation } from '~/providers/shop/customer/customer';
 
 export default component$(() => {
 	const navigate = useNavigate();

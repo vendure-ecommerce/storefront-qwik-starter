@@ -10,11 +10,11 @@ import { CreateAddressInput, CreateCustomerInput } from '~/generated/graphql';
 import {
 	addPaymentToOrderMutation,
 	transitionOrderToStateMutation,
-} from '~/providers/checkout/checkout';
+} from '~/providers/shop/checkout/checkout';
 import {
 	setCustomerForOrderMutation,
 	setOrderShippingAddressMutation,
-} from '~/providers/orders/order';
+} from '~/providers/shop/orders/order';
 import { isEnvVariableEnabled } from '~/utils';
 
 type Step = 'SHIPPING' | 'PAYMENT' | 'CONFIRMATION';

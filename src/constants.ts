@@ -13,3 +13,7 @@ export const DEFAULT_METADATA_DESCRIPTION =
 	'A headless commerce storefront starter kit built with Vendure & Qwik';
 export const DEFAULT_METADATA_IMAGE = 'https://qwik-storefront.vendure.io/social-image.png';
 export const DEFAULT_LOCALE = 'en';
+// TODO: replace DEV_API and PROD_API with your dev and prod API urls.
+export const DEV_API = 'https://readonlydemo.vendure.io';
+export const PROD_API = 'https://readonlydemo.vendure.io';
+export const LOCAL_API = 'http://localhost:3000';

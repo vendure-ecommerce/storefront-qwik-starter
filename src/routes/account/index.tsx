@@ -20,8 +20,8 @@ import { APP_STATE } from '~/constants';
 import {
 	requestUpdateCustomerEmailAddressMutation,
 	updateCustomerMutation,
-} from '~/providers/account/account';
-import { getActiveCustomerQuery } from '~/providers/customer/customer';
+} from '~/providers/shop/account/account';
+import { getActiveCustomerQuery } from '~/providers/shop/customer/customer';
 import { ActiveCustomer } from '~/types';
 
 export default component$(() => {

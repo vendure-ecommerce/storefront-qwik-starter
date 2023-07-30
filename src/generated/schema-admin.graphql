@@ -1,0 +1,7349 @@
+union AddFulfillmentToOrderResult =
+	  CreateFulfillmentError
+	| EmptyOrderLineSelectionError
+	| Fulfillment
+	| FulfillmentStateTransitionError
+	| InsufficientStockOnHandError
+	| InvalidFulfillmentHandlerError
+	| ItemsAlreadyFulfilledError
+
+input AddItemInput {
+	productVariantId: ID!
+	quantity: Int!
+}
+
+input AddItemToDraftOrderInput {
+	productVariantId: ID!
+	quantity: Int!
+}
+
+union AddManualPaymentToOrderResult = ManualPaymentStateError | Order
+
+input AddNoteToCustomerInput {
+	id: ID!
+	isPublic: Boolean!
+	note: String!
+}
+
+input AddNoteToOrderInput {
+	id: ID!
+	isPublic: Boolean!
+	note: String!
+}
+
+type Address implements Node {
+	city: String
+	company: String
+	country: Country!
+	createdAt: DateTime!
+	customFields: JSON
+	defaultBillingAddress: Boolean
+	defaultShippingAddress: Boolean
+	fullName: String
+	id: ID!
+	phoneNumber: String
+	postalCode: String
+	province: String
+	streetLine1: String!
+	streetLine2: String
+	updatedAt: DateTime!
+}
+
+input AdjustDraftOrderLineInput {
+	orderLineId: ID!
+	quantity: Int!
+}
+
+type Adjustment {
+	adjustmentSource: String!
+	amount: Money!
+	data: JSON
+	description: String!
+	type: AdjustmentType!
+}
+
+enum AdjustmentType {
+	DISTRIBUTED_ORDER_PROMOTION
+	OTHER
+	PROMOTION
+}
+
+type Administrator implements Node {
+	createdAt: DateTime!
+	customFields: JSON
+	emailAddress: String!
+	firstName: String!
+	id: ID!
+	lastName: String!
+	updatedAt: DateTime!
+	user: User!
+}
+
+input AdministratorFilterParameter {
+	createdAt: DateOperators
+	emailAddress: StringOperators
+	firstName: StringOperators
+	id: IDOperators
+	lastName: StringOperators
+	updatedAt: DateOperators
+}
+
+type AdministratorList implements PaginatedList {
+	items: [Administrator!]!
+	totalItems: Int!
+}
+
+input AdministratorListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: AdministratorFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: AdministratorSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input AdministratorPaymentInput {
+	metadata: JSON
+	paymentMethod: String
+}
+
+input AdministratorRefundInput {
+	paymentId: ID!
+	reason: String
+}
+
+input AdministratorSortParameter {
+	createdAt: SortOrder
+	emailAddress: SortOrder
+	firstName: SortOrder
+	id: SortOrder
+	lastName: SortOrder
+	updatedAt: SortOrder
+}
+
+type Allocation implements Node & StockMovement {
+	createdAt: DateTime!
+	id: ID!
+	orderLine: OrderLine!
+	productVariant: ProductVariant!
+	quantity: Int!
+	type: StockMovementType!
+	updatedAt: DateTime!
+}
+
+"""
+Returned if an attempting to refund an OrderItem which has already been refunded
+"""
+type AlreadyRefundedError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+	refundId: ID!
+}
+
+union ApplyCouponCodeResult =
+	  CouponCodeExpiredError
+	| CouponCodeInvalidError
+	| CouponCodeLimitError
+	| Order
+
+type Asset implements Node {
+	createdAt: DateTime!
+	customFields: JSON
+	fileSize: Int!
+	focalPoint: Coordinate
+	height: Int!
+	id: ID!
+	mimeType: String!
+	name: String!
+	preview: String!
+	source: String!
+	tags: [Tag!]!
+	type: AssetType!
+	updatedAt: DateTime!
+	width: Int!
+}
+
+input AssetFilterParameter {
+	createdAt: DateOperators
+	fileSize: NumberOperators
+	height: NumberOperators
+	id: IDOperators
+	mimeType: StringOperators
+	name: StringOperators
+	preview: StringOperators
+	source: StringOperators
+	type: StringOperators
+	updatedAt: DateOperators
+	width: NumberOperators
+}
+
+type AssetList implements PaginatedList {
+	items: [Asset!]!
+	totalItems: Int!
+}
+
+input AssetListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: AssetFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: AssetSortParameter
+	tags: [String!]
+	tagsOperator: LogicalOperator
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input AssetSortParameter {
+	createdAt: SortOrder
+	fileSize: SortOrder
+	height: SortOrder
+	id: SortOrder
+	mimeType: SortOrder
+	name: SortOrder
+	preview: SortOrder
+	source: SortOrder
+	updatedAt: SortOrder
+	width: SortOrder
+}
+
+enum AssetType {
+	BINARY
+	IMAGE
+	VIDEO
+}
+
+input AssignAssetsToChannelInput {
+	assetIds: [ID!]!
+	channelId: ID!
+}
+
+input AssignCollectionsToChannelInput {
+	channelId: ID!
+	collectionIds: [ID!]!
+}
+
+input AssignFacetsToChannelInput {
+	channelId: ID!
+	facetIds: [ID!]!
+}
+
+input AssignPaymentMethodsToChannelInput {
+	channelId: ID!
+	paymentMethodIds: [ID!]!
+}
+
+input AssignProductVariantsToChannelInput {
+	channelId: ID!
+	priceFactor: Float
+	productVariantIds: [ID!]!
+}
+
+input AssignProductsToChannelInput {
+	channelId: ID!
+	priceFactor: Float
+	productIds: [ID!]!
+}
+
+input AssignPromotionsToChannelInput {
+	channelId: ID!
+	promotionIds: [ID!]!
+}
+
+input AssignShippingMethodsToChannelInput {
+	channelId: ID!
+	shippingMethodIds: [ID!]!
+}
+
+input AssignStockLocationsToChannelInput {
+	channelId: ID!
+	stockLocationIds: [ID!]!
+}
+
+input AuthenticationInput {
+	native: NativeAuthInput
+}
+
+type AuthenticationMethod implements Node {
+	createdAt: DateTime!
+	id: ID!
+	strategy: String!
+	updatedAt: DateTime!
+}
+
+union AuthenticationResult = CurrentUser | InvalidCredentialsError
+
+type BooleanCustomFieldConfig implements CustomField {
+	description: [LocalizedString!]
+	internal: Boolean
+	label: [LocalizedString!]
+	list: Boolean!
+	name: String!
+	nullable: Boolean
+	readonly: Boolean
+	type: String!
+	ui: JSON
+}
+
+"""
+Operators for filtering on a list of Boolean fields
+"""
+input BooleanListOperators {
+	inList: Boolean!
+}
+
+"""
+Operators for filtering on a Boolean field
+"""
+input BooleanOperators {
+	eq: Boolean
+	isNull: Boolean
+}
+
+"""
+Returned if an attempting to cancel lines from an Order which is still active
+"""
+type CancelActiveOrderError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+	orderState: String!
+}
+
+input CancelOrderInput {
+	"""
+	Specify whether the shipping charges should also be cancelled. Defaults to false
+	"""
+	cancelShipping: Boolean
+
+	"""
+	Optionally specify which OrderLines to cancel. If not provided, all OrderLines will be cancelled
+	"""
+	lines: [OrderLineInput!]
+
+	"""
+	The id of the order to be cancelled
+	"""
+	orderId: ID!
+	reason: String
+}
+
+union CancelOrderResult =
+	  CancelActiveOrderError
+	| EmptyOrderLineSelectionError
+	| MultipleOrderError
+	| Order
+	| OrderStateTransitionError
+	| QuantityTooGreatError
+
+"""
+Returned if the Payment cancellation fails
+"""
+type CancelPaymentError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+	paymentErrorMessage: String!
+}
+
+union CancelPaymentResult = CancelPaymentError | Payment | PaymentStateTransitionError
+
+type Cancellation implements Node & StockMovement {
+	createdAt: DateTime!
+	id: ID!
+	orderLine: OrderLine!
+	productVariant: ProductVariant!
+	quantity: Int!
+	type: StockMovementType!
+	updatedAt: DateTime!
+}
+
+type Channel implements Node {
+	availableCurrencyCodes: [CurrencyCode!]!
+	availableLanguageCodes: [LanguageCode!]
+	code: String!
+	createdAt: DateTime!
+	currencyCode: CurrencyCode! @deprecated(reason: "Use defaultCurrencyCode instead")
+	customFields: JSON
+	defaultCurrencyCode: CurrencyCode!
+	defaultLanguageCode: LanguageCode!
+	defaultShippingZone: Zone
+	defaultTaxZone: Zone
+	id: ID!
+
+	"""
+	Not yet used - will be implemented in a future release.
+	"""
+	outOfStockThreshold: Int
+	pricesIncludeTax: Boolean!
+	seller: Seller
+	token: String!
+
+	"""
+	Not yet used - will be implemented in a future release.
+	"""
+	trackInventory: Boolean
+	updatedAt: DateTime!
+}
+
+"""
+Returned when the default LanguageCode of a Channel is no longer found in the `availableLanguages`
+of the GlobalSettings
+"""
+type ChannelDefaultLanguageError implements ErrorResult {
+	channelCode: String!
+	errorCode: ErrorCode!
+	language: String!
+	message: String!
+}
+
+input ChannelFilterParameter {
+	code: StringOperators
+	createdAt: DateOperators
+	currencyCode: StringOperators
+	defaultCurrencyCode: StringOperators
+	defaultLanguageCode: StringOperators
+	id: IDOperators
+	outOfStockThreshold: NumberOperators
+	pricesIncludeTax: BooleanOperators
+	token: StringOperators
+	trackInventory: BooleanOperators
+	updatedAt: DateOperators
+}
+
+type ChannelList implements PaginatedList {
+	items: [Channel!]!
+	totalItems: Int!
+}
+
+input ChannelListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: ChannelFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: ChannelSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input ChannelSortParameter {
+	code: SortOrder
+	createdAt: SortOrder
+	id: SortOrder
+	outOfStockThreshold: SortOrder
+	token: SortOrder
+	updatedAt: SortOrder
+}
+
+type Collection implements Node {
+	assets: [Asset!]!
+	breadcrumbs: [CollectionBreadcrumb!]!
+	children: [Collection!]
+	createdAt: DateTime!
+	customFields: JSON
+	description: String!
+	featuredAsset: Asset
+	filters: [ConfigurableOperation!]!
+	id: ID!
+	inheritFilters: Boolean!
+	isPrivate: Boolean!
+	languageCode: LanguageCode
+	name: String!
+	parent: Collection
+	parentId: ID!
+	position: Int!
+	productVariants(options: ProductVariantListOptions): ProductVariantList!
+	slug: String!
+	translations: [CollectionTranslation!]!
+	updatedAt: DateTime!
+}
+
+type CollectionBreadcrumb {
+	id: ID!
+	name: String!
+	slug: String!
+}
+
+input CollectionFilterParameter {
+	createdAt: DateOperators
+	description: StringOperators
+	id: IDOperators
+	inheritFilters: BooleanOperators
+	isPrivate: BooleanOperators
+	languageCode: StringOperators
+	name: StringOperators
+	parentId: IDOperators
+	position: NumberOperators
+	slug: StringOperators
+	updatedAt: DateOperators
+}
+
+type CollectionList implements PaginatedList {
+	items: [Collection!]!
+	totalItems: Int!
+}
+
+input CollectionListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: CollectionFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: CollectionSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+	topLevelOnly: Boolean
+}
+
+"""
+Which Collections are present in the products returned
+by the search, and in what quantity.
+"""
+type CollectionResult {
+	collection: Collection!
+	count: Int!
+}
+
+input CollectionSortParameter {
+	createdAt: SortOrder
+	description: SortOrder
+	id: SortOrder
+	name: SortOrder
+	parentId: SortOrder
+	position: SortOrder
+	slug: SortOrder
+	updatedAt: SortOrder
+}
+
+type CollectionTranslation {
+	createdAt: DateTime!
+	description: String!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	slug: String!
+	updatedAt: DateTime!
+}
+
+type ConfigArg {
+	name: String!
+	value: String!
+}
+
+type ConfigArgDefinition {
+	defaultValue: JSON
+	description: String
+	label: String
+	list: Boolean!
+	name: String!
+	required: Boolean!
+	type: String!
+	ui: JSON
+}
+
+input ConfigArgInput {
+	name: String!
+
+	"""
+	A JSON stringified representation of the actual value
+	"""
+	value: String!
+}
+
+type ConfigurableOperation {
+	args: [ConfigArg!]!
+	code: String!
+}
+
+type ConfigurableOperationDefinition {
+	args: [ConfigArgDefinition!]!
+	code: String!
+	description: String!
+}
+
+input ConfigurableOperationInput {
+	arguments: [ConfigArgInput!]!
+	code: String!
+}
+
+type Coordinate {
+	x: Float!
+	y: Float!
+}
+
+input CoordinateInput {
+	x: Float!
+	y: Float!
+}
+
+type Country implements Node & Region {
+	code: String!
+	createdAt: DateTime!
+	customFields: JSON
+	enabled: Boolean!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	parent: Region
+	parentId: ID
+	translations: [RegionTranslation!]!
+	type: String!
+	updatedAt: DateTime!
+}
+
+input CountryFilterParameter {
+	code: StringOperators
+	createdAt: DateOperators
+	enabled: BooleanOperators
+	id: IDOperators
+	languageCode: StringOperators
+	name: StringOperators
+	parentId: IDOperators
+	type: StringOperators
+	updatedAt: DateOperators
+}
+
+type CountryList implements PaginatedList {
+	items: [Country!]!
+	totalItems: Int!
+}
+
+input CountryListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: CountryFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: CountrySortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input CountrySortParameter {
+	code: SortOrder
+	createdAt: SortOrder
+	id: SortOrder
+	name: SortOrder
+	parentId: SortOrder
+	type: SortOrder
+	updatedAt: SortOrder
+}
+
+input CountryTranslationInput {
+	customFields: JSON
+	id: ID
+	languageCode: LanguageCode!
+	name: String
+}
+
+"""
+Returned if the provided coupon code is invalid
+"""
+type CouponCodeExpiredError implements ErrorResult {
+	couponCode: String!
+	errorCode: ErrorCode!
+	message: String!
+}
+
+"""
+Returned if the provided coupon code is invalid
+"""
+type CouponCodeInvalidError implements ErrorResult {
+	couponCode: String!
+	errorCode: ErrorCode!
+	message: String!
+}
+
+"""
+Returned if the provided coupon code is invalid
+"""
+type CouponCodeLimitError implements ErrorResult {
+	couponCode: String!
+	errorCode: ErrorCode!
+	limit: Int!
+	message: String!
+}
+
+input CreateAddressInput {
+	city: String
+	company: String
+	countryCode: String!
+	customFields: JSON
+	defaultBillingAddress: Boolean
+	defaultShippingAddress: Boolean
+	fullName: String
+	phoneNumber: String
+	postalCode: String
+	province: String
+	streetLine1: String!
+	streetLine2: String
+}
+
+input CreateAdministratorInput {
+	customFields: JSON
+	emailAddress: String!
+	firstName: String!
+	lastName: String!
+	password: String!
+	roleIds: [ID!]!
+}
+
+input CreateAssetInput {
+	customFields: JSON
+	file: Upload!
+	tags: [String!]
+}
+
+union CreateAssetResult = Asset | MimeTypeError
+
+input CreateChannelInput {
+	availableCurrencyCodes: [CurrencyCode!]
+	availableLanguageCodes: [LanguageCode!]
+	code: String!
+	customFields: JSON
+	defaultCurrencyCode: CurrencyCode
+	defaultLanguageCode: LanguageCode!
+	defaultShippingZoneId: ID!
+	defaultTaxZoneId: ID!
+	outOfStockThreshold: Int
+	pricesIncludeTax: Boolean!
+	sellerId: ID
+	token: String!
+	trackInventory: Boolean
+}
+
+union CreateChannelResult = Channel | LanguageNotAvailableError
+
+input CreateCollectionInput {
+	assetIds: [ID!]
+	customFields: JSON
+	featuredAssetId: ID
+	filters: [ConfigurableOperationInput!]!
+	inheritFilters: Boolean
+	isPrivate: Boolean
+	parentId: ID
+	translations: [CreateCollectionTranslationInput!]!
+}
+
+input CreateCollectionTranslationInput {
+	customFields: JSON
+	description: String!
+	languageCode: LanguageCode!
+	name: String!
+	slug: String!
+}
+
+input CreateCountryInput {
+	code: String!
+	customFields: JSON
+	enabled: Boolean!
+	translations: [CountryTranslationInput!]!
+}
+
+input CreateCustomerGroupInput {
+	customFields: JSON
+	customerIds: [ID!]
+	name: String!
+}
+
+input CreateCustomerInput {
+	customFields: JSON
+	emailAddress: String!
+	firstName: String!
+	lastName: String!
+	phoneNumber: String
+	title: String
+}
+
+union CreateCustomerResult = Customer | EmailAddressConflictError
+
+input CreateFacetInput {
+	code: String!
+	customFields: JSON
+	isPrivate: Boolean!
+	translations: [FacetTranslationInput!]!
+	values: [CreateFacetValueWithFacetInput!]
+}
+
+input CreateFacetValueInput {
+	code: String!
+	customFields: JSON
+	facetId: ID!
+	translations: [FacetValueTranslationInput!]!
+}
+
+input CreateFacetValueWithFacetInput {
+	code: String!
+	translations: [FacetValueTranslationInput!]!
+}
+
+"""
+Returned if an error is thrown in a FulfillmentHandler's createFulfillment method
+"""
+type CreateFulfillmentError implements ErrorResult {
+	errorCode: ErrorCode!
+	fulfillmentHandlerError: String!
+	message: String!
+}
+
+input CreateGroupOptionInput {
+	code: String!
+	translations: [ProductOptionGroupTranslationInput!]!
+}
+
+input CreatePaymentMethodInput {
+	checker: ConfigurableOperationInput
+	code: String!
+	customFields: JSON
+	enabled: Boolean!
+	handler: ConfigurableOperationInput!
+	translations: [PaymentMethodTranslationInput!]!
+}
+
+input CreateProductInput {
+	assetIds: [ID!]
+	customFields: JSON
+	enabled: Boolean
+	facetValueIds: [ID!]
+	featuredAssetId: ID
+	translations: [ProductTranslationInput!]!
+}
+
+input CreateProductOptionGroupInput {
+	code: String!
+	customFields: JSON
+	options: [CreateGroupOptionInput!]!
+	translations: [ProductOptionGroupTranslationInput!]!
+}
+
+input CreateProductOptionInput {
+	code: String!
+	customFields: JSON
+	productOptionGroupId: ID!
+	translations: [ProductOptionGroupTranslationInput!]!
+}
+
+input CreateProductVariantInput {
+	assetIds: [ID!]
+	customFields: JSON
+	facetValueIds: [ID!]
+	featuredAssetId: ID
+	optionIds: [ID!]
+	outOfStockThreshold: Int
+	price: Money
+	productId: ID!
+	sku: String!
+	stockLevels: [StockLevelInput!]
+	stockOnHand: Int
+	taxCategoryId: ID
+	trackInventory: GlobalFlag
+	translations: [ProductVariantTranslationInput!]!
+	useGlobalOutOfStockThreshold: Boolean
+}
+
+input CreateProductVariantOptionInput {
+	code: String!
+	optionGroupId: ID!
+	translations: [ProductOptionTranslationInput!]!
+}
+
+input CreatePromotionInput {
+	actions: [ConfigurableOperationInput!]!
+	conditions: [ConfigurableOperationInput!]!
+	couponCode: String
+	customFields: JSON
+	enabled: Boolean!
+	endsAt: DateTime
+	perCustomerUsageLimit: Int
+	startsAt: DateTime
+	translations: [PromotionTranslationInput!]!
+}
+
+union CreatePromotionResult = MissingConditionsError | Promotion
+
+input CreateProvinceInput {
+	code: String!
+	customFields: JSON
+	enabled: Boolean!
+	translations: [ProvinceTranslationInput!]!
+}
+
+input CreateRoleInput {
+	channelIds: [ID!]
+	code: String!
+	description: String!
+	permissions: [Permission!]!
+}
+
+input CreateSellerInput {
+	customFields: JSON
+	name: String!
+}
+
+input CreateShippingMethodInput {
+	calculator: ConfigurableOperationInput!
+	checker: ConfigurableOperationInput!
+	code: String!
+	customFields: JSON
+	fulfillmentHandler: String!
+	translations: [ShippingMethodTranslationInput!]!
+}
+
+input CreateStockLocationInput {
+	customFields: JSON
+	description: String
+	name: String!
+}
+
+input CreateTagInput {
+	value: String!
+}
+
+input CreateTaxCategoryInput {
+	customFields: JSON
+	isDefault: Boolean
+	name: String!
+}
+
+input CreateTaxRateInput {
+	categoryId: ID!
+	customFields: JSON
+	customerGroupId: ID
+	enabled: Boolean!
+	name: String!
+	value: Float!
+	zoneId: ID!
+}
+
+input CreateZoneInput {
+	customFields: JSON
+	memberIds: [ID!]
+	name: String!
+}
+
+"""
+@description
+ISO 4217 currency code
+
+@docsCategory common
+"""
+enum CurrencyCode {
+	"""
+	United Arab Emirates dirham
+	"""
+	AED
+
+	"""
+	Afghan afghani
+	"""
+	AFN
+
+	"""
+	Albanian lek
+	"""
+	ALL
+
+	"""
+	Armenian dram
+	"""
+	AMD
+
+	"""
+	Netherlands Antillean guilder
+	"""
+	ANG
+
+	"""
+	Angolan kwanza
+	"""
+	AOA
+
+	"""
+	Argentine peso
+	"""
+	ARS
+
+	"""
+	Australian dollar
+	"""
+	AUD
+
+	"""
+	Aruban florin
+	"""
+	AWG
+
+	"""
+	Azerbaijani manat
+	"""
+	AZN
+
+	"""
+	Bosnia and Herzegovina convertible mark
+	"""
+	BAM
+
+	"""
+	Barbados dollar
+	"""
+	BBD
+
+	"""
+	Bangladeshi taka
+	"""
+	BDT
+
+	"""
+	Bulgarian lev
+	"""
+	BGN
+
+	"""
+	Bahraini dinar
+	"""
+	BHD
+
+	"""
+	Burundian franc
+	"""
+	BIF
+
+	"""
+	Bermudian dollar
+	"""
+	BMD
+
+	"""
+	Brunei dollar
+	"""
+	BND
+
+	"""
+	Boliviano
+	"""
+	BOB
+
+	"""
+	Brazilian real
+	"""
+	BRL
+
+	"""
+	Bahamian dollar
+	"""
+	BSD
+
+	"""
+	Bhutanese ngultrum
+	"""
+	BTN
+
+	"""
+	Botswana pula
+	"""
+	BWP
+
+	"""
+	Belarusian ruble
+	"""
+	BYN
+
+	"""
+	Belize dollar
+	"""
+	BZD
+
+	"""
+	Canadian dollar
+	"""
+	CAD
+
+	"""
+	Congolese franc
+	"""
+	CDF
+
+	"""
+	Swiss franc
+	"""
+	CHF
+
+	"""
+	Chilean peso
+	"""
+	CLP
+
+	"""
+	Renminbi (Chinese) yuan
+	"""
+	CNY
+
+	"""
+	Colombian peso
+	"""
+	COP
+
+	"""
+	Costa Rican colon
+	"""
+	CRC
+
+	"""
+	Cuban convertible peso
+	"""
+	CUC
+
+	"""
+	Cuban peso
+	"""
+	CUP
+
+	"""
+	Cape Verde escudo
+	"""
+	CVE
+
+	"""
+	Czech koruna
+	"""
+	CZK
+
+	"""
+	Djiboutian franc
+	"""
+	DJF
+
+	"""
+	Danish krone
+	"""
+	DKK
+
+	"""
+	Dominican peso
+	"""
+	DOP
+
+	"""
+	Algerian dinar
+	"""
+	DZD
+
+	"""
+	Egyptian pound
+	"""
+	EGP
+
+	"""
+	Eritrean nakfa
+	"""
+	ERN
+
+	"""
+	Ethiopian birr
+	"""
+	ETB
+
+	"""
+	Euro
+	"""
+	EUR
+
+	"""
+	Fiji dollar
+	"""
+	FJD
+
+	"""
+	Falkland Islands pound
+	"""
+	FKP
+
+	"""
+	Pound sterling
+	"""
+	GBP
+
+	"""
+	Georgian lari
+	"""
+	GEL
+
+	"""
+	Ghanaian cedi
+	"""
+	GHS
+
+	"""
+	Gibraltar pound
+	"""
+	GIP
+
+	"""
+	Gambian dalasi
+	"""
+	GMD
+
+	"""
+	Guinean franc
+	"""
+	GNF
+
+	"""
+	Guatemalan quetzal
+	"""
+	GTQ
+
+	"""
+	Guyanese dollar
+	"""
+	GYD
+
+	"""
+	Hong Kong dollar
+	"""
+	HKD
+
+	"""
+	Honduran lempira
+	"""
+	HNL
+
+	"""
+	Croatian kuna
+	"""
+	HRK
+
+	"""
+	Haitian gourde
+	"""
+	HTG
+
+	"""
+	Hungarian forint
+	"""
+	HUF
+
+	"""
+	Indonesian rupiah
+	"""
+	IDR
+
+	"""
+	Israeli new shekel
+	"""
+	ILS
+
+	"""
+	Indian rupee
+	"""
+	INR
+
+	"""
+	Iraqi dinar
+	"""
+	IQD
+
+	"""
+	Iranian rial
+	"""
+	IRR
+
+	"""
+	Icelandic króna
+	"""
+	ISK
+
+	"""
+	Jamaican dollar
+	"""
+	JMD
+
+	"""
+	Jordanian dinar
+	"""
+	JOD
+
+	"""
+	Japanese yen
+	"""
+	JPY
+
+	"""
+	Kenyan shilling
+	"""
+	KES
+
+	"""
+	Kyrgyzstani som
+	"""
+	KGS
+
+	"""
+	Cambodian riel
+	"""
+	KHR
+
+	"""
+	Comoro franc
+	"""
+	KMF
+
+	"""
+	North Korean won
+	"""
+	KPW
+
+	"""
+	South Korean won
+	"""
+	KRW
+
+	"""
+	Kuwaiti dinar
+	"""
+	KWD
+
+	"""
+	Cayman Islands dollar
+	"""
+	KYD
+
+	"""
+	Kazakhstani tenge
+	"""
+	KZT
+
+	"""
+	Lao kip
+	"""
+	LAK
+
+	"""
+	Lebanese pound
+	"""
+	LBP
+
+	"""
+	Sri Lankan rupee
+	"""
+	LKR
+
+	"""
+	Liberian dollar
+	"""
+	LRD
+
+	"""
+	Lesotho loti
+	"""
+	LSL
+
+	"""
+	Libyan dinar
+	"""
+	LYD
+
+	"""
+	Moroccan dirham
+	"""
+	MAD
+
+	"""
+	Moldovan leu
+	"""
+	MDL
+
+	"""
+	Malagasy ariary
+	"""
+	MGA
+
+	"""
+	Macedonian denar
+	"""
+	MKD
+
+	"""
+	Myanmar kyat
+	"""
+	MMK
+
+	"""
+	Mongolian tögrög
+	"""
+	MNT
+
+	"""
+	Macanese pataca
+	"""
+	MOP
+
+	"""
+	Mauritanian ouguiya
+	"""
+	MRU
+
+	"""
+	Mauritian rupee
+	"""
+	MUR
+
+	"""
+	Maldivian rufiyaa
+	"""
+	MVR
+
+	"""
+	Malawian kwacha
+	"""
+	MWK
+
+	"""
+	Mexican peso
+	"""
+	MXN
+
+	"""
+	Malaysian ringgit
+	"""
+	MYR
+
+	"""
+	Mozambican metical
+	"""
+	MZN
+
+	"""
+	Namibian dollar
+	"""
+	NAD
+
+	"""
+	Nigerian naira
+	"""
+	NGN
+
+	"""
+	Nicaraguan córdoba
+	"""
+	NIO
+
+	"""
+	Norwegian krone
+	"""
+	NOK
+
+	"""
+	Nepalese rupee
+	"""
+	NPR
+
+	"""
+	New Zealand dollar
+	"""
+	NZD
+
+	"""
+	Omani rial
+	"""
+	OMR
+
+	"""
+	Panamanian balboa
+	"""
+	PAB
+
+	"""
+	Peruvian sol
+	"""
+	PEN
+
+	"""
+	Papua New Guinean kina
+	"""
+	PGK
+
+	"""
+	Philippine peso
+	"""
+	PHP
+
+	"""
+	Pakistani rupee
+	"""
+	PKR
+
+	"""
+	Polish złoty
+	"""
+	PLN
+
+	"""
+	Paraguayan guaraní
+	"""
+	PYG
+
+	"""
+	Qatari riyal
+	"""
+	QAR
+
+	"""
+	Romanian leu
+	"""
+	RON
+
+	"""
+	Serbian dinar
+	"""
+	RSD
+
+	"""
+	Russian ruble
+	"""
+	RUB
+
+	"""
+	Rwandan franc
+	"""
+	RWF
+
+	"""
+	Saudi riyal
+	"""
+	SAR
+
+	"""
+	Solomon Islands dollar
+	"""
+	SBD
+
+	"""
+	Seychelles rupee
+	"""
+	SCR
+
+	"""
+	Sudanese pound
+	"""
+	SDG
+
+	"""
+	Swedish krona/kronor
+	"""
+	SEK
+
+	"""
+	Singapore dollar
+	"""
+	SGD
+
+	"""
+	Saint Helena pound
+	"""
+	SHP
+
+	"""
+	Sierra Leonean leone
+	"""
+	SLL
+
+	"""
+	Somali shilling
+	"""
+	SOS
+
+	"""
+	Surinamese dollar
+	"""
+	SRD
+
+	"""
+	South Sudanese pound
+	"""
+	SSP
+
+	"""
+	São Tomé and Príncipe dobra
+	"""
+	STN
+
+	"""
+	Salvadoran colón
+	"""
+	SVC
+
+	"""
+	Syrian pound
+	"""
+	SYP
+
+	"""
+	Swazi lilangeni
+	"""
+	SZL
+
+	"""
+	Thai baht
+	"""
+	THB
+
+	"""
+	Tajikistani somoni
+	"""
+	TJS
+
+	"""
+	Turkmenistan manat
+	"""
+	TMT
+
+	"""
+	Tunisian dinar
+	"""
+	TND
+
+	"""
+	Tongan paʻanga
+	"""
+	TOP
+
+	"""
+	Turkish lira
+	"""
+	TRY
+
+	"""
+	Trinidad and Tobago dollar
+	"""
+	TTD
+
+	"""
+	New Taiwan dollar
+	"""
+	TWD
+
+	"""
+	Tanzanian shilling
+	"""
+	TZS
+
+	"""
+	Ukrainian hryvnia
+	"""
+	UAH
+
+	"""
+	Ugandan shilling
+	"""
+	UGX
+
+	"""
+	United States dollar
+	"""
+	USD
+
+	"""
+	Uruguayan peso
+	"""
+	UYU
+
+	"""
+	Uzbekistan som
+	"""
+	UZS
+
+	"""
+	Venezuelan bolívar soberano
+	"""
+	VES
+
+	"""
+	Vietnamese đồng
+	"""
+	VND
+
+	"""
+	Vanuatu vatu
+	"""
+	VUV
+
+	"""
+	Samoan tala
+	"""
+	WST
+
+	"""
+	CFA franc BEAC
+	"""
+	XAF
+
+	"""
+	East Caribbean dollar
+	"""
+	XCD
+
+	"""
+	CFA franc BCEAO
+	"""
+	XOF
+
+	"""
+	CFP franc (franc Pacifique)
+	"""
+	XPF
+
+	"""
+	Yemeni rial
+	"""
+	YER
+
+	"""
+	South African rand
+	"""
+	ZAR
+
+	"""
+	Zambian kwacha
+	"""
+	ZMW
+
+	"""
+	Zimbabwean dollar
+	"""
+	ZWL
+}
+
+type CurrentUser {
+	channels: [CurrentUserChannel!]!
+	id: ID!
+	identifier: String!
+}
+
+type CurrentUserChannel {
+	code: String!
+	id: ID!
+	permissions: [Permission!]!
+	token: String!
+}
+
+interface CustomField {
+	description: [LocalizedString!]
+	internal: Boolean
+	label: [LocalizedString!]
+	list: Boolean!
+	name: String!
+	nullable: Boolean
+	readonly: Boolean
+	type: String!
+	ui: JSON
+}
+
+union CustomFieldConfig =
+	  BooleanCustomFieldConfig
+	| DateTimeCustomFieldConfig
+	| FloatCustomFieldConfig
+	| IntCustomFieldConfig
+	| LocaleStringCustomFieldConfig
+	| LocaleTextCustomFieldConfig
+	| RelationCustomFieldConfig
+	| StringCustomFieldConfig
+	| TextCustomFieldConfig
+
+type CustomFields {
+	Address: [CustomFieldConfig!]!
+	Administrator: [CustomFieldConfig!]!
+	Asset: [CustomFieldConfig!]!
+	Channel: [CustomFieldConfig!]!
+	Collection: [CustomFieldConfig!]!
+	Customer: [CustomFieldConfig!]!
+	CustomerGroup: [CustomFieldConfig!]!
+	Facet: [CustomFieldConfig!]!
+	FacetValue: [CustomFieldConfig!]!
+	Fulfillment: [CustomFieldConfig!]!
+	GlobalSettings: [CustomFieldConfig!]!
+	Order: [CustomFieldConfig!]!
+	OrderLine: [CustomFieldConfig!]!
+	PaymentMethod: [CustomFieldConfig!]!
+	Product: [CustomFieldConfig!]!
+	ProductOption: [CustomFieldConfig!]!
+	ProductOptionGroup: [CustomFieldConfig!]!
+	ProductVariant: [CustomFieldConfig!]!
+	Promotion: [CustomFieldConfig!]!
+	Region: [CustomFieldConfig!]!
+	Seller: [CustomFieldConfig!]!
+	ShippingMethod: [CustomFieldConfig!]!
+	StockLocation: [CustomFieldConfig!]!
+	TaxCategory: [CustomFieldConfig!]!
+	TaxRate: [CustomFieldConfig!]!
+	User: [CustomFieldConfig!]!
+	Zone: [CustomFieldConfig!]!
+}
+
+type Customer implements Node {
+	addresses: [Address!]
+	createdAt: DateTime!
+	customFields: JSON
+	emailAddress: String!
+	firstName: String!
+	groups: [CustomerGroup!]!
+	history(options: HistoryEntryListOptions): HistoryEntryList!
+	id: ID!
+	lastName: String!
+	orders(options: OrderListOptions): OrderList!
+	phoneNumber: String
+	title: String
+	updatedAt: DateTime!
+	user: User
+}
+
+input CustomerFilterParameter {
+	createdAt: DateOperators
+	emailAddress: StringOperators
+	firstName: StringOperators
+	id: IDOperators
+	lastName: StringOperators
+	phoneNumber: StringOperators
+	postalCode: StringOperators
+	title: StringOperators
+	updatedAt: DateOperators
+}
+
+type CustomerGroup implements Node {
+	createdAt: DateTime!
+	customFields: JSON
+	customers(options: CustomerListOptions): CustomerList!
+	id: ID!
+	name: String!
+	updatedAt: DateTime!
+}
+
+input CustomerGroupFilterParameter {
+	createdAt: DateOperators
+	id: IDOperators
+	name: StringOperators
+	updatedAt: DateOperators
+}
+
+type CustomerGroupList implements PaginatedList {
+	items: [CustomerGroup!]!
+	totalItems: Int!
+}
+
+input CustomerGroupListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: CustomerGroupFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: CustomerGroupSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input CustomerGroupSortParameter {
+	createdAt: SortOrder
+	id: SortOrder
+	name: SortOrder
+	updatedAt: SortOrder
+}
+
+type CustomerList implements PaginatedList {
+	items: [Customer!]!
+	totalItems: Int!
+}
+
+input CustomerListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: CustomerFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: CustomerSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input CustomerSortParameter {
+	createdAt: SortOrder
+	emailAddress: SortOrder
+	firstName: SortOrder
+	id: SortOrder
+	lastName: SortOrder
+	phoneNumber: SortOrder
+	title: SortOrder
+	updatedAt: SortOrder
+}
+
+"""
+Operators for filtering on a list of Date fields
+"""
+input DateListOperators {
+	inList: DateTime!
+}
+
+"""
+Operators for filtering on a DateTime field
+"""
+input DateOperators {
+	after: DateTime
+	before: DateTime
+	between: DateRange
+	eq: DateTime
+	isNull: Boolean
+}
+
+input DateRange {
+	end: DateTime!
+	start: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+"""
+Expects the same validation formats as the `<input type="datetime-local">` HTML element.
+See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local#Additional_attributes
+"""
+type DateTimeCustomFieldConfig implements CustomField {
+	description: [LocalizedString!]
+	internal: Boolean
+	label: [LocalizedString!]
+	list: Boolean!
+	max: String
+	min: String
+	name: String!
+	nullable: Boolean
+	readonly: Boolean
+	step: Int
+	type: String!
+	ui: JSON
+}
+
+input DeleteAssetInput {
+	assetId: ID!
+	deleteFromAllChannels: Boolean
+	force: Boolean
+}
+
+input DeleteAssetsInput {
+	assetIds: [ID!]!
+	deleteFromAllChannels: Boolean
+	force: Boolean
+}
+
+input DeleteStockLocationInput {
+	id: ID!
+	transferToLocationId: ID
+}
+
+type DeletionResponse {
+	message: String
+	result: DeletionResult!
+}
+
+enum DeletionResult {
+	"""
+	The entity was successfully deleted
+	"""
+	DELETED
+
+	"""
+	Deletion did not take place, reason given in message
+	"""
+	NOT_DELETED
+}
+
+type Discount {
+	adjustmentSource: String!
+	amount: Money!
+	amountWithTax: Money!
+	description: String!
+	type: AdjustmentType!
+}
+
+"""
+Returned when attempting to create a Customer with an email address already registered to an existing User.
+"""
+type EmailAddressConflictError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+"""
+Returned if no OrderLines have been specified for the operation
+"""
+type EmptyOrderLineSelectionError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+enum ErrorCode {
+	ALREADY_REFUNDED_ERROR
+	CANCEL_ACTIVE_ORDER_ERROR
+	CANCEL_PAYMENT_ERROR
+	CHANNEL_DEFAULT_LANGUAGE_ERROR
+	COUPON_CODE_EXPIRED_ERROR
+	COUPON_CODE_INVALID_ERROR
+	COUPON_CODE_LIMIT_ERROR
+	CREATE_FULFILLMENT_ERROR
+	EMAIL_ADDRESS_CONFLICT_ERROR
+	EMPTY_ORDER_LINE_SELECTION_ERROR
+	FACET_IN_USE_ERROR
+	FULFILLMENT_STATE_TRANSITION_ERROR
+	GUEST_CHECKOUT_ERROR
+	INELIGIBLE_SHIPPING_METHOD_ERROR
+	INSUFFICIENT_STOCK_ERROR
+	INSUFFICIENT_STOCK_ON_HAND_ERROR
+	INVALID_CREDENTIALS_ERROR
+	INVALID_FULFILLMENT_HANDLER_ERROR
+	ITEMS_ALREADY_FULFILLED_ERROR
+	LANGUAGE_NOT_AVAILABLE_ERROR
+	MANUAL_PAYMENT_STATE_ERROR
+	MIME_TYPE_ERROR
+	MISSING_CONDITIONS_ERROR
+	MULTIPLE_ORDER_ERROR
+	NATIVE_AUTH_STRATEGY_ERROR
+	NEGATIVE_QUANTITY_ERROR
+	NOTHING_TO_REFUND_ERROR
+	NO_ACTIVE_ORDER_ERROR
+	NO_CHANGES_SPECIFIED_ERROR
+	ORDER_LIMIT_ERROR
+	ORDER_MODIFICATION_ERROR
+	ORDER_MODIFICATION_STATE_ERROR
+	ORDER_STATE_TRANSITION_ERROR
+	PAYMENT_METHOD_MISSING_ERROR
+	PAYMENT_ORDER_MISMATCH_ERROR
+	PAYMENT_STATE_TRANSITION_ERROR
+	PRODUCT_OPTION_IN_USE_ERROR
+	QUANTITY_TOO_GREAT_ERROR
+	REFUND_ORDER_STATE_ERROR
+	REFUND_PAYMENT_ID_MISSING_ERROR
+	REFUND_STATE_TRANSITION_ERROR
+	SETTLE_PAYMENT_ERROR
+	UNKNOWN_ERROR
+}
+
+interface ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+type Facet implements Node {
+	code: String!
+	createdAt: DateTime!
+	customFields: JSON
+	id: ID!
+	isPrivate: Boolean!
+	languageCode: LanguageCode!
+	name: String!
+	translations: [FacetTranslation!]!
+	updatedAt: DateTime!
+	values: [FacetValue!]!
+}
+
+input FacetFilterParameter {
+	code: StringOperators
+	createdAt: DateOperators
+	id: IDOperators
+	isPrivate: BooleanOperators
+	languageCode: StringOperators
+	name: StringOperators
+	updatedAt: DateOperators
+}
+
+type FacetInUseError implements ErrorResult {
+	errorCode: ErrorCode!
+	facetCode: String!
+	message: String!
+	productCount: Int!
+	variantCount: Int!
+}
+
+type FacetList implements PaginatedList {
+	items: [Facet!]!
+	totalItems: Int!
+}
+
+input FacetListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: FacetFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: FacetSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input FacetSortParameter {
+	code: SortOrder
+	createdAt: SortOrder
+	id: SortOrder
+	name: SortOrder
+	updatedAt: SortOrder
+}
+
+type FacetTranslation {
+	createdAt: DateTime!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	updatedAt: DateTime!
+}
+
+input FacetTranslationInput {
+	customFields: JSON
+	id: ID
+	languageCode: LanguageCode!
+	name: String
+}
+
+type FacetValue implements Node {
+	code: String!
+	createdAt: DateTime!
+	customFields: JSON
+	facet: Facet!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	translations: [FacetValueTranslation!]!
+	updatedAt: DateTime!
+}
+
+"""
+Used to construct boolean expressions for filtering search results
+by FacetValue ID. Examples:
+
+* ID=1 OR ID=2: `{ facetValueFilters: [{ or: [1,2] }] }`
+* ID=1 AND ID=2: `{ facetValueFilters: [{ and: 1 }, { and: 2 }] }`
+* ID=1 AND (ID=2 OR ID=3): `{ facetValueFilters: [{ and: 1 }, { or: [2,3] }] }`
+"""
+input FacetValueFilterInput {
+	and: ID
+	or: [ID!]
+}
+
+input FacetValueFilterParameter {
+	code: StringOperators
+	createdAt: DateOperators
+	id: IDOperators
+	languageCode: StringOperators
+	name: StringOperators
+	updatedAt: DateOperators
+}
+
+type FacetValueList implements PaginatedList {
+	items: [FacetValue!]!
+	totalItems: Int!
+}
+
+input FacetValueListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: FacetValueFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: FacetValueSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+"""
+Which FacetValues are present in the products returned
+by the search, and in what quantity.
+"""
+type FacetValueResult {
+	count: Int!
+	facetValue: FacetValue!
+}
+
+input FacetValueSortParameter {
+	code: SortOrder
+	createdAt: SortOrder
+	id: SortOrder
+	name: SortOrder
+	updatedAt: SortOrder
+}
+
+type FacetValueTranslation {
+	createdAt: DateTime!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	updatedAt: DateTime!
+}
+
+input FacetValueTranslationInput {
+	customFields: JSON
+	id: ID
+	languageCode: LanguageCode!
+	name: String
+}
+
+type FloatCustomFieldConfig implements CustomField {
+	description: [LocalizedString!]
+	internal: Boolean
+	label: [LocalizedString!]
+	list: Boolean!
+	max: Float
+	min: Float
+	name: String!
+	nullable: Boolean
+	readonly: Boolean
+	step: Float
+	type: String!
+	ui: JSON
+}
+
+input FulfillOrderInput {
+	handler: ConfigurableOperationInput!
+	lines: [OrderLineInput!]!
+}
+
+type Fulfillment implements Node {
+	createdAt: DateTime!
+	customFields: JSON
+	id: ID!
+	lines: [FulfillmentLine!]!
+	method: String!
+	nextStates: [String!]!
+	state: String!
+	summary: [FulfillmentLine!]! @deprecated(reason: "Use the `lines` field instead")
+	trackingCode: String
+	updatedAt: DateTime!
+}
+
+type FulfillmentLine {
+	fulfillment: Fulfillment!
+	fulfillmentId: ID!
+	orderLine: OrderLine!
+	orderLineId: ID!
+	quantity: Int!
+}
+
+"""
+Returned when there is an error in transitioning the Fulfillment state
+"""
+type FulfillmentStateTransitionError implements ErrorResult {
+	errorCode: ErrorCode!
+	fromState: String!
+	message: String!
+	toState: String!
+	transitionError: String!
+}
+
+enum GlobalFlag {
+	FALSE
+	INHERIT
+	TRUE
+}
+
+type GlobalSettings {
+	availableLanguages: [LanguageCode!]!
+	createdAt: DateTime!
+	customFields: JSON
+	id: ID!
+	outOfStockThreshold: Int!
+	serverConfig: ServerConfig!
+	trackInventory: Boolean!
+	updatedAt: DateTime!
+}
+
+"""
+Returned when attempting to set the Customer on a guest checkout when the configured GuestCheckoutStrategy does not allow it.
+"""
+type GuestCheckoutError implements ErrorResult {
+	errorCode: ErrorCode!
+	errorDetail: String!
+	message: String!
+}
+
+type HistoryEntry implements Node {
+	administrator: Administrator
+	createdAt: DateTime!
+	data: JSON!
+	id: ID!
+	isPublic: Boolean!
+	type: HistoryEntryType!
+	updatedAt: DateTime!
+}
+
+input HistoryEntryFilterParameter {
+	createdAt: DateOperators
+	id: IDOperators
+	isPublic: BooleanOperators
+	type: StringOperators
+	updatedAt: DateOperators
+}
+
+type HistoryEntryList implements PaginatedList {
+	items: [HistoryEntry!]!
+	totalItems: Int!
+}
+
+input HistoryEntryListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: HistoryEntryFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: HistoryEntrySortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input HistoryEntrySortParameter {
+	createdAt: SortOrder
+	id: SortOrder
+	updatedAt: SortOrder
+}
+
+enum HistoryEntryType {
+	CUSTOMER_ADDED_TO_GROUP
+	CUSTOMER_ADDRESS_CREATED
+	CUSTOMER_ADDRESS_DELETED
+	CUSTOMER_ADDRESS_UPDATED
+	CUSTOMER_DETAIL_UPDATED
+	CUSTOMER_EMAIL_UPDATE_REQUESTED
+	CUSTOMER_EMAIL_UPDATE_VERIFIED
+	CUSTOMER_NOTE
+	CUSTOMER_PASSWORD_RESET_REQUESTED
+	CUSTOMER_PASSWORD_RESET_VERIFIED
+	CUSTOMER_PASSWORD_UPDATED
+	CUSTOMER_REGISTERED
+	CUSTOMER_REMOVED_FROM_GROUP
+	CUSTOMER_VERIFIED
+	ORDER_CANCELLATION
+	ORDER_COUPON_APPLIED
+	ORDER_COUPON_REMOVED
+	ORDER_FULFILLMENT
+	ORDER_FULFILLMENT_TRANSITION
+	ORDER_MODIFIED
+	ORDER_NOTE
+	ORDER_PAYMENT_TRANSITION
+	ORDER_REFUND_TRANSITION
+	ORDER_STATE_TRANSITION
+}
+
+"""
+Operators for filtering on a list of ID fields
+"""
+input IDListOperators {
+	inList: ID!
+}
+
+"""
+Operators for filtering on an ID field
+"""
+input IDOperators {
+	eq: String
+	in: [String!]
+	isNull: Boolean
+	notEq: String
+	notIn: [String!]
+}
+
+type ImportInfo {
+	errors: [String!]
+	imported: Int!
+	processed: Int!
+}
+
+"""
+Returned when attempting to set a ShippingMethod for which the Order is not eligible
+"""
+type IneligibleShippingMethodError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+"""
+Returned when attempting to add more items to the Order than are available
+"""
+type InsufficientStockError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+	order: Order!
+	quantityAvailable: Int!
+}
+
+"""
+Returned if attempting to create a Fulfillment when there is insufficient
+stockOnHand of a ProductVariant to satisfy the requested quantity.
+"""
+type InsufficientStockOnHandError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+	productVariantId: ID!
+	productVariantName: String!
+	stockOnHand: Int!
+}
+
+type IntCustomFieldConfig implements CustomField {
+	description: [LocalizedString!]
+	internal: Boolean
+	label: [LocalizedString!]
+	list: Boolean!
+	max: Int
+	min: Int
+	name: String!
+	nullable: Boolean
+	readonly: Boolean
+	step: Int
+	type: String!
+	ui: JSON
+}
+
+"""
+Returned if the user authentication credentials are not valid
+"""
+type InvalidCredentialsError implements ErrorResult {
+	authenticationError: String!
+	errorCode: ErrorCode!
+	message: String!
+}
+
+"""
+Returned if the specified FulfillmentHandler code is not valid
+"""
+type InvalidFulfillmentHandlerError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+"""
+Returned if the specified items are already part of a Fulfillment
+"""
+type ItemsAlreadyFulfilledError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type Job implements Node {
+	attempts: Int!
+	createdAt: DateTime!
+	data: JSON
+	duration: Int!
+	error: JSON
+	id: ID!
+	isSettled: Boolean!
+	progress: Float!
+	queueName: String!
+	result: JSON
+	retries: Int!
+	settledAt: DateTime
+	startedAt: DateTime
+	state: JobState!
+}
+
+type JobBufferSize {
+	bufferId: String!
+	size: Int!
+}
+
+input JobFilterParameter {
+	attempts: NumberOperators
+	createdAt: DateOperators
+	duration: NumberOperators
+	id: IDOperators
+	isSettled: BooleanOperators
+	progress: NumberOperators
+	queueName: StringOperators
+	retries: NumberOperators
+	settledAt: DateOperators
+	startedAt: DateOperators
+	state: StringOperators
+}
+
+type JobList implements PaginatedList {
+	items: [Job!]!
+	totalItems: Int!
+}
+
+input JobListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: JobFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: JobSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+type JobQueue {
+	name: String!
+	running: Boolean!
+}
+
+input JobSortParameter {
+	attempts: SortOrder
+	createdAt: SortOrder
+	duration: SortOrder
+	id: SortOrder
+	progress: SortOrder
+	queueName: SortOrder
+	retries: SortOrder
+	settledAt: SortOrder
+	startedAt: SortOrder
+}
+
+"""
+@description
+The state of a Job in the JobQueue
+
+@docsCategory common
+"""
+enum JobState {
+	CANCELLED
+	COMPLETED
+	FAILED
+	PENDING
+	RETRYING
+	RUNNING
+}
+
+"""
+@description
+Languages in the form of a ISO 639-1 language code with optional
+region or script modifier (e.g. de_AT). The selection available is based
+on the [Unicode CLDR summary list](https://unicode-org.github.io/cldr-staging/charts/37/summary/root.html)
+and includes the major spoken languages of the world and any widely-used variants.
+
+@docsCategory common
+"""
+enum LanguageCode {
+	"""
+	Afrikaans
+	"""
+	af
+
+	"""
+	Akan
+	"""
+	ak
+
+	"""
+	Amharic
+	"""
+	am
+
+	"""
+	Arabic
+	"""
+	ar
+
+	"""
+	Assamese
+	"""
+	as
+
+	"""
+	Azerbaijani
+	"""
+	az
+
+	"""
+	Belarusian
+	"""
+	be
+
+	"""
+	Bulgarian
+	"""
+	bg
+
+	"""
+	Bambara
+	"""
+	bm
+
+	"""
+	Bangla
+	"""
+	bn
+
+	"""
+	Tibetan
+	"""
+	bo
+
+	"""
+	Breton
+	"""
+	br
+
+	"""
+	Bosnian
+	"""
+	bs
+
+	"""
+	Catalan
+	"""
+	ca
+
+	"""
+	Chechen
+	"""
+	ce
+
+	"""
+	Corsican
+	"""
+	co
+
+	"""
+	Czech
+	"""
+	cs
+
+	"""
+	Church Slavic
+	"""
+	cu
+
+	"""
+	Welsh
+	"""
+	cy
+
+	"""
+	Danish
+	"""
+	da
+
+	"""
+	German
+	"""
+	de
+
+	"""
+	Austrian German
+	"""
+	de_AT
+
+	"""
+	Swiss High German
+	"""
+	de_CH
+
+	"""
+	Dzongkha
+	"""
+	dz
+
+	"""
+	Ewe
+	"""
+	ee
+
+	"""
+	Greek
+	"""
+	el
+
+	"""
+	English
+	"""
+	en
+
+	"""
+	Australian English
+	"""
+	en_AU
+
+	"""
+	Canadian English
+	"""
+	en_CA
+
+	"""
+	British English
+	"""
+	en_GB
+
+	"""
+	American English
+	"""
+	en_US
+
+	"""
+	Esperanto
+	"""
+	eo
+
+	"""
+	Spanish
+	"""
+	es
+
+	"""
+	European Spanish
+	"""
+	es_ES
+
+	"""
+	Mexican Spanish
+	"""
+	es_MX
+
+	"""
+	Estonian
+	"""
+	et
+
+	"""
+	Basque
+	"""
+	eu
+
+	"""
+	Persian
+	"""
+	fa
+
+	"""
+	Dari
+	"""
+	fa_AF
+
+	"""
+	Fulah
+	"""
+	ff
+
+	"""
+	Finnish
+	"""
+	fi
+
+	"""
+	Faroese
+	"""
+	fo
+
+	"""
+	French
+	"""
+	fr
+
+	"""
+	Canadian French
+	"""
+	fr_CA
+
+	"""
+	Swiss French
+	"""
+	fr_CH
+
+	"""
+	Western Frisian
+	"""
+	fy
+
+	"""
+	Irish
+	"""
+	ga
+
+	"""
+	Scottish Gaelic
+	"""
+	gd
+
+	"""
+	Galician
+	"""
+	gl
+
+	"""
+	Gujarati
+	"""
+	gu
+
+	"""
+	Manx
+	"""
+	gv
+
+	"""
+	Hausa
+	"""
+	ha
+
+	"""
+	Hebrew
+	"""
+	he
+
+	"""
+	Hindi
+	"""
+	hi
+
+	"""
+	Croatian
+	"""
+	hr
+
+	"""
+	Haitian Creole
+	"""
+	ht
+
+	"""
+	Hungarian
+	"""
+	hu
+
+	"""
+	Armenian
+	"""
+	hy
+
+	"""
+	Interlingua
+	"""
+	ia
+
+	"""
+	Indonesian
+	"""
+	id
+
+	"""
+	Igbo
+	"""
+	ig
+
+	"""
+	Sichuan Yi
+	"""
+	ii
+
+	"""
+	Icelandic
+	"""
+	is
+
+	"""
+	Italian
+	"""
+	it
+
+	"""
+	Japanese
+	"""
+	ja
+
+	"""
+	Javanese
+	"""
+	jv
+
+	"""
+	Georgian
+	"""
+	ka
+
+	"""
+	Kikuyu
+	"""
+	ki
+
+	"""
+	Kazakh
+	"""
+	kk
+
+	"""
+	Kalaallisut
+	"""
+	kl
+
+	"""
+	Khmer
+	"""
+	km
+
+	"""
+	Kannada
+	"""
+	kn
+
+	"""
+	Korean
+	"""
+	ko
+
+	"""
+	Kashmiri
+	"""
+	ks
+
+	"""
+	Kurdish
+	"""
+	ku
+
+	"""
+	Cornish
+	"""
+	kw
+
+	"""
+	Kyrgyz
+	"""
+	ky
+
+	"""
+	Latin
+	"""
+	la
+
+	"""
+	Luxembourgish
+	"""
+	lb
+
+	"""
+	Ganda
+	"""
+	lg
+
+	"""
+	Lingala
+	"""
+	ln
+
+	"""
+	Lao
+	"""
+	lo
+
+	"""
+	Lithuanian
+	"""
+	lt
+
+	"""
+	Luba-Katanga
+	"""
+	lu
+
+	"""
+	Latvian
+	"""
+	lv
+
+	"""
+	Malagasy
+	"""
+	mg
+
+	"""
+	Maori
+	"""
+	mi
+
+	"""
+	Macedonian
+	"""
+	mk
+
+	"""
+	Malayalam
+	"""
+	ml
+
+	"""
+	Mongolian
+	"""
+	mn
+
+	"""
+	Marathi
+	"""
+	mr
+
+	"""
+	Malay
+	"""
+	ms
+
+	"""
+	Maltese
+	"""
+	mt
+
+	"""
+	Burmese
+	"""
+	my
+
+	"""
+	Norwegian Bokmål
+	"""
+	nb
+
+	"""
+	North Ndebele
+	"""
+	nd
+
+	"""
+	Nepali
+	"""
+	ne
+
+	"""
+	Dutch
+	"""
+	nl
+
+	"""
+	Flemish
+	"""
+	nl_BE
+
+	"""
+	Norwegian Nynorsk
+	"""
+	nn
+
+	"""
+	Nyanja
+	"""
+	ny
+
+	"""
+	Oromo
+	"""
+	om
+
+	"""
+	Odia
+	"""
+	or
+
+	"""
+	Ossetic
+	"""
+	os
+
+	"""
+	Punjabi
+	"""
+	pa
+
+	"""
+	Polish
+	"""
+	pl
+
+	"""
+	Pashto
+	"""
+	ps
+
+	"""
+	Portuguese
+	"""
+	pt
+
+	"""
+	Brazilian Portuguese
+	"""
+	pt_BR
+
+	"""
+	European Portuguese
+	"""
+	pt_PT
+
+	"""
+	Quechua
+	"""
+	qu
+
+	"""
+	Romansh
+	"""
+	rm
+
+	"""
+	Rundi
+	"""
+	rn
+
+	"""
+	Romanian
+	"""
+	ro
+
+	"""
+	Moldavian
+	"""
+	ro_MD
+
+	"""
+	Russian
+	"""
+	ru
+
+	"""
+	Kinyarwanda
+	"""
+	rw
+
+	"""
+	Sanskrit
+	"""
+	sa
+
+	"""
+	Sindhi
+	"""
+	sd
+
+	"""
+	Northern Sami
+	"""
+	se
+
+	"""
+	Sango
+	"""
+	sg
+
+	"""
+	Sinhala
+	"""
+	si
+
+	"""
+	Slovak
+	"""
+	sk
+
+	"""
+	Slovenian
+	"""
+	sl
+
+	"""
+	Samoan
+	"""
+	sm
+
+	"""
+	Shona
+	"""
+	sn
+
+	"""
+	Somali
+	"""
+	so
+
+	"""
+	Albanian
+	"""
+	sq
+
+	"""
+	Serbian
+	"""
+	sr
+
+	"""
+	Southern Sotho
+	"""
+	st
+
+	"""
+	Sundanese
+	"""
+	su
+
+	"""
+	Swedish
+	"""
+	sv
+
+	"""
+	Swahili
+	"""
+	sw
+
+	"""
+	Congo Swahili
+	"""
+	sw_CD
+
+	"""
+	Tamil
+	"""
+	ta
+
+	"""
+	Telugu
+	"""
+	te
+
+	"""
+	Tajik
+	"""
+	tg
+
+	"""
+	Thai
+	"""
+	th
+
+	"""
+	Tigrinya
+	"""
+	ti
+
+	"""
+	Turkmen
+	"""
+	tk
+
+	"""
+	Tongan
+	"""
+	to
+
+	"""
+	Turkish
+	"""
+	tr
+
+	"""
+	Tatar
+	"""
+	tt
+
+	"""
+	Uyghur
+	"""
+	ug
+
+	"""
+	Ukrainian
+	"""
+	uk
+
+	"""
+	Urdu
+	"""
+	ur
+
+	"""
+	Uzbek
+	"""
+	uz
+
+	"""
+	Vietnamese
+	"""
+	vi
+
+	"""
+	Volapük
+	"""
+	vo
+
+	"""
+	Wolof
+	"""
+	wo
+
+	"""
+	Xhosa
+	"""
+	xh
+
+	"""
+	Yiddish
+	"""
+	yi
+
+	"""
+	Yoruba
+	"""
+	yo
+
+	"""
+	Chinese
+	"""
+	zh
+
+	"""
+	Simplified Chinese
+	"""
+	zh_Hans
+
+	"""
+	Traditional Chinese
+	"""
+	zh_Hant
+
+	"""
+	Zulu
+	"""
+	zu
+}
+
+"""
+Returned if attempting to set a Channel's defaultLanguageCode to a language which is not enabled in GlobalSettings
+"""
+type LanguageNotAvailableError implements ErrorResult {
+	errorCode: ErrorCode!
+	languageCode: String!
+	message: String!
+}
+
+type LocaleStringCustomFieldConfig implements CustomField {
+	description: [LocalizedString!]
+	internal: Boolean
+	label: [LocalizedString!]
+	length: Int
+	list: Boolean!
+	name: String!
+	nullable: Boolean
+	pattern: String
+	readonly: Boolean
+	type: String!
+	ui: JSON
+}
+
+type LocaleTextCustomFieldConfig implements CustomField {
+	description: [LocalizedString!]
+	internal: Boolean
+	label: [LocalizedString!]
+	list: Boolean!
+	name: String!
+	nullable: Boolean
+	readonly: Boolean
+	type: String!
+	ui: JSON
+}
+
+type LocalizedString {
+	languageCode: LanguageCode!
+	value: String!
+}
+
+enum LogicalOperator {
+	AND
+	OR
+}
+
+input ManualPaymentInput {
+	metadata: JSON
+	method: String!
+	orderId: ID!
+	transactionId: String
+}
+
+"""
+Returned when a call to addManualPaymentToOrder is made but the Order
+is not in the required state.
+"""
+type ManualPaymentStateError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+enum MetricInterval {
+	Daily
+}
+
+type MetricSummary {
+	entries: [MetricSummaryEntry!]!
+	interval: MetricInterval!
+	title: String!
+	type: MetricType!
+}
+
+type MetricSummaryEntry {
+	label: String!
+	value: Float!
+}
+
+input MetricSummaryInput {
+	interval: MetricInterval!
+	refresh: Boolean
+	types: [MetricType!]!
+}
+
+enum MetricType {
+	AverageOrderValue
+	OrderCount
+	OrderTotal
+}
+
+type MimeTypeError implements ErrorResult {
+	errorCode: ErrorCode!
+	fileName: String!
+	message: String!
+	mimeType: String!
+}
+
+"""
+Returned if a PromotionCondition has neither a couponCode nor any conditions set
+"""
+type MissingConditionsError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+input ModifyOrderInput {
+	addItems: [AddItemInput!]
+	adjustOrderLines: [OrderLineInput!]
+	couponCodes: [String!]
+	dryRun: Boolean!
+	note: String
+	options: ModifyOrderOptions
+	orderId: ID!
+	refund: AdministratorRefundInput
+	surcharges: [SurchargeInput!]
+	updateBillingAddress: UpdateOrderAddressInput
+	updateShippingAddress: UpdateOrderAddressInput
+}
+
+input ModifyOrderOptions {
+	freezePromotions: Boolean
+	recalculateShipping: Boolean
+}
+
+union ModifyOrderResult =
+	  CouponCodeExpiredError
+	| CouponCodeInvalidError
+	| CouponCodeLimitError
+	| InsufficientStockError
+	| NegativeQuantityError
+	| NoChangesSpecifiedError
+	| Order
+	| OrderLimitError
+	| OrderModificationStateError
+	| PaymentMethodMissingError
+	| RefundPaymentIdMissingError
+
+"""
+The `Money` scalar type represents monetary values and supports signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).
+"""
+scalar Money
+
+input MoveCollectionInput {
+	collectionId: ID!
+	index: Int!
+	parentId: ID!
+}
+
+"""
+Returned if an operation has specified OrderLines from multiple Orders
+"""
+type MultipleOrderError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+type Mutation {
+	"""
+	Add Customers to a CustomerGroup
+	"""
+	addCustomersToGroup(customerGroupId: ID!, customerIds: [ID!]!): CustomerGroup!
+	addFulfillmentToOrder(input: FulfillOrderInput!): AddFulfillmentToOrderResult!
+
+	"""
+	Adds an item to the draft Order.
+	"""
+	addItemToDraftOrder(input: AddItemToDraftOrderInput!, orderId: ID!): UpdateOrderItemsResult!
+
+	"""
+	Used to manually create a new Payment against an Order.
+	This can be used by an Administrator when an Order is in the ArrangingPayment state.
+
+	It is also used when a completed Order
+	has been modified (using `modifyOrder`) and the price has increased. The extra payment
+	can then be manually arranged by the administrator, and the details used to create a new
+	Payment.
+	"""
+	addManualPaymentToOrder(input: ManualPaymentInput!): AddManualPaymentToOrderResult!
+
+	"""
+	Add members to a Zone
+	"""
+	addMembersToZone(memberIds: [ID!]!, zoneId: ID!): Zone!
+	addNoteToCustomer(input: AddNoteToCustomerInput!): Customer!
+	addNoteToOrder(input: AddNoteToOrderInput!): Order!
+
+	"""
+	Add an OptionGroup to a Product
+	"""
+	addOptionGroupToProduct(optionGroupId: ID!, productId: ID!): Product!
+
+	"""
+	Adjusts a draft OrderLine. If custom fields are defined on the OrderLine entity, a third argument 'customFields' of type `OrderLineCustomFieldsInput` will be available.
+	"""
+	adjustDraftOrderLine(input: AdjustDraftOrderLineInput!, orderId: ID!): UpdateOrderItemsResult!
+
+	"""
+	Applies the given coupon code to the draft Order
+	"""
+	applyCouponCodeToDraftOrder(couponCode: String!, orderId: ID!): ApplyCouponCodeResult!
+
+	"""
+	Assign assets to channel
+	"""
+	assignAssetsToChannel(input: AssignAssetsToChannelInput!): [Asset!]!
+
+	"""
+	Assigns Collections to the specified Channel
+	"""
+	assignCollectionsToChannel(input: AssignCollectionsToChannelInput!): [Collection!]!
+
+	"""
+	Assigns Facets to the specified Channel
+	"""
+	assignFacetsToChannel(input: AssignFacetsToChannelInput!): [Facet!]!
+
+	"""
+	Assigns PaymentMethods to the specified Channel
+	"""
+	assignPaymentMethodsToChannel(input: AssignPaymentMethodsToChannelInput!): [PaymentMethod!]!
+
+	"""
+	Assigns ProductVariants to the specified Channel
+	"""
+	assignProductVariantsToChannel(input: AssignProductVariantsToChannelInput!): [ProductVariant!]!
+
+	"""
+	Assigns all ProductVariants of Product to the specified Channel
+	"""
+	assignProductsToChannel(input: AssignProductsToChannelInput!): [Product!]!
+
+	"""
+	Assigns Promotions to the specified Channel
+	"""
+	assignPromotionsToChannel(input: AssignPromotionsToChannelInput!): [Promotion!]!
+
+	"""
+	Assign a Role to an Administrator
+	"""
+	assignRoleToAdministrator(administratorId: ID!, roleId: ID!): Administrator!
+
+	"""
+	Assigns ShippingMethods to the specified Channel
+	"""
+	assignShippingMethodsToChannel(input: AssignShippingMethodsToChannelInput!): [ShippingMethod!]!
+
+	"""
+	Assigns StockLocations to the specified Channel
+	"""
+	assignStockLocationsToChannel(input: AssignStockLocationsToChannelInput!): [StockLocation!]!
+
+	"""
+	Authenticates the user using a named authentication strategy
+	"""
+	authenticate(input: AuthenticationInput!, rememberMe: Boolean): AuthenticationResult!
+	cancelJob(jobId: ID!): Job!
+	cancelOrder(input: CancelOrderInput!): CancelOrderResult!
+	cancelPayment(id: ID!): CancelPaymentResult!
+
+	"""
+	Create a new Administrator
+	"""
+	createAdministrator(input: CreateAdministratorInput!): Administrator!
+
+	"""
+	Create a new Asset
+	"""
+	createAssets(input: [CreateAssetInput!]!): [CreateAssetResult!]!
+
+	"""
+	Create a new Channel
+	"""
+	createChannel(input: CreateChannelInput!): CreateChannelResult!
+
+	"""
+	Create a new Collection
+	"""
+	createCollection(input: CreateCollectionInput!): Collection!
+
+	"""
+	Create a new Country
+	"""
+	createCountry(input: CreateCountryInput!): Country!
+
+	"""
+	Create a new Customer. If a password is provided, a new User will also be created an linked to the Customer.
+	"""
+	createCustomer(input: CreateCustomerInput!, password: String): CreateCustomerResult!
+
+	"""
+	Create a new Address and associate it with the Customer specified by customerId
+	"""
+	createCustomerAddress(customerId: ID!, input: CreateAddressInput!): Address!
+
+	"""
+	Create a new CustomerGroup
+	"""
+	createCustomerGroup(input: CreateCustomerGroupInput!): CustomerGroup!
+
+	"""
+	Creates a draft Order
+	"""
+	createDraftOrder: Order!
+
+	"""
+	Create a new Facet
+	"""
+	createFacet(input: CreateFacetInput!): Facet!
+
+	"""
+	Create one or more FacetValues
+	"""
+	createFacetValues(input: [CreateFacetValueInput!]!): [FacetValue!]!
+
+	"""
+	Create existing PaymentMethod
+	"""
+	createPaymentMethod(input: CreatePaymentMethodInput!): PaymentMethod!
+
+	"""
+	Create a new Product
+	"""
+	createProduct(input: CreateProductInput!): Product!
+
+	"""
+	Create a new ProductOption within a ProductOptionGroup
+	"""
+	createProductOption(input: CreateProductOptionInput!): ProductOption!
+
+	"""
+	Create a new ProductOptionGroup
+	"""
+	createProductOptionGroup(input: CreateProductOptionGroupInput!): ProductOptionGroup!
+
+	"""
+	Create a set of ProductVariants based on the OptionGroups assigned to the given Product
+	"""
+	createProductVariants(input: [CreateProductVariantInput!]!): [ProductVariant]!
+	createPromotion(input: CreatePromotionInput!): CreatePromotionResult!
+
+	"""
+	Create a new Province
+	"""
+	createProvince(input: CreateProvinceInput!): Province!
+
+	"""
+	Create a new Role
+	"""
+	createRole(input: CreateRoleInput!): Role!
+
+	"""
+	Create a new Seller
+	"""
+	createSeller(input: CreateSellerInput!): Seller!
+
+	"""
+	Create a new ShippingMethod
+	"""
+	createShippingMethod(input: CreateShippingMethodInput!): ShippingMethod!
+	createStockLocation(input: CreateStockLocationInput!): StockLocation!
+	createStripePaymentIntent: String
+
+	"""
+	Create a new Tag
+	"""
+	createTag(input: CreateTagInput!): Tag!
+
+	"""
+	Create a new TaxCategory
+	"""
+	createTaxCategory(input: CreateTaxCategoryInput!): TaxCategory!
+
+	"""
+	Create a new TaxRate
+	"""
+	createTaxRate(input: CreateTaxRateInput!): TaxRate!
+
+	"""
+	Create a new Zone
+	"""
+	createZone(input: CreateZoneInput!): Zone!
+
+	"""
+	Delete an Administrator
+	"""
+	deleteAdministrator(id: ID!): DeletionResponse!
+
+	"""
+	Delete multiple Administrators
+	"""
+	deleteAdministrators(ids: [ID!]!): [DeletionResponse!]!
+
+	"""
+	Delete an Asset
+	"""
+	deleteAsset(input: DeleteAssetInput!): DeletionResponse!
+
+	"""
+	Delete multiple Assets
+	"""
+	deleteAssets(input: DeleteAssetsInput!): DeletionResponse!
+
+	"""
+	Delete a Channel
+	"""
+	deleteChannel(id: ID!): DeletionResponse!
+
+	"""
+	Delete multiple Channels
+	"""
+	deleteChannels(ids: [ID!]!): [DeletionResponse!]!
+
+	"""
+	Delete a Collection and all of its descendants
+	"""
+	deleteCollection(id: ID!): DeletionResponse!
+
+	"""
+	Delete multiple Collections and all of their descendants
+	"""
+	deleteCollections(ids: [ID!]!): [DeletionResponse!]!
+
+	"""
+	Delete multiple Countries
+	"""
+	deleteCountries(ids: [ID!]!): [DeletionResponse!]!
+
+	"""
+	Delete a Country
+	"""
+	deleteCountry(id: ID!): DeletionResponse!
+
+	"""
+	Delete a Customer
+	"""
+	deleteCustomer(id: ID!): DeletionResponse!
+
+	"""
+	Update an existing Address
+	"""
+	deleteCustomerAddress(id: ID!): Success!
+
+	"""
+	Delete a CustomerGroup
+	"""
+	deleteCustomerGroup(id: ID!): DeletionResponse!
+
+	"""
+	Delete multiple CustomerGroups
+	"""
+	deleteCustomerGroups(ids: [ID!]!): [DeletionResponse!]!
+	deleteCustomerNote(id: ID!): DeletionResponse!
+
+	"""
+	Deletes Customers
+	"""
+	deleteCustomers(ids: [ID!]!): [DeletionResponse!]!
+
+	"""
+	Deletes a draft Order
+	"""
+	deleteDraftOrder(orderId: ID!): DeletionResponse!
+
+	"""
+	Delete an existing Facet
+	"""
+	deleteFacet(force: Boolean, id: ID!): DeletionResponse!
+
+	"""
+	Delete one or more FacetValues
+	"""
+	deleteFacetValues(force: Boolean, ids: [ID!]!): [DeletionResponse!]!
+
+	"""
+	Delete multiple existing Facets
+	"""
+	deleteFacets(force: Boolean, ids: [ID!]!): [DeletionResponse!]!
+	deleteOrderNote(id: ID!): DeletionResponse!
+
+	"""
+	Delete a PaymentMethod
+	"""
+	deletePaymentMethod(force: Boolean, id: ID!): DeletionResponse!
+
+	"""
+	Delete multiple PaymentMethods
+	"""
+	deletePaymentMethods(force: Boolean, ids: [ID!]!): [DeletionResponse!]!
+
+	"""
+	Delete a Product
+	"""
+	deleteProduct(id: ID!): DeletionResponse!
+
+	"""
+	Delete a ProductOption
+	"""
+	deleteProductOption(id: ID!): DeletionResponse!
+
+	"""
+	Delete a ProductVariant
+	"""
+	deleteProductVariant(id: ID!): DeletionResponse!
+
+	"""
+	Delete multiple ProductVariants
+	"""
+	deleteProductVariants(ids: [ID!]!): [DeletionResponse!]!
+
+	"""
+	Delete multiple Products
+	"""
+	deleteProducts(ids: [ID!]!): [DeletionResponse!]!
+	deletePromotion(id: ID!): DeletionResponse!
+	deletePromotions(ids: [ID!]!): [DeletionResponse!]!
+
+	"""
+	Delete a Province
+	"""
+	deleteProvince(id: ID!): DeletionResponse!
+
+	"""
+	Delete an existing Role
+	"""
+	deleteRole(id: ID!): DeletionResponse!
+
+	"""
+	Delete multiple Roles
+	"""
+	deleteRoles(ids: [ID!]!): [DeletionResponse!]!
+
+	"""
+	Delete a Seller
+	"""
+	deleteSeller(id: ID!): DeletionResponse!
+
+	"""
+	Delete multiple Sellers
+	"""
+	deleteSellers(ids: [ID!]!): [DeletionResponse!]!
+
+	"""
+	Delete a ShippingMethod
+	"""
+	deleteShippingMethod(id: ID!): DeletionResponse!
+
+	"""
+	Delete multiple ShippingMethods
+	"""
+	deleteShippingMethods(ids: [ID!]!): [DeletionResponse!]!
+	deleteStockLocation(input: DeleteStockLocationInput!): DeletionResponse!
+	deleteStockLocations(input: [DeleteStockLocationInput!]!): [DeletionResponse!]!
+
+	"""
+	Delete an existing Tag
+	"""
+	deleteTag(id: ID!): DeletionResponse!
+
+	"""
+	Deletes multiple TaxCategories
+	"""
+	deleteTaxCategories(ids: [ID!]!): [DeletionResponse!]!
+
+	"""
+	Deletes a TaxCategory
+	"""
+	deleteTaxCategory(id: ID!): DeletionResponse!
+
+	"""
+	Delete a TaxRate
+	"""
+	deleteTaxRate(id: ID!): DeletionResponse!
+
+	"""
+	Delete multiple TaxRates
+	"""
+	deleteTaxRates(ids: [ID!]!): [DeletionResponse!]!
+
+	"""
+	Delete a Zone
+	"""
+	deleteZone(id: ID!): DeletionResponse!
+
+	"""
+	Delete a Zone
+	"""
+	deleteZones(ids: [ID!]!): [DeletionResponse!]!
+	flushBufferedJobs(bufferIds: [String!]): Success!
+	importProducts(csvFile: Upload!): ImportInfo
+
+	"""
+	Authenticates the user using the native authentication strategy. This mutation is an alias for `authenticate({ native: { ... }})`
+	"""
+	login(password: String!, rememberMe: Boolean, username: String!): NativeAuthenticationResult!
+	logout: Success!
+
+	"""
+	Allows an Order to be modified after it has been completed by the Customer. The Order must first
+	be in the `Modifying` state.
+	"""
+	modifyOrder(input: ModifyOrderInput!): ModifyOrderResult!
+
+	"""
+	Move a Collection to a different parent or index
+	"""
+	moveCollection(input: MoveCollectionInput!): Collection!
+	refundOrder(input: RefundOrderInput!): RefundOrderResult!
+	reindex: Job!
+
+	"""
+	Removes Collections from the specified Channel
+	"""
+	removeCollectionsFromChannel(input: RemoveCollectionsFromChannelInput!): [Collection!]!
+
+	"""
+	Removes the given coupon code from the draft Order
+	"""
+	removeCouponCodeFromDraftOrder(couponCode: String!, orderId: ID!): Order
+
+	"""
+	Remove Customers from a CustomerGroup
+	"""
+	removeCustomersFromGroup(customerGroupId: ID!, customerIds: [ID!]!): CustomerGroup!
+
+	"""
+	Remove an OrderLine from the draft Order
+	"""
+	removeDraftOrderLine(orderId: ID!, orderLineId: ID!): RemoveOrderItemsResult!
+
+	"""
+	Removes Facets from the specified Channel
+	"""
+	removeFacetsFromChannel(input: RemoveFacetsFromChannelInput!): [RemoveFacetFromChannelResult!]!
+
+	"""
+	Remove members from a Zone
+	"""
+	removeMembersFromZone(memberIds: [ID!]!, zoneId: ID!): Zone!
+
+	"""
+	Remove an OptionGroup from a Product. If the OptionGroup is in use by any ProductVariants
+	the mutation will return a ProductOptionInUseError, and the OptionGroup will not be removed.
+	Setting the `force` argument to `true` will override this and remove the OptionGroup anyway,
+	as well as removing any of the group's options from the Product's ProductVariants.
+	"""
+	removeOptionGroupFromProduct(
+		force: Boolean
+		optionGroupId: ID!
+		productId: ID!
+	): RemoveOptionGroupFromProductResult!
+
+	"""
+	Removes PaymentMethods from the specified Channel
+	"""
+	removePaymentMethodsFromChannel(input: RemovePaymentMethodsFromChannelInput!): [PaymentMethod!]!
+
+	"""
+	Removes ProductVariants from the specified Channel
+	"""
+	removeProductVariantsFromChannel(
+		input: RemoveProductVariantsFromChannelInput!
+	): [ProductVariant!]!
+
+	"""
+	Removes all ProductVariants of Product from the specified Channel
+	"""
+	removeProductsFromChannel(input: RemoveProductsFromChannelInput!): [Product!]!
+
+	"""
+	Removes Promotions from the specified Channel
+	"""
+	removePromotionsFromChannel(input: RemovePromotionsFromChannelInput!): [Promotion!]!
+
+	"""
+	Remove all settled jobs in the given queues older than the given date. Returns the number of jobs deleted.
+	"""
+	removeSettledJobs(olderThan: DateTime, queueNames: [String!]): Int!
+
+	"""
+	Removes ShippingMethods from the specified Channel
+	"""
+	removeShippingMethodsFromChannel(
+		input: RemoveShippingMethodsFromChannelInput!
+	): [ShippingMethod!]!
+
+	"""
+	Removes StockLocations from the specified Channel
+	"""
+	removeStockLocationsFromChannel(input: RemoveStockLocationsFromChannelInput!): [StockLocation!]!
+	runPendingSearchIndexUpdates: Success!
+	setCustomerForDraftOrder(
+		customerId: ID
+		input: CreateCustomerInput
+		orderId: ID!
+	): SetCustomerForDraftOrderResult!
+
+	"""
+	Sets the billing address for a draft Order
+	"""
+	setDraftOrderBillingAddress(input: CreateAddressInput!, orderId: ID!): Order!
+
+	"""
+	Allows any custom fields to be set for the active order
+	"""
+	setDraftOrderCustomFields(input: UpdateOrderInput!, orderId: ID!): Order!
+
+	"""
+	Sets the shipping address for a draft Order
+	"""
+	setDraftOrderShippingAddress(input: CreateAddressInput!, orderId: ID!): Order!
+
+	"""
+	Sets the shipping method by id, which can be obtained with the `eligibleShippingMethodsForDraftOrder` query
+	"""
+	setDraftOrderShippingMethod(orderId: ID!, shippingMethodId: ID!): SetOrderShippingMethodResult!
+	setOrderCustomFields(input: UpdateOrderInput!): Order
+	settlePayment(id: ID!): SettlePaymentResult!
+	settleRefund(input: SettleRefundInput!): SettleRefundResult!
+	transitionFulfillmentToState(id: ID!, state: String!): TransitionFulfillmentToStateResult!
+	transitionOrderToState(id: ID!, state: String!): TransitionOrderToStateResult
+	transitionPaymentToState(id: ID!, state: String!): TransitionPaymentToStateResult!
+
+	"""
+	Update the active (currently logged-in) Administrator
+	"""
+	updateActiveAdministrator(input: UpdateActiveAdministratorInput!): Administrator!
+
+	"""
+	Update an existing Administrator
+	"""
+	updateAdministrator(input: UpdateAdministratorInput!): Administrator!
+
+	"""
+	Update an existing Asset
+	"""
+	updateAsset(input: UpdateAssetInput!): Asset!
+
+	"""
+	Update an existing Channel
+	"""
+	updateChannel(input: UpdateChannelInput!): UpdateChannelResult!
+
+	"""
+	Update an existing Collection
+	"""
+	updateCollection(input: UpdateCollectionInput!): Collection!
+
+	"""
+	Update an existing Country
+	"""
+	updateCountry(input: UpdateCountryInput!): Country!
+
+	"""
+	Update an existing Customer
+	"""
+	updateCustomer(input: UpdateCustomerInput!): UpdateCustomerResult!
+
+	"""
+	Update an existing Address
+	"""
+	updateCustomerAddress(input: UpdateAddressInput!): Address!
+
+	"""
+	Update an existing CustomerGroup
+	"""
+	updateCustomerGroup(input: UpdateCustomerGroupInput!): CustomerGroup!
+	updateCustomerNote(input: UpdateCustomerNoteInput!): HistoryEntry!
+
+	"""
+	Update an existing Facet
+	"""
+	updateFacet(input: UpdateFacetInput!): Facet!
+
+	"""
+	Update one or more FacetValues
+	"""
+	updateFacetValues(input: [UpdateFacetValueInput!]!): [FacetValue!]!
+	updateGlobalSettings(input: UpdateGlobalSettingsInput!): UpdateGlobalSettingsResult!
+	updateOrderNote(input: UpdateOrderNoteInput!): HistoryEntry!
+
+	"""
+	Update an existing PaymentMethod
+	"""
+	updatePaymentMethod(input: UpdatePaymentMethodInput!): PaymentMethod!
+
+	"""
+	Update an existing Product
+	"""
+	updateProduct(input: UpdateProductInput!): Product!
+
+	"""
+	Create a new ProductOption within a ProductOptionGroup
+	"""
+	updateProductOption(input: UpdateProductOptionInput!): ProductOption!
+
+	"""
+	Update an existing ProductOptionGroup
+	"""
+	updateProductOptionGroup(input: UpdateProductOptionGroupInput!): ProductOptionGroup!
+
+	"""
+	Update existing ProductVariants
+	"""
+	updateProductVariants(input: [UpdateProductVariantInput!]!): [ProductVariant]!
+
+	"""
+	Update multiple existing Products
+	"""
+	updateProducts(input: [UpdateProductInput!]!): [Product!]!
+	updatePromotion(input: UpdatePromotionInput!): UpdatePromotionResult!
+
+	"""
+	Update an existing Province
+	"""
+	updateProvince(input: UpdateProvinceInput!): Province!
+
+	"""
+	Update an existing Role
+	"""
+	updateRole(input: UpdateRoleInput!): Role!
+
+	"""
+	Update an existing Seller
+	"""
+	updateSeller(input: UpdateSellerInput!): Seller!
+
+	"""
+	Update an existing ShippingMethod
+	"""
+	updateShippingMethod(input: UpdateShippingMethodInput!): ShippingMethod!
+	updateStockLocation(input: UpdateStockLocationInput!): StockLocation!
+
+	"""
+	Update an existing Tag
+	"""
+	updateTag(input: UpdateTagInput!): Tag!
+
+	"""
+	Update an existing TaxCategory
+	"""
+	updateTaxCategory(input: UpdateTaxCategoryInput!): TaxCategory!
+
+	"""
+	Update an existing TaxRate
+	"""
+	updateTaxRate(input: UpdateTaxRateInput!): TaxRate!
+
+	"""
+	Update an existing Zone
+	"""
+	updateZone(input: UpdateZoneInput!): Zone!
+}
+
+input NativeAuthInput {
+	password: String!
+	username: String!
+}
+
+"""
+Returned when attempting an operation that relies on the NativeAuthStrategy, if that strategy is not configured.
+"""
+type NativeAuthStrategyError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+union NativeAuthenticationResult = CurrentUser | InvalidCredentialsError | NativeAuthStrategyError
+
+"""
+Returned when attempting to set a negative OrderLine quantity.
+"""
+type NegativeQuantityError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+"""
+Returned when invoking a mutation which depends on there being an active Order on the
+current session.
+"""
+type NoActiveOrderError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+"""
+Returned when a call to modifyOrder fails to specify any changes
+"""
+type NoChangesSpecifiedError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+interface Node {
+	id: ID!
+}
+
+"""
+Returned if an attempting to refund an Order but neither items nor shipping refund was specified
+"""
+type NothingToRefundError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+"""
+Operators for filtering on a list of Number fields
+"""
+input NumberListOperators {
+	inList: Float!
+}
+
+"""
+Operators for filtering on a Int or Float field
+"""
+input NumberOperators {
+	between: NumberRange
+	eq: Float
+	gt: Float
+	gte: Float
+	isNull: Boolean
+	lt: Float
+	lte: Float
+}
+
+input NumberRange {
+	end: Float!
+	start: Float!
+}
+
+type Order implements Node {
+	"""
+	An order is active as long as the payment process has not been completed
+	"""
+	active: Boolean!
+	aggregateOrder: Order
+	aggregateOrderId: ID
+	billingAddress: OrderAddress
+	channels: [Channel!]!
+
+	"""
+	A unique code for the Order
+	"""
+	code: String!
+
+	"""
+	An array of all coupon codes applied to the Order
+	"""
+	couponCodes: [String!]!
+	createdAt: DateTime!
+	currencyCode: CurrencyCode!
+	customFields: JSON
+	customer: Customer
+	discounts: [Discount!]!
+	fulfillments: [Fulfillment!]
+	history(options: HistoryEntryListOptions): HistoryEntryList!
+	id: ID!
+	lines: [OrderLine!]!
+	modifications: [OrderModification!]!
+	nextStates: [String!]!
+
+	"""
+	The date & time that the Order was placed, i.e. the Customer
+	completed the checkout and the Order is no longer "active"
+	"""
+	orderPlacedAt: DateTime
+	payments: [Payment!]
+
+	"""
+	Promotions applied to the order. Only gets populated after the payment process has completed.
+	"""
+	promotions: [Promotion!]!
+	sellerOrders: [Order!]
+	shipping: Money!
+	shippingAddress: OrderAddress
+	shippingLines: [ShippingLine!]!
+	shippingWithTax: Money!
+	state: String!
+
+	"""
+	The subTotal is the total of all OrderLines in the Order. This figure also includes any Order-level
+	discounts which have been prorated (proportionally distributed) amongst the items of each OrderLine.
+	To get a total of all OrderLines which does not account for prorated discounts, use the
+	sum of `OrderLine.discountedLinePrice` values.
+	"""
+	subTotal: Money!
+
+	"""
+	Same as subTotal, but inclusive of tax
+	"""
+	subTotalWithTax: Money!
+
+	"""
+	Surcharges are arbitrary modifications to the Order total which are neither
+	ProductVariants nor discounts resulting from applied Promotions. For example,
+	one-off discounts based on customer interaction, or surcharges based on payment
+	methods.
+	"""
+	surcharges: [Surcharge!]!
+
+	"""
+	A summary of the taxes being applied to this Order
+	"""
+	taxSummary: [OrderTaxSummary!]!
+
+	"""
+	Equal to subTotal plus shipping
+	"""
+	total: Money!
+	totalQuantity: Int!
+
+	"""
+	The final payable amount. Equal to subTotalWithTax plus shippingWithTax
+	"""
+	totalWithTax: Money!
+	type: OrderType!
+	updatedAt: DateTime!
+}
+
+type OrderAddress {
+	city: String
+	company: String
+	country: String
+	countryCode: String
+	customFields: JSON
+	fullName: String
+	phoneNumber: String
+	postalCode: String
+	province: String
+	streetLine1: String
+	streetLine2: String
+}
+
+input OrderFilterParameter {
+	active: BooleanOperators
+	aggregateOrderId: IDOperators
+	code: StringOperators
+	createdAt: DateOperators
+	currencyCode: StringOperators
+	customerLastName: StringOperators
+	id: IDOperators
+	orderPlacedAt: DateOperators
+	shipping: NumberOperators
+	shippingWithTax: NumberOperators
+	state: StringOperators
+	subTotal: NumberOperators
+	subTotalWithTax: NumberOperators
+	total: NumberOperators
+	totalQuantity: NumberOperators
+	totalWithTax: NumberOperators
+	transactionId: StringOperators
+	type: StringOperators
+	updatedAt: DateOperators
+}
+
+"""
+Returned when the maximum order size limit has been reached.
+"""
+type OrderLimitError implements ErrorResult {
+	errorCode: ErrorCode!
+	maxItems: Int!
+	message: String!
+}
+
+type OrderLine implements Node {
+	createdAt: DateTime!
+	customFields: JSON
+
+	"""
+	The price of the line including discounts, excluding tax
+	"""
+	discountedLinePrice: Money!
+
+	"""
+	The price of the line including discounts and tax
+	"""
+	discountedLinePriceWithTax: Money!
+
+	"""
+	The price of a single unit including discounts, excluding tax.
+
+	If Order-level discounts have been applied, this will not be the
+	actual taxable unit price (see `proratedUnitPrice`), but is generally the
+	correct price to display to customers to avoid confusion
+	about the internal handling of distributed Order-level discounts.
+	"""
+	discountedUnitPrice: Money!
+
+	"""
+	The price of a single unit including discounts and tax
+	"""
+	discountedUnitPriceWithTax: Money!
+	discounts: [Discount!]!
+	featuredAsset: Asset
+	fulfillmentLines: [FulfillmentLine!]
+	id: ID!
+
+	"""
+	The total price of the line excluding tax and discounts.
+	"""
+	linePrice: Money!
+
+	"""
+	The total price of the line including tax but excluding discounts.
+	"""
+	linePriceWithTax: Money!
+
+	"""
+	The total tax on this line
+	"""
+	lineTax: Money!
+	order: Order!
+
+	"""
+	The quantity at the time the Order was placed
+	"""
+	orderPlacedQuantity: Int!
+	productVariant: ProductVariant!
+
+	"""
+	The actual line price, taking into account both item discounts _and_ prorated (proportionally-distributed)
+	Order-level discounts. This value is the true economic value of the OrderLine, and is used in tax
+	and refund calculations.
+	"""
+	proratedLinePrice: Money!
+
+	"""
+	The proratedLinePrice including tax
+	"""
+	proratedLinePriceWithTax: Money!
+
+	"""
+	The actual unit price, taking into account both item discounts _and_ prorated (proportionally-distributed)
+	Order-level discounts. This value is the true economic value of the OrderItem, and is used in tax
+	and refund calculations.
+	"""
+	proratedUnitPrice: Money!
+
+	"""
+	The proratedUnitPrice including tax
+	"""
+	proratedUnitPriceWithTax: Money!
+	quantity: Int!
+	taxLines: [TaxLine!]!
+	taxRate: Float!
+
+	"""
+	The price of a single unit, excluding tax and discounts
+	"""
+	unitPrice: Money!
+
+	"""
+	Non-zero if the unitPrice has changed since it was initially added to Order
+	"""
+	unitPriceChangeSinceAdded: Money!
+
+	"""
+	The price of a single unit, including tax but excluding discounts
+	"""
+	unitPriceWithTax: Money!
+
+	"""
+	Non-zero if the unitPriceWithTax has changed since it was initially added to Order
+	"""
+	unitPriceWithTaxChangeSinceAdded: Money!
+	updatedAt: DateTime!
+}
+
+input OrderLineInput {
+	orderLineId: ID!
+	quantity: Int!
+}
+
+type OrderList implements PaginatedList {
+	items: [Order!]!
+	totalItems: Int!
+}
+
+input OrderListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: OrderFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: OrderSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+type OrderModification implements Node {
+	createdAt: DateTime!
+	id: ID!
+	isSettled: Boolean!
+	lines: [OrderModificationLine!]!
+	note: String!
+	payment: Payment
+	priceChange: Money!
+	refund: Refund
+	surcharges: [Surcharge!]
+	updatedAt: DateTime!
+}
+
+"""
+Returned when attempting to modify the contents of an Order that is not in the `AddingItems` state.
+"""
+type OrderModificationError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+type OrderModificationLine {
+	modification: OrderModification!
+	modificationId: ID!
+	orderLine: OrderLine!
+	orderLineId: ID!
+	quantity: Int!
+}
+
+"""
+Returned when attempting to modify the contents of an Order that is not in the `Modifying` state.
+"""
+type OrderModificationStateError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+type OrderProcessState {
+	name: String!
+	to: [String!]!
+}
+
+input OrderSortParameter {
+	aggregateOrderId: SortOrder
+	code: SortOrder
+	createdAt: SortOrder
+	customerLastName: SortOrder
+	id: SortOrder
+	orderPlacedAt: SortOrder
+	shipping: SortOrder
+	shippingWithTax: SortOrder
+	state: SortOrder
+	subTotal: SortOrder
+	subTotalWithTax: SortOrder
+	total: SortOrder
+	totalQuantity: SortOrder
+	totalWithTax: SortOrder
+	transactionId: SortOrder
+	updatedAt: SortOrder
+}
+
+"""
+Returned if there is an error in transitioning the Order state
+"""
+type OrderStateTransitionError implements ErrorResult {
+	errorCode: ErrorCode!
+	fromState: String!
+	message: String!
+	toState: String!
+	transitionError: String!
+}
+
+"""
+A summary of the taxes being applied to this order, grouped
+by taxRate.
+"""
+type OrderTaxSummary {
+	"""
+	A description of this tax
+	"""
+	description: String!
+
+	"""
+	The total net price of OrderLines to which this taxRate applies
+	"""
+	taxBase: Money!
+
+	"""
+	The taxRate as a percentage
+	"""
+	taxRate: Float!
+
+	"""
+	The total tax being applied to the Order at this taxRate
+	"""
+	taxTotal: Money!
+}
+
+enum OrderType {
+	Aggregate
+	Regular
+	Seller
+}
+
+interface PaginatedList {
+	items: [Node!]!
+	totalItems: Int!
+}
+
+type Payment implements Node {
+	amount: Money!
+	createdAt: DateTime!
+	errorMessage: String
+	id: ID!
+	metadata: JSON
+	method: String!
+	nextStates: [String!]!
+	refunds: [Refund!]!
+	state: String!
+	transactionId: String
+	updatedAt: DateTime!
+}
+
+type PaymentMethod implements Node {
+	checker: ConfigurableOperation
+	code: String!
+	createdAt: DateTime!
+	customFields: JSON
+	description: String!
+	enabled: Boolean!
+	handler: ConfigurableOperation!
+	id: ID!
+	name: String!
+	translations: [PaymentMethodTranslation!]!
+	updatedAt: DateTime!
+}
+
+input PaymentMethodFilterParameter {
+	code: StringOperators
+	createdAt: DateOperators
+	description: StringOperators
+	enabled: BooleanOperators
+	id: IDOperators
+	name: StringOperators
+	updatedAt: DateOperators
+}
+
+type PaymentMethodList implements PaginatedList {
+	items: [PaymentMethod!]!
+	totalItems: Int!
+}
+
+input PaymentMethodListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: PaymentMethodFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: PaymentMethodSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+"""
+Returned when a call to modifyOrder fails to include a paymentMethod even
+though the price has increased as a result of the changes.
+"""
+type PaymentMethodMissingError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+type PaymentMethodQuote {
+	code: String!
+	customFields: JSON
+	description: String!
+	eligibilityMessage: String
+	id: ID!
+	isEligible: Boolean!
+	name: String!
+}
+
+input PaymentMethodSortParameter {
+	code: SortOrder
+	createdAt: SortOrder
+	description: SortOrder
+	id: SortOrder
+	name: SortOrder
+	updatedAt: SortOrder
+}
+
+type PaymentMethodTranslation {
+	createdAt: DateTime!
+	description: String!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	updatedAt: DateTime!
+}
+
+input PaymentMethodTranslationInput {
+	customFields: JSON
+	description: String
+	id: ID
+	languageCode: LanguageCode!
+	name: String
+}
+
+"""
+Returned if an attempting to refund a Payment against OrderLines from a different Order
+"""
+type PaymentOrderMismatchError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+"""
+Returned when there is an error in transitioning the Payment state
+"""
+type PaymentStateTransitionError implements ErrorResult {
+	errorCode: ErrorCode!
+	fromState: String!
+	message: String!
+	toState: String!
+	transitionError: String!
+}
+
+"""
+@description
+Permissions for administrators and customers. Used to control access to
+GraphQL resolvers via the {@link Allow} decorator.
+
+## Understanding Permission.Owner
+
+`Permission.Owner` is a special permission which is used in some Vendure resolvers to indicate that that resolver should only
+be accessible to the "owner" of that resource.
+
+For example, the Shop API `activeCustomer` query resolver should only return the Customer object for the "owner" of that Customer, i.e.
+based on the activeUserId of the current session. As a result, the resolver code looks like this:
+
+@example
+```TypeScript
+\@Query()
+\@Allow(Permission.Owner)
+async activeCustomer(\@Ctx() ctx: RequestContext): Promise<Customer | undefined> {
+  const userId = ctx.activeUserId;
+  if (userId) {
+    return this.customerService.findOneByUserId(ctx, userId);
+  }
+}
+```
+
+Here we can see that the "ownership" must be enforced by custom logic inside the resolver. Since "ownership" cannot be defined generally
+nor statically encoded at build-time, any resolvers using `Permission.Owner` **must** include logic to enforce that only the owner
+of the resource has access. If not, then it is the equivalent of using `Permission.Public`.
+
+
+@docsCategory common
+"""
+enum Permission {
+	"""
+	Authenticated means simply that the user is logged in
+	"""
+	Authenticated
+
+	"""
+	Grants permission to create Administrator
+	"""
+	CreateAdministrator
+
+	"""
+	Grants permission to create Asset
+	"""
+	CreateAsset
+
+	"""
+	Grants permission to create Products, Facets, Assets, Collections
+	"""
+	CreateCatalog
+
+	"""
+	Grants permission to create Channel
+	"""
+	CreateChannel
+
+	"""
+	Grants permission to create Collection
+	"""
+	CreateCollection
+
+	"""
+	Grants permission to create Country
+	"""
+	CreateCountry
+
+	"""
+	Grants permission to create Customer
+	"""
+	CreateCustomer
+
+	"""
+	Grants permission to create CustomerGroup
+	"""
+	CreateCustomerGroup
+
+	"""
+	Grants permission to create Facet
+	"""
+	CreateFacet
+
+	"""
+	Grants permission to create Order
+	"""
+	CreateOrder
+
+	"""
+	Grants permission to create PaymentMethod
+	"""
+	CreatePaymentMethod
+
+	"""
+	Grants permission to create Product
+	"""
+	CreateProduct
+
+	"""
+	Grants permission to create Promotion
+	"""
+	CreatePromotion
+
+	"""
+	Grants permission to create Seller
+	"""
+	CreateSeller
+
+	"""
+	Grants permission to create PaymentMethods, ShippingMethods, TaxCategories, TaxRates, Zones, Countries, System & GlobalSettings
+	"""
+	CreateSettings
+
+	"""
+	Grants permission to create ShippingMethod
+	"""
+	CreateShippingMethod
+
+	"""
+	Grants permission to create StockLocation
+	"""
+	CreateStockLocation
+
+	"""
+	Grants permission to create System
+	"""
+	CreateSystem
+
+	"""
+	Grants permission to create Tag
+	"""
+	CreateTag
+
+	"""
+	Grants permission to create TaxCategory
+	"""
+	CreateTaxCategory
+
+	"""
+	Grants permission to create TaxRate
+	"""
+	CreateTaxRate
+
+	"""
+	Grants permission to create Zone
+	"""
+	CreateZone
+
+	"""
+	Grants permission to delete Administrator
+	"""
+	DeleteAdministrator
+
+	"""
+	Grants permission to delete Asset
+	"""
+	DeleteAsset
+
+	"""
+	Grants permission to delete Products, Facets, Assets, Collections
+	"""
+	DeleteCatalog
+
+	"""
+	Grants permission to delete Channel
+	"""
+	DeleteChannel
+
+	"""
+	Grants permission to delete Collection
+	"""
+	DeleteCollection
+
+	"""
+	Grants permission to delete Country
+	"""
+	DeleteCountry
+
+	"""
+	Grants permission to delete Customer
+	"""
+	DeleteCustomer
+
+	"""
+	Grants permission to delete CustomerGroup
+	"""
+	DeleteCustomerGroup
+
+	"""
+	Grants permission to delete Facet
+	"""
+	DeleteFacet
+
+	"""
+	Grants permission to delete Order
+	"""
+	DeleteOrder
+
+	"""
+	Grants permission to delete PaymentMethod
+	"""
+	DeletePaymentMethod
+
+	"""
+	Grants permission to delete Product
+	"""
+	DeleteProduct
+
+	"""
+	Grants permission to delete Promotion
+	"""
+	DeletePromotion
+
+	"""
+	Grants permission to delete Seller
+	"""
+	DeleteSeller
+
+	"""
+	Grants permission to delete PaymentMethods, ShippingMethods, TaxCategories, TaxRates, Zones, Countries, System & GlobalSettings
+	"""
+	DeleteSettings
+
+	"""
+	Grants permission to delete ShippingMethod
+	"""
+	DeleteShippingMethod
+
+	"""
+	Grants permission to delete StockLocation
+	"""
+	DeleteStockLocation
+
+	"""
+	Grants permission to delete System
+	"""
+	DeleteSystem
+
+	"""
+	Grants permission to delete Tag
+	"""
+	DeleteTag
+
+	"""
+	Grants permission to delete TaxCategory
+	"""
+	DeleteTaxCategory
+
+	"""
+	Grants permission to delete TaxRate
+	"""
+	DeleteTaxRate
+
+	"""
+	Grants permission to delete Zone
+	"""
+	DeleteZone
+
+	"""
+	Owner means the user owns this entity, e.g. a Customer's own Order
+	"""
+	Owner
+
+	"""
+	Public means any unauthenticated user may perform the operation
+	"""
+	Public
+
+	"""
+	Grants permission to read Administrator
+	"""
+	ReadAdministrator
+
+	"""
+	Grants permission to read Asset
+	"""
+	ReadAsset
+
+	"""
+	Grants permission to read Products, Facets, Assets, Collections
+	"""
+	ReadCatalog
+
+	"""
+	Grants permission to read Channel
+	"""
+	ReadChannel
+
+	"""
+	Grants permission to read Collection
+	"""
+	ReadCollection
+
+	"""
+	Grants permission to read Country
+	"""
+	ReadCountry
+
+	"""
+	Grants permission to read Customer
+	"""
+	ReadCustomer
+
+	"""
+	Grants permission to read CustomerGroup
+	"""
+	ReadCustomerGroup
+
+	"""
+	Grants permission to read Facet
+	"""
+	ReadFacet
+
+	"""
+	Grants permission to read Order
+	"""
+	ReadOrder
+
+	"""
+	Grants permission to read PaymentMethod
+	"""
+	ReadPaymentMethod
+
+	"""
+	Grants permission to read Product
+	"""
+	ReadProduct
+
+	"""
+	Grants permission to read Promotion
+	"""
+	ReadPromotion
+
+	"""
+	Grants permission to read Seller
+	"""
+	ReadSeller
+
+	"""
+	Grants permission to read PaymentMethods, ShippingMethods, TaxCategories, TaxRates, Zones, Countries, System & GlobalSettings
+	"""
+	ReadSettings
+
+	"""
+	Grants permission to read ShippingMethod
+	"""
+	ReadShippingMethod
+
+	"""
+	Grants permission to read StockLocation
+	"""
+	ReadStockLocation
+
+	"""
+	Grants permission to read System
+	"""
+	ReadSystem
+
+	"""
+	Grants permission to read Tag
+	"""
+	ReadTag
+
+	"""
+	Grants permission to read TaxCategory
+	"""
+	ReadTaxCategory
+
+	"""
+	Grants permission to read TaxRate
+	"""
+	ReadTaxRate
+
+	"""
+	Grants permission to read Zone
+	"""
+	ReadZone
+
+	"""
+	SuperAdmin has unrestricted access to all operations
+	"""
+	SuperAdmin
+
+	"""
+	Grants permission to update Administrator
+	"""
+	UpdateAdministrator
+
+	"""
+	Grants permission to update Asset
+	"""
+	UpdateAsset
+
+	"""
+	Grants permission to update Products, Facets, Assets, Collections
+	"""
+	UpdateCatalog
+
+	"""
+	Grants permission to update Channel
+	"""
+	UpdateChannel
+
+	"""
+	Grants permission to update Collection
+	"""
+	UpdateCollection
+
+	"""
+	Grants permission to update Country
+	"""
+	UpdateCountry
+
+	"""
+	Grants permission to update Customer
+	"""
+	UpdateCustomer
+
+	"""
+	Grants permission to update CustomerGroup
+	"""
+	UpdateCustomerGroup
+
+	"""
+	Grants permission to update Facet
+	"""
+	UpdateFacet
+
+	"""
+	Grants permission to update GlobalSettings
+	"""
+	UpdateGlobalSettings
+
+	"""
+	Grants permission to update Order
+	"""
+	UpdateOrder
+
+	"""
+	Grants permission to update PaymentMethod
+	"""
+	UpdatePaymentMethod
+
+	"""
+	Grants permission to update Product
+	"""
+	UpdateProduct
+
+	"""
+	Grants permission to update Promotion
+	"""
+	UpdatePromotion
+
+	"""
+	Grants permission to update Seller
+	"""
+	UpdateSeller
+
+	"""
+	Grants permission to update PaymentMethods, ShippingMethods, TaxCategories, TaxRates, Zones, Countries, System & GlobalSettings
+	"""
+	UpdateSettings
+
+	"""
+	Grants permission to update ShippingMethod
+	"""
+	UpdateShippingMethod
+
+	"""
+	Grants permission to update StockLocation
+	"""
+	UpdateStockLocation
+
+	"""
+	Grants permission to update System
+	"""
+	UpdateSystem
+
+	"""
+	Grants permission to update Tag
+	"""
+	UpdateTag
+
+	"""
+	Grants permission to update TaxCategory
+	"""
+	UpdateTaxCategory
+
+	"""
+	Grants permission to update TaxRate
+	"""
+	UpdateTaxRate
+
+	"""
+	Grants permission to update Zone
+	"""
+	UpdateZone
+}
+
+type PermissionDefinition {
+	assignable: Boolean!
+	description: String!
+	name: String!
+}
+
+input PreviewCollectionVariantsInput {
+	filters: [ConfigurableOperationInput!]!
+	inheritFilters: Boolean!
+	parentId: ID
+}
+
+"""
+The price range where the result has more than one price
+"""
+type PriceRange {
+	max: Money!
+	min: Money!
+}
+
+type Product implements Node {
+	assets: [Asset!]!
+	channels: [Channel!]!
+	collections: [Collection!]!
+	createdAt: DateTime!
+	customFields: JSON
+	description: String!
+	enabled: Boolean!
+	facetValues: [FacetValue!]!
+	featuredAsset: Asset
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	optionGroups: [ProductOptionGroup!]!
+	slug: String!
+	translations: [ProductTranslation!]!
+	updatedAt: DateTime!
+
+	"""
+	Returns a paginated, sortable, filterable list of ProductVariants
+	"""
+	variantList(options: ProductVariantListOptions): ProductVariantList!
+
+	"""
+	Returns all ProductVariants
+	"""
+	variants: [ProductVariant!]!
+}
+
+input ProductFilterParameter {
+	createdAt: DateOperators
+	description: StringOperators
+	enabled: BooleanOperators
+	facetValueId: IDOperators
+	id: IDOperators
+	languageCode: StringOperators
+	name: StringOperators
+	slug: StringOperators
+	updatedAt: DateOperators
+}
+
+type ProductList implements PaginatedList {
+	items: [Product!]!
+	totalItems: Int!
+}
+
+input ProductListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: ProductFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: ProductSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+type ProductOption implements Node {
+	code: String!
+	createdAt: DateTime!
+	customFields: JSON
+	group: ProductOptionGroup!
+	groupId: ID!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	translations: [ProductOptionTranslation!]!
+	updatedAt: DateTime!
+}
+
+type ProductOptionGroup implements Node {
+	code: String!
+	createdAt: DateTime!
+	customFields: JSON
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	options: [ProductOption!]!
+	translations: [ProductOptionGroupTranslation!]!
+	updatedAt: DateTime!
+}
+
+type ProductOptionGroupTranslation {
+	createdAt: DateTime!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	updatedAt: DateTime!
+}
+
+input ProductOptionGroupTranslationInput {
+	customFields: JSON
+	id: ID
+	languageCode: LanguageCode!
+	name: String
+}
+
+type ProductOptionInUseError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+	optionGroupCode: String!
+	productVariantCount: Int!
+}
+
+type ProductOptionTranslation {
+	createdAt: DateTime!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	updatedAt: DateTime!
+}
+
+input ProductOptionTranslationInput {
+	customFields: JSON
+	id: ID
+	languageCode: LanguageCode!
+	name: String
+}
+
+input ProductSortParameter {
+	createdAt: SortOrder
+	description: SortOrder
+	id: SortOrder
+	name: SortOrder
+	slug: SortOrder
+	updatedAt: SortOrder
+}
+
+type ProductTranslation {
+	createdAt: DateTime!
+	description: String!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	slug: String!
+	updatedAt: DateTime!
+}
+
+input ProductTranslationInput {
+	customFields: JSON
+	description: String
+	id: ID
+	languageCode: LanguageCode!
+	name: String
+	slug: String
+}
+
+type ProductVariant implements Node {
+	assets: [Asset!]!
+	channels: [Channel!]!
+	createdAt: DateTime!
+	currencyCode: CurrencyCode!
+	customFields: JSON
+	enabled: Boolean!
+	facetValues: [FacetValue!]!
+	featuredAsset: Asset
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	options: [ProductOption!]!
+	outOfStockThreshold: Int!
+	price: Money!
+	priceWithTax: Money!
+	prices: [ProductVariantPrice!]!
+	product: Product!
+	productId: ID!
+	sku: String!
+	stockAllocated: Int! @deprecated(reason: "use stockLevels")
+	stockLevel: String!
+	stockLevels: [StockLevel!]!
+	stockMovements(options: StockMovementListOptions): StockMovementList!
+	stockOnHand: Int! @deprecated(reason: "use stockLevels")
+	taxCategory: TaxCategory!
+	taxRateApplied: TaxRate!
+	trackInventory: GlobalFlag!
+	translations: [ProductVariantTranslation!]!
+	updatedAt: DateTime!
+	useGlobalOutOfStockThreshold: Boolean!
+}
+
+input ProductVariantFilterParameter {
+	createdAt: DateOperators
+	currencyCode: StringOperators
+	enabled: BooleanOperators
+	facetValueId: IDOperators
+	id: IDOperators
+	languageCode: StringOperators
+	name: StringOperators
+	outOfStockThreshold: NumberOperators
+	price: NumberOperators
+	priceWithTax: NumberOperators
+	productId: IDOperators
+	sku: StringOperators
+	stockAllocated: NumberOperators
+	stockLevel: StringOperators
+	stockOnHand: NumberOperators
+	trackInventory: StringOperators
+	updatedAt: DateOperators
+	useGlobalOutOfStockThreshold: BooleanOperators
+}
+
+type ProductVariantList implements PaginatedList {
+	items: [ProductVariant!]!
+	totalItems: Int!
+}
+
+input ProductVariantListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: ProductVariantFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: ProductVariantSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+type ProductVariantPrice {
+	currencyCode: CurrencyCode!
+	price: Int!
+}
+
+"""
+Used to set up update the price of a ProductVariant in a particular Channel.
+If the `delete` flag is `true`, the price will be deleted for the given Channel.
+"""
+input ProductVariantPriceInput {
+	currencyCode: CurrencyCode!
+	delete: Boolean
+	price: Money!
+}
+
+input ProductVariantSortParameter {
+	createdAt: SortOrder
+	id: SortOrder
+	name: SortOrder
+	outOfStockThreshold: SortOrder
+	price: SortOrder
+	priceWithTax: SortOrder
+	productId: SortOrder
+	sku: SortOrder
+	stockAllocated: SortOrder
+	stockLevel: SortOrder
+	stockOnHand: SortOrder
+	updatedAt: SortOrder
+}
+
+type ProductVariantTranslation {
+	createdAt: DateTime!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	updatedAt: DateTime!
+}
+
+input ProductVariantTranslationInput {
+	customFields: JSON
+	id: ID
+	languageCode: LanguageCode!
+	name: String
+}
+
+type Promotion implements Node {
+	actions: [ConfigurableOperation!]!
+	conditions: [ConfigurableOperation!]!
+	couponCode: String
+	createdAt: DateTime!
+	customFields: JSON
+	description: String!
+	enabled: Boolean!
+	endsAt: DateTime
+	id: ID!
+	name: String!
+	perCustomerUsageLimit: Int
+	startsAt: DateTime
+	translations: [PromotionTranslation!]!
+	updatedAt: DateTime!
+}
+
+input PromotionFilterParameter {
+	couponCode: StringOperators
+	createdAt: DateOperators
+	description: StringOperators
+	enabled: BooleanOperators
+	endsAt: DateOperators
+	id: IDOperators
+	name: StringOperators
+	perCustomerUsageLimit: NumberOperators
+	startsAt: DateOperators
+	updatedAt: DateOperators
+}
+
+type PromotionList implements PaginatedList {
+	items: [Promotion!]!
+	totalItems: Int!
+}
+
+input PromotionListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: PromotionFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: PromotionSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input PromotionSortParameter {
+	couponCode: SortOrder
+	createdAt: SortOrder
+	description: SortOrder
+	endsAt: SortOrder
+	id: SortOrder
+	name: SortOrder
+	perCustomerUsageLimit: SortOrder
+	startsAt: SortOrder
+	updatedAt: SortOrder
+}
+
+type PromotionTranslation {
+	createdAt: DateTime!
+	description: String!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	updatedAt: DateTime!
+}
+
+input PromotionTranslationInput {
+	customFields: JSON
+	description: String
+	id: ID
+	languageCode: LanguageCode!
+	name: String
+}
+
+type Province implements Node & Region {
+	code: String!
+	createdAt: DateTime!
+	customFields: JSON
+	enabled: Boolean!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	parent: Region
+	parentId: ID
+	translations: [RegionTranslation!]!
+	type: String!
+	updatedAt: DateTime!
+}
+
+input ProvinceFilterParameter {
+	code: StringOperators
+	createdAt: DateOperators
+	enabled: BooleanOperators
+	id: IDOperators
+	languageCode: StringOperators
+	name: StringOperators
+	parentId: IDOperators
+	type: StringOperators
+	updatedAt: DateOperators
+}
+
+type ProvinceList implements PaginatedList {
+	items: [Province!]!
+	totalItems: Int!
+}
+
+input ProvinceListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: ProvinceFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: ProvinceSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input ProvinceSortParameter {
+	code: SortOrder
+	createdAt: SortOrder
+	id: SortOrder
+	name: SortOrder
+	parentId: SortOrder
+	type: SortOrder
+	updatedAt: SortOrder
+}
+
+input ProvinceTranslationInput {
+	customFields: JSON
+	id: ID
+	languageCode: LanguageCode!
+	name: String
+}
+
+"""
+Returned if the specified quantity of an OrderLine is greater than the number of items in that line
+"""
+type QuantityTooGreatError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+type Query {
+	activeAdministrator: Administrator
+	activeChannel: Channel!
+	administrator(id: ID!): Administrator
+	administrators(options: AdministratorListOptions): AdministratorList!
+
+	"""
+	Get a single Asset by id
+	"""
+	asset(id: ID!): Asset
+
+	"""
+	Get a list of Assets
+	"""
+	assets(options: AssetListOptions): AssetList!
+	channel(id: ID!): Channel
+	channels(options: ChannelListOptions): ChannelList!
+
+	"""
+	Get a Collection either by id or slug. If neither id nor slug is specified, an error will result.
+	"""
+	collection(id: ID, slug: String): Collection
+	collectionFilters: [ConfigurableOperationDefinition!]!
+	collections(options: CollectionListOptions): CollectionList!
+	countries(options: CountryListOptions): CountryList!
+	country(id: ID!): Country
+	customer(id: ID!): Customer
+	customerGroup(id: ID!): CustomerGroup
+	customerGroups(options: CustomerGroupListOptions): CustomerGroupList!
+	customers(options: CustomerListOptions): CustomerList!
+
+	"""
+	Returns a list of eligible shipping methods for the draft Order
+	"""
+	eligibleShippingMethodsForDraftOrder(orderId: ID!): [ShippingMethodQuote!]!
+	facet(id: ID!): Facet
+	facetValues(options: FacetValueListOptions): FacetValueList!
+	facets(options: FacetListOptions): FacetList!
+	fulfillmentHandlers: [ConfigurableOperationDefinition!]!
+	globalSettings: GlobalSettings!
+	job(jobId: ID!): Job
+	jobBufferSize(bufferIds: [String!]): [JobBufferSize!]!
+	jobQueues: [JobQueue!]!
+	jobs(options: JobListOptions): JobList!
+	jobsById(jobIds: [ID!]!): [Job!]!
+	me: CurrentUser
+
+	"""
+	Get metrics for the given interval and metric types.
+	"""
+	metricSummary(input: MetricSummaryInput): [MetricSummary!]!
+	order(id: ID!): Order
+	orders(options: OrderListOptions): OrderList!
+	paymentMethod(id: ID!): PaymentMethod
+	paymentMethodEligibilityCheckers: [ConfigurableOperationDefinition!]!
+	paymentMethodHandlers: [ConfigurableOperationDefinition!]!
+	paymentMethods(options: PaymentMethodListOptions): PaymentMethodList!
+	pendingSearchIndexUpdates: Int!
+
+	"""
+	Used for real-time previews of the contents of a Collection
+	"""
+	previewCollectionVariants(
+		input: PreviewCollectionVariantsInput!
+		options: ProductVariantListOptions
+	): ProductVariantList!
+
+	"""
+	Get a Product either by id or slug. If neither id nor slug is specified, an error will result.
+	"""
+	product(id: ID, slug: String): Product
+	productOptionGroup(id: ID!): ProductOptionGroup
+	productOptionGroups(filterTerm: String): [ProductOptionGroup!]!
+
+	"""
+	Get a ProductVariant by id
+	"""
+	productVariant(id: ID!): ProductVariant
+
+	"""
+	List ProductVariants either all or for the specific product.
+	"""
+	productVariants(options: ProductVariantListOptions, productId: ID): ProductVariantList!
+
+	"""
+	List Products
+	"""
+	products(options: ProductListOptions): ProductList!
+	promotion(id: ID!): Promotion
+	promotionActions: [ConfigurableOperationDefinition!]!
+	promotionConditions: [ConfigurableOperationDefinition!]!
+	promotions(options: PromotionListOptions): PromotionList!
+	province(id: ID!): Province
+	provinces(options: ProvinceListOptions): ProvinceList!
+	role(id: ID!): Role
+	roles(options: RoleListOptions): RoleList!
+	search(input: SearchInput!): SearchResponse!
+	seller(id: ID!): Seller
+	sellers(options: SellerListOptions): SellerList!
+	shippingCalculators: [ConfigurableOperationDefinition!]!
+	shippingEligibilityCheckers: [ConfigurableOperationDefinition!]!
+	shippingMethod(id: ID!): ShippingMethod
+	shippingMethods(options: ShippingMethodListOptions): ShippingMethodList!
+	stockLocation(id: ID!): StockLocation
+	stockLocations(options: StockLocationListOptions): StockLocationList!
+	tag(id: ID!): Tag!
+	tags(options: TagListOptions): TagList!
+	taxCategories(options: TaxCategoryListOptions): TaxCategoryList!
+	taxCategory(id: ID!): TaxCategory
+	taxRate(id: ID!): TaxRate
+	taxRates(options: TaxRateListOptions): TaxRateList!
+	testEligibleShippingMethods(input: TestEligibleShippingMethodsInput!): [ShippingMethodQuote!]!
+	testShippingMethod(input: TestShippingMethodInput!): TestShippingMethodResult!
+	zone(id: ID!): Zone
+	zones(options: ZoneListOptions): ZoneList!
+}
+
+type Refund implements Node {
+	adjustment: Money!
+	createdAt: DateTime!
+	id: ID!
+	items: Money!
+	lines: [RefundLine!]!
+	metadata: JSON
+	method: String
+	paymentId: ID!
+	reason: String
+	shipping: Money!
+	state: String!
+	total: Money!
+	transactionId: String
+	updatedAt: DateTime!
+}
+
+type RefundLine {
+	orderLine: OrderLine!
+	orderLineId: ID!
+	quantity: Int!
+	refund: Refund!
+	refundId: ID!
+}
+
+input RefundOrderInput {
+	adjustment: Money!
+	lines: [OrderLineInput!]!
+	paymentId: ID!
+	reason: String
+	shipping: Money!
+}
+
+union RefundOrderResult =
+	  AlreadyRefundedError
+	| MultipleOrderError
+	| NothingToRefundError
+	| OrderStateTransitionError
+	| PaymentOrderMismatchError
+	| QuantityTooGreatError
+	| Refund
+	| RefundOrderStateError
+	| RefundStateTransitionError
+
+"""
+Returned if an attempting to refund an Order which is not in the expected state
+"""
+type RefundOrderStateError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+	orderState: String!
+}
+
+"""
+Returned when a call to modifyOrder fails to include a refundPaymentId even
+though the price has decreased as a result of the changes.
+"""
+type RefundPaymentIdMissingError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+"""
+Returned when there is an error in transitioning the Refund state
+"""
+type RefundStateTransitionError implements ErrorResult {
+	errorCode: ErrorCode!
+	fromState: String!
+	message: String!
+	toState: String!
+	transitionError: String!
+}
+
+interface Region implements Node {
+	code: String!
+	createdAt: DateTime!
+	enabled: Boolean!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	parent: Region
+	parentId: ID
+	translations: [RegionTranslation!]!
+	type: String!
+	updatedAt: DateTime!
+}
+
+type RegionTranslation {
+	createdAt: DateTime!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	updatedAt: DateTime!
+}
+
+type RelationCustomFieldConfig implements CustomField {
+	description: [LocalizedString!]
+	entity: String!
+	internal: Boolean
+	label: [LocalizedString!]
+	list: Boolean!
+	name: String!
+	nullable: Boolean
+	readonly: Boolean
+	scalarFields: [String!]!
+	type: String!
+	ui: JSON
+}
+
+type Release implements Node & StockMovement {
+	createdAt: DateTime!
+	id: ID!
+	productVariant: ProductVariant!
+	quantity: Int!
+	type: StockMovementType!
+	updatedAt: DateTime!
+}
+
+input RemoveCollectionsFromChannelInput {
+	channelId: ID!
+	collectionIds: [ID!]!
+}
+
+union RemoveFacetFromChannelResult = Facet | FacetInUseError
+
+input RemoveFacetsFromChannelInput {
+	channelId: ID!
+	facetIds: [ID!]!
+	force: Boolean
+}
+
+union RemoveOptionGroupFromProductResult = Product | ProductOptionInUseError
+
+union RemoveOrderItemsResult = Order | OrderModificationError
+
+input RemovePaymentMethodsFromChannelInput {
+	channelId: ID!
+	paymentMethodIds: [ID!]!
+}
+
+input RemoveProductVariantsFromChannelInput {
+	channelId: ID!
+	productVariantIds: [ID!]!
+}
+
+input RemoveProductsFromChannelInput {
+	channelId: ID!
+	productIds: [ID!]!
+}
+
+input RemovePromotionsFromChannelInput {
+	channelId: ID!
+	promotionIds: [ID!]!
+}
+
+input RemoveShippingMethodsFromChannelInput {
+	channelId: ID!
+	shippingMethodIds: [ID!]!
+}
+
+input RemoveStockLocationsFromChannelInput {
+	channelId: ID!
+	stockLocationIds: [ID!]!
+}
+
+type Return implements Node & StockMovement {
+	createdAt: DateTime!
+	id: ID!
+	productVariant: ProductVariant!
+	quantity: Int!
+	type: StockMovementType!
+	updatedAt: DateTime!
+}
+
+type Role implements Node {
+	channels: [Channel!]!
+	code: String!
+	createdAt: DateTime!
+	description: String!
+	id: ID!
+	permissions: [Permission!]!
+	updatedAt: DateTime!
+}
+
+input RoleFilterParameter {
+	code: StringOperators
+	createdAt: DateOperators
+	description: StringOperators
+	id: IDOperators
+	updatedAt: DateOperators
+}
+
+type RoleList implements PaginatedList {
+	items: [Role!]!
+	totalItems: Int!
+}
+
+input RoleListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: RoleFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: RoleSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input RoleSortParameter {
+	code: SortOrder
+	createdAt: SortOrder
+	description: SortOrder
+	id: SortOrder
+	updatedAt: SortOrder
+}
+
+type Sale implements Node & StockMovement {
+	createdAt: DateTime!
+	id: ID!
+	productVariant: ProductVariant!
+	quantity: Int!
+	type: StockMovementType!
+	updatedAt: DateTime!
+}
+
+input SearchInput {
+	collectionId: ID
+	collectionSlug: String
+	facetValueFilters: [FacetValueFilterInput!]
+	groupByProduct: Boolean
+	skip: Int
+	sort: SearchResultSortParameter
+	take: Int
+	term: String
+}
+
+type SearchReindexResponse {
+	success: Boolean!
+}
+
+type SearchResponse {
+	collections: [CollectionResult!]!
+	facetValues: [FacetValueResult!]!
+	items: [SearchResult!]!
+	totalItems: Int!
+}
+
+type SearchResult {
+	"""
+	An array of ids of the Channels in which this result appears
+	"""
+	channelIds: [ID!]!
+
+	"""
+	An array of ids of the Collections in which this result appears
+	"""
+	collectionIds: [ID!]!
+	currencyCode: CurrencyCode!
+	description: String!
+	enabled: Boolean!
+	facetIds: [ID!]!
+	facetValueIds: [ID!]!
+	price: SearchResultPrice!
+	priceWithTax: SearchResultPrice!
+	productAsset: SearchResultAsset
+	productId: ID!
+	productName: String!
+	productVariantAsset: SearchResultAsset
+	productVariantId: ID!
+	productVariantName: String!
+
+	"""
+	A relevance score for the result. Differs between database implementations
+	"""
+	score: Float!
+	sku: String!
+	slug: String!
+}
+
+type SearchResultAsset {
+	focalPoint: Coordinate
+	id: ID!
+	preview: String!
+}
+
+"""
+The price of a search result product, either as a range or as a single price
+"""
+union SearchResultPrice = PriceRange | SinglePrice
+
+input SearchResultSortParameter {
+	name: SortOrder
+	price: SortOrder
+}
+
+type Seller implements Node {
+	createdAt: DateTime!
+	customFields: JSON
+	id: ID!
+	name: String!
+	updatedAt: DateTime!
+}
+
+input SellerFilterParameter {
+	createdAt: DateOperators
+	id: IDOperators
+	name: StringOperators
+	updatedAt: DateOperators
+}
+
+type SellerList implements PaginatedList {
+	items: [Seller!]!
+	totalItems: Int!
+}
+
+input SellerListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: SellerFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: SellerSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input SellerSortParameter {
+	createdAt: SortOrder
+	id: SortOrder
+	name: SortOrder
+	updatedAt: SortOrder
+}
+
+type ServerConfig {
+	customFieldConfig: CustomFields!
+	orderProcess: [OrderProcessState!]!
+	permissions: [PermissionDefinition!]!
+	permittedAssetTypes: [String!]!
+}
+
+union SetCustomerForDraftOrderResult = EmailAddressConflictError | Order
+
+union SetOrderShippingMethodResult =
+	  IneligibleShippingMethodError
+	| NoActiveOrderError
+	| Order
+	| OrderModificationError
+
+"""
+Returned if the Payment settlement fails
+"""
+type SettlePaymentError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+	paymentErrorMessage: String!
+}
+
+union SettlePaymentResult =
+	  OrderStateTransitionError
+	| Payment
+	| PaymentStateTransitionError
+	| SettlePaymentError
+
+input SettleRefundInput {
+	id: ID!
+	transactionId: String!
+}
+
+union SettleRefundResult = Refund | RefundStateTransitionError
+
+type ShippingLine {
+	discountedPrice: Money!
+	discountedPriceWithTax: Money!
+	discounts: [Discount!]!
+	id: ID!
+	price: Money!
+	priceWithTax: Money!
+	shippingMethod: ShippingMethod!
+}
+
+type ShippingMethod implements Node {
+	calculator: ConfigurableOperation!
+	checker: ConfigurableOperation!
+	code: String!
+	createdAt: DateTime!
+	customFields: JSON
+	description: String!
+	fulfillmentHandlerCode: String!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	translations: [ShippingMethodTranslation!]!
+	updatedAt: DateTime!
+}
+
+input ShippingMethodFilterParameter {
+	code: StringOperators
+	createdAt: DateOperators
+	description: StringOperators
+	fulfillmentHandlerCode: StringOperators
+	id: IDOperators
+	languageCode: StringOperators
+	name: StringOperators
+	updatedAt: DateOperators
+}
+
+type ShippingMethodList implements PaginatedList {
+	items: [ShippingMethod!]!
+	totalItems: Int!
+}
+
+input ShippingMethodListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: ShippingMethodFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: ShippingMethodSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+type ShippingMethodQuote {
+	code: String!
+	customFields: JSON
+	description: String!
+	id: ID!
+
+	"""
+	Any optional metadata returned by the ShippingCalculator in the ShippingCalculationResult
+	"""
+	metadata: JSON
+	name: String!
+	price: Money!
+	priceWithTax: Money!
+}
+
+input ShippingMethodSortParameter {
+	code: SortOrder
+	createdAt: SortOrder
+	description: SortOrder
+	fulfillmentHandlerCode: SortOrder
+	id: SortOrder
+	name: SortOrder
+	updatedAt: SortOrder
+}
+
+type ShippingMethodTranslation {
+	createdAt: DateTime!
+	description: String!
+	id: ID!
+	languageCode: LanguageCode!
+	name: String!
+	updatedAt: DateTime!
+}
+
+input ShippingMethodTranslationInput {
+	customFields: JSON
+	description: String
+	id: ID
+	languageCode: LanguageCode!
+	name: String
+}
+
+"""
+The price value where the result has a single price
+"""
+type SinglePrice {
+	value: Money!
+}
+
+enum SortOrder {
+	ASC
+	DESC
+}
+
+type StockAdjustment implements Node & StockMovement {
+	createdAt: DateTime!
+	id: ID!
+	productVariant: ProductVariant!
+	quantity: Int!
+	type: StockMovementType!
+	updatedAt: DateTime!
+}
+
+type StockLevel implements Node {
+	createdAt: DateTime!
+	id: ID!
+	stockAllocated: Int!
+	stockLocation: StockLocation!
+	stockLocationId: ID!
+	stockOnHand: Int!
+	updatedAt: DateTime!
+}
+
+input StockLevelInput {
+	stockLocationId: ID!
+	stockOnHand: Int!
+}
+
+type StockLocation implements Node {
+	createdAt: DateTime!
+	customFields: JSON
+	description: String!
+	id: ID!
+	name: String!
+	updatedAt: DateTime!
+}
+
+input StockLocationFilterParameter {
+	createdAt: DateOperators
+	description: StringOperators
+	id: IDOperators
+	name: StringOperators
+	updatedAt: DateOperators
+}
+
+type StockLocationList implements PaginatedList {
+	items: [StockLocation!]!
+	totalItems: Int!
+}
+
+input StockLocationListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: StockLocationFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: StockLocationSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input StockLocationSortParameter {
+	createdAt: SortOrder
+	description: SortOrder
+	id: SortOrder
+	name: SortOrder
+	updatedAt: SortOrder
+}
+
+interface StockMovement {
+	createdAt: DateTime!
+	id: ID!
+	productVariant: ProductVariant!
+	quantity: Int!
+	type: StockMovementType!
+	updatedAt: DateTime!
+}
+
+union StockMovementItem = Allocation | Cancellation | Release | Return | Sale | StockAdjustment
+
+type StockMovementList {
+	items: [StockMovementItem!]!
+	totalItems: Int!
+}
+
+input StockMovementListOptions {
+	skip: Int
+	take: Int
+	type: StockMovementType
+}
+
+enum StockMovementType {
+	ADJUSTMENT
+	ALLOCATION
+	CANCELLATION
+	RELEASE
+	RETURN
+	SALE
+}
+
+type StringCustomFieldConfig implements CustomField {
+	description: [LocalizedString!]
+	internal: Boolean
+	label: [LocalizedString!]
+	length: Int
+	list: Boolean!
+	name: String!
+	nullable: Boolean
+	options: [StringFieldOption!]
+	pattern: String
+	readonly: Boolean
+	type: String!
+	ui: JSON
+}
+
+type StringFieldOption {
+	label: [LocalizedString!]
+	value: String!
+}
+
+"""
+Operators for filtering on a list of String fields
+"""
+input StringListOperators {
+	inList: String!
+}
+
+"""
+Operators for filtering on a String field
+"""
+input StringOperators {
+	contains: String
+	eq: String
+	in: [String!]
+	isNull: Boolean
+	notContains: String
+	notEq: String
+	notIn: [String!]
+	regex: String
+}
+
+"""
+Indicates that an operation succeeded, where we do not want to return any more specific information.
+"""
+type Success {
+	success: Boolean!
+}
+
+type Surcharge implements Node {
+	createdAt: DateTime!
+	description: String!
+	id: ID!
+	price: Money!
+	priceWithTax: Money!
+	sku: String
+	taxLines: [TaxLine!]!
+	taxRate: Float!
+	updatedAt: DateTime!
+}
+
+input SurchargeInput {
+	description: String!
+	price: Money!
+	priceIncludesTax: Boolean!
+	sku: String
+	taxDescription: String
+	taxRate: Float
+}
+
+type Tag implements Node {
+	createdAt: DateTime!
+	id: ID!
+	updatedAt: DateTime!
+	value: String!
+}
+
+input TagFilterParameter {
+	createdAt: DateOperators
+	id: IDOperators
+	updatedAt: DateOperators
+	value: StringOperators
+}
+
+type TagList implements PaginatedList {
+	items: [Tag!]!
+	totalItems: Int!
+}
+
+input TagListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: TagFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: TagSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input TagSortParameter {
+	createdAt: SortOrder
+	id: SortOrder
+	updatedAt: SortOrder
+	value: SortOrder
+}
+
+type TaxCategory implements Node {
+	createdAt: DateTime!
+	customFields: JSON
+	id: ID!
+	isDefault: Boolean!
+	name: String!
+	updatedAt: DateTime!
+}
+
+input TaxCategoryFilterParameter {
+	createdAt: DateOperators
+	id: IDOperators
+	isDefault: BooleanOperators
+	name: StringOperators
+	updatedAt: DateOperators
+}
+
+type TaxCategoryList implements PaginatedList {
+	items: [TaxCategory!]!
+	totalItems: Int!
+}
+
+input TaxCategoryListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: TaxCategoryFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: TaxCategorySortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input TaxCategorySortParameter {
+	createdAt: SortOrder
+	id: SortOrder
+	name: SortOrder
+	updatedAt: SortOrder
+}
+
+type TaxLine {
+	description: String!
+	taxRate: Float!
+}
+
+type TaxRate implements Node {
+	category: TaxCategory!
+	createdAt: DateTime!
+	customFields: JSON
+	customerGroup: CustomerGroup
+	enabled: Boolean!
+	id: ID!
+	name: String!
+	updatedAt: DateTime!
+	value: Float!
+	zone: Zone!
+}
+
+input TaxRateFilterParameter {
+	createdAt: DateOperators
+	enabled: BooleanOperators
+	id: IDOperators
+	name: StringOperators
+	updatedAt: DateOperators
+	value: NumberOperators
+}
+
+type TaxRateList implements PaginatedList {
+	items: [TaxRate!]!
+	totalItems: Int!
+}
+
+input TaxRateListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: TaxRateFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: TaxRateSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input TaxRateSortParameter {
+	createdAt: SortOrder
+	id: SortOrder
+	name: SortOrder
+	updatedAt: SortOrder
+	value: SortOrder
+}
+
+input TestEligibleShippingMethodsInput {
+	lines: [TestShippingMethodOrderLineInput!]!
+	shippingAddress: CreateAddressInput!
+}
+
+input TestShippingMethodInput {
+	calculator: ConfigurableOperationInput!
+	checker: ConfigurableOperationInput!
+	lines: [TestShippingMethodOrderLineInput!]!
+	shippingAddress: CreateAddressInput!
+}
+
+input TestShippingMethodOrderLineInput {
+	productVariantId: ID!
+	quantity: Int!
+}
+
+type TestShippingMethodQuote {
+	metadata: JSON
+	price: Money!
+	priceWithTax: Money!
+}
+
+type TestShippingMethodResult {
+	eligible: Boolean!
+	quote: TestShippingMethodQuote
+}
+
+type TextCustomFieldConfig implements CustomField {
+	description: [LocalizedString!]
+	internal: Boolean
+	label: [LocalizedString!]
+	list: Boolean!
+	name: String!
+	nullable: Boolean
+	readonly: Boolean
+	type: String!
+	ui: JSON
+}
+
+union TransitionFulfillmentToStateResult = Fulfillment | FulfillmentStateTransitionError
+
+union TransitionOrderToStateResult = Order | OrderStateTransitionError
+
+union TransitionPaymentToStateResult = Payment | PaymentStateTransitionError
+
+input UpdateActiveAdministratorInput {
+	customFields: JSON
+	emailAddress: String
+	firstName: String
+	lastName: String
+	password: String
+}
+
+input UpdateAddressInput {
+	city: String
+	company: String
+	countryCode: String
+	customFields: JSON
+	defaultBillingAddress: Boolean
+	defaultShippingAddress: Boolean
+	fullName: String
+	id: ID!
+	phoneNumber: String
+	postalCode: String
+	province: String
+	streetLine1: String
+	streetLine2: String
+}
+
+input UpdateAdministratorInput {
+	customFields: JSON
+	emailAddress: String
+	firstName: String
+	id: ID!
+	lastName: String
+	password: String
+	roleIds: [ID!]
+}
+
+input UpdateAssetInput {
+	customFields: JSON
+	focalPoint: CoordinateInput
+	id: ID!
+	name: String
+	tags: [String!]
+}
+
+input UpdateChannelInput {
+	availableCurrencyCodes: [CurrencyCode!]
+	availableLanguageCodes: [LanguageCode!]
+	code: String
+	customFields: JSON
+	defaultCurrencyCode: CurrencyCode
+	defaultLanguageCode: LanguageCode
+	defaultShippingZoneId: ID
+	defaultTaxZoneId: ID
+	id: ID!
+	outOfStockThreshold: Int
+	pricesIncludeTax: Boolean
+	sellerId: ID
+	token: String
+	trackInventory: Boolean
+}
+
+union UpdateChannelResult = Channel | LanguageNotAvailableError
+
+input UpdateCollectionInput {
+	assetIds: [ID!]
+	customFields: JSON
+	featuredAssetId: ID
+	filters: [ConfigurableOperationInput!]
+	id: ID!
+	inheritFilters: Boolean
+	isPrivate: Boolean
+	parentId: ID
+	translations: [UpdateCollectionTranslationInput!]
+}
+
+input UpdateCollectionTranslationInput {
+	customFields: JSON
+	description: String
+	id: ID
+	languageCode: LanguageCode!
+	name: String
+	slug: String
+}
+
+input UpdateCountryInput {
+	code: String
+	customFields: JSON
+	enabled: Boolean
+	id: ID!
+	translations: [CountryTranslationInput!]
+}
+
+input UpdateCustomerGroupInput {
+	customFields: JSON
+	id: ID!
+	name: String
+}
+
+input UpdateCustomerInput {
+	customFields: JSON
+	emailAddress: String
+	firstName: String
+	id: ID!
+	lastName: String
+	phoneNumber: String
+	title: String
+}
+
+input UpdateCustomerNoteInput {
+	note: String!
+	noteId: ID!
+}
+
+union UpdateCustomerResult = Customer | EmailAddressConflictError
+
+input UpdateFacetInput {
+	code: String
+	customFields: JSON
+	id: ID!
+	isPrivate: Boolean
+	translations: [FacetTranslationInput!]
+}
+
+input UpdateFacetValueInput {
+	code: String
+	customFields: JSON
+	id: ID!
+	translations: [FacetValueTranslationInput!]
+}
+
+input UpdateGlobalSettingsInput {
+	availableLanguages: [LanguageCode!]
+	customFields: JSON
+	outOfStockThreshold: Int
+	trackInventory: Boolean
+}
+
+union UpdateGlobalSettingsResult = ChannelDefaultLanguageError | GlobalSettings
+
+input UpdateOrderAddressInput {
+	city: String
+	company: String
+	countryCode: String
+	fullName: String
+	phoneNumber: String
+	postalCode: String
+	province: String
+	streetLine1: String
+	streetLine2: String
+}
+
+input UpdateOrderInput {
+	customFields: JSON
+	id: ID!
+}
+
+union UpdateOrderItemsResult =
+	  InsufficientStockError
+	| NegativeQuantityError
+	| Order
+	| OrderLimitError
+	| OrderModificationError
+
+input UpdateOrderNoteInput {
+	isPublic: Boolean
+	note: String
+	noteId: ID!
+}
+
+input UpdatePaymentMethodInput {
+	checker: ConfigurableOperationInput
+	code: String
+	customFields: JSON
+	enabled: Boolean
+	handler: ConfigurableOperationInput
+	id: ID!
+	translations: [PaymentMethodTranslationInput!]
+}
+
+input UpdateProductInput {
+	assetIds: [ID!]
+	customFields: JSON
+	enabled: Boolean
+	facetValueIds: [ID!]
+	featuredAssetId: ID
+	id: ID!
+	translations: [ProductTranslationInput!]
+}
+
+input UpdateProductOptionGroupInput {
+	code: String
+	customFields: JSON
+	id: ID!
+	translations: [ProductOptionGroupTranslationInput!]
+}
+
+input UpdateProductOptionInput {
+	code: String
+	customFields: JSON
+	id: ID!
+	translations: [ProductOptionGroupTranslationInput!]
+}
+
+input UpdateProductVariantInput {
+	assetIds: [ID!]
+	customFields: JSON
+	enabled: Boolean
+	facetValueIds: [ID!]
+	featuredAssetId: ID
+	id: ID!
+	optionIds: [ID!]
+	outOfStockThreshold: Int
+
+	"""
+	Sets the price for the ProductVariant in the Channel's default currency
+	"""
+	price: Money
+
+	"""
+	Allows multiple prices to be set for the ProductVariant in different currencies.
+	"""
+	prices: [ProductVariantPriceInput!]
+	sku: String
+	stockLevels: [StockLevelInput!]
+	stockOnHand: Int
+	taxCategoryId: ID
+	trackInventory: GlobalFlag
+	translations: [ProductVariantTranslationInput!]
+	useGlobalOutOfStockThreshold: Boolean
+}
+
+input UpdatePromotionInput {
+	actions: [ConfigurableOperationInput!]
+	conditions: [ConfigurableOperationInput!]
+	couponCode: String
+	customFields: JSON
+	enabled: Boolean
+	endsAt: DateTime
+	id: ID!
+	perCustomerUsageLimit: Int
+	startsAt: DateTime
+	translations: [PromotionTranslationInput!]
+}
+
+union UpdatePromotionResult = MissingConditionsError | Promotion
+
+input UpdateProvinceInput {
+	code: String
+	customFields: JSON
+	enabled: Boolean
+	id: ID!
+	translations: [ProvinceTranslationInput!]
+}
+
+input UpdateRoleInput {
+	channelIds: [ID!]
+	code: String
+	description: String
+	id: ID!
+	permissions: [Permission!]
+}
+
+input UpdateSellerInput {
+	customFields: JSON
+	id: ID!
+	name: String
+}
+
+input UpdateShippingMethodInput {
+	calculator: ConfigurableOperationInput
+	checker: ConfigurableOperationInput
+	code: String
+	customFields: JSON
+	fulfillmentHandler: String
+	id: ID!
+	translations: [ShippingMethodTranslationInput!]!
+}
+
+input UpdateStockLocationInput {
+	customFields: JSON
+	description: String
+	id: ID!
+	name: String
+}
+
+input UpdateTagInput {
+	id: ID!
+	value: String
+}
+
+input UpdateTaxCategoryInput {
+	customFields: JSON
+	id: ID!
+	isDefault: Boolean
+	name: String
+}
+
+input UpdateTaxRateInput {
+	categoryId: ID
+	customFields: JSON
+	customerGroupId: ID
+	enabled: Boolean
+	id: ID!
+	name: String
+	value: Float
+	zoneId: ID
+}
+
+input UpdateZoneInput {
+	customFields: JSON
+	id: ID!
+	name: String
+}
+
+"""
+The `Upload` scalar type represents a file upload.
+"""
+scalar Upload
+
+type User implements Node {
+	authenticationMethods: [AuthenticationMethod!]!
+	createdAt: DateTime!
+	customFields: JSON
+	id: ID!
+	identifier: String!
+	lastLogin: DateTime
+	roles: [Role!]!
+	updatedAt: DateTime!
+	verified: Boolean!
+}
+
+type Zone implements Node {
+	createdAt: DateTime!
+	customFields: JSON
+	id: ID!
+	members: [Region!]!
+	name: String!
+	updatedAt: DateTime!
+}
+
+input ZoneFilterParameter {
+	createdAt: DateOperators
+	id: IDOperators
+	name: StringOperators
+	updatedAt: DateOperators
+}
+
+type ZoneList implements PaginatedList {
+	items: [Zone!]!
+	totalItems: Int!
+}
+
+input ZoneListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: ZoneFilterParameter
+
+	"""
+	Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: ZoneSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input ZoneSortParameter {
+	createdAt: SortOrder
+	id: SortOrder
+	name: SortOrder
+	updatedAt: SortOrder
+}

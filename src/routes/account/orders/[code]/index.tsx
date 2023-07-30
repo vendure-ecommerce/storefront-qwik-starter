@@ -2,7 +2,7 @@ import { component$, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation } from '@builder.io/qwik-city';
 import { Image } from 'qwik-image';
 import { Order } from '~/generated/graphql';
-import { getOrderByCodeQuery } from '~/providers/orders/order';
+import { getOrderByCodeQuery } from '~/providers/shop/orders/order';
 import { formatDateTime, formatPrice } from '~/utils';
 
 export default component$(() => {

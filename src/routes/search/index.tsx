@@ -4,7 +4,7 @@ import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
 import { SearchResponse } from '~/generated/graphql';
-import { searchQueryWithTerm } from '~/providers/products/products';
+import { searchQueryWithTerm } from '~/providers/shop/products/products';
 import { FacetWithValues } from '~/types';
 import { changeUrlParamsWithoutRefresh, enableDisableFacetValues, groupFacetValues } from '~/utils';
 

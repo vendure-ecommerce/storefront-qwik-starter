@@ -27,9 +27,13 @@
 		"lint": "eslint \"src/**/*.ts*\"",
 		"prepare": "husky install",
 		"preview": "qwik build preview && vite preview --open",
-		"start": "vite --open --mode ssr",
+		"start": "npm run generate && vite --open --mode ssr",
 		"qwik": "qwik",
-		"generate": "graphql-codegen --config codegen.yml"
+		"generate-admin": "graphql-codegen --config codegen-admin.ts",
+		"generate-shop": "graphql-codegen --config codegen-shop.ts",
+		"generate-dev": "export IS_DEV=TRUE && npm run generate-shop && npm run generate-admin",
+		"generate-local": "export IS_LOCAL=TRUE && npm run generate-shop && npm run generate-admin",
+		"generate": "npm run generate-shop && npm run generate-admin"
 	},
 	"devDependencies": {
 		"@angular/compiler": "^16.1.3",

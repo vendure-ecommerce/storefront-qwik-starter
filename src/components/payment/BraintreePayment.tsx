@@ -6,7 +6,7 @@ import {
 	addPaymentToOrderMutation,
 	generateBraintreeClientTokenQuery,
 	transitionOrderToStateMutation,
-} from '~/providers/checkout/checkout';
+} from '~/providers/shop/checkout/checkout';
 import CreditCardIcon from '../icons/CreditCardIcon';
 import XCircleIcon from '../icons/XCircleIcon';
 const client = {

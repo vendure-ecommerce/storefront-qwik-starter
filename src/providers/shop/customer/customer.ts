@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import { sdk } from '~/graphql-wrapper';
 import {
 	ActiveCustomerAddressesQuery,
 	ActiveCustomerOrdersQuery,
@@ -10,13 +9,16 @@ import {
 	UpdateAddressInput,
 	UpdateCustomerPasswordMutationMutation,
 } from '~/generated/graphql';
+import { shopSdk } from '~/graphql-wrapper';
 
 export const getActiveCustomerQuery = async () => {
-	return sdk.activeCustomer().then((res: ActiveCustomerQuery) => res.activeCustomer as Customer);
+	return shopSdk
+		.activeCustomer()
+		.then((res: ActiveCustomerQuery) => res.activeCustomer as Customer);
 };
 
 export const getActiveCustomerAddressesQuery = async () => {
-	return sdk
+	return shopSdk
 		.activeCustomerAddresses()
 		.then((res: ActiveCustomerAddressesQuery) => res.activeCustomer as Customer);
 };
@@ -25,13 +27,13 @@ export const updateCustomerPasswordMutation = async (
 	currentPassword: string,
 	newPassword: string
 ) => {
-	return sdk
+	return shopSdk
 		.updateCustomerPasswordMutation({ currentPassword, newPassword })
 		.then((res: UpdateCustomerPasswordMutationMutation) => res.updateCustomerPassword);
 };
 
 export const deleteCustomerAddressMutation = async (id: string) => {
-	return sdk.deleteCustomerAddress({ id });
+	return shopSdk.deleteCustomerAddress({ id });
 };
 
 export const getActiveCustomerOrdersQuery = async () => {
@@ -47,7 +49,7 @@ export const getActiveCustomerOrdersQuery = async () => {
 			},
 		},
 	};
-	return sdk
+	return shopSdk
 		.activeCustomerOrders(variables)
 		.then((res: ActiveCustomerOrdersQuery) => res.activeCustomer as Customer);
 };
@@ -57,14 +59,14 @@ export const updateCustomerAddressMutation = async (
 	token: string | undefined
 ) => {
 	console.log(token);
-	return sdk.updateCustomerAddressMutation({ input }, { token });
+	return shopSdk.updateCustomerAddressMutation({ input }, { token });
 };
 
 export const createCustomerAddressMutation = (
 	input: CreateAddressInput,
 	token: string | undefined
 ) => {
-	return sdk.createCustomerAddressMutation({ input }, { token });
+	return shopSdk.createCustomerAddressMutation({ input }, { token });
 };
 
 gql`

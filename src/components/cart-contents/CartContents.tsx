@@ -10,7 +10,7 @@ import { Link, useLocation, useNavigate } from '@builder.io/qwik-city';
 import { Image } from 'qwik-image';
 import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
-import { adjustOrderLineMutation, removeOrderLineMutation } from '~/providers/orders/order';
+import { adjustOrderLineMutation, removeOrderLineMutation } from '~/providers/shop/orders/order';
 import { isCheckoutPage } from '~/utils';
 import Price from '../products/Price';
 

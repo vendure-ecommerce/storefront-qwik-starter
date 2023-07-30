@@ -10,8 +10,8 @@ import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import TopReviews from '~/components/top-reviews/TopReviews';
 import { APP_STATE } from '~/constants';
 import { Order, OrderLine, Product } from '~/generated/graphql';
-import { addItemToOrderMutation } from '~/providers/orders/order';
-import { getProductBySlug } from '~/providers/products/products';
+import { addItemToOrderMutation } from '~/providers/shop/orders/order';
+import { getProductBySlug } from '~/providers/shop/products/products';
 import { Variant } from '~/types';
 import { cleanUpParams, generateDocumentHead, isEnvVariableEnabled } from '~/utils';
 

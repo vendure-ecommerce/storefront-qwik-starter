@@ -1,7 +1,7 @@
 import { $, component$, useSignal } from '@builder.io/qwik';
 import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import XCircleIcon from '~/components/icons/XCircleIcon';
-import { resetPasswordMutation } from '~/providers/account/account';
+import { resetPasswordMutation } from '~/providers/shop/account/account';
 
 export default component$(() => {
 	const password = useSignal('');
