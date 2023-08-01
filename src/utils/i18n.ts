@@ -8,6 +8,7 @@ import type { RenderOptions } from '@builder.io/qwik/server';
 import { DEFAULT_LOCALE } from '~/constants';
 import EN from '../locales/message.en.json';
 import ES from '../locales/message.es.json';
+import DE from '../locales/message.de.json';
 
 /**
  * This file is left for the developer to customize to get the behavior they want for localization.
@@ -44,7 +45,7 @@ if (!$localizeFn.TRANSLATION_BY_LOCALE) {
  */
 export function initTranslations() {
 	console.log('Loading translations...');
-	[EN, ES].forEach(({ translations, locale }) => {
+	[EN, ES, DE].forEach(({ translations, locale }) => {
 		withLocale(locale, () => loadTranslations(translations));
 	});
 }
