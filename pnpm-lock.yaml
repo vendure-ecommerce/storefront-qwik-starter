@@ -46,6 +46,9 @@ devDependencies:
   '@builder.io/qwik-city':
     specifier: 1.2.6
     version: 1.2.6
+  '@builder.io/qwik-labs':
+    specifier: github:BuilderIo/qwik-labs-build#24076027f9e086a0d2971503bacb8deb4405da1a
+    version: github.com/BuilderIo/qwik-labs-build/24076027f9e086a0d2971503bacb8deb4405da1a
   '@graphql-codegen/cli':
     specifier: ^4.0.1
     version: 4.0.1(@babel/core@7.22.5)(@types/node@20.5.0)(graphql@16.7.1)
@@ -9757,4 +9760,14 @@ packages:
       {
         integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==,
       }
+    dev: true
+
+  github.com/BuilderIo/qwik-labs-build/24076027f9e086a0d2971503bacb8deb4405da1a:
+    resolution:
+      {
+        tarball: https://codeload.github.com/BuilderIo/qwik-labs-build/tar.gz/24076027f9e086a0d2971503bacb8deb4405da1a,
+      }
+    name: '@builder.io/qwik-labs'
+    version: 0.0.1
+    engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
     dev: true
