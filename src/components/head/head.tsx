@@ -1,8 +1,6 @@
 import { component$ } from '@builder.io/qwik';
 import { useDocumentHead, useLocation } from '@builder.io/qwik-city';
-import { Insights } from '@builder.io/qwik-labs';
 import { DEFAULT_METADATA_TITLE } from '~/constants';
-import { ENV_VARIABLES } from '~/env';
 import { generateDocumentHead } from '~/utils';
 
 export const Head = component$(() => {
@@ -36,8 +34,6 @@ export const Head = component$(() => {
 			))}
 
 			<meta name="description" content="Vendure Qwik Storefront" />
-
-			<Insights publicApiKey={ENV_VARIABLES.VITE_QWIK_INSIGHTS_KEY} />
 		</head>
 	);
 });

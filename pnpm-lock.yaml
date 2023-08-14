@@ -8,9 +8,6 @@ dependencies:
   '@angular/localize':
     specifier: ^16.0.4
     version: 16.1.6(@angular/compiler-cli@16.1.6)(@angular/compiler@16.1.6)
-  '@builder.io/qwik-labs':
-    specifier: github:BuilderIo/qwik-labs-build#main
-    version: github.com/BuilderIo/qwik-labs-build/24076027f9e086a0d2971503bacb8deb4405da1a
   '@graphql-codegen/typescript-generic-sdk':
     specifier: ^3.1.0
     version: 3.1.0(graphql-tag@2.12.6)(graphql@16.7.1)
@@ -9761,13 +9758,3 @@ packages:
         integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==,
       }
     dev: true
-
-  github.com/BuilderIo/qwik-labs-build/24076027f9e086a0d2971503bacb8deb4405da1a:
-    resolution:
-      {
-        tarball: https://codeload.github.com/BuilderIo/qwik-labs-build/tar.gz/24076027f9e086a0d2971503bacb8deb4405da1a,
-      }
-    name: '@builder.io/qwik-labs'
-    version: 0.0.1
-    engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
-    dev: false
