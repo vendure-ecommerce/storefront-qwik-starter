@@ -66,7 +66,7 @@
 		"wrangler": "latest"
 	},
 	"dependencies": {
-		"@angular/localize": "^16.1.6",
+		"@angular/localize": "^16.0.4",
 		"@builder.io/qwik-labs": "github:BuilderIo/qwik-labs-build#main",
 		"@graphql-codegen/typescript-generic-sdk": "^3.1.0",
 		"@stripe/stripe-js": "^1.54.1",
