@@ -1,7 +1,7 @@
 /**
  * WHAT IS THIS FILE?
  *
- * SSR entry point, in all cases the application is render outside the browser, this
+ * SSR entry point, in all cases the application is rendered outside the browser, this
  * entry point will be the common one.
  *
  * - Server (express, cloudflare...)
@@ -25,6 +25,5 @@ export default function (opts: RenderToStreamOptions) {
 			lang: 'en-us',
 			...opts.containerAttributes,
 		},
-		streaming: { inOrder: { strategy: 'auto', maximunInitialChunk: 0, maximunChunk: 0 } },
 	});
 }
