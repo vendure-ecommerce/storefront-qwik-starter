@@ -47,7 +47,7 @@ devDependencies:
     specifier: 1.2.7
     version: 1.2.7
   '@builder.io/qwik-labs':
-    specifier: github:BuilderIo/qwik-labs-build#main
+    specifier: github:BuilderIo/qwik-labs-build#fee8a07cbe582654bb234ce7af82f37c75baaa5b
     version: github.com/BuilderIo/qwik-labs-build/fee8a07cbe582654bb234ce7af82f37c75baaa5b
   '@graphql-codegen/cli':
     specifier: ^5.0.0

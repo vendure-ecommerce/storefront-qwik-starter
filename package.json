@@ -40,7 +40,7 @@
 		"@angular/compiler-cli": "^16.2.0",
 		"@builder.io/qwik": "1.2.7",
 		"@builder.io/qwik-city": "1.2.7",
-		"@builder.io/qwik-labs": "github:BuilderIo/qwik-labs-build#main",
+		"@builder.io/qwik-labs": "github:BuilderIo/qwik-labs-build#fee8a07cbe582654bb234ce7af82f37c75baaa5b",
 		"@graphql-codegen/cli": "^5.0.0",
 		"@graphql-codegen/introspection": "^4.0.0",
 		"@graphql-codegen/typescript": "^4.0.1",
