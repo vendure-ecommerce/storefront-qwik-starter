@@ -36,8 +36,8 @@
 		"generate": "npm run generate-shop && npm run generate-admin"
 	},
 	"devDependencies": {
-		"@angular/compiler": "^16.2.0",
-		"@angular/compiler-cli": "^16.2.0",
+		"@angular/compiler": "^16.2.1",
+		"@angular/compiler-cli": "^16.2.1",
 		"@builder.io/qwik": "1.2.6",
 		"@builder.io/qwik-city": "1.2.6",
 		"@builder.io/qwik-labs": "github:BuilderIo/qwik-labs-build#fee8a07cbe582654bb234ce7af82f37c75baaa5b",
@@ -67,7 +67,7 @@
 		"wrangler": "latest"
 	},
 	"dependencies": {
-		"@angular/localize": "^16.2.0",
+		"@angular/localize": "^16.2.1",
 		"@graphql-codegen/typescript-generic-sdk": "^3.1.0",
 		"@stripe/stripe-js": "^2.1.0",
 		"braintree-web-drop-in": "^1.40.0",
