@@ -41,11 +41,11 @@ devDependencies:
     specifier: ^16.2.1
     version: 16.2.1(@angular/compiler@16.2.1)(typescript@5.1.6)
   '@builder.io/qwik':
-    specifier: 1.2.6
-    version: 1.2.6(undici@5.23.0)
+    specifier: 1.2.7
+    version: 1.2.7(undici@5.23.0)
   '@builder.io/qwik-city':
-    specifier: 1.2.6
-    version: 1.2.6
+    specifier: 1.2.7
+    version: 1.2.7
   '@builder.io/qwik-labs':
     specifier: github:BuilderIo/qwik-labs-build#fee8a07cbe582654bb234ce7af82f37c75baaa5b
     version: github.com/BuilderIo/qwik-labs-build/fee8a07cbe582654bb234ce7af82f37c75baaa5b
@@ -89,8 +89,8 @@ devDependencies:
     specifier: 8.47.0
     version: 8.47.0
   eslint-plugin-qwik:
-    specifier: 1.2.6
-    version: 1.2.6(eslint@8.47.0)
+    specifier: 1.2.7
+    version: 1.2.7(eslint@8.47.0)
   husky:
     specifier: ^8.0.3
     version: 8.0.3
@@ -990,10 +990,10 @@ packages:
       }
     dev: false
 
-  /@builder.io/qwik-city@1.2.6:
+  /@builder.io/qwik-city@1.2.7:
     resolution:
       {
-        integrity: sha512-/uo58NysxpdsiEwuuKo8HDM9UYYAofrniupor2v5vci3Dr6PTXcvKAFJ1Z+SdJGv2uxr5hvKsbVohnVYa9jxYg==,
+        integrity: sha512-L5zykrLcvQ8wo2UO9SBIw3R7f07Mp3S5YHoEWir/9s4kJfrunyyyjEXwqhWbUo7GqPZL+o3R6fi5iXuc2Fg4rQ==,
       }
     engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
     dependencies:
@@ -1001,7 +1001,7 @@ packages:
       '@types/mdx': 2.0.5
       source-map: 0.7.4
       svgo: 3.0.2
-      vfile: 5.3.7
+      vfile: 6.0.1
       vite-imagetools: 5.0.7
       zod: 3.22.1
     transitivePeerDependencies:
@@ -1009,10 +1009,10 @@ packages:
       - supports-color
     dev: true
 
-  /@builder.io/qwik@1.2.6(undici@5.23.0):
+  /@builder.io/qwik@1.2.7(undici@5.23.0):
     resolution:
       {
-        integrity: sha512-Cm1sLAimML55I5T1RI80R1lLgI4cnSeQt5obQtcMKa8wMmf2/luEyQaEkeN2fV3sp/gaVXCfAuKaddXK6ONdww==,
+        integrity: sha512-jTaJ/LaifUD7UvvSg1JGSySiUl/RxQaul/QrXVr+jbky+hpa6jk0HHQ9Hv21MptAqwU+EPKL81Wqfws4CsHkaQ==,
       }
     engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
     hasBin: true
@@ -4647,14 +4647,14 @@ packages:
     engines: { node: '>=10' }
     dev: true
 
-  /eslint-plugin-qwik@1.2.6(eslint@8.47.0):
+  /eslint-plugin-qwik@1.2.7(eslint@8.47.0):
     resolution:
       {
-        integrity: sha512-AY0+0Omu3yu85gm2PjfjyG8pAXBntZPwDpIHXOvav1FmrocwW+khR8QGZpjIu2jirZ8xol9d+TITgzHms8Llxw==,
+        integrity: sha512-WFwwKzsURv4lOzF8arT5s59ZR0xizXCYhZBCZLa0ZalUaYAmPn444CRgqbTKWd0kRKtObI7I0FMN04jUrUXpEw==,
       }
     engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
     peerDependencies:
-      eslint: '>= 8'
+      eslint: 8.45.0
     dependencies:
       eslint: 8.47.0
       jsx-ast-utils: 3.3.4
@@ -9048,6 +9048,15 @@ packages:
       '@types/unist': 2.0.6
     dev: true
 
+  /unist-util-stringify-position@4.0.0:
+    resolution:
+      {
+        integrity: sha512-0ASV06AAoKCDkS2+xw5RXJywruurpbC4JZSm7nr7MOt1ojAzvyyaO+UxZf18j8FCF6kmzCZKcAgN/yu2gm2XgQ==,
+      }
+    dependencies:
+      '@types/unist': 3.0.0
+    dev: true
+
   /unist-util-visit-parents@5.1.1:
     resolution:
       {
@@ -9182,6 +9191,16 @@ packages:
       unist-util-stringify-position: 3.0.2
     dev: true
 
+  /vfile-message@4.0.2:
+    resolution:
+      {
+        integrity: sha512-jRDZ1IMLttGj41KcZvlrYAaI3CfqpLpfpf+Mfig13viT6NKvRzWZ+lXz0Y5D60w6uJIBAOGq9mSHf0gktF0duw==,
+      }
+    dependencies:
+      '@types/unist': 3.0.0
+      unist-util-stringify-position: 4.0.0
+    dev: true
+
   /vfile@5.3.7:
     resolution:
       {
@@ -9192,6 +9211,17 @@ packages:
       is-buffer: 2.0.5
       unist-util-stringify-position: 3.0.2
       vfile-message: 3.1.3
+    dev: true
+
+  /vfile@6.0.1:
+    resolution:
+      {
+        integrity: sha512-1bYqc7pt6NIADBJ98UiG0Bn/CHIVOoZ/IyEkqIruLg0mE1BKzkOXY2D6CSqQIcKqgadppE5lrxgWXJmXd7zZJw==,
+      }
+    dependencies:
+      '@types/unist': 3.0.0
+      unist-util-stringify-position: 4.0.0
+      vfile-message: 4.0.2
     dev: true
 
   /vite-imagetools@5.0.7:
