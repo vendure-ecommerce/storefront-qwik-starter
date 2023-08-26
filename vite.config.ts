@@ -1,5 +1,5 @@
 import { qwikCity } from '@builder.io/qwik-city/vite';
-import { insightsEntryStrategy } from '@builder.io/qwik-labs/vite';
+import { qwikInsights } from '@builder.io/qwik-labs/vite';
 import { qwikVite } from '@builder.io/qwik/optimizer';
 import { defineConfig, loadEnv } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
@@ -12,12 +12,11 @@ export default defineConfig(async (config) => {
 			sourcemap: config.mode === 'development',
 		},
 		plugins: [
-			qwikCity(),
-			qwikVite({
-				entryStrategy: await insightsEntryStrategy({
-					publicApiKey: loadEnv('', '.').VITE_QWIK_INSIGHTS_KEY,
-				}),
+			qwikInsights({
+				publicApiKey: loadEnv('', '.', '').VITE_QWIK_INSIGHTS_KEY,
 			}),
+			qwikCity(),
+			qwikVite(),
 			tsconfigPaths(),
 		],
 		preview: {
