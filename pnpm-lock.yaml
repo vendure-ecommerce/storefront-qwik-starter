@@ -41,11 +41,11 @@ devDependencies:
     specifier: ^16.2.1
     version: 16.2.1(@angular/compiler@16.2.1)(typescript@5.1.6)
   '@builder.io/qwik':
-    specifier: 1.2.9
-    version: 1.2.9(undici@5.23.0)
+    specifier: 1.2.10
+    version: 1.2.10(undici@5.23.0)
   '@builder.io/qwik-city':
-    specifier: 1.2.9
-    version: 1.2.9
+    specifier: 1.2.10
+    version: 1.2.10
   '@builder.io/qwik-labs':
     specifier: github:BuilderIo/qwik-labs-build#main
     version: github.com/BuilderIo/qwik-labs-build/762e4845ecd74b4677e629f93501585d3e631970
@@ -89,8 +89,8 @@ devDependencies:
     specifier: 8.45.0
     version: 8.45.0
   eslint-plugin-qwik:
-    specifier: 1.2.9
-    version: 1.2.9(eslint@8.45.0)
+    specifier: 1.2.10
+    version: 1.2.10(eslint@8.45.0)
   husky:
     specifier: ^8.0.3
     version: 8.0.3
@@ -990,10 +990,10 @@ packages:
       }
     dev: false
 
-  /@builder.io/qwik-city@1.2.9:
+  /@builder.io/qwik-city@1.2.10:
     resolution:
       {
-        integrity: sha512-p+etf1zQ+srhjNH5fX/YSFBjayWEIpnlTKKJgvb22f4E6R4CEPYIhRtcZtg3ljPuC2k+ouGdA0GMHj6LA3enhA==,
+        integrity: sha512-IKo6NjT7dYtDYY1Y0hP56/jlbjcnK89NA0sHEBmNZJZJy+YnzvWLPWf9Ft9q30hIwK3azyW+XtJZpwIJIPEAFw==,
       }
     engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
     dependencies:
@@ -1009,10 +1009,10 @@ packages:
       - supports-color
     dev: true
 
-  /@builder.io/qwik@1.2.9(undici@5.23.0):
+  /@builder.io/qwik@1.2.10(undici@5.23.0):
     resolution:
       {
-        integrity: sha512-LLifLKFHIe0181aYgzoayG2mSv0asBQq38BrwxS3sBfnsQSEJuTXUfx1PwUq5xZRHQ/jNbkyMHuznC06SU3mPg==,
+        integrity: sha512-UJDqEx3p32cmafT9zPk9G623wy0HeMp+T6IE12HKOZtC28T4VC4lwbzkxowPIPd+GuwTSXfWSQzwwgbnOBiPgg==,
       }
     engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
     hasBin: true
@@ -4647,10 +4647,10 @@ packages:
     engines: { node: '>=10' }
     dev: true
 
-  /eslint-plugin-qwik@1.2.9(eslint@8.45.0):
+  /eslint-plugin-qwik@1.2.10(eslint@8.45.0):
     resolution:
       {
-        integrity: sha512-5Pnu0/thHb0J2zRO3IJD7YGFAbULQwjsPVIiszSBAWH2W/4UQEOKf3PaTCatiMnNBAjyfkhmzweIAlaZvB8MNw==,
+        integrity: sha512-pMRyVCUEpgqYbAYsnDl+L/88IO6zWpoSU6DqizCeu7ZsBpqvMowM7Izv8NHutQqd60RQPutMEUpAAQW6VDLAaw==,
       }
     engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
     peerDependencies:
