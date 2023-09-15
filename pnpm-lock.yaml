@@ -41,14 +41,14 @@ devDependencies:
     specifier: ^16.2.1
     version: 16.2.1(@angular/compiler@16.2.1)(typescript@5.1.6)
   '@builder.io/qwik':
-    specifier: github:gioboa/qwik-labs-build#c19606dd3cef89f826a9c0d433eadbe53b9b6668
-    version: github.com/gioboa/qwik-labs-build/c19606dd3cef89f826a9c0d433eadbe53b9b6668(undici@5.23.0)
+    specifier: 1.2.11
+    version: 1.2.11(undici@5.23.0)
   '@builder.io/qwik-city':
-    specifier: 1.2.10
-    version: 1.2.10
+    specifier: 1.2.11
+    version: 1.2.11
   '@builder.io/qwik-labs':
-    specifier: github:gioboa/qwik-labs-build#54b333d220dedde3f7da3a13c43d05102d5f332d
-    version: github.com/gioboa/qwik-labs-build/54b333d220dedde3f7da3a13c43d05102d5f332d
+    specifier: github:gioboa/qwik-labs-build#main
+    version: github.com/gioboa/qwik-labs-build/91ec5d613a831fd8805e2c6f19230a59315c07b9
   '@graphql-codegen/cli':
     specifier: ^5.0.0
     version: 5.0.0(@babel/core@7.22.5)(@types/node@20.5.0)(graphql@16.8.0)
@@ -89,8 +89,8 @@ devDependencies:
     specifier: 8.45.0
     version: 8.45.0
   eslint-plugin-qwik:
-    specifier: 1.2.10
-    version: 1.2.10(eslint@8.45.0)
+    specifier: 1.2.11
+    version: 1.2.11(eslint@8.45.0)
   husky:
     specifier: ^8.0.3
     version: 8.0.3
@@ -990,10 +990,10 @@ packages:
       }
     dev: false
 
-  /@builder.io/qwik-city@1.2.10:
+  /@builder.io/qwik-city@1.2.11:
     resolution:
       {
-        integrity: sha512-IKo6NjT7dYtDYY1Y0hP56/jlbjcnK89NA0sHEBmNZJZJy+YnzvWLPWf9Ft9q30hIwK3azyW+XtJZpwIJIPEAFw==,
+        integrity: sha512-meeApo5czwGsn7bywtu2P4bBdRTprwtfjcwE06APvhRF2Y5xK0bv7vW9vGbRvPy/w6o5Izc+CauLepryOcXiGg==,
       }
     engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
     dependencies:
@@ -1007,6 +1007,20 @@ packages:
     transitivePeerDependencies:
       - rollup
       - supports-color
+    dev: true
+
+  /@builder.io/qwik@1.2.11(undici@5.23.0):
+    resolution:
+      {
+        integrity: sha512-C0umHmXhKdMu2dP/UTBEvuoSC1pfYSPC43jzYiF6dMXpQasgyDXIQML8yzrAsxnimr7OfKfn2vNyn2t5e9BG8A==,
+      }
+    engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
+    hasBin: true
+    peerDependencies:
+      undici: ^5.14.0
+    dependencies:
+      csstype: 3.1.2
+      undici: 5.23.0
     dev: true
 
   /@cloudflare/kv-asset-handler@0.2.0:
@@ -4633,14 +4647,14 @@ packages:
     engines: { node: '>=10' }
     dev: true
 
-  /eslint-plugin-qwik@1.2.10(eslint@8.45.0):
+  /eslint-plugin-qwik@1.2.11(eslint@8.45.0):
     resolution:
       {
-        integrity: sha512-pMRyVCUEpgqYbAYsnDl+L/88IO6zWpoSU6DqizCeu7ZsBpqvMowM7Izv8NHutQqd60RQPutMEUpAAQW6VDLAaw==,
+        integrity: sha512-F4h4waCC9g8cXREVgHLhUzlbPkKJ7TpuUd1xmFQ0D+vYXvKk7RYYC1azBZMXqcc09b8XXz1UuvR2HLMrf/JblQ==,
       }
     engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
     peerDependencies:
-      eslint: 8.45.0
+      eslint: ^8.45.0
     dependencies:
       eslint: 8.45.0
       jsx-ast-utils: 3.3.4
@@ -9598,29 +9612,12 @@ packages:
       }
     dev: true
 
-  github.com/gioboa/qwik-labs-build/54b333d220dedde3f7da3a13c43d05102d5f332d:
+  github.com/gioboa/qwik-labs-build/91ec5d613a831fd8805e2c6f19230a59315c07b9:
     resolution:
       {
-        tarball: https://codeload.github.com/gioboa/qwik-labs-build/tar.gz/54b333d220dedde3f7da3a13c43d05102d5f332d,
+        tarball: https://codeload.github.com/gioboa/qwik-labs-build/tar.gz/91ec5d613a831fd8805e2c6f19230a59315c07b9,
       }
     name: '@builder.io/qwik-labs'
     version: 0.0.1
     engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
-    dev: true
-
-  github.com/gioboa/qwik-labs-build/c19606dd3cef89f826a9c0d433eadbe53b9b6668(undici@5.23.0):
-    resolution:
-      {
-        tarball: https://codeload.github.com/gioboa/qwik-labs-build/tar.gz/c19606dd3cef89f826a9c0d433eadbe53b9b6668,
-      }
-    id: github.com/gioboa/qwik-labs-build/c19606dd3cef89f826a9c0d433eadbe53b9b6668
-    name: '@builder.io/qwik'
-    version: 1.2.10-dev20230829231637
-    engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
-    hasBin: true
-    peerDependencies:
-      undici: ^5.14.0
-    dependencies:
-      csstype: 3.1.2
-      undici: 5.23.0
     dev: true
