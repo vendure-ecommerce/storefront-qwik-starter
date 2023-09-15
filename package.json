@@ -39,7 +39,7 @@
 		"@angular/compiler-cli": "^16.2.1",
 		"@angular/compiler": "^16.2.1",
 		"@builder.io/qwik-city": "1.2.11",
-		"@builder.io/qwik-labs": "github:gioboa/qwik-labs-build#main",
+		"@builder.io/qwik-labs": "github:BuilderIo/qwik-labs-build#adb8df9bc0d903229367113f31c9ca904b5187c5",
 		"@builder.io/qwik": "1.2.11",
 		"@graphql-codegen/cli": "^5.0.0",
 		"@graphql-codegen/introspection": "^4.0.0",

@@ -47,8 +47,8 @@ devDependencies:
     specifier: 1.2.11
     version: 1.2.11
   '@builder.io/qwik-labs':
-    specifier: github:gioboa/qwik-labs-build#main
-    version: github.com/gioboa/qwik-labs-build/91ec5d613a831fd8805e2c6f19230a59315c07b9
+    specifier: github:BuilderIo/qwik-labs-build#adb8df9bc0d903229367113f31c9ca904b5187c5
+    version: github.com/BuilderIo/qwik-labs-build/adb8df9bc0d903229367113f31c9ca904b5187c5
   '@graphql-codegen/cli':
     specifier: ^5.0.0
     version: 5.0.0(@babel/core@7.22.5)(@types/node@20.5.0)(graphql@16.8.0)
@@ -9612,10 +9612,10 @@ packages:
       }
     dev: true
 
-  github.com/gioboa/qwik-labs-build/91ec5d613a831fd8805e2c6f19230a59315c07b9:
+  github.com/BuilderIo/qwik-labs-build/adb8df9bc0d903229367113f31c9ca904b5187c5:
     resolution:
       {
-        tarball: https://codeload.github.com/gioboa/qwik-labs-build/tar.gz/91ec5d613a831fd8805e2c6f19230a59315c07b9,
+        tarball: https://codeload.github.com/BuilderIo/qwik-labs-build/tar.gz/adb8df9bc0d903229367113f31c9ca904b5187c5,
       }
     name: '@builder.io/qwik-labs'
     version: 0.0.1
