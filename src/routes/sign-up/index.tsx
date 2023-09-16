@@ -64,7 +64,7 @@ export default component$(() => {
 							</p>
 						) : (
 							<p>
-								Account registration is not supported by the demo Vendure instance. In order to use
+								Account registration is not supported by the demo Geneway instance. In order to use
 								it, please connect to your own local / production instance.
 							</p>
 						)}

@@ -1,12 +1,12 @@
 {
 	"$schema": "https://json.schemastore.org/web-manifest-combined.json",
-	"name": "Vendure Qwik Storefront",
+	"name": "Geneway Qwik Storefront",
 	"short_name": "Qwik Storefront",
 	"start_url": ".",
 	"display": "standalone",
 	"theme_color": "#1D4ED8",
 	"background_color": "#fff",
-	"description": "A Qwik version of the Vendure Storefront.",
+	"description": "A Qwik version of the Geneway Storefront.",
 	"icons": [
 		{
 			"src": "logo-512-512.png",

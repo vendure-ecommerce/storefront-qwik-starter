@@ -6,7 +6,7 @@ import { requester } from '~/utils/api';
 export type SortDirection = 'DESC' | 'ASC';
 
 export interface Options {
-	// Vendure Channel code or token.
+	// Geneway Channel code or token.
 	channelToken?: string;
 	// Auth bearer token
 	token?: string;

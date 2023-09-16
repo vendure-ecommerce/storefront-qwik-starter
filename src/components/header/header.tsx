@@ -88,7 +88,7 @@ export default component$(() => {
 				<div class="max-w-6xl mx-auto p-4 flex items-center space-x-4">
 					<h1 class="text-white w-10">
 						<Link href="/">
-							<img src={`/cube-logo-small.webp`} width={40} height={31} alt="Vendure logo" />
+							<img src={`/cube-logo-small.webp`} width={40} height={31} alt="Geneway logo" />
 						</Link>
 					</h1>
 					<div class="flex space-x-4 sm:block">

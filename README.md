@@ -1,6 +1,6 @@
-# Vendure Qwik Storefront Starter️
+# Geneway Qwik Storefront Starter️
 
-An e-commerce storefront for [Vendure](https://www.vendure.io) built with [Qwik](https://qwik.builder.io/) & [Qwik City](https://qwik.builder.io/qwikcity/overview).
+An e-commerce storefront for [Geneway](https://www.vendure.io) built with [Qwik](https://qwik.builder.io/) & [Qwik City](https://qwik.builder.io/qwikcity/overview).
 
 👉 [qwik-storefront.vendure.io](https://qwik-storefront.vendure.io)
 
@@ -51,7 +51,7 @@ https needs to be enabled, please confirm you are using ssl. You can use apache 
 
 Make sure that your vendure instance is accessible and not being blocked by a firewall for example.
 
-If you see a message on signup "Account registration is not supported by the demo Vendure instance. In order to use it, please connect to your own local / production instance." This is simply a static message, it is not doing any actual check. Simply remove this message. To connect to your vendure instance simply set the .env variables to point to your vendure setup.
+If you see a message on signup "Account registration is not supported by the demo Geneway instance. In order to use it, please connect to your own local / production instance." This is simply a static message, it is not doing any actual check. Simply remove this message. To connect to your vendure instance simply set the .env variables to point to your vendure setup.
 
 ### What payment systems are supported?
 
@@ -134,9 +134,9 @@ The resulting language should match your browser language. You can also override
 
 ## Related
 
-- [Vendure Docs](https://vendure.io/docs)
-- [Vendure Github](https://github.com/vendure-ecommerce/vendure)
-- [Vendure Discord](https://vendure.io/community)
+- [Geneway Docs](https://vendure.io/docs)
+- [Geneway Github](https://github.com/vendure-ecommerce/vendure)
+- [Geneway Discord](https://vendure.io/community)
 - [Qwik Docs](https://qwik.builder.io/)
 - [Qwik Github](https://github.com/BuilderIO/qwik)
 - [@QwikDev](https://twitter.com/QwikDev)

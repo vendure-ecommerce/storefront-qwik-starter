@@ -23,7 +23,7 @@ export default component$(() => {
 				<div class="relative max-w-3xl mx-auto py-32 px-6 flex flex-col items-center text-center sm:py-64 lg:px-0">
 					<div class="relative bg-zinc-800 bg-opacity-0 rounded-lg p-0">
 						<h1 class="text-6xl text-transparent bg-clip-text font-extrabold tracking-normal lg:text-6xl bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600">
-							{$localize`Vendure Qwik Starter`}
+							{$localize`Geneway Qwik Starter`}
 						</h1>
 					</div>
 
@@ -34,7 +34,7 @@ export default component$(() => {
 							target="_blank"
 							class="text-blue-300 hover:text-blue-500"
 						>
-							Vendure
+							Geneway
 						</a>{' '}
 						&{' '}
 						<a
