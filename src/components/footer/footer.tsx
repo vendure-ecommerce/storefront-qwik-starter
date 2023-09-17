@@ -108,10 +108,10 @@ export default component$(() => {
 					<a
 						class="flex items-center space-x-4 font-medium text-gray-500 hover:text-gray-700"
 						target="_blank"
-						href="https://github.com/vendure-ecommerce/storefront-qwik-starter"
+						href="https://www.antaja.com"
 					>
 						<GitIcon />
-						<span>github.com/vendure-ecommerce/storefront-qwik-starter</span>
+						<span>(C)2023 Antaja</span>
 					</a>
 				</div>
 			</div>

@@ -52,11 +52,7 @@ export default component$(() => {
 							<div>
 								<p class="hidden sm:block">
 									{$localize`Exclusive: Get your own`}{' '}
-									<a
-										href="https://github.com/vendure-ecommerce/storefront-qwik-starter"
-										target="_blank"
-										class="underline"
-									>
+									<a href="" target="_blank" class="underline">
 										{$localize`FREE storefront starter kit`}
 									</a>
 								</p>

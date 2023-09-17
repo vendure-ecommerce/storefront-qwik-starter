@@ -30,7 +30,7 @@ export default component$(() => {
 					<p class="mt-4 text-2xl text-white">
 						{$localize`A headless commerce storefront starter kit built with`}{' '}
 						<a
-							href="https://www.vendure.io"
+							href="https://www.geneway.vip"
 							target="_blank"
 							class="text-blue-300 hover:text-blue-500"
 						>
