@@ -75,7 +75,6 @@
 		"graphql": "^16.8.0",
 		"graphql-tag": "^2.12.6",
 		"qwik-image": "^0.0.7",
-		"undici": "^5.23.0",
 		"zod": "^3.22.1"
 	},
 	"overrides": {
