@@ -3,6 +3,7 @@ import { Link } from '@builder.io/qwik-city';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { logoutMutation } from '~/providers/shop/account/account';
 import { getActiveCustomerQuery } from '~/providers/shop/customer/customer';
+import { GitHubLink } from '../GitHubLink/GitHubLink';
 import LogoutIcon from '../icons/LogoutIcon';
 import ShoppingBagIcon from '../icons/ShoppingBagIcon';
 import UserIcon from '../icons/UserIcon';
@@ -61,7 +62,7 @@ export default component$(() => {
 									</a>
 								</p>
 							</div>
-							<div class="flex">
+							<div class="flex mr-[60px] 2xl:mr-0">
 								<Link
 									href={appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? '/account' : '/sign-in'}
 									class="flex items-center space-x-1 pb-1 pr-2"
@@ -123,6 +124,7 @@ export default component$(() => {
 						</button>
 					</div>
 				</div>
+				<GitHubLink />
 			</header>
 		</div>
 	);
