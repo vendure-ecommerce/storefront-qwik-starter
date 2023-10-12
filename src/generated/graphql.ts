@@ -82,21 +82,9 @@ export type ApplyCouponCodeResult =
 	| Order;
 
 export type Asset = Node & {
-	__typename?: 'Asset';
-	createdAt: Scalars['DateTime'];
-	customFields?: Maybe<Scalars['JSON']>;
-	fileSize: Scalars['Int'];
-	focalPoint?: Maybe<Coordinate>;
-	height: Scalars['Int'];
 	id: Scalars['ID'];
-	mimeType: Scalars['String'];
 	name: Scalars['String'];
 	preview: Scalars['String'];
-	source: Scalars['String'];
-	tags: Array<Tag>;
-	type: AssetType;
-	updatedAt: Scalars['DateTime'];
-	width: Scalars['Int'];
 };
 
 export type AssetList = PaginatedList & {
