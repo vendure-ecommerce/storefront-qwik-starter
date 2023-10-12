@@ -17,7 +17,15 @@ import { cleanUpParams, generateDocumentHead, isEnvVariableEnabled } from '~/uti
 
 export const useProductLoader = routeLoader$(async ({ params }) => {
 	const { slug } = cleanUpParams(params);
-	return await getProductBySlug(slug);
+	const product = await getProductBySlug(slug);
+	if (product.assets.length === 1) {
+		product.assets.push({
+			id: 'placeholder_2',
+			name: 'placeholder',
+			preview: '/asset_placeholder.webp',
+		});
+	}
+	return product;
 });
 
 export default component$(() => {
@@ -36,6 +44,7 @@ export default component$(() => {
 	});
 
 	const productSignal = useProductLoader();
+	const currentImageSig = useSignal(productSignal.value.assets[0]);
 	const selectedVariantIdSignal = useSignal(productSignal.value.variants[0].id);
 	const selectedVariantSignal = useComputed$(() =>
 		productSignal.value.variants.find((v) => v.id === selectedVariantIdSignal.value)
@@ -67,13 +76,34 @@ export default component$(() => {
 								<div class="h-[400px] w-full md:w-[400px]">
 									<Image
 										layout="fixed"
-										class="object-center object-cover rounded-lg"
+										class="object-center object-cover rounded-lg mx-auto"
 										width="400"
 										height="400"
-										src={productSignal.value.featuredAsset?.preview + '?w=400&h=400&format=webp'}
-										alt={productSignal.value.name}
+										src={currentImageSig.value.preview + '?w=400&h=400&format=webp'}
+										alt={currentImageSig.value.name}
 									/>
 								</div>
+								{productSignal.value.assets.length > 1 && (
+									<div class="w-full md:w-[400px] my-2 flex flex-wrap gap-3 justify-center">
+										{productSignal.value.assets.map((asset, key) => (
+											<Image
+												key={key}
+												layout="fixed"
+												class={{
+													'object-center object-cover rounded-lg': true,
+													'border-b-8 border-primary-600': currentImageSig.value.id === asset.id,
+												}}
+												width="80"
+												height="80"
+												src={asset.preview + '?w=400&h=400&format=webp'}
+												alt={asset.name}
+												onClick$={() => {
+													currentImageSig.value = asset;
+												}}
+											/>
+										))}
+									</div>
+								)}
 							</span>
 						</div>
 						<div class="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
