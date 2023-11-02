@@ -38,14 +38,14 @@ devDependencies:
     specifier: ^16.2.1
     version: 16.2.1(@angular/compiler@16.2.1)(typescript@5.1.6)
   '@builder.io/qwik':
-    specifier: github:BuilderIo/qwik-build#7521f8e9157e643e7948fa4ae99234e41b56cf95
-    version: github.com/BuilderIo/qwik-build/7521f8e9157e643e7948fa4ae99234e41b56cf95(@types/node@20.5.0)(undici@5.23.0)
+    specifier: 1.2.13
+    version: 1.2.13(undici@5.23.0)
   '@builder.io/qwik-city':
-    specifier: github:BuilderIo/qwik-city-build#bc4e963e1243fd2a6d74dcc5fe5d12fd69a8ac96
-    version: github.com/BuilderIo/qwik-city-build/bc4e963e1243fd2a6d74dcc5fe5d12fd69a8ac96(@types/node@20.5.0)
+    specifier: 1.2.13
+    version: 1.2.13
   '@builder.io/qwik-labs':
-    specifier: github:BuilderIo/qwik-labs-build#5f672e948330926b348cbac8692d9aba6f8f41b2
-    version: github.com/BuilderIo/qwik-labs-build/5f672e948330926b348cbac8692d9aba6f8f41b2
+    specifier: github:BuilderIo/qwik-labs-build#adb8df9bc0d903229367113f31c9ca904b5187c5
+    version: github.com/BuilderIo/qwik-labs-build/adb8df9bc0d903229367113f31c9ca904b5187c5
   '@graphql-codegen/cli':
     specifier: ^5.0.0
     version: 5.0.0(@babel/core@7.22.5)(@types/node@20.5.0)(graphql@16.8.0)
@@ -86,8 +86,8 @@ devDependencies:
     specifier: 8.45.0
     version: 8.45.0
   eslint-plugin-qwik:
-    specifier: 1.2.16
-    version: 1.2.16(eslint@8.45.0)
+    specifier: 1.2.13
+    version: 1.2.13(eslint@8.45.0)
   husky:
     specifier: ^8.0.3
     version: 8.0.3
@@ -990,6 +990,39 @@ packages:
       }
     dev: false
 
+  /@builder.io/qwik-city@1.2.13:
+    resolution:
+      {
+        integrity: sha512-RiNHnxGYeovQ4roa61z/FHDXizDHY2ewK02Hj+8syZsAAOoeaMm0ze05mBYBYBAJxk3exDwl6IFYR9eUvprBjg==,
+      }
+    engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
+    dependencies:
+      '@mdx-js/mdx': 2.3.0
+      '@types/mdx': 2.0.5
+      source-map: 0.7.4
+      svgo: 3.0.2
+      vfile: 6.0.1
+      vite-imagetools: 5.0.7
+      zod: 3.22.1
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+    dev: true
+
+  /@builder.io/qwik@1.2.13(undici@5.23.0):
+    resolution:
+      {
+        integrity: sha512-JVBBfkoFNGDd6BZzuk8k2rS+Td9SLngZWk0j6lJCQNPj548vA4DdERlUM+iHe3BYq2q7A3oMo63vUF74h42gDw==,
+      }
+    engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
+    hasBin: true
+    peerDependencies:
+      undici: ^5.14.0
+    dependencies:
+      csstype: 3.1.2
+      undici: 5.23.0
+    dev: true
+
   /@cloudflare/kv-asset-handler@0.2.0:
     resolution:
       {
@@ -1666,14 +1699,6 @@ packages:
         integrity: sha512-Ag+9YM4ocKQx9AarydN0KY2j0ErMHNIocPDrVo8zAE44xLTjEtz81OdR68/cydGtk6m6jDb5Za3r2useMzYmSw==,
       }
     engines: { node: ^12.22.0 || ^14.17.0 || >=16.0.0 }
-    dev: true
-
-  /@fastify/busboy@2.0.0:
-    resolution:
-      {
-        integrity: sha512-JUFJad5lv7jxj926GPgymrWQxxjPYuJNiNjNMzqT+HiuP6Vl3dk5xzG+8sTX96np0ZAluvaMzPsjhHZ5rNuNQQ==,
-      }
-    engines: { node: '>=14' }
     dev: true
 
   /@graphql-codegen/cli@5.0.0(@babel/core@7.22.5)(@types/node@20.5.0)(graphql@16.8.0):
@@ -2582,7 +2607,7 @@ packages:
       }
     dependencies:
       '@types/estree-jsx': 1.0.0
-      '@types/mdx': 2.0.9
+      '@types/mdx': 2.0.5
       estree-util-build-jsx: 2.2.2
       estree-util-is-identifier-name: 2.0.1
       estree-util-to-js: 1.1.0
@@ -2834,10 +2859,10 @@ packages:
       '@types/unist': 3.0.0
     dev: true
 
-  /@types/mdx@2.0.9:
+  /@types/mdx@2.0.5:
     resolution:
       {
-        integrity: sha512-OKMdj17y8Cs+k1r0XFyp59ChSOwf8ODGtMQ4mnpfz5eFDk1aO41yN3pSKGuvVzmWAkFp37seubY1tzOVpwfWwg==,
+        integrity: sha512-76CqzuD6Q7LC+AtbPqrvD9AqsN0k8bsYo2bM2J8pmNldP1aIPAbzUQ7QbobyXL4eLr1wK5x8FZFe8eF/ubRuBg==,
       }
     dev: true
 
@@ -4623,17 +4648,17 @@ packages:
     engines: { node: '>=10' }
     dev: true
 
-  /eslint-plugin-qwik@1.2.16(eslint@8.45.0):
+  /eslint-plugin-qwik@1.2.13(eslint@8.45.0):
     resolution:
       {
-        integrity: sha512-GrgRYjH/ozzrOuK/j10EfmgV6Hv552fHq/0+1ULyImU5DwoiN0jTDaWOKVIl2E8LEkSBsdg8AT+pPs8kOZy1TQ==,
+        integrity: sha512-Pw7628tbS5hif39Ca1oPvK3Qut5sX67FJTMsz/NsrEOOlxtQQApW/LlB1u5KM8bbamAdPKM+RJs/vtTD4iENKQ==,
       }
     engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
     peerDependencies:
       eslint: ^8.45.0
     dependencies:
       eslint: 8.45.0
-      jsx-ast-utils: 3.3.5
+      jsx-ast-utils: 3.3.4
     dev: true
 
   /eslint-scope@7.2.2:
@@ -5598,10 +5623,10 @@ packages:
     engines: { node: '>= 4' }
     dev: true
 
-  /imagetools-core@4.1.0:
+  /imagetools-core@4.0.5:
     resolution:
       {
-        integrity: sha512-GDMgj3zhQ3g6Ga3yWBSmdJC7mM8UePgHiZsVQZ8sUWgAk2UzRyGlFV5qdv0topv63vE86KaK6MmAbjVUVibOzA==,
+        integrity: sha512-sNRVfUwkUcsVWNn5inTHDXWzpPRWPWbSgGkuQmlsFCWXAR2+K5R5vG5tC3Qs4LeJaMugKB8hGVm6rvZjFHQrUw==,
       }
     engines: { node: '>=12.0.0' }
     dependencies:
@@ -6173,10 +6198,10 @@ packages:
       }
     dev: true
 
-  /jsx-ast-utils@3.3.5:
+  /jsx-ast-utils@3.3.4:
     resolution:
       {
-        integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==,
+        integrity: sha512-fX2TVdCViod6HwKEtSWGHs57oFhVfCMwieb9PuRDgjDPh5XeqJiHFFFJCHxU5cnTc3Bu/GRL+kPiFmw8XWOfKw==,
       }
     engines: { node: '>=4.0' }
     dependencies:
@@ -8951,16 +8976,6 @@ packages:
       busboy: 1.6.0
     dev: true
 
-  /undici@5.27.0:
-    resolution:
-      {
-        integrity: sha512-l3ydWhlhOJzMVOYkymLykcRRXqbUaQriERtR70B9LzNkZ4bX52Fc8wbTDneMiwo8T+AemZXvXaTx+9o5ROxrXg==,
-      }
-    engines: { node: '>=14.0' }
-    dependencies:
-      '@fastify/busboy': 2.0.0
-    dev: true
-
   /unified@10.1.2:
     resolution:
       {
@@ -9212,15 +9227,15 @@ packages:
       vfile-message: 4.0.2
     dev: true
 
-  /vite-imagetools@5.1.2:
+  /vite-imagetools@5.0.7:
     resolution:
       {
-        integrity: sha512-r8WVrrmYSmctm1IEMJuYSo3jGH93W6mf0NK3+85rmG+BJBO05E/YsbWw/lhE1nPBHgYb8liPC2ID3jSzGiPzJw==,
+        integrity: sha512-8g7RU+liA4uWuujSe3hdMTCNWimMJsdLIU5uB+/SUBQ+j0TcaMKnQZ6n4LCBF2w30ml1X8WNFGOcTblquWrgGQ==,
       }
     engines: { node: '>=12.0.0' }
     dependencies:
       '@rollup/pluginutils': 5.0.3
-      imagetools-core: 4.1.0
+      imagetools-core: 4.0.5
     transitivePeerDependencies:
       - rollup
     dev: true
@@ -9249,45 +9264,6 @@ packages:
     resolution:
       {
         integrity: sha512-2mbUn2LlUmNASWwSCNSJ/EG2HuSRTnVNaydp6vMCm5VIqJsjMfbIWtbH2kDuwUVW5mMUKKZvGPX/rqeqVvv1XA==,
-      }
-    engines: { node: ^14.18.0 || >=16.0.0 }
-    hasBin: true
-    peerDependencies:
-      '@types/node': '>= 14'
-      less: '*'
-      lightningcss: ^1.21.0
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      '@types/node': 20.5.0
-      esbuild: 0.18.20
-      postcss: 8.4.28
-      rollup: 3.28.0
-    optionalDependencies:
-      fsevents: 2.3.2
-    dev: true
-
-  /vite@4.5.0(@types/node@20.5.0):
-    resolution:
-      {
-        integrity: sha512-ulr8rNLA6rkyFAlVWw2q5YJ91v098AFQ2R0PRFwPzREXOUJQPtFUG0t+/ZikhaOCDqFoDhN6/v8Sq0o4araFAw==,
       }
     engines: { node: ^14.18.0 || >=16.0.0 }
     hasBin: true
@@ -9632,13 +9608,6 @@ packages:
         integrity: sha512-+qUhAMl414+Elh+fRNtpU+byrwjDFOS1N7NioLY+tSlcADTx4TkCUua/hxJvxwDXcV4397/nZ420jy4n4+3WUg==,
       }
 
-  /zod@3.22.4:
-    resolution:
-      {
-        integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==,
-      }
-    dev: true
-
   /zwitch@2.0.4:
     resolution:
       {
@@ -9646,67 +9615,10 @@ packages:
       }
     dev: true
 
-  github.com/BuilderIo/qwik-build/7521f8e9157e643e7948fa4ae99234e41b56cf95(@types/node@20.5.0)(undici@5.23.0):
+  github.com/BuilderIo/qwik-labs-build/adb8df9bc0d903229367113f31c9ca904b5187c5:
     resolution:
       {
-        tarball: https://codeload.github.com/BuilderIo/qwik-build/tar.gz/7521f8e9157e643e7948fa4ae99234e41b56cf95,
-      }
-    id: github.com/BuilderIo/qwik-build/7521f8e9157e643e7948fa4ae99234e41b56cf95
-    name: '@builder.io/qwik'
-    version: 1.2.16
-    engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
-    hasBin: true
-    peerDependencies:
-      undici: ^5.14.0
-    dependencies:
-      csstype: 3.1.2
-      undici: 5.23.0
-      vite: 4.5.0(@types/node@20.5.0)
-    transitivePeerDependencies:
-      - '@types/node'
-      - less
-      - lightningcss
-      - sass
-      - stylus
-      - sugarss
-      - terser
-    dev: true
-
-  github.com/BuilderIo/qwik-city-build/bc4e963e1243fd2a6d74dcc5fe5d12fd69a8ac96(@types/node@20.5.0):
-    resolution:
-      {
-        tarball: https://codeload.github.com/BuilderIo/qwik-city-build/tar.gz/bc4e963e1243fd2a6d74dcc5fe5d12fd69a8ac96,
-      }
-    id: github.com/BuilderIo/qwik-city-build/bc4e963e1243fd2a6d74dcc5fe5d12fd69a8ac96
-    name: '@builder.io/qwik-city'
-    version: 1.2.16-dev20231101222729
-    engines: { node: '>=16.8.0 <18.0.0 || >=18.11' }
-    dependencies:
-      '@mdx-js/mdx': 2.3.0
-      '@types/mdx': 2.0.9
-      source-map: 0.7.4
-      svgo: 3.0.2
-      undici: 5.27.0
-      vfile: 6.0.1
-      vite: 4.5.0(@types/node@20.5.0)
-      vite-imagetools: 5.1.2
-      zod: 3.22.4
-    transitivePeerDependencies:
-      - '@types/node'
-      - less
-      - lightningcss
-      - rollup
-      - sass
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-    dev: true
-
-  github.com/BuilderIo/qwik-labs-build/5f672e948330926b348cbac8692d9aba6f8f41b2:
-    resolution:
-      {
-        tarball: https://codeload.github.com/BuilderIo/qwik-labs-build/tar.gz/5f672e948330926b348cbac8692d9aba6f8f41b2,
+        tarball: https://codeload.github.com/BuilderIo/qwik-labs-build/tar.gz/adb8df9bc0d903229367113f31c9ca904b5187c5,
       }
     name: '@builder.io/qwik-labs'
     version: 0.0.1
