@@ -46,11 +46,11 @@ export default component$(() => {
 	return (
 		<div>
 			{appState.activeOrder?.id && (
-				<div class="bg-gray-50">
+				<div class="bg-gray-50 pb-48">
 					<div
 						class={`${
 							state.step === 'CONFIRMATION' ? 'lg:max-w-3xl mx-auto' : 'lg:max-w-7xl'
-						} max-w-2xl mx-auto pt-8 pb-24 px-4 sm:px-6 lg:px-8`}
+						} max-w-2xl mx-auto pt-8 mb-24 px-4 sm:px-6 lg:px-8 `}
 					>
 						<h2 class="sr-only">{$localize`Checkout`}</h2>
 						<nav class="hidden sm:block pb-8 mb-8 border-b">
