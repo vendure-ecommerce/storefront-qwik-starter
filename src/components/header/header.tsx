@@ -92,7 +92,7 @@ export default component$(() => {
 							<img src={`/cube-logo-small.webp`} width={40} height={31} alt="Vendure logo" />
 						</Link>
 					</h1>
-					<div class="flex space-x-4 sm:block">
+					<div class="hidden space-x-4 sm:block">
 						{collections.map((collection) => (
 							<Link
 								class="text-sm md:text-base text-gray-200 hover:text-white"
@@ -103,7 +103,7 @@ export default component$(() => {
 							</Link>
 						))}
 					</div>
-					<div class="flex-1 hidden sm:block md:pr-8">
+					<div class="flex-1 block md:pr-8">
 						<SearchBar />
 					</div>
 					<div class="">
