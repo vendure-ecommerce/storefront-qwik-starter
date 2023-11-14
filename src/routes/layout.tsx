@@ -60,7 +60,7 @@ export default component$(() => {
 			id: '',
 			city: '',
 			company: '',
-			countryCode: availableCountriesSignal.value ? availableCountriesSignal.value[0].code : '',
+			countryCode: (availableCountriesSignal.value && availableCountriesSignal.value.length > 0) ? availableCountriesSignal.value[0].code : '',
 			fullName: '',
 			phoneNumber: '',
 			postalCode: '',
