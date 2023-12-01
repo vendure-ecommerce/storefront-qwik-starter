@@ -7,8 +7,8 @@ export const GitHubLink = component$(() => {
 			aria-label="View source on GitHub"
 		>
 			<svg
-				width="80"
-				height="80"
+				width="50"
+				height="50"
 				viewBox="0 0 250 250"
 				style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;"
 				aria-hidden="true"
