@@ -4,6 +4,7 @@ export type AppState = {
 	collections: CollectionGql[];
 	activeOrder: Order;
 	showCart: boolean;
+	showMenu: boolean;
 	customer: ActiveCustomer;
 	shippingAddress: ShippingAddress;
 	availableCountries: Country[];

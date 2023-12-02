@@ -5,6 +5,7 @@ import { logoutMutation } from '~/providers/shop/account/account';
 import { getActiveCustomerQuery } from '~/providers/shop/customer/customer';
 import { GitHubLink } from '../GitHubLink/GitHubLink';
 import LogoutIcon from '../icons/LogoutIcon';
+import MenuIcon from '../icons/MenuIcon';
 import ShoppingBagIcon from '../icons/ShoppingBagIcon';
 import UserIcon from '../icons/UserIcon';
 import SearchBar from '../search-bar/SearchBar';
@@ -87,6 +88,12 @@ export default component$(() => {
 					</div>
 				</div>
 				<div class="max-w-6xl mx-auto p-4 flex items-center space-x-4">
+					<button
+						class="block sm:hidden text-white"
+						onClick$={() => (appState.showMenu = !appState.showMenu)}
+					>
+						<MenuIcon />
+					</button>
 					<h1 class="text-white w-10">
 						<Link href="/">
 							<img src={`/cube-logo-small.webp`} width={40} height={31} alt="Vendure logo" />
