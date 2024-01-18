@@ -33,7 +33,8 @@
 		"generate-shop": "graphql-codegen --config codegen-shop.ts",
 		"generate-dev": "export IS_DEV=TRUE && npm run generate-shop && npm run generate-admin",
 		"generate-local": "export IS_LOCAL=TRUE && npm run generate-shop && npm run generate-admin",
-		"generate": "npm run generate-shop && npm run generate-admin"
+		"generate": "npm run generate-shop && npm run generate-admin",
+		"postinstall": "pnpm install --force @img/sharp-darwin-x64"
 	},
 	"devDependencies": {
 		"@angular/compiler-cli": "^16.2.1",
