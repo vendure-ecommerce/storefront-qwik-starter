@@ -1,4 +1,4 @@
-import { $, component$, QwikChangeEvent, useContext } from '@builder.io/qwik';
+import { component$, useContext } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
 import { ShippingAddress } from '~/types';
 
@@ -24,12 +24,12 @@ export default component$<IProps>(({ shippingAddress }) => {
 								value={shippingAddress.fullName}
 								autoComplete="given-name"
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-								onChange$={$((e: QwikChangeEvent<HTMLInputElement>) => {
+								onChange$={(_, el) => {
 									appState.shippingAddress = {
 										...appState.shippingAddress,
-										fullName: e.target.value,
+										fullName: el.value,
 									};
-								})}
+								}}
 							/>
 						</div>
 					</div>
@@ -45,10 +45,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 								id="company"
 								value={shippingAddress.company}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+								onChange$={(_, el) => {
 									appState.shippingAddress = {
 										...appState.shippingAddress,
-										company: e.target.value,
+										company: el.value,
 									};
 								}}
 							/>
@@ -66,10 +66,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 								id="streetLine1"
 								value={shippingAddress.streetLine1}
 								autoComplete="street-address"
-								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+								onChange$={(_, el) => {
 									appState.shippingAddress = {
 										...appState.shippingAddress,
-										streetLine1: e.target.value,
+										streetLine1: el.value,
 									};
 								}}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
@@ -88,10 +88,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 								id="streetLine2"
 								value={shippingAddress.streetLine2}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+								onChange$={(_, el) => {
 									appState.shippingAddress = {
 										...appState.shippingAddress,
-										streetLine2: e.target.value,
+										streetLine2: el.value,
 									};
 								}}
 							/>
@@ -110,8 +110,8 @@ export default component$<IProps>(({ shippingAddress }) => {
 								autoComplete="address-level2"
 								value={shippingAddress.city}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
-									appState.shippingAddress = { ...appState.shippingAddress, city: e.target.value };
+								onChange$={(_, el) => {
+									appState.shippingAddress = { ...appState.shippingAddress, city: el.value };
 								}}
 							/>
 						</div>
@@ -128,10 +128,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 									name="countryCode"
 									value={shippingAddress.countryCode}
 									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-									onChange$={(e: QwikChangeEvent<HTMLSelectElement>) => {
+									onChange$={(_, el) => {
 										appState.shippingAddress = {
 											...appState.shippingAddress,
-											countryCode: e.target.value,
+											countryCode: el.value,
 										};
 									}}
 								>
@@ -160,10 +160,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 								id="province"
 								value={shippingAddress.province}
 								autoComplete="address-level1"
-								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+								onChange$={(_, el) => {
 									appState.shippingAddress = {
 										...appState.shippingAddress,
-										province: e.target.value,
+										province: el.value,
 									};
 								}}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
@@ -182,10 +182,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 								id="postalCode"
 								value={shippingAddress.postalCode}
 								autoComplete="postal-code"
-								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+								onChange$={(_, el) => {
 									appState.shippingAddress = {
 										...appState.shippingAddress,
-										postalCode: e.target.value,
+										postalCode: el.value,
 									};
 								}}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
@@ -204,10 +204,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 								id="phoneNumber"
 								value={shippingAddress.phoneNumber}
 								autoComplete="tel"
-								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+								onChange$={(_, el) => {
 									appState.shippingAddress = {
 										...appState.shippingAddress,
-										phoneNumber: e.target.value,
+										phoneNumber: el.value,
 									};
 								}}
 								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
@@ -227,10 +227,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 								name="defaultShippingAddress"
 								id="defaultShippingAddress"
 								checked={shippingAddress.defaultShippingAddress}
-								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+								onChange$={(_, el) => {
 									appState.shippingAddress = {
 										...appState.shippingAddress,
-										defaultShippingAddress: e.target.checked,
+										defaultShippingAddress: el.checked,
 									};
 								}}
 							/>
@@ -246,10 +246,10 @@ export default component$<IProps>(({ shippingAddress }) => {
 								name="defaultBillingAddress"
 								id="defaultBillingAddress"
 								checked={shippingAddress.defaultBillingAddress}
-								onChange$={(e: QwikChangeEvent<HTMLInputElement>) => {
+								onChange$={(_, el) => {
 									appState.shippingAddress = {
 										...appState.shippingAddress,
-										defaultBillingAddress: e.target.checked,
+										defaultBillingAddress: el.checked,
 									};
 								}}
 							/>

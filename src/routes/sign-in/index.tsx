@@ -50,7 +50,7 @@ export default component$(() => {
 									autoComplete="email"
 									value={email.value}
 									required
-									onInput$={(ev) => (email.value = (ev.target as HTMLInputElement).value)}
+									onInput$={(_, el) => (email.value = el.value)}
 									class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
@@ -63,9 +63,9 @@ export default component$(() => {
 									type="password"
 									value={password.value}
 									required
-									onInput$={(ev) => (password.value = (ev.target as HTMLInputElement).value)}
-									onKeyUp$={(ev) => {
-										if (ev.key === 'Enter' && !!(ev.target as HTMLInputElement).value) {
+									onInput$={(_, el) => (password.value = el.value)}
+									onKeyUp$={(ev, el) => {
+										if (ev.key === 'Enter' && !!el.value) {
 											login();
 										}
 									}}
@@ -79,7 +79,7 @@ export default component$(() => {
 								<input
 									type="checkbox"
 									checked
-									onChange$={(ev) => (rememberMe.value = ev.target.checked)}
+									onChange$={(_, el) => (rememberMe.value = el.checked)}
 									class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
 								/>
 								<label class="ml-2 block text-sm text-gray-900">Remember me</label>

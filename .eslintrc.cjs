@@ -36,5 +36,7 @@ module.exports = {
 		'no-case-declarations': 'off',
 		'no-console': 'off',
 		'@typescript-eslint/no-unused-vars': ['error'],
+		'qwik/no-use-visible-task': 'off',
+		'qwik/loader-location': 'off',
 	},
 };

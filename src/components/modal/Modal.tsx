@@ -1,4 +1,4 @@
-import { PropFunction, Slot, component$ } from '@builder.io/qwik';
+import { QRL, Slot, component$ } from '@builder.io/qwik';
 import { Button } from '../buttons/Button';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import CheckIcon from '../icons/CheckIcon';
@@ -8,8 +8,8 @@ interface IProps {
 	title: string;
 	open: boolean;
 	iconBackground?: string;
-	onSubmit$?: PropFunction<() => void>;
-	onCancel$?: PropFunction<() => void>;
+	onSubmit$?: QRL<() => void>;
+	onCancel$?: QRL<() => void>;
 }
 
 export const Modal = component$(({ title, open, iconBackground, onSubmit$, onCancel$ }: IProps) => {

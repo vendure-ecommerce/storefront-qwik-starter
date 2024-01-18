@@ -1,4 +1,4 @@
-import { $, QwikChangeEvent, component$, useContext, useSignal } from '@builder.io/qwik';
+import { $, component$, useContext, useSignal } from '@builder.io/qwik';
 import { useNavigate } from '@builder.io/qwik-city';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
 import { ErrorMessage } from '~/components/error-message/ErrorMessage';
@@ -66,9 +66,9 @@ export default component$(() => {
 					<h3 class="text-sm text-gray-500">Current Password</h3>
 					<input
 						type="password"
-						onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-							currentPassword.value = event.target.value;
-						})}
+						onChange$={(_, el) => {
+							currentPassword.value = el.value;
+						}}
 						autoComplete="current-password"
 						class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 					/>
@@ -77,9 +77,9 @@ export default component$(() => {
 					<h3 class="text-sm text-gray-500">New Password</h3>
 					<input
 						type="password"
-						onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-							newPassword.value = event.target.value;
-						})}
+						onChange$={(_, el) => {
+							newPassword.value = el.value;
+						}}
 						autoComplete="new-password"
 						class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 					/>
@@ -88,9 +88,9 @@ export default component$(() => {
 					<h3 class="text-sm text-gray-500">Confirm Password</h3>
 					<input
 						type="password"
-						onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-							confirmPassword.value = event.target.value;
-						})}
+						onChange$={(_, el) => {
+							confirmPassword.value = el.value;
+						}}
 						autoComplete="new-password"
 						class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 					/>

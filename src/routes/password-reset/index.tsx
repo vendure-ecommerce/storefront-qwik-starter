@@ -32,10 +32,10 @@ export default component$(() => {
 								type="password"
 								value={password.value}
 								required
-								onInput$={(ev) => (password.value = (ev.target as HTMLInputElement).value)}
-								onKeyUp$={(ev) => {
+								onInput$={(_, el) => (password.value = el.value)}
+								onKeyUp$={(ev, el) => {
 									error.value = '';
-									if (ev.key === 'Enter' && !!(ev.target as HTMLInputElement).value) {
+									if (ev.key === 'Enter' && !!el.value) {
 										reset();
 									}
 								}}

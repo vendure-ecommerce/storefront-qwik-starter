@@ -1,4 +1,4 @@
-import { PropFunction, component$ } from '@builder.io/qwik';
+import { QRL, component$ } from '@builder.io/qwik';
 import { useNavigate } from '@builder.io/qwik-city';
 import { ShippingAddress } from '~/types';
 import { Button } from '../buttons/Button';
@@ -8,7 +8,7 @@ import XCircleIcon from '../icons/XCircleIcon';
 
 type IProps = {
 	address: ShippingAddress;
-	onDelete$?: PropFunction<(id: string) => void>;
+	onDelete$?: QRL<(id: string) => void>;
 };
 
 export default component$<IProps>(({ address, onDelete$ }) => {

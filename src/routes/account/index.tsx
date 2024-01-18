@@ -1,11 +1,4 @@
-import {
-	$,
-	QwikChangeEvent,
-	component$,
-	useContext,
-	useSignal,
-	useVisibleTask$,
-} from '@builder.io/qwik';
+import { $, component$, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { isBrowser } from '@builder.io/qwik/build';
 import { Image } from 'qwik-image';
 import { Button } from '~/components/buttons/Button';
@@ -152,9 +145,9 @@ export default component$(() => {
 							<input
 								type="password"
 								name="password"
-								onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-									currentPassword.value = event.target.value;
-								})}
+								onChange$={(_, el) => {
+									currentPassword.value = el.value;
+								}}
 								class="w-full"
 							/>
 						</div>
@@ -175,9 +168,9 @@ export default component$(() => {
 								<input
 									type="text"
 									value={appState.customer?.title}
-									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-										update.customer.title = event.target.value;
-									})}
+									onInput$={(_, el) => {
+										update.customer.title = el.value;
+									}}
 									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
@@ -189,11 +182,11 @@ export default component$(() => {
 								<input
 									type="text"
 									value={appState.customer?.firstName}
-									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-										if (event.target.value !== '') {
-											update.customer.firstName = event.target.value;
+									onChange$={(_, el) => {
+										if (el.value !== '') {
+											update.customer.firstName = el.value;
 										}
-									})}
+									}}
 									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
@@ -204,11 +197,11 @@ export default component$(() => {
 								<input
 									type="text"
 									value={appState.customer?.lastName}
-									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-										if (event.target.value !== '') {
-											update.customer.lastName = event.target.value;
+									onChange$={(_, el) => {
+										if (el.value !== '') {
+											update.customer.lastName = el.value;
 										}
-									})}
+									}}
 									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
@@ -217,11 +210,11 @@ export default component$(() => {
 								<input
 									type="email"
 									value={appState.customer?.emailAddress}
-									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-										if (event.target.value !== '') {
-											newEmail.value = event.target.value;
+									onChange$={(_, el) => {
+										if (el.value !== '') {
+											newEmail.value = el.value;
 										}
-									})}
+									}}
 									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
@@ -231,9 +224,9 @@ export default component$(() => {
 								<input
 									type="tel"
 									value={appState.customer?.phoneNumber}
-									onChange$={$((event: QwikChangeEvent<HTMLInputElement>) => {
-										update.customer.phoneNumber = event.target.value;
-									})}
+									onChange$={(_, el) => {
+										update.customer.phoneNumber = el.value;
+									}}
 									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>

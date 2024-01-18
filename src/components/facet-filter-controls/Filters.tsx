@@ -1,4 +1,4 @@
-import { $, component$, PropFunction } from '@builder.io/qwik';
+import { $, component$, QRL } from '@builder.io/qwik';
 import { FacetWithValues } from '~/types';
 import CloseIcon from '../icons/CloseIcon';
 import MinusIcon from '../icons/MinusIcon';
@@ -7,9 +7,9 @@ import PlusIcon from '../icons/PlusIcon';
 export default component$<{
 	showMenu: boolean;
 	facetsWithValues: FacetWithValues[];
-	onToggleMenu$: PropFunction<() => void>;
-	onFilterChange$: PropFunction<(id: string) => void>;
-	onOpenCloseFilter$: PropFunction<(id: string) => void>;
+	onToggleMenu$: QRL<() => void>;
+	onFilterChange$: QRL<(id: string) => void>;
+	onOpenCloseFilter$: QRL<(id: string) => void>;
 }>(
 	({
 		showMenu = false,

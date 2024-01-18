@@ -1,11 +1,11 @@
-import { $, component$, PropFunction, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { $, component$, QRL, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { getEligiblePaymentMethodsQuery } from '~/providers/shop/checkout/checkout';
 import { EligiblePaymentMethods } from '~/types';
 import CreditCardIcon from '../icons/CreditCardIcon';
 import BraintreePayment from './BraintreePayment';
 import StripePayment from './StripePayment';
 
-export default component$<{ onForward$: PropFunction<() => void> }>(({ onForward$ }) => {
+export default component$<{ onForward$: QRL<() => void> }>(({ onForward$ }) => {
 	const paymentMethods = useSignal<EligiblePaymentMethods[]>();
 
 	useVisibleTask$(async () => {

@@ -78,7 +78,7 @@ export default component$(() => {
 									autoComplete="email"
 									value={email.value}
 									required
-									onInput$={(ev) => (email.value = (ev.target as HTMLInputElement).value)}
+									onInput$={(_, el) => (email.value = el.value)}
 									class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
@@ -91,7 +91,7 @@ export default component$(() => {
 									type="text"
 									value={firstName.value}
 									required
-									onInput$={(ev) => (firstName.value = (ev.target as HTMLInputElement).value)}
+									onInput$={(_, el) => (firstName.value = el.value)}
 									class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
@@ -104,7 +104,7 @@ export default component$(() => {
 									type="text"
 									value={lastName.value}
 									required
-									onInput$={(ev) => (lastName.value = (ev.target as HTMLInputElement).value)}
+									onInput$={(_, el) => (lastName.value = el.value)}
 									class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
@@ -117,7 +117,7 @@ export default component$(() => {
 									type="password"
 									value={password.value}
 									required
-									onInput$={(ev) => (password.value = (ev.target as HTMLInputElement).value)}
+									onInput$={(_, el) => (password.value = el.value)}
 									class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
@@ -130,7 +130,7 @@ export default component$(() => {
 									type="password"
 									value={confirmPassword.value}
 									required
-									onInput$={(ev) => (confirmPassword.value = (ev.target as HTMLInputElement).value)}
+									onInput$={(_, el) => (confirmPassword.value = el.value)}
 									class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
