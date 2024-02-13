@@ -12,6 +12,8 @@ An e-commerce storefront for [Vendure](https://www.vendure.io) built with [Qwik]
 
 <br/>
 
+### 📑 [Guide: Spin up an e-commerce app in 60s with Vendure + Qwik](https://dev.to/prasmalla/in-2023-set-up-a-nodejs-e-commerce-app-in-1-minute-with-vendure-qwik-bl7)
+
 ## Features
 
 - Cart ✅
