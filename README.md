@@ -12,6 +12,8 @@ An e-commerce storefront for [Vendure](https://www.vendure.io) built with [Qwik]
 
 <br/>
 
+### 📑 [Guide: Spin up an e-commerce app in 60s with Vendure + Qwik](https://dev.to/prasmalla/in-2023-set-up-a-nodejs-e-commerce-app-in-1-minute-with-vendure-qwik-bl7)
+
 ## Features
 
 - Cart ✅
@@ -63,7 +65,7 @@ For Braintree make sure to name your payment method in your vendure admin "brain
 Development mode uses [Vite's development server](https://vitejs.dev/). During development, the `dev` command will server-side render (SSR) the output.
 
 ```shell
-npm start # or `yarn start`
+pnpm start
 ```
 
 > Note: during dev mode, Vite may request a significant number of `.js` files. This does not represent a Qwik production build.
@@ -73,7 +75,7 @@ npm start # or `yarn start`
 The preview command will create a production build of the client modules, a production build of `src/entry.preview.tsx`, and run a local server. The preview server is only for convenience to locally preview a production build, and it should not be used as a production server.
 
 ```shell
-npm run preview # or `yarn preview`
+pnpm preview # or `yarn preview`
 ```
 
 ## Production
@@ -81,7 +83,7 @@ npm run preview # or `yarn preview`
 The production build will generate client and server modules by running both client and server build commands. Additionally, the build command will use Typescript to run a type check on the source code.
 
 ```shell
-npm run build # or `yarn build`
+pnpm build # or `yarn build`
 ```
 
 ## i18n
@@ -101,8 +103,8 @@ export default component$((props: { name: string }) => {
 The first step in translation is to build the application. Once the artifacts are build the strings can be extracted for translation.
 
 ```bash
-npm run build.client
-npm run i18n-extract
+pnpm build.client
+pnpm i18n-extract
 ```
 
 The result of the commands is `src/locale/message.en.json`.
@@ -121,7 +123,7 @@ src/locale/message.es.json
 Qwik hashes bundles based on the content of the files. This means that if a file changes, the order of i18n translations will be lost and can be difficult to manage manually.
 
 ```bash
-npm run i18n-sort
+pnpm i18n-sort
 ```
 
 The `i18n-sort` script will sort by first appearance in the src folder to keep a consistent order.
