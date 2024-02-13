@@ -34,7 +34,7 @@
 		"generate-dev": "export IS_DEV=TRUE && pnpm generate-shop && pnpm generate-admin",
 		"generate-local": "export IS_LOCAL=TRUE && pnpm generate-shop && pnpm generate-admin",
 		"generate": "pnpm generate-shop && pnpm generate-admin",
-		"postinstall": "pnpm install --force @img/sharp-darwin-x64"
+		"postinstall": "npm install --force @img/sharp-linux-x64"
 	},
 	"devDependencies": {
 		"@angular/compiler": "^17.1.3",
