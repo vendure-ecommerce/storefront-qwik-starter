@@ -10,7 +10,7 @@
 	},
 	"scripts": {
 		"build": "qwik build",
-		"build.client": "vite build && pnpm i18n-translate",
+		"build.client": "vite build && npm run i18n-translate",
 		"build.preview": "vite build --ssr src/entry.preview.tsx",
 		"build.server": "vite build -c adapters/cloudflare-pages/vite.config.ts",
 		"build.types": "tsc --incremental --noEmit",
@@ -33,8 +33,7 @@
 		"generate-shop": "graphql-codegen --config codegen-shop.ts",
 		"generate-dev": "export IS_DEV=TRUE && pnpm generate-shop && pnpm generate-admin",
 		"generate-local": "export IS_LOCAL=TRUE && pnpm generate-shop && pnpm generate-admin",
-		"generate": "pnpm generate-shop && pnpm generate-admin",
-		"postinstall": "npm install --force @img/sharp-linux-x64"
+		"generate": "pnpm generate-shop && pnpm generate-admin"
 	},
 	"devDependencies": {
 		"@angular/compiler": "^17.1.3",
@@ -71,7 +70,6 @@
 	"dependencies": {
 		"@angular/localize": "^17.1.3",
 		"@graphql-codegen/typescript-generic-sdk": "^4.0.1",
-		"@img/sharp-linux-x64": "^0.33.2",
 		"@stripe/stripe-js": "^3.0.0",
 		"braintree-web-drop-in": "^1.42.0",
 		"graphql": "^16.8.1",

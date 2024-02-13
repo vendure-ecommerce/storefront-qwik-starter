@@ -11,9 +11,6 @@ dependencies:
   '@graphql-codegen/typescript-generic-sdk':
     specifier: ^4.0.1
     version: 4.0.1(graphql-tag@2.12.6)(graphql@16.8.1)
-  '@img/sharp-darwin-x64':
-    specifier: ^0.33.2
-    version: 0.33.2
   '@stripe/stripe-js':
     specifier: ^3.0.0
     version: 3.0.0
@@ -1348,7 +1345,7 @@ packages:
       }
     requiresBuild: true
     dependencies:
-      tslib: 2.5.0
+      tslib: 2.6.2
     dev: true
     optional: true
 
@@ -2891,6 +2888,8 @@ packages:
     requiresBuild: true
     optionalDependencies:
       '@img/sharp-libvips-darwin-x64': 1.0.1
+    dev: true
+    optional: true
 
   /@img/sharp-libvips-darwin-arm64@1.0.1:
     resolution:
@@ -2913,6 +2912,7 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
+    dev: true
     optional: true
 
   /@img/sharp-libvips-linux-arm64@1.0.1:
