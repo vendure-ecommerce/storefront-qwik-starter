@@ -3502,6 +3502,8 @@ export type AddPaymentToOrderMutation = {
 				active: boolean;
 				createdAt: any;
 				state: string;
+				couponCodes: string;
+				discounts: any;
 				currencyCode: CurrencyCode;
 				totalQuantity: number;
 				subTotal: any;
@@ -3543,6 +3545,8 @@ export type AddPaymentToOrderMutation = {
 					id: string;
 					unitPriceWithTax: any;
 					linePriceWithTax: any;
+					discountedUnitPriceWithTax: any;
+					discountedLinePriceWithTax: any;
 					quantity: number;
 					featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 					productVariant: {
@@ -3568,63 +3572,67 @@ export type TransitionOrderToStateMutation = {
 	__typename?: 'Mutation';
 	transitionOrderToState?:
 		| {
-				__typename: 'Order';
+			__typename: 'Order';
+			id: string;
+			code: string;
+			active: boolean;
+			createdAt: any;
+			state: string;
+			couponCodes: string;
+			discounts: any;
+			currencyCode: CurrencyCode;
+			totalQuantity: number;
+			subTotal: any;
+			subTotalWithTax: any;
+			shippingWithTax: any;
+			totalWithTax: any;
+			taxSummary: Array<{
+				__typename?: 'OrderTaxSummary';
+				description: string;
+				taxRate: number;
+				taxTotal: any;
+			}>;
+			customer?: {
+				__typename?: 'Customer';
 				id: string;
-				code: string;
-				active: boolean;
-				createdAt: any;
-				state: string;
-				currencyCode: CurrencyCode;
-				totalQuantity: number;
-				subTotal: any;
-				subTotalWithTax: any;
-				shippingWithTax: any;
-				totalWithTax: any;
-				taxSummary: Array<{
-					__typename?: 'OrderTaxSummary';
-					description: string;
-					taxRate: number;
-					taxTotal: any;
-				}>;
-				customer?: {
-					__typename?: 'Customer';
+				firstName: string;
+				lastName: string;
+				emailAddress: string;
+			} | null;
+			shippingAddress?: {
+				__typename?: 'OrderAddress';
+				fullName?: string | null;
+				streetLine1?: string | null;
+				streetLine2?: string | null;
+				company?: string | null;
+				city?: string | null;
+				province?: string | null;
+				postalCode?: string | null;
+				countryCode?: string | null;
+				phoneNumber?: string | null;
+			} | null;
+			shippingLines: Array<{
+				__typename?: 'ShippingLine';
+				priceWithTax: any;
+				shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
+			}>;
+			lines: Array<{
+				__typename?: 'OrderLine';
+				id: string;
+				unitPriceWithTax: any;
+				linePriceWithTax: any;
+				discountedUnitPriceWithTax: any;
+				discountedLinePriceWithTax: any;
+				quantity: number;
+				featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
+				productVariant: {
+					__typename?: 'ProductVariant';
 					id: string;
-					firstName: string;
-					lastName: string;
-					emailAddress: string;
-				} | null;
-				shippingAddress?: {
-					__typename?: 'OrderAddress';
-					fullName?: string | null;
-					streetLine1?: string | null;
-					streetLine2?: string | null;
-					company?: string | null;
-					city?: string | null;
-					province?: string | null;
-					postalCode?: string | null;
-					countryCode?: string | null;
-					phoneNumber?: string | null;
-				} | null;
-				shippingLines: Array<{
-					__typename?: 'ShippingLine';
-					priceWithTax: any;
-					shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
-				}>;
-				lines: Array<{
-					__typename?: 'OrderLine';
-					id: string;
-					unitPriceWithTax: any;
-					linePriceWithTax: any;
-					quantity: number;
-					featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
-					productVariant: {
-						__typename?: 'ProductVariant';
-						id: string;
-						name: string;
-						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
-					};
-				}>;
+					name: string;
+					price: any;
+					product: { __typename?: 'Product'; id: string; slug: string };
+				};
+			}>;
 		  }
 		| { __typename?: 'OrderStateTransitionError'; errorCode: ErrorCode; message: string }
 		| null;
@@ -4098,63 +4106,67 @@ export type SetOrderShippingAddressMutation = {
 	setOrderShippingAddress:
 		| { __typename?: 'NoActiveOrderError'; errorCode: ErrorCode; message: string }
 		| {
-				__typename: 'Order';
+			__typename: 'Order';
+			id: string;
+			code: string;
+			active: boolean;
+			createdAt: any;
+			state: string;
+			couponCodes: Array<string>;
+			discounts: any;
+			currencyCode: CurrencyCode;
+			totalQuantity: number;
+			subTotal: any;
+			subTotalWithTax: any;
+			shippingWithTax: any;
+			totalWithTax: any;
+			taxSummary: Array<{
+				__typename?: 'OrderTaxSummary';
+				description: string;
+				taxRate: number;
+				taxTotal: any;
+			}>;
+			customer?: {
+				__typename?: 'Customer';
 				id: string;
-				code: string;
-				active: boolean;
-				createdAt: any;
-				state: string;
-				currencyCode: CurrencyCode;
-				totalQuantity: number;
-				subTotal: any;
-				subTotalWithTax: any;
-				shippingWithTax: any;
-				totalWithTax: any;
-				taxSummary: Array<{
-					__typename?: 'OrderTaxSummary';
-					description: string;
-					taxRate: number;
-					taxTotal: any;
-				}>;
-				customer?: {
-					__typename?: 'Customer';
+				firstName: string;
+				lastName: string;
+				emailAddress: string;
+			} | null;
+			shippingAddress?: {
+				__typename?: 'OrderAddress';
+				fullName?: string | null;
+				streetLine1?: string | null;
+				streetLine2?: string | null;
+				company?: string | null;
+				city?: string | null;
+				province?: string | null;
+				postalCode?: string | null;
+				countryCode?: string | null;
+				phoneNumber?: string | null;
+			} | null;
+			shippingLines: Array<{
+				__typename?: 'ShippingLine';
+				priceWithTax: any;
+				shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
+			}>;
+			lines: Array<{
+				__typename?: 'OrderLine';
+				id: string;
+				unitPriceWithTax: any;
+				linePriceWithTax: any;
+				discountedUnitPriceWithTax: any;
+				discountedLinePriceWithTax: any;
+				quantity: number;
+				featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
+				productVariant: {
+					__typename?: 'ProductVariant';
 					id: string;
-					firstName: string;
-					lastName: string;
-					emailAddress: string;
-				} | null;
-				shippingAddress?: {
-					__typename?: 'OrderAddress';
-					fullName?: string | null;
-					streetLine1?: string | null;
-					streetLine2?: string | null;
-					company?: string | null;
-					city?: string | null;
-					province?: string | null;
-					postalCode?: string | null;
-					countryCode?: string | null;
-					phoneNumber?: string | null;
-				} | null;
-				shippingLines: Array<{
-					__typename?: 'ShippingLine';
-					priceWithTax: any;
-					shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
-				}>;
-				lines: Array<{
-					__typename?: 'OrderLine';
-					id: string;
-					unitPriceWithTax: any;
-					linePriceWithTax: any;
-					quantity: number;
-					featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
-					productVariant: {
-						__typename?: 'ProductVariant';
-						id: string;
-						name: string;
-						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
-					};
-				}>;
+					name: string;
+					price: any;
+					product: { __typename?: 'Product'; id: string; slug: string };
+				};
+			}>;
 		  };
 };
 
@@ -4170,6 +4182,77 @@ export type SetCustomerForOrderMutation = {
 		| { __typename?: 'GuestCheckoutError'; errorCode: ErrorCode; message: string }
 		| { __typename?: 'NoActiveOrderError'; errorCode: ErrorCode; message: string }
 		| {
+			__typename: 'Order';
+			id: string;
+			code: string;
+			active: boolean;
+			createdAt: any;
+			state: string;
+			couponCodes: string;
+			discounts: any;
+			currencyCode: CurrencyCode;
+			totalQuantity: number;
+			subTotal: any;
+			subTotalWithTax: any;
+			shippingWithTax: any;
+			totalWithTax: any;
+			taxSummary: Array<{
+				__typename?: 'OrderTaxSummary';
+				description: string;
+				taxRate: number;
+				taxTotal: any;
+			}>;
+			customer?: {
+				__typename?: 'Customer';
+				id: string;
+				firstName: string;
+				lastName: string;
+				emailAddress: string;
+			} | null;
+			shippingAddress?: {
+				__typename?: 'OrderAddress';
+				fullName?: string | null;
+				streetLine1?: string | null;
+				streetLine2?: string | null;
+				company?: string | null;
+				city?: string | null;
+				province?: string | null;
+				postalCode?: string | null;
+				countryCode?: string | null;
+				phoneNumber?: string | null;
+			} | null;
+			shippingLines: Array<{
+				__typename?: 'ShippingLine';
+				priceWithTax: any;
+				shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
+			}>;
+			lines: Array<{
+				__typename?: 'OrderLine';
+				id: string;
+				unitPriceWithTax: any;
+				linePriceWithTax: any;
+				discountedUnitPriceWithTax: any;
+				discountedLinePriceWithTax: any;
+				quantity: number;
+				featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
+				productVariant: {
+					__typename?: 'ProductVariant';
+					id: string;
+					name: string;
+					price: any;
+					product: { __typename?: 'Product'; id: string; slug: string };
+				};
+			}>;
+		  };
+};
+export type ApplyCouponCodeMutationVariables = Exact<{
+	couponCode: Scalars['String']['input'];
+}>;
+
+export type ApplyCouponCodeMutation = {
+	__typename?: 'Mutation';
+	applyCouponCode:
+		| {
 				__typename: 'Order';
 				id: string;
 				code: string;
@@ -4177,7 +4260,9 @@ export type SetCustomerForOrderMutation = {
 				createdAt: any;
 				state: string;
 				currencyCode: CurrencyCode;
+				couponCodes: Array<string>;
 				totalQuantity: number;
+				discounts?: Discount;
 				subTotal: any;
 				subTotalWithTax: any;
 				shippingWithTax: any;
@@ -4195,6 +4280,7 @@ export type SetCustomerForOrderMutation = {
 					lastName: string;
 					emailAddress: string;
 				} | null;
+				
 				shippingAddress?: {
 					__typename?: 'OrderAddress';
 					fullName?: string | null;
@@ -4217,6 +4303,8 @@ export type SetCustomerForOrderMutation = {
 					id: string;
 					unitPriceWithTax: any;
 					linePriceWithTax: any;
+					discountedUnitPriceWithTax: any;
+					discountedLinePriceWithTax: any;
 					quantity: number;
 					featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 					productVariant: {
@@ -4224,11 +4312,15 @@ export type SetCustomerForOrderMutation = {
 						id: string;
 						name: string;
 						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
+						product: { __typename?: 'Product'; name: string; id: string; slug: string };
 					};
 				}>;
-		  };
+		  }
+		| { __typename?: 'CouponCodeExpiredError '; errorCode: ErrorCode; message: string }
+		| { __typename?: 'CouponCodeInvalidError'; errorCode: ErrorCode; message: string }
+		| { __typename?: 'CouponCodeLimitError'; errorCode: ErrorCode; message: string };
 };
+
 
 export type AddItemToOrderMutationVariables = Exact<{
 	productVariantId: Scalars['ID']['input'];
@@ -4241,63 +4333,68 @@ export type AddItemToOrderMutation = {
 		| { __typename?: 'InsufficientStockError'; errorCode: ErrorCode; message: string }
 		| { __typename?: 'NegativeQuantityError'; errorCode: ErrorCode; message: string }
 		| {
-				__typename: 'Order';
+			__typename: 'Order';
+			id: string;
+			code: string;
+			active: boolean;
+			createdAt: any;
+			state: string;
+			currencyCode: CurrencyCode;
+			couponCodes: Array<string>;
+			totalQuantity: number;
+			discounts?: Discount;
+			subTotal: any;
+			subTotalWithTax: any;
+			shippingWithTax: any;
+			totalWithTax: any;
+			taxSummary: Array<{
+				__typename?: 'OrderTaxSummary';
+				description: string;
+				taxRate: number;
+				taxTotal: any;
+			}>;
+			customer?: {
+				__typename?: 'Customer';
 				id: string;
-				code: string;
-				active: boolean;
-				createdAt: any;
-				state: string;
-				currencyCode: CurrencyCode;
-				totalQuantity: number;
-				subTotal: any;
-				subTotalWithTax: any;
-				shippingWithTax: any;
-				totalWithTax: any;
-				taxSummary: Array<{
-					__typename?: 'OrderTaxSummary';
-					description: string;
-					taxRate: number;
-					taxTotal: any;
-				}>;
-				customer?: {
-					__typename?: 'Customer';
+				firstName: string;
+				lastName: string;
+				emailAddress: string;
+			} | null;
+			
+			shippingAddress?: {
+				__typename?: 'OrderAddress';
+				fullName?: string | null;
+				streetLine1?: string | null;
+				streetLine2?: string | null;
+				company?: string | null;
+				city?: string | null;
+				province?: string | null;
+				postalCode?: string | null;
+				countryCode?: string | null;
+				phoneNumber?: string | null;
+			} | null;
+			shippingLines: Array<{
+				__typename?: 'ShippingLine';
+				priceWithTax: any;
+				shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
+			}>;
+			lines: Array<{
+				__typename?: 'OrderLine';
+				id: string;
+				unitPriceWithTax: any;
+				linePriceWithTax: any;
+				discountedUnitPriceWithTax: any;
+				discountedLinePriceWithTax: any;
+				quantity: number;
+				featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
+				productVariant: {
+					__typename?: 'ProductVariant';
 					id: string;
-					firstName: string;
-					lastName: string;
-					emailAddress: string;
-				} | null;
-				shippingAddress?: {
-					__typename?: 'OrderAddress';
-					fullName?: string | null;
-					streetLine1?: string | null;
-					streetLine2?: string | null;
-					company?: string | null;
-					city?: string | null;
-					province?: string | null;
-					postalCode?: string | null;
-					countryCode?: string | null;
-					phoneNumber?: string | null;
-				} | null;
-				shippingLines: Array<{
-					__typename?: 'ShippingLine';
-					priceWithTax: any;
-					shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
-				}>;
-				lines: Array<{
-					__typename?: 'OrderLine';
-					id: string;
-					unitPriceWithTax: any;
-					linePriceWithTax: any;
-					quantity: number;
-					featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
-					productVariant: {
-						__typename?: 'ProductVariant';
-						id: string;
-						name: string;
-						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
-					};
-				}>;
+					name: string;
+					price: any;
+					product: { __typename?: 'Product'; name: string; id: string; slug: string };
+				};
+			}>;
 		  }
 		| { __typename?: 'OrderLimitError'; errorCode: ErrorCode; message: string }
 		| { __typename?: 'OrderModificationError'; errorCode: ErrorCode; message: string };
@@ -4313,14 +4410,83 @@ export type SetOrderShippingMethodMutation = {
 		| { __typename?: 'IneligibleShippingMethodError'; errorCode: ErrorCode; message: string }
 		| { __typename?: 'NoActiveOrderError'; errorCode: ErrorCode; message: string }
 		| {
-				__typename: 'Order';
+			__typename: 'Order';
+			id: string;
+			code: string;
+			active: boolean;
+			createdAt: any;
+			state: string;
+			currencyCode: CurrencyCode;
+			couponCodes: Array<string>;
+			totalQuantity: number;
+			discounts?: any;
+			subTotal: any;
+			subTotalWithTax: any;
+			shippingWithTax: any;
+			totalWithTax: any;
+			taxSummary: Array<{
+				__typename?: 'OrderTaxSummary';
+				description: string;
+				taxRate: number;
+				taxTotal: any;
+			}>;
+			customer?: {
+				__typename?: 'Customer';
+				id: string;
+				firstName: string;
+				lastName: string;
+				emailAddress: string;
+			} | null;
+			
+			shippingAddress?: {
+				__typename?: 'OrderAddress';
+				fullName?: string | null;
+				streetLine1?: string | null;
+				streetLine2?: string | null;
+				company?: string | null;
+				city?: string | null;
+				province?: string | null;
+				postalCode?: string | null;
+				countryCode?: string | null;
+				phoneNumber?: string | null;
+			} | null;
+			shippingLines: Array<{
+				__typename?: 'ShippingLine';
+				priceWithTax: any;
+				shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
+			}>;
+			lines: Array<{
+				__typename?: 'OrderLine';
+				id: string;
+				unitPriceWithTax: any;
+				linePriceWithTax: any;
+				discountedUnitPriceWithTax: any;
+				discountedLinePriceWithTax: any;
+				quantity: number;
+				featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
+				productVariant: {
+					__typename?: 'ProductVariant';
+					id: string;
+					name: string;
+					price: any;
+					product: { __typename?: 'Product'; name: string; id: string; slug: string };
+				};
+			}>;
+		}
+			| { __typename?: 'OrderModificationError'; errorCode: ErrorCode; message: string };
+};
+
+export type OrderDetailFragment = {
+	__typename: 'Order';
 				id: string;
 				code: string;
 				active: boolean;
 				createdAt: any;
 				state: string;
 				currencyCode: CurrencyCode;
+				couponCodes: Array<string>;
 				totalQuantity: number;
+				discounts?: Discount;
 				subTotal: any;
 				subTotalWithTax: any;
 				shippingWithTax: any;
@@ -4338,6 +4504,7 @@ export type SetOrderShippingMethodMutation = {
 					lastName: string;
 					emailAddress: string;
 				} | null;
+				
 				shippingAddress?: {
 					__typename?: 'OrderAddress';
 					fullName?: string | null;
@@ -4360,6 +4527,8 @@ export type SetOrderShippingMethodMutation = {
 					id: string;
 					unitPriceWithTax: any;
 					linePriceWithTax: any;
+					discountedUnitPriceWithTax: any;
+					discountedLinePriceWithTax: any;
 					quantity: number;
 					featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 					productVariant: {
@@ -4367,71 +4536,9 @@ export type SetOrderShippingMethodMutation = {
 						id: string;
 						name: string;
 						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
+						product: { __typename?: 'Product'; name: string; id: string; slug: string };
 					};
 				}>;
-		  }
-		| { __typename?: 'OrderModificationError'; errorCode: ErrorCode; message: string };
-};
-
-export type OrderDetailFragment = {
-	__typename: 'Order';
-	id: string;
-	code: string;
-	active: boolean;
-	createdAt: any;
-	state: string;
-	currencyCode: CurrencyCode;
-	totalQuantity: number;
-	subTotal: any;
-	subTotalWithTax: any;
-	shippingWithTax: any;
-	totalWithTax: any;
-	taxSummary: Array<{
-		__typename?: 'OrderTaxSummary';
-		description: string;
-		taxRate: number;
-		taxTotal: any;
-	}>;
-	customer?: {
-		__typename?: 'Customer';
-		id: string;
-		firstName: string;
-		lastName: string;
-		emailAddress: string;
-	} | null;
-	shippingAddress?: {
-		__typename?: 'OrderAddress';
-		fullName?: string | null;
-		streetLine1?: string | null;
-		streetLine2?: string | null;
-		company?: string | null;
-		city?: string | null;
-		province?: string | null;
-		postalCode?: string | null;
-		countryCode?: string | null;
-		phoneNumber?: string | null;
-	} | null;
-	shippingLines: Array<{
-		__typename?: 'ShippingLine';
-		priceWithTax: any;
-		shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
-	}>;
-	lines: Array<{
-		__typename?: 'OrderLine';
-		id: string;
-		unitPriceWithTax: any;
-		linePriceWithTax: any;
-		quantity: number;
-		featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
-		productVariant: {
-			__typename?: 'ProductVariant';
-			id: string;
-			name: string;
-			price: any;
-			product: { __typename?: 'Product'; id: string; slug: string };
-		};
-	}>;
 };
 
 export type AdjustOrderLineMutationVariables = Exact<{
@@ -4445,148 +4552,88 @@ export type AdjustOrderLineMutation = {
 		| { __typename?: 'InsufficientStockError'; errorCode: ErrorCode; message: string }
 		| { __typename?: 'NegativeQuantityError'; errorCode: ErrorCode; message: string }
 		| {
-				__typename: 'Order';
+			__typename: 'Order';
+			id: string;
+			code: string;
+			active: boolean;
+			createdAt: any;
+			state: string;
+			currencyCode: CurrencyCode;
+			couponCodes: Array<string>;
+			totalQuantity: number;
+			discounts?: any;
+			subTotal: any;
+			subTotalWithTax: any;
+			shippingWithTax: any;
+			totalWithTax: any;
+			taxSummary: Array<{
+				__typename?: 'OrderTaxSummary';
+				description: string;
+				taxRate: number;
+				taxTotal: any;
+			}>;
+			customer?: {
+				__typename?: 'Customer';
 				id: string;
-				code: string;
-				active: boolean;
-				createdAt: any;
-				state: string;
-				currencyCode: CurrencyCode;
-				totalQuantity: number;
-				subTotal: any;
-				subTotalWithTax: any;
-				shippingWithTax: any;
-				totalWithTax: any;
-				taxSummary: Array<{
-					__typename?: 'OrderTaxSummary';
-					description: string;
-					taxRate: number;
-					taxTotal: any;
-				}>;
-				customer?: {
-					__typename?: 'Customer';
+				firstName: string;
+				lastName: string;
+				emailAddress: string;
+			} | null;
+			
+			shippingAddress?: {
+				__typename?: 'OrderAddress';
+				fullName?: string | null;
+				streetLine1?: string | null;
+				streetLine2?: string | null;
+				company?: string | null;
+				city?: string | null;
+				province?: string | null;
+				postalCode?: string | null;
+				countryCode?: string | null;
+				phoneNumber?: string | null;
+			} | null;
+			shippingLines: Array<{
+				__typename?: 'ShippingLine';
+				priceWithTax: any;
+				shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
+			}>;
+			lines: Array<{
+				__typename?: 'OrderLine';
+				id: string;
+				unitPriceWithTax: any;
+				linePriceWithTax: any;
+				discountedUnitPriceWithTax: any;
+				discountedLinePriceWithTax: any;
+				quantity: number;
+				featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
+				productVariant: {
+					__typename?: 'ProductVariant';
 					id: string;
-					firstName: string;
-					lastName: string;
-					emailAddress: string;
-				} | null;
-				shippingAddress?: {
-					__typename?: 'OrderAddress';
-					fullName?: string | null;
-					streetLine1?: string | null;
-					streetLine2?: string | null;
-					company?: string | null;
-					city?: string | null;
-					province?: string | null;
-					postalCode?: string | null;
-					countryCode?: string | null;
-					phoneNumber?: string | null;
-				} | null;
-				shippingLines: Array<{
-					__typename?: 'ShippingLine';
-					priceWithTax: any;
-					shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
-				}>;
-				lines: Array<{
-					__typename?: 'OrderLine';
-					id: string;
-					unitPriceWithTax: any;
-					linePriceWithTax: any;
-					quantity: number;
-					featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
-					productVariant: {
-						__typename?: 'ProductVariant';
-						id: string;
-						name: string;
-						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
-					};
-				}>;
+					name: string;
+					price: any;
+					product: { __typename?: 'Product'; name: string; id: string; slug: string };
+				};
+			}>;
 		  }
 		| { __typename?: 'OrderLimitError'; errorCode: ErrorCode; message: string }
 		| { __typename?: 'OrderModificationError'; errorCode: ErrorCode; message: string };
 };
 
-export type RemoveOrderLineMutationVariables = Exact<{
-	orderLineId: Scalars['ID']['input'];
+export type RemoveCouponCodeMutationVariables = Exact<{
+	couponCode: Scalars['String']['input'];
 }>;
 
-export type RemoveOrderLineMutation = {
+export type RemoveCouponCodeMutation = {
 	__typename?: 'Mutation';
-	removeOrderLine:
-		| {
-				__typename: 'Order';
-				id: string;
-				code: string;
-				active: boolean;
-				createdAt: any;
-				state: string;
-				currencyCode: CurrencyCode;
-				totalQuantity: number;
-				subTotal: any;
-				subTotalWithTax: any;
-				shippingWithTax: any;
-				totalWithTax: any;
-				taxSummary: Array<{
-					__typename?: 'OrderTaxSummary';
-					description: string;
-					taxRate: number;
-					taxTotal: any;
-				}>;
-				customer?: {
-					__typename?: 'Customer';
-					id: string;
-					firstName: string;
-					lastName: string;
-					emailAddress: string;
-				} | null;
-				shippingAddress?: {
-					__typename?: 'OrderAddress';
-					fullName?: string | null;
-					streetLine1?: string | null;
-					streetLine2?: string | null;
-					company?: string | null;
-					city?: string | null;
-					province?: string | null;
-					postalCode?: string | null;
-					countryCode?: string | null;
-					phoneNumber?: string | null;
-				} | null;
-				shippingLines: Array<{
-					__typename?: 'ShippingLine';
-					priceWithTax: any;
-					shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
-				}>;
-				lines: Array<{
-					__typename?: 'OrderLine';
-					id: string;
-					unitPriceWithTax: any;
-					linePriceWithTax: any;
-					quantity: number;
-					featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
-					productVariant: {
-						__typename?: 'ProductVariant';
-						id: string;
-						name: string;
-						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
-					};
-				}>;
-		  }
-		| { __typename?: 'OrderModificationError'; errorCode: ErrorCode; message: string };
-};
-
-export type ActiveOrderQueryVariables = Exact<{ [key: string]: never }>;
-
-export type ActiveOrderQuery = {
-	__typename?: 'Query';
-	activeOrder?: {
+	removeCouponCode: {
 		__typename: 'Order';
 		id: string;
 		code: string;
 		active: boolean;
 		createdAt: any;
 		state: string;
+		couponCodes: Array<string>;
+		discounts: any;
 		currencyCode: CurrencyCode;
 		totalQuantity: number;
 		subTotal: any;
@@ -4628,6 +4675,8 @@ export type ActiveOrderQuery = {
 			id: string;
 			unitPriceWithTax: any;
 			linePriceWithTax: any;
+			discountedUnitPriceWithTax: any;
+			discountedLinePriceWithTax: any;
 			quantity: number;
 			featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 			productVariant: {
@@ -4635,9 +4684,175 @@ export type ActiveOrderQuery = {
 				id: string;
 				name: string;
 				price: any;
-				product: { __typename?: 'Product'; id: string; slug: string };
+				product: { __typename?: 'Product'; name: string; id: string; slug: string };
 			};
 		}>;
+	};
+};
+
+export type RemoveOrderLineMutationVariables = Exact<{
+	orderLineId: Scalars['ID']['input'];
+}>;
+
+export type RemoveOrderLineMutation = {
+	__typename?: 'Mutation';
+	removeOrderLine:
+		| {
+			__typename: 'Order';
+			id: string;
+			code: string;
+			active: boolean;
+			createdAt: any;
+			state: string;
+			currencyCode: CurrencyCode;
+			couponCodes: Array<string>;
+			totalQuantity: number;
+			discounts?: any;
+			subTotal: any;
+			subTotalWithTax: any;
+			shippingWithTax: any;
+			totalWithTax: any;
+			taxSummary: Array<{
+				__typename?: 'OrderTaxSummary';
+				description: string;
+				taxRate: number;
+				taxTotal: any;
+			}>;
+			customer?: {
+				__typename?: 'Customer';
+				id: string;
+				firstName: string;
+				lastName: string;
+				emailAddress: string;
+			} | null;
+			billingAddress?: {
+				__typename?: 'OrderAddress';
+				fullName?: string | null;
+				streetLine1?: string | null;
+				streetLine2?: string | null;
+				company?: string | null;
+				city?: string | null;
+				province?: string | null;
+				postalCode?: string | null;
+				countryCode?: string | null;
+				phoneNumber?: string | null;
+			} | null;
+			shippingAddress?: {
+				__typename?: 'OrderAddress';
+				fullName?: string | null;
+				streetLine1?: string | null;
+				streetLine2?: string | null;
+				company?: string | null;
+				city?: string | null;
+				province?: string | null;
+				postalCode?: string | null;
+				countryCode?: string | null;
+				phoneNumber?: string | null;
+			} | null;
+			shippingLines: Array<{
+				__typename?: 'ShippingLine';
+				priceWithTax: any;
+				shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
+			}>;
+			lines: Array<{
+				__typename?: 'OrderLine';
+				id: string;
+				unitPriceWithTax: any;
+				linePriceWithTax: any;
+				discountedUnitPriceWithTax: any;
+				discountedLinePriceWithTax: any;
+				quantity: number;
+				featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
+				productVariant: {
+					__typename?: 'ProductVariant';
+					id: string;
+					name: string;
+					price: any;
+					product: { __typename?: 'Product'; name: string; id: string; slug: string };
+				};
+			}>;
+		  }
+		| { __typename?: 'OrderModificationError'; errorCode: ErrorCode; message: string };
+};
+
+export type ActiveOrderQueryVariables = Exact<{ [key: string]: never }>;
+
+export type ActiveOrderQuery = {
+	__typename?: 'Query';
+	activeOrder?: {
+		__typename: 'Order';
+				id: string;
+				code: string;
+				active: boolean;
+				createdAt: any;
+				state: string;
+				currencyCode: CurrencyCode;
+				couponCodes: Array<string>;
+				totalQuantity: number;
+				discounts?: any;
+				subTotal: any;
+				subTotalWithTax: any;
+				shippingWithTax: any;
+				totalWithTax: any;
+				taxSummary: Array<{
+					__typename?: 'OrderTaxSummary';
+					description: string;
+					taxRate: number;
+					taxTotal: any;
+				}>;
+				customer?: {
+					__typename?: 'Customer';
+					id: string;
+					firstName: string;
+					lastName: string;
+					emailAddress: string;
+				} | null;
+				billingAddress?: {
+					__typename?: 'OrderAddress';
+					fullName?: string | null;
+					streetLine1?: string | null;
+					streetLine2?: string | null;
+					company?: string | null;
+					city?: string | null;
+					province?: string | null;
+					postalCode?: string | null;
+					countryCode?: string | null;
+					phoneNumber?: string | null;
+				} | null;
+				shippingAddress?: {
+					__typename?: 'OrderAddress';
+					fullName?: string | null;
+					streetLine1?: string | null;
+					streetLine2?: string | null;
+					company?: string | null;
+					city?: string | null;
+					province?: string | null;
+					postalCode?: string | null;
+					countryCode?: string | null;
+					phoneNumber?: string | null;
+				} | null;
+				shippingLines: Array<{
+					__typename?: 'ShippingLine';
+					priceWithTax: any;
+					shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
+				}>;
+				lines: Array<{
+					__typename?: 'OrderLine';
+					id: string;
+					unitPriceWithTax: any;
+					linePriceWithTax: any;
+					discountedUnitPriceWithTax: any;
+					discountedLinePriceWithTax: any;
+					quantity: number;
+					featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
+					productVariant: {
+						__typename?: 'ProductVariant';
+						id: string;
+						name: string;
+						price: any;
+						product: { __typename?: 'Product'; name: string; id: string; slug: string };
+					};
+				}>;
 	} | null;
 };
 
@@ -4649,62 +4864,67 @@ export type OrderByCodeQuery = {
 	__typename?: 'Query';
 	orderByCode?: {
 		__typename: 'Order';
-		id: string;
-		code: string;
-		active: boolean;
-		createdAt: any;
-		state: string;
-		currencyCode: CurrencyCode;
-		totalQuantity: number;
-		subTotal: any;
-		subTotalWithTax: any;
-		shippingWithTax: any;
-		totalWithTax: any;
-		taxSummary: Array<{
-			__typename?: 'OrderTaxSummary';
-			description: string;
-			taxRate: number;
-			taxTotal: any;
-		}>;
-		customer?: {
-			__typename?: 'Customer';
-			id: string;
-			firstName: string;
-			lastName: string;
-			emailAddress: string;
-		} | null;
-		shippingAddress?: {
-			__typename?: 'OrderAddress';
-			fullName?: string | null;
-			streetLine1?: string | null;
-			streetLine2?: string | null;
-			company?: string | null;
-			city?: string | null;
-			province?: string | null;
-			postalCode?: string | null;
-			countryCode?: string | null;
-			phoneNumber?: string | null;
-		} | null;
-		shippingLines: Array<{
-			__typename?: 'ShippingLine';
-			priceWithTax: any;
-			shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
-		}>;
-		lines: Array<{
-			__typename?: 'OrderLine';
-			id: string;
-			unitPriceWithTax: any;
-			linePriceWithTax: any;
-			quantity: number;
-			featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
-			productVariant: {
-				__typename?: 'ProductVariant';
 				id: string;
-				name: string;
-				price: any;
-				product: { __typename?: 'Product'; id: string; slug: string };
-			};
-		}>;
+				code: string;
+				active: boolean;
+				createdAt: any;
+				state: string;
+				currencyCode: CurrencyCode;
+				couponCodes: Array<string>;
+				totalQuantity: number;
+				discounts?: any;
+				subTotal: any;
+				subTotalWithTax: any;
+				shippingWithTax: any;
+				totalWithTax: any;
+				taxSummary: Array<{
+					__typename?: 'OrderTaxSummary';
+					description: string;
+					taxRate: number;
+					taxTotal: any;
+				}>;
+				customer?: {
+					__typename?: 'Customer';
+					id: string;
+					firstName: string;
+					lastName: string;
+					emailAddress: string;
+				} | null;
+				
+				shippingAddress?: {
+					__typename?: 'OrderAddress';
+					fullName?: string | null;
+					streetLine1?: string | null;
+					streetLine2?: string | null;
+					company?: string | null;
+					city?: string | null;
+					province?: string | null;
+					postalCode?: string | null;
+					countryCode?: string | null;
+					phoneNumber?: string | null;
+				} | null;
+				shippingLines: Array<{
+					__typename?: 'ShippingLine';
+					priceWithTax: any;
+					shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
+				}>;
+				lines: Array<{
+					__typename?: 'OrderLine';
+					id: string;
+					unitPriceWithTax: any;
+					linePriceWithTax: any;
+					discountedUnitPriceWithTax: any;
+					discountedLinePriceWithTax: any;
+					quantity: number;
+					featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
+					productVariant: {
+						__typename?: 'ProductVariant';
+						id: string;
+						name: string;
+						price: any;
+						product: { __typename?: 'Product'; name: string; id: string; slug: string };
+					};
+				}>;
 	} | null;
 };
 
@@ -4875,6 +5095,8 @@ export const OrderDetailFragmentDoc = gql`
 		createdAt
 		state
 		currencyCode
+		couponCodes
+		discount
 		totalQuantity
 		subTotal
 		subTotalWithTax
@@ -4913,6 +5135,8 @@ export const OrderDetailFragmentDoc = gql`
 			id
 			unitPriceWithTax
 			linePriceWithTax
+			discountedUnitPriceWithTax
+			discountedLinePriceWithTax
 			quantity
 			featuredAsset {
 				id
@@ -5346,6 +5570,20 @@ export const SetCustomerForOrderDocument = gql`
 	}
 	${OrderDetailFragmentDoc}
 `;
+
+export const ApplyCouponCodeDocument = gql`
+	mutation addCouponCode($couponCode: String!) {
+		addCouponCode(couponCode: $couponCode) {
+			...OrderDetail
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+	${OrderDetailFragmentDoc}
+`;
+
 export const AddItemToOrderDocument = gql`
 	mutation addItemToOrder($productVariantId: ID!, $quantity: Int!) {
 		addItemToOrder(productVariantId: $productVariantId, quantity: $quantity) {
@@ -5373,6 +5611,18 @@ export const SetOrderShippingMethodDocument = gql`
 export const AdjustOrderLineDocument = gql`
 	mutation adjustOrderLine($orderLineId: ID!, $quantity: Int!) {
 		adjustOrderLine(orderLineId: $orderLineId, quantity: $quantity) {
+			...OrderDetail
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+	${OrderDetailFragmentDoc}
+`;
+export const RemoveCouponCodeDocument = gql`
+	mutation removeCouponCode($couponCode: String!) {
+		removeCouponCode(couponCode: $couponCode) {
 			...OrderDetail
 			... on ErrorResult {
 				errorCode
@@ -5736,6 +5986,16 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
 				options
 			) as Promise<SetCustomerForOrderMutation>;
 		},
+		applyCouponCode(
+			variables: ApplyCouponCodeMutationVariables,
+			options?: C
+		): Promise<ApplyCouponCodeMutation> {
+			return requester<ApplyCouponCodeMutation, ApplyCouponCodeMutationVariables>(
+				ApplyCouponCodeDocument,
+				variables,
+				options
+			) as Promise<ApplyCouponCodeMutation>;
+		},
 		addItemToOrder(
 			variables: AddItemToOrderMutationVariables,
 			options?: C
@@ -5765,6 +6025,16 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
 				variables,
 				options
 			) as Promise<AdjustOrderLineMutation>;
+		},
+		removeCouponCode(
+			variables: RemoveCouponCodeMutationVariables,
+			options?: C
+		): Promise<RemoveCouponCodeMutation> {
+			return requester<RemoveCouponCodeMutation, RemoveCouponCodeMutationVariables>(
+				RemoveCouponCodeDocument,
+				variables,
+				options
+			) as Promise<RemoveCouponCodeMutation>;
 		},
 		removeOrderLine(
 			variables: RemoveOrderLineMutationVariables,
