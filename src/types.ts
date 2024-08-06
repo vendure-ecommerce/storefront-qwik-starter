@@ -107,6 +107,8 @@ export type Line = {
 	id: string;
 	unitPriceWithTax: number;
 	linePriceWithTax: number;
+	discountedUnitPriceWithTax: number;
+	discountedLinePriceWithTax: number;
 	quantity: number;
 	featuredAsset: FeaturedAsset;
 	productVariant: ProductVariant;
@@ -118,6 +120,8 @@ export type ActiveOrder = {
 	code: string;
 	active: boolean;
 	createdAt: Date;
+	couponCodes: string[];
+	discount: any;
 	state: string;
 	currencyCode: CurrencyCode;
 	totalQuantity: number;

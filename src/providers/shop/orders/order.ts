@@ -3,16 +3,29 @@ import {
 	ActiveOrderQuery,
 	AddItemToOrderMutation,
 	AdjustOrderLineMutation,
+	ApplyCouponCodeMutation,
 	CreateAddressInput,
 	CreateCustomerInput,
 	Order,
 	OrderByCodeQuery,
+	RemoveCouponCodeMutation,
 	RemoveOrderLineMutation,
 	SetCustomerForOrderMutation,
 	SetOrderShippingAddressMutation,
-	SetOrderShippingMethodMutation,
-} from '~/generated/graphql';
+	SetOrderShippingMethodMutation
+} from '~/generated/graphql-shop';
 import { shopSdk } from '~/graphql-wrapper';
+
+export const removeCouponCodeMutation = async (couponCode: string) => {
+	return shopSdk
+		.removeCouponCode({ couponCode })
+		.then((res: RemoveCouponCodeMutation) => res.removeCouponCode);
+};
+export const applyCouponCodeMutation = async (couponCode: string) => {
+	return shopSdk
+		.applyCouponCode({ couponCode })
+		.then((res: ApplyCouponCodeMutation) => res.applyCouponCode);
+};
 
 export const getActiveOrderQuery = async () => {
 	return shopSdk.activeOrder(undefined).then((res: ActiveOrderQuery) => res.activeOrder as Order);
@@ -115,6 +128,8 @@ gql`
 		createdAt
 		state
 		currencyCode
+		couponCode
+		discount
 		totalQuantity
 		subTotal
 		subTotalWithTax
@@ -153,6 +168,8 @@ gql`
 			id
 			unitPriceWithTax
 			linePriceWithTax
+			discountedUnitPriceWithTax
+			discountedLinePriceWithTax
 			quantity
 			featuredAsset {
 				id
@@ -181,6 +198,30 @@ gql`
 			}
 		}
 	}
+`;
+
+gql`
+mutation addCouponCode($couponCode: String!) {
+	addCouponCode(couponCode: $couponCode) {
+		...OrderDetail
+		... on ErrorResult {
+			errorCode
+			message
+		}
+	}
+}
+`;
+
+gql`
+mutation removeCouponCode($couponCode: String!) {
+	removeCouponCode(couponCode: $couponCode) {
+		...OrderDetail
+		... on ErrorResult {
+			errorCode
+			message
+		}
+	}
+}
 `;
 
 gql`
