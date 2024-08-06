@@ -30,12 +30,11 @@ export default component$(() => {
 					city: address.city,
 					province: address.province,
 					postalCode: address.postalCode,
-					countryCode: address.country.code,
+					countryCode: address.country.code, // Updated to countryCode
 					phoneNumber: address.phoneNumber,
 					defaultShippingAddress: address.defaultShippingAddress,
 					defaultBillingAddress: address.defaultBillingAddress,
-					country: address.country.code,
-				} as ShippingAddress)
+				}) as ShippingAddress
 		);
 		activeCustomerAddresses.value = { id, addresses: shippingAddresses };
 
@@ -53,8 +52,13 @@ export default component$(() => {
 						<AddressCard
 							address={address}
 							onDelete$={async (id) => {
-								await deleteCustomerAddressMutation(id);
-								location.reload();
+								try {
+									await deleteCustomerAddressMutation(id);
+									// Optimistically update state without full page reload
+									appState.addressBook = appState.addressBook.filter((a) => a.id !== id);
+								} catch (error) {
+									console.error('Failed to delete address:', error);
+								}
 							}}
 						/>
 					</div>
