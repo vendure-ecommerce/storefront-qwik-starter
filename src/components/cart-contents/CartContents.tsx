@@ -39,10 +39,10 @@ export default component$<{
 	return (
 		<div class="flow-root">
 			<ul class="-my-6 divide-y divide-gray-200">
-				{rowsSignal.value.map((line, key) => {
+				{rowsSignal.value.map((line) => {
 					const { linePriceWithTax } = line;
 					return (
-						<li key={key} class="py-6 flex">
+						<li key={line.id} class="py-6 flex">
 							<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
 								<Image
 									layout="fixed"
