@@ -2,7 +2,7 @@ import { $, component$, useSignal } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import { registerCustomerAccountMutation } from '~/providers/shop/account/account';
-
+import { isEnvVariableEnabled } from '~/utils';
 export default component$(() => {
 	const email = useSignal('');
 	const firstName = useSignal('');
@@ -11,7 +11,6 @@ export default component$(() => {
 	const confirmPassword = useSignal('');
 	const successSignal = useSignal(false);
 	const error = useSignal('');
-
 	const registerCustomer = $(async (): Promise<void> => {
 		if (
 			email.value === '' ||
@@ -56,19 +55,22 @@ export default component$(() => {
 
 			<div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
 				<div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-					<div class="mb-6 bg-yellow-50 border border-yellow-400 text-yellow-800 rounded p-4 text-center text-sm">
-						{successSignal.value ? (
+					{successSignal.value && (
+						<div class="mb-6 bg-yellow-50 border border-yellow-400 text-yellow-800 rounded p-4 text-center text-sm">
 							<p>
 								Account registration successful! We sent email verification to {email.value}, you
 								must verify before logging in.
 							</p>
-						) : (
+						</div>
+					)}
+					{isEnvVariableEnabled('VITE_IS_READONLY_INSTANCE') && (
+						<div class="mb-6 bg-yellow-50 border border-yellow-400 text-yellow-800 rounded p-4 text-center text-sm">
 							<p>
 								Account registration is not supported by the demo Vendure instance. In order to use
 								it, please connect to your own local / production instance.
 							</p>
-						)}
-					</div>
+						</div>
+					)}
 					<div class="space-y-6">
 						<div>
 							<label class="block text-sm font-medium text-gray-700">Email address</label>
