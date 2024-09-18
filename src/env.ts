@@ -9,7 +9,6 @@ const envVariables = z.object({
 	VITE_SHOW_REVIEWS: z.string(),
 	VITE_SECURE_COOKIE: z.string(),
 	VITE_STRIPE_PUBLISHABLE_KEY: z.string(),
-	VITE_QWIK_INSIGHTS_KEY: z.string(),
 });
 
 export const ENV_VARIABLES = envVariables.parse(import.meta.env);
