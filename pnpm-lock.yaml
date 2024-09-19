@@ -26,8 +26,8 @@ importers:
         specifier: ^2.12.6
         version: 2.12.6(graphql@16.9.0)
       qwik-image:
-        specifier: ^0.0.8
-        version: 0.0.8
+        specifier: ^0.0.15
+        version: 0.0.15
       zod:
         specifier: ^3.22.4
         version: 3.23.8
@@ -5581,10 +5581,10 @@ packages:
         integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==,
       }
 
-  qwik-image@0.0.8:
+  qwik-image@0.0.15:
     resolution:
       {
-        integrity: sha512-scmrnRVpTWpVESHEkE/9EZ6diy7K8dhRTh4nqEIj9al4PafY8o3sIsV4oxjG+1wn1TIXd1CJmnTCLEJ37gvgAA==,
+        integrity: sha512-FvEGgM4FE0qh9ceHNvgaNkvJfoXMmSitAzEvCkeaCaoybLMU5odQvqmSple0fjD1bIE0j3TcPUmjlT3XdOnHbA==,
       }
 
   read-cache@1.0.0:
@@ -10666,7 +10666,7 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
-  qwik-image@0.0.8: {}
+  qwik-image@0.0.15: {}
 
   read-cache@1.0.0:
     dependencies:
