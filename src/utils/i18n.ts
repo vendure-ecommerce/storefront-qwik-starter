@@ -6,10 +6,11 @@ import '@angular/localize/init';
 import { getLocale, withLocale } from '@builder.io/qwik';
 import type { RenderOptions } from '@builder.io/qwik/server';
 import { DEFAULT_LOCALE } from '~/constants';
+import DE from '../locales/message.de.json';
 import EN from '../locales/message.en.json';
 import ES from '../locales/message.es.json';
-import DE from '../locales/message.de.json';
-
+import FR from '../locales/message.fr.json';
+import IT from '../locales/message.it.json';
 /**
  * This file is left for the developer to customize to get the behavior they want for localization.
  */
@@ -45,7 +46,7 @@ if (!$localizeFn.TRANSLATION_BY_LOCALE) {
  */
 export function initTranslations() {
 	console.log('Loading translations...');
-	[EN, ES, DE].forEach(({ translations, locale }) => {
+	[EN, ES, DE, FR, IT].forEach(({ translations, locale }) => {
 		withLocale(locale, () => loadTranslations(translations));
 	});
 }
@@ -57,19 +58,47 @@ export function initTranslations() {
  *
  * @returns The locale to use which will be stored in the `useEnvData('locale')`.
  */
+// export function extractLang(acceptLanguage: string | undefined | null, url: string): string {
+// 	let locale = (url && new URL(url).searchParams.get('lang')) || acceptLanguage?.split(',')[0];
+// 	if (locale) {
+// 		// If we have a locale, make sure it's in the list of supported locales.
+// 		if (!$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
+// 			// If not, try to remove sub-locale. (e.g. `en-US` -> `en`)
+// 			locale = locale.split('-')[0];
+// 			if (!$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
+// 				locale = ''; // If not, give up and don't translate.
+// 			}
+// 		}
+// 	}
+// 	return locale || '';
+// }
+// export function extractLang(acceptLanguage: string | undefined | null, url: string): string {
+// 	// Attempt to extract the language from the URL path (e.g., "/fr/products/...").
+// 	let locale = (url && new URL(url).pathname.split('/')[1]) || acceptLanguage?.split(',')[0];
+
+// 	// Check if the extracted locale is supported.
+// 	if (locale && !$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
+// 	  // If not supported, try to remove sub-locale (e.g., "en-US" -> "en").
+// 	  locale = locale.split('-')[0];
+// 	  if (!$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
+// 		locale = 'en';  // Default to English if no supported locale is found.
+// 	  }
+// 	}
+
+// 	return locale;
+//   }
+
 export function extractLang(acceptLanguage: string | undefined | null, url: string): string {
-	let locale = (url && new URL(url).searchParams.get('lang')) || acceptLanguage?.split(',')[0];
-	if (locale) {
-		// If we have a locale, make sure it's in the list of supported locales.
+	let locale = (url && new URL(url).pathname.split('/')[1]) || acceptLanguage?.split(',')[0];
+
+	if (locale && !$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
+		locale = locale.split('-')[0]; // Fallback to sub-locale
 		if (!$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
-			// If not, try to remove sub-locale. (e.g. `en-US` -> `en`)
-			locale = locale.split('-')[0];
-			if (!$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
-				locale = ''; // If not, give up and don't translate.
-			}
+			locale = 'en'; // Default to English
 		}
 	}
-	return locale || '';
+
+	return locale || 'en';
 }
 
 /**

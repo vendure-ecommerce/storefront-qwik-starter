@@ -9,28 +9,39 @@ import {
 } from '@builder.io/qwik';
 import { RequestHandler, routeLoader$ } from '@builder.io/qwik-city';
 import { ImageTransformerProps, useImageProvider } from 'qwik-image';
+import Cart from '~/components/cart/Cart';
+import Footer from '~/components/footer/footer';
+import Header from '~/components/header/header';
 import Menu from '~/components/menu/Menu';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, IMAGE_RESOLUTIONS } from '~/constants';
-import { Order } from '~/generated/graphql';
+import { Collection as CollectionGql, Order } from '~/generated/graphql';
 import { getAvailableCountriesQuery } from '~/providers/shop/checkout/checkout';
 import { getCollections } from '~/providers/shop/collections/collections';
 import { getActiveOrderQuery } from '~/providers/shop/orders/order';
-import { ActiveCustomer, AppState } from '~/types';
+import type { AppState } from '~/types';
 import { extractLang } from '~/utils/i18n';
-import Cart from '../components/cart/Cart';
-import Footer from '../components/footer/footer';
-import Header from '../components/header/header';
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
 	cacheControl({ staleWhileRevalidate: 60 * 60 * 24 * 7, maxAge: 5 });
 };
 
-export const useCollectionsLoader = routeLoader$(async () => {
-	return await getCollections();
+export const useCollectionsLoader = routeLoader$(async ({ locale }) => {
+	const lang = locale();
+	try {
+		return await getCollections(lang);
+	} catch (error) {
+		console.error('Failed to fetch collections:', error);
+		return [];
+	}
 });
 
 export const useAvailableCountriesLoader = routeLoader$(async () => {
-	return await getAvailableCountriesQuery();
+	try {
+		return await getAvailableCountriesQuery();
+	} catch (error) {
+		console.error('Failed to fetch available countries:', error);
+		return [];
+	}
 });
 
 export const onRequest: RequestHandler = ({ request, locale }) => {
@@ -42,7 +53,6 @@ export default component$(() => {
 		return `${src}?w=${width}&h=${height}&format=webp`;
 	});
 
-	// Provide your default options
 	useImageProvider({
 		imageTransformer$,
 		resolutions: IMAGE_RESOLUTIONS,
@@ -52,20 +62,20 @@ export default component$(() => {
 	const availableCountriesSignal = useAvailableCountriesLoader();
 
 	const state = useStore<AppState>({
+		products: [],
+		language: 'en',
+		activeLanguage: null,
 		showCart: false,
 		showMenu: false,
-		customer: { id: CUSTOMER_NOT_DEFINED_ID, firstName: '', lastName: '' } as ActiveCustomer,
+		customer: { id: CUSTOMER_NOT_DEFINED_ID, firstName: '', lastName: '' },
 		activeOrder: {} as Order,
-		collections: collectionsSignal.value || [],
+		collections: (collectionsSignal.value as CollectionGql[]) || [],
+		//@ts-ignore
 		availableCountries: availableCountriesSignal.value || [],
 		shippingAddress: {
-			id: '',
 			city: '',
 			company: '',
-			countryCode:
-				availableCountriesSignal.value && availableCountriesSignal.value.length > 0
-					? availableCountriesSignal.value[0].code
-					: '',
+			countryCode: availableCountriesSignal.value?.[0]?.code || '',
 			fullName: '',
 			phoneNumber: '',
 			postalCode: '',
@@ -78,17 +88,37 @@ export default component$(() => {
 
 	useContextProvider(APP_STATE, state);
 
-	useVisibleTask$(async () => {
-		state.activeOrder = await getActiveOrderQuery();
+	useVisibleTask$(async ({ track }) => {
+		track(() => state.language);
+		track(() => state.activeLanguage);
+
+		const urlLang = window.location.pathname.split('/')[1];
+		const storedLang = localStorage.getItem('lang');
+		const supportedLangs = ['en', 'fr', 'de', 'it', 'es'];
+
+		let selectedLang = 'en';
+		if (urlLang && supportedLangs.includes(urlLang)) {
+			selectedLang = urlLang;
+		} else if (storedLang && supportedLangs.includes(storedLang)) {
+			selectedLang = storedLang;
+		}
+
+		state.language = selectedLang;
+		state.activeLanguage = selectedLang;
+
+		try {
+			const collections = await getCollections(selectedLang);
+			state.collections = collections;
+			state.activeOrder = await getActiveOrderQuery();
+		} catch (error) {
+			console.error('Failed to fetch data:', error);
+		}
 	});
 
 	useVisibleTask$(({ track }) => {
 		track(() => state.showCart);
 		track(() => state.showMenu);
-
-		state.showCart || state.showMenu
-			? document.body.classList.add('overflow-hidden')
-			: document.body.classList.remove('overflow-hidden');
+		document.body.classList.toggle('overflow-hidden', state.showCart || state.showMenu);
 	});
 
 	useOn(
@@ -104,8 +134,8 @@ export default component$(() => {
 	return (
 		<div>
 			<Header />
-			<Cart />
-			<Menu />
+			{state.showCart && <Cart />}
+			{state.showMenu && <Menu />}
 			<main class="pb-12 bg-gray-50">
 				<Slot />
 			</main>

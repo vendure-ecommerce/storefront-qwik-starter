@@ -1,12 +1,13 @@
 import { component$ } from '@builder.io/qwik';
-import { Link } from '@builder.io/qwik-city';
+
 import { Image } from 'qwik-image';
 import Price from './Price';
-
+import { LocalizedLink } from '../LocalizedLink';
 export default component$(
 	({ productAsset, productName, slug, priceWithTax, currencyCode }: any) => {
 		return (
-			<Link class="flex flex-col mx-auto" href={`/products/${slug}/`}>
+			//@ts-ignore
+			<LocalizedLink class="flex flex-col mx-auto" href={`/products/${slug}/`}>
 				<Image
 					layout="fixed"
 					class="rounded-xl flex-grow object-cover aspect-[7/8]"
@@ -22,7 +23,7 @@ export default component$(
 					currencyCode={currencyCode}
 					forcedClass="text-sm font-medium text-gray-900"
 				/>
-			</Link>
+			</LocalizedLink>
 		);
 	}
 );

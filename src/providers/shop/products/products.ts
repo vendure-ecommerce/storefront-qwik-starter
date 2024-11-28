@@ -2,37 +2,54 @@ import gql from 'graphql-tag';
 import { Product, ProductQuery, SearchInput, SearchResponse } from '~/generated/graphql';
 import { shopSdk } from '~/graphql-wrapper';
 
-export const search = async (searchInput: SearchInput) => {
+export const search = async (searchInput: SearchInput, languageCode: string) => {
 	return await shopSdk
-		.search({ input: { groupByProduct: true, ...searchInput } })
-		.then((res) => res.search as SearchResponse);
+		.search({
+			input: { groupByProduct: true, ...searchInput },
+			languageCode,
+		})
+		.then((res: { search: SearchResponse }) => res.search as SearchResponse);
 };
 
-export const searchQueryWithCollectionSlug = async (collectionSlug: string) =>
-	search({ collectionSlug });
+export const searchQueryWithCollectionSlug = async (collectionSlug: string, languageCode: string) =>
+	search({ collectionSlug }, languageCode);
 
 export const searchQueryWithTerm = async (
 	collectionSlug: string,
 	term: string,
-	facetValueIds: string[]
-) => search({ collectionSlug, term, facetValueFilters: [{ or: facetValueIds }] });
+	facetValueIds: string[],
+	languageCode: string
+) =>
+	search(
+		{
+			collectionSlug,
+			term,
+			facetValueFilters: [{ or: facetValueIds }],
+		},
+		languageCode
+	);
 
-export const getProductBySlug = async (slug: string) => {
-	return shopSdk.product({ slug }).then((res: ProductQuery) => res.product as Product);
+export const getProductBySlug = async (slug: string, languageCode: string) => {
+	return shopSdk
+		.product({
+			slug,
+			languageCode, // Pass directly as a variable
+		})
+		.then((res: ProductQuery) => res.product as Product);
 };
 
 export const detailedProductFragment = gql`
 	fragment DetailedProduct on Product {
 		id
-		name
-		description
+		name(languageCode: $languageCode)
+		description(languageCode: $languageCode)
 		collections {
 			id
 			slug
-			name
+			name(languageCode: $languageCode)
 			breadcrumbs {
 				id
-				name
+				name(languageCode: $languageCode)
 				slug
 			}
 		}
@@ -40,11 +57,11 @@ export const detailedProductFragment = gql`
 			facet {
 				id
 				code
-				name
+				name(languageCode: $languageCode)
 			}
 			id
 			code
-			name
+			name(languageCode: $languageCode)
 		}
 		featuredAsset {
 			id
@@ -56,7 +73,7 @@ export const detailedProductFragment = gql`
 		}
 		variants {
 			id
-			name
+			name(languageCode: $languageCode)
 			priceWithTax
 			currencyCode
 			sku
@@ -70,7 +87,7 @@ export const detailedProductFragment = gql`
 `;
 
 gql`
-	query product($slug: String, $id: ID) {
+	query product($slug: String, $id: ID, $languageCode: LanguageCode!) {
 		product(slug: $slug, id: $id) {
 			...DetailedProduct
 		}
@@ -80,7 +97,7 @@ gql`
 export const listedProductFragment = gql`
 	fragment ListedProduct on SearchResult {
 		productId
-		productName
+		productName(languageCode: $languageCode)
 		slug
 		productAsset {
 			id
@@ -100,7 +117,7 @@ export const listedProductFragment = gql`
 `;
 
 gql`
-	query search($input: SearchInput!) {
+	query search($input: SearchInput!, $languageCode: LanguageCode!) {
 		search(input: $input) {
 			totalItems
 			items {
@@ -110,10 +127,10 @@ gql`
 				count
 				facetValue {
 					id
-					name
+					name(languageCode: $languageCode)
 					facet {
 						id
-						name
+						name(languageCode: $languageCode)
 					}
 				}
 			}

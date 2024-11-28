@@ -73,12 +73,15 @@
 		"braintree-web-drop-in": "^1.42.0",
 		"graphql": "^16.8.1",
 		"graphql-tag": "^2.12.6",
+		"lucide-react": "^0.460.0",
 		"qwik-image": "^0.0.15",
+		"react-world-flags": "^1.6.0",
 		"zod": "^3.22.4"
 	},
 	"overrides": {
 		"@angular/compiler-cli": {
 			"typescript": "5.3.3"
 		}
-	}
+	},
+	"packageManager": "yarn@4.5.0+sha512.837566d24eec14ec0f5f1411adb544e892b3454255e61fdef8fd05f3429480102806bac7446bc9daff3896b01ae4b62d00096c7e989f1596f2af10b927532f39"
 }

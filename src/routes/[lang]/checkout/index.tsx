@@ -82,9 +82,8 @@ export default component$(() => {
 											delete shippingAddress.defaultBillingAddress;
 
 											const setOrderShippingAddress = async () => {
-												const setOrderShippingAddress = await setOrderShippingAddressMutation(
-													shippingAddress
-												);
+												const setOrderShippingAddress =
+													await setOrderShippingAddressMutation(shippingAddress);
 
 												if (setOrderShippingAddress.__typename === 'Order') {
 													if (isEnvVariableEnabled('VITE_SHOW_PAYMENT_STEP')) {
