@@ -88,17 +88,35 @@ export function initTranslations() {
 // 	return locale;
 //   }
 
+// export function extractLang(acceptLanguage: string | undefined | null, url: string): string {
+// 	let locale = (url && new URL(url).pathname.split('/')[1]) || acceptLanguage?.split(',')[0];
+
+// 	if (locale && !$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
+// 		locale = locale.split('-')[0]; // Fallback to sub-locale
+// 		if (!$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
+// 			locale = 'en'; // Default to English
+// 		}
+// 	}
+
+// 	return locale || 'en';
+// }
+
 export function extractLang(acceptLanguage: string | undefined | null, url: string): string {
-	let locale = (url && new URL(url).pathname.split('/')[1]) || acceptLanguage?.split(',')[0];
+	try {
+		const urlObj = url ? new URL(url) : null;
+		let locale = urlObj?.pathname.split('/')[1] || acceptLanguage?.split(',')[0];
 
-	if (locale && !$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
-		locale = locale.split('-')[0]; // Fallback to sub-locale
-		if (!$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
-			locale = 'en'; // Default to English
+		if (locale && !$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
+			locale = locale.split('-')[0]; // Fallback to sub-locale
+			if (!$localizeFn.TRANSLATION_BY_LOCALE.has(locale)) {
+				locale = 'en'; // Default to English
+			}
 		}
-	}
 
-	return locale || 'en';
+		return locale || 'en';
+	} catch (e) {
+		return 'en';
+	}
 }
 
 /**

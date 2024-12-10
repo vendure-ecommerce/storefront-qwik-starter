@@ -1,6 +1,6 @@
 import { component$, useContext } from '@builder.io/qwik';
-import { Link } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
+import { LocalizedLink } from '../LocalizedLink';
 
 export default component$(() => {
 	const collections = useContext(APP_STATE).collections.filter(
@@ -33,13 +33,13 @@ export default component$(() => {
 								<ul class="mt-4 space-y-4">
 									{collections.map((collection) => (
 										<li key={collection.id}>
-											<Link
+											<LocalizedLink
 												class="text-base text-gray-500 hover:text-gray-600"
 												href={`/collections/${collection.slug}`}
 												key={collection.id}
 											>
 												{collection.name}
-											</Link>
+											</LocalizedLink>
 										</li>
 									))}
 								</ul>
@@ -51,9 +51,12 @@ export default component$(() => {
 								<ul class="mt-4 space-y-4">
 									{navigation.support.map((item) => (
 										<li key={item.name}>
-											<Link href={item.href} class="text-base text-gray-500 hover:text-gray-600">
+											<LocalizedLink
+												href={item.href}
+												class="text-base text-gray-500 hover:text-gray-600"
+											>
 												{item.name}
-											</Link>
+											</LocalizedLink>
 										</li>
 									))}
 								</ul>
@@ -67,9 +70,12 @@ export default component$(() => {
 								<ul class="mt-4 space-y-4">
 									{navigation.company.map((item) => (
 										<li key={item.name}>
-											<Link href={item.href} class="text-base text-gray-500 hover:text-gray-600">
+											<LocalizedLink
+												href={item.href}
+												class="text-base text-gray-500 hover:text-gray-600"
+											>
 												{item.name}
-											</Link>
+											</LocalizedLink>
 										</li>
 									))}
 								</ul>
@@ -103,16 +109,6 @@ export default component$(() => {
 						</div>
 					</div>
 				</div>
-				{/* <div class="mt-8 border-t pt-8">
-					<a
-						class="flex items-center space-x-4 font-medium text-gray-500 hover:text-gray-700"
-						target="_blank"
-						href="https://github.com/vendure-ecommerce/storefront-qwik-starter"
-					>
-						<GitIcon />
-						<span>github.com/vendure-ecommerce/storefront-qwik-starter</span>
-					</a>
-				</div> */}
 			</div>
 		</footer>
 	);

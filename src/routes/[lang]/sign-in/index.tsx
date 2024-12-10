@@ -1,7 +1,7 @@
 import { $, component$, useSignal } from '@builder.io/qwik';
 import { Link, useNavigate } from '@builder.io/qwik-city';
 import XCircleIcon from '~/components/icons/XCircleIcon';
-import { loginMutation } from '~/providers/shop/account/account';
+import { loginMutation } from '../../../providers/shop/account/account';
 
 export default component$(() => {
 	const navigate = useNavigate();

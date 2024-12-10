@@ -1,16 +1,183 @@
+// import { $, QwikKeyboardEvent, component$, useStore, useTask$ } from '@builder.io/qwik';
+// import { DocumentHead, routeLoader$, useLocation } from '@builder.io/qwik-city';
+// import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
+// import CollectionCard from '~/components/collection-card/CollectionCard';
+// import Filters from '~/components/facet-filter-controls/Filters';
+// import FiltersButton from '~/components/filters-button/FiltersButton';
+// import ProductCard from '~/components/products/ProductCard';
+// import { SearchResponse } from '~/generated/graphql';
+// import { getCollectionBySlug } from '~/providers/shop/collections/collections';
+// import {
+// 	searchQueryWithCollectionSlug,
+// 	searchQueryWithTerm,
+// } from '~/providers/shop/products/products';
+// import { FacetWithValues } from '~/types';
+// import {
+// 	changeUrlParamsWithoutRefresh,
+// 	cleanUpParams,
+// 	enableDisableFacetValues,
+// 	generateDocumentHead,
+// 	groupFacetValues,
+// } from '~/utils';
+
+// export const useCollectionLoader = routeLoader$(async ({ params }) => {
+// 	return await getCollectionBySlug(params.slug);
+// });
+
+// export const useSearchLoader = routeLoader$(async ({ params: p, url }) => {
+// 	const params = cleanUpParams(p);
+// 	const activeFacetValueIds: string[] = url.searchParams.get('f')?.split('-') || [];
+// 	return activeFacetValueIds.length
+// 		? await searchQueryWithTerm(params.slug, '', activeFacetValueIds)
+// 		: await searchQueryWithCollectionSlug(params.slug);
+// });
+
+// export default component$(() => {
+// 	const { params: p, url } = useLocation();
+// 	const params = cleanUpParams(p);
+// 	const activeFacetValueIds: string[] = url.searchParams.get('f')?.split('-') || [];
+
+// 	const collectionSignal = useCollectionLoader();
+// 	const searchSignal = useSearchLoader();
+
+// 	const state = useStore<{
+// 		showMenu: boolean;
+// 		search: SearchResponse;
+// 		facedValues: FacetWithValues[];
+// 		facetValueIds: string[];
+// 	}>({
+// 		showMenu: false,
+// 		search: searchSignal.value as SearchResponse,
+// 		facedValues: groupFacetValues(searchSignal.value as SearchResponse, activeFacetValueIds),
+// 		facetValueIds: activeFacetValueIds,
+// 	});
+
+// 	useTask$(async ({ track }) => {
+// 		track(() => collectionSignal.value.slug);
+// 		params.slug = cleanUpParams(p).slug;
+// 		state.facetValueIds = url.searchParams.get('f')?.split('-') || [];
+// 		state.search = state.facetValueIds.length
+// 			? await searchQueryWithTerm(params.slug, '', state.facetValueIds)
+// 			: await searchQueryWithCollectionSlug(params.slug);
+// 		state.facedValues = groupFacetValues(state.search as SearchResponse, state.facetValueIds);
+// 	});
+
+// 	const onFilterChange = $(async (id: string) => {
+// 		const { facedValues, facetValueIds } = enableDisableFacetValues(
+// 			state.facedValues,
+// 			state.facetValueIds.includes(id)
+// 				? state.facetValueIds.filter((f) => f !== id)
+// 				: [...state.facetValueIds, id]
+// 		);
+// 		state.facedValues = facedValues;
+// 		state.facetValueIds = facetValueIds;
+// 		changeUrlParamsWithoutRefresh('', facetValueIds);
+
+// 		state.search = facetValueIds.length
+// 			? await searchQueryWithTerm(params.slug, '', state.facetValueIds)
+// 			: await searchQueryWithCollectionSlug(params.slug);
+// 	});
+
+// 	const onOpenCloseFilter = $((id: string) => {
+// 		state.facedValues = state.facedValues.map((f) => {
+// 			if (f.id === id) {
+// 				f.open = !f.open;
+// 			}
+// 			return f;
+// 		});
+// 	});
+
+// 	return (
+// 		<div
+// 			class="max-w-6xl mx-auto px-4 py-10"
+// 			onKeyDown$={(event: QwikKeyboardEvent) => {
+// 				if (event.key === 'Escape') {
+// 					state.showMenu = false;
+// 				}
+// 			}}
+// 		>
+// 			<div class="flex justify-between items-center">
+// 				<h2 class="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
+// 					{collectionSignal.value.name}
+// 				</h2>
+// 				<div>
+// 					{!!state.facedValues.length && (
+// 						<FiltersButton
+// 							onToggleMenu$={async () => {
+// 								state.showMenu = !state.showMenu;
+// 							}}
+// 						/>
+// 					)}
+// 				</div>
+// 			</div>
+// 			<div>
+// 				<Breadcrumbs items={collectionSignal.value.breadcrumbs || []}></Breadcrumbs>
+// 				{!!collectionSignal.value.children?.length && (
+// 					<div class="max-w-2xl mx-auto py-16 sm:py-16 lg:max-w-none border-b mb-16">
+// 						<h2 class="text-2xl font-light text-gray-900">Collections</h2>
+// 						<div class="mt-6 grid max-w-xs sm:max-w-none mx-auto sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
+// 							{collectionSignal.value.children.map((child) => (
+// 								<CollectionCard key={child.id} collection={child}></CollectionCard>
+// 							))}
+// 						</div>
+// 					</div>
+// 				)}
+// 			</div>
+// 			<div class="mt-6 grid sm:grid-cols-5 gap-x-4">
+// 				{!!state.facedValues.length && (
+// 					<Filters
+// 						showMenu={state.showMenu}
+// 						facetsWithValues={state.facedValues}
+// 						onToggleMenu$={async () => {
+// 							state.showMenu = !state.showMenu;
+// 						}}
+// 						onFilterChange$={onFilterChange}
+// 						onOpenCloseFilter$={onOpenCloseFilter}
+// 					/>
+// 				)}
+// 				<div class="sm:col-span-5 lg:col-span-4">
+// 					<div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+// 						{state.search.items.map((item) => (
+// 							<ProductCard
+// 								key={item.productId}
+// 								productAsset={item.productAsset}
+// 								productName={item.productName}
+// 								slug={item.slug}
+// 								priceWithTax={item.priceWithTax}
+// 								currencyCode={item.currencyCode}
+// 							></ProductCard>
+// 						))}
+// 					</div>
+// 				</div>
+// 			</div>
+// 		</div>
+// 	);
+// });
+
+// export const head: DocumentHead = ({ resolveValue, url }) => {
+// 	const collection = resolveValue(useCollectionLoader);
+// 	let image = collection.children?.[0]?.featuredAsset?.preview || undefined;
+// 	if (!image) {
+// 		const search = resolveValue(useSearchLoader);
+// 		image = search.items?.[0]?.productAsset?.preview || undefined;
+// 	}
+// 	return generateDocumentHead(url.href, collection.name, undefined, image);
+// };
+
 import { $, QwikKeyboardEvent, component$, useContext, useStore, useTask$ } from '@builder.io/qwik';
 import { DocumentHead, routeLoader$, useLocation } from '@builder.io/qwik-city';
-import { APP_STATE } from '~/constants';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductCard from '~/components/products/ProductCard';
+import { SearchResponse } from '~/generated/graphql';
 import { getCollectionBySlug } from '~/providers/shop/collections/collections';
 import {
 	searchQueryWithCollectionSlug,
 	searchQueryWithTerm,
 } from '~/providers/shop/products/products';
+import { FacetWithValues } from '~/types';
 import {
 	changeUrlParamsWithoutRefresh,
 	cleanUpParams,
@@ -18,32 +185,23 @@ import {
 	generateDocumentHead,
 	groupFacetValues,
 } from '~/utils';
-import { Collection } from '~/generated/graphql';
+import { APP_STATE } from '~/constants';
 
 export const useCollectionLoader = routeLoader$(async ({ params, request }) => {
-	// Get language from URL first segment
-	const urlLang = request.url.split('/')[3] || 'en';
-	// Fallback to Accept-Language header if no URL language
-	const acceptLang = request.headers.get('Accept-Language')?.split(',')[0].split('-')[0];
-	const locale = urlLang || acceptLang || 'en';
-
-	const collection = await getCollectionBySlug(params.slug, locale);
-	return { collection, locale };
+	const url = new URL(request.url);
+	const lang = url.pathname.split('/')[1] || 'en';
+	return await getCollectionBySlug(params.slug, lang);
 });
 
 export const useSearchLoader = routeLoader$(async ({ params: p, url, request }) => {
-	const urlLang = request.url.split('/')[3] || 'en';
-	const acceptLang = request.headers.get('Accept-Language')?.split(',')[0].split('-')[0];
-	const locale = urlLang || acceptLang || 'en';
-
 	const params = cleanUpParams(p);
 	const activeFacetValueIds: string[] = url.searchParams.get('f')?.split('-') || [];
+	const requestUrl = new URL(request.url);
+	const lang = requestUrl.pathname.split('/')[1] || 'en';
 
-	const searchResult = activeFacetValueIds.length
-		? await searchQueryWithTerm(params.slug, '', activeFacetValueIds, locale)
-		: await searchQueryWithCollectionSlug(params.slug, locale);
-
-	return { search: searchResult, locale };
+	return activeFacetValueIds.length
+		? await searchQueryWithTerm(params.slug, '', activeFacetValueIds, lang)
+		: await searchQueryWithCollectionSlug(params.slug, lang);
 });
 
 export default component$(() => {
@@ -55,29 +213,28 @@ export default component$(() => {
 	const collectionSignal = useCollectionLoader();
 	const searchSignal = useSearchLoader();
 
-	const state = useStore({
+	const state = useStore<{
+		showMenu: boolean;
+		search: SearchResponse;
+		facedValues: FacetWithValues[];
+		facetValueIds: string[];
+	}>({
 		showMenu: false,
-		search: searchSignal.value.search,
-		facedValues: groupFacetValues(searchSignal.value.search, activeFacetValueIds),
+		search: searchSignal.value as SearchResponse,
+		facedValues: groupFacetValues(searchSignal.value as SearchResponse, activeFacetValueIds),
 		facetValueIds: activeFacetValueIds,
-		locale: appState.language || searchSignal.value.locale,
 	});
 
 	useTask$(async ({ track }) => {
-		track(() => collectionSignal.value.collection.slug);
-		track(() => appState.language); // Track language changes
-
+		track(() => collectionSignal.value.slug);
 		params.slug = cleanUpParams(p).slug;
 		state.facetValueIds = url.searchParams.get('f')?.split('-') || [];
-
-		// Use appState language for API calls
-		const currentLocale = appState.language || state.locale;
-
 		state.search = state.facetValueIds.length
-			? await searchQueryWithTerm(params.slug, '', state.facetValueIds, currentLocale)
-			: await searchQueryWithCollectionSlug(params.slug, currentLocale);
-
-		state.facedValues = groupFacetValues(state.search, state.facetValueIds);
+			? //@ts-ignore
+				await searchQueryWithTerm(params.slug, '', state.facetValueIds, appState.language)
+			: //@ts-ignore
+				await searchQueryWithCollectionSlug(params.slug, appState.language);
+		state.facedValues = groupFacetValues(state.search as SearchResponse, state.facetValueIds);
 	});
 
 	const onFilterChange = $(async (id: string) => {
@@ -87,20 +244,18 @@ export default component$(() => {
 				? state.facetValueIds.filter((f) => f !== id)
 				: [...state.facetValueIds, id]
 		);
-
 		state.facedValues = facedValues;
 		state.facetValueIds = facetValueIds;
 		changeUrlParamsWithoutRefresh('', facetValueIds);
 
-		// Use appState language for API calls
-		const currentLocale = appState.language || state.locale;
-
 		state.search = facetValueIds.length
-			? await searchQueryWithTerm(params.slug, '', state.facetValueIds, currentLocale)
-			: await searchQueryWithCollectionSlug(params.slug, currentLocale);
+			? //@ts-ignore
+				await searchQueryWithTerm(params.slug, '', state.facetValueIds, appState.language)
+			: //@ts-ignore
+				await searchQueryWithCollectionSlug(params.slug, appState.language);
 	});
 
-	const onOpenCloseFilter = $((id: strinyg) => {
+	const onOpenCloseFilter = $((id: string) => {
 		state.facedValues = state.facedValues.map((f) => {
 			if (f.id === id) {
 				f.open = !f.open;
@@ -109,6 +264,7 @@ export default component$(() => {
 		});
 	});
 
+	// Rest of the component remains the same
 	return (
 		<div
 			class="max-w-6xl mx-auto px-4 py-10"
@@ -120,7 +276,7 @@ export default component$(() => {
 		>
 			<div class="flex justify-between items-center">
 				<h2 class="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
-					{collectionSignal.value.collection.name}
+					{collectionSignal.value.name}
 				</h2>
 				<div>
 					{!!state.facedValues.length && (
@@ -133,13 +289,13 @@ export default component$(() => {
 				</div>
 			</div>
 			<div>
-				<Breadcrumbs items={collectionSignal.value.collection.breadcrumbs || []} />
-				{!!collectionSignal.value.collection.children?.length && (
+				<Breadcrumbs items={collectionSignal.value.breadcrumbs || []}></Breadcrumbs>
+				{!!collectionSignal.value.children?.length && (
 					<div class="max-w-2xl mx-auto py-16 sm:py-16 lg:max-w-none border-b mb-16">
 						<h2 class="text-2xl font-light text-gray-900">Collections</h2>
 						<div class="mt-6 grid max-w-xs sm:max-w-none mx-auto sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
-							{collectionSignal.value.collection.children.map((child: Collection) => (
-								<CollectionCard key={child.id} collection={child} />
+							{collectionSignal.value.children.map((child) => (
+								<CollectionCard key={child.id} collection={child}></CollectionCard>
 							))}
 						</div>
 					</div>
@@ -159,25 +315,16 @@ export default component$(() => {
 				)}
 				<div class="sm:col-span-5 lg:col-span-4">
 					<div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-						{state.search.items.map(
-							(item: {
-								productId: string | number | null | undefined;
-								productAsset: unknown;
-								productName: unknown;
-								slug: unknown;
-								priceWithTax: unknown;
-								currencyCode: unknown;
-							}) => (
-								<ProductCard
-									key={item.productId}
-									productAsset={item.productAsset}
-									productName={item.productName}
-									slug={item.slug}
-									priceWithTax={item.priceWithTax}
-									currencyCode={item.currencyCode}
-								/>
-							)
-						)}
+						{state.search.items.map((item) => (
+							<ProductCard
+								key={item.productId}
+								productAsset={item.productAsset}
+								productName={item.productName}
+								slug={item.slug}
+								priceWithTax={item.priceWithTax}
+								currencyCode={item.currencyCode}
+							></ProductCard>
+						))}
 					</div>
 				</div>
 			</div>
@@ -186,10 +333,10 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = ({ resolveValue, url }) => {
-	const { collection } = resolveValue(useCollectionLoader);
+	const collection = resolveValue(useCollectionLoader);
 	let image = collection.children?.[0]?.featuredAsset?.preview || undefined;
 	if (!image) {
-		const { search } = resolveValue(useSearchLoader);
+		const search = resolveValue(useSearchLoader);
 		image = search.items?.[0]?.productAsset?.preview || undefined;
 	}
 	return generateDocumentHead(url.href, collection.name, undefined, image);

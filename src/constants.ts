@@ -1,7 +1,6 @@
 import { createContextId } from '@builder.io/qwik';
 import { ENV_VARIABLES } from '~/env';
 import { AppState } from './types';
-
 export const APP_STATE = createContextId<AppState>('app_state');
 export const AUTH_TOKEN = 'authToken';
 export const CUSTOMER_NOT_DEFINED_ID = 'CUSTOMER_NOT_DEFINED_ID';

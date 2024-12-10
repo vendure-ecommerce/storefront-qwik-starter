@@ -1,10 +1,11 @@
 import { component$, useContext } from '@builder.io/qwik';
-import { Link, useLocation } from '@builder.io/qwik-city';
+import { useLocation } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import { isCheckoutPage } from '~/utils';
 import CartContents from '../cart-contents/CartContents';
 import CartPrice from '../cart-totals/CartPrice';
 import CloseIcon from '../icons/CloseIcon';
+import { LocalizedLink } from '../LocalizedLink';
 
 export default component$(() => {
 	const location = useLocation();
@@ -56,12 +57,12 @@ export default component$(() => {
 												{$localize`Shipping will be calculated at checkout.`}
 											</p>
 											<div class="mt-6">
-												<Link
+												<LocalizedLink
 													href="/checkout/"
 													class="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700 w-full"
 												>
 													{$localize`Checkout`}
-												</Link>
+												</LocalizedLink>
 											</div>
 										</div>
 									)}

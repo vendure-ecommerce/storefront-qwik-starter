@@ -1,13 +1,97 @@
+// utils/index.ts
 import {
 	DEFAULT_METADATA_DESCRIPTION,
 	DEFAULT_METADATA_IMAGE,
 	DEFAULT_METADATA_TITLE,
 	DEFAULT_METADATA_URL,
+	DEFAULT_LOCALE,
 } from '~/constants';
 import { ENV_VARIABLES } from '~/env';
 import { SearchResponse } from '~/generated/graphql';
 import { ActiveCustomer, FacetWithValues, ShippingAddress } from '~/types';
 
+// Language Support
+export const languages = [
+	{ code: 'en', name: 'English', flag: '🇬🇧' },
+	{ code: 'fr', name: 'Français', flag: '🇫🇷' },
+	{ code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+	{ code: 'it', name: 'Italiano', flag: '🇮🇹' },
+	{ code: 'es', name: 'Español', flag: '🇪🇸' },
+] as const;
+
+export type SupportedLanguages = (typeof languages)[number]['code'];
+
+export const isValidLanguage = (lang: string): lang is SupportedLanguages => {
+	return languages.map((l) => l.code).includes(lang as SupportedLanguages);
+};
+
+export const getLanguageCode = async (requestEvent?: {
+	headers: Headers;
+}): Promise<SupportedLanguages> => {
+	// Server-side language detection
+	if (requestEvent?.headers) {
+		// Try URL language first
+		const url = new URL(requestEvent.headers.get('referer') || 'http://localhost');
+		const urlLang = url.pathname.split('/')[1];
+		if (urlLang && isValidLanguage(urlLang)) {
+			return urlLang;
+		}
+
+		// Try Accept-Language header
+		const acceptLanguage = requestEvent.headers.get('accept-language');
+		if (acceptLanguage) {
+			const preferredLanguages = acceptLanguage
+				.split(',')
+				.map((lang) => lang.split(';')[0].split('-')[0].toLowerCase());
+
+			const matchedLang = preferredLanguages.find((lang) =>
+				languages.some((supportedLang) => supportedLang.code === lang)
+			);
+
+			if (matchedLang && isValidLanguage(matchedLang)) {
+				return matchedLang;
+			}
+		}
+	}
+
+	// Client-side language detection
+	if (typeof window !== 'undefined') {
+		// Try URL language
+		const urlLang = window.location.pathname.split('/')[1];
+		if (urlLang && isValidLanguage(urlLang)) {
+			return urlLang;
+		}
+
+		// Try localStorage
+		try {
+			const storedLang = localStorage.getItem('lang');
+			if (storedLang && isValidLanguage(storedLang)) {
+				return storedLang;
+			}
+		} catch (e) {
+			console.warn('localStorage is not available:', e);
+		}
+
+		// Try browser language
+		try {
+			const browserLangs = navigator.languages || [navigator.language];
+			const simpleLangs = browserLangs.map((lang) => lang.split('-')[0]);
+			const matchedLang = simpleLangs.find((lang) =>
+				languages.some((supportedLang) => supportedLang.code === lang)
+			);
+
+			if (matchedLang && isValidLanguage(matchedLang)) {
+				return matchedLang;
+			}
+		} catch (e) {
+			console.warn('Navigator languages are not available:', e);
+		}
+	}
+
+	return DEFAULT_LOCALE as SupportedLanguages;
+};
+
+// Existing Utils
 export const getRandomInt = (max: number) => Math.floor(Math.random() * max);
 
 export function formatPrice(value = 0, currency: any) {

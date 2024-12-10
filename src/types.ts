@@ -24,6 +24,8 @@ export type Product = {
 	featuredAsset: FeaturedAsset;
 	assets: Asset[];
 	variants: Variant[];
+	// language: string | number | readonly string[] | undefined;
+	// activeLanguage: string | null;
 };
 
 type Breadcrumb = {
@@ -37,7 +39,9 @@ export type Collection = {
 	slug: string;
 	name: string;
 	breadcrumbs?: Breadcrumb[];
-	parent?: { name: '__root_collection__' };
+
+	parent?: { name: '__root_collection__' } | null;
+
 	featuredAsset?: { id: string; preview: string };
 	children: any[];
 };
@@ -46,6 +50,8 @@ type Facet = {
 	id: string;
 	code: string;
 	name: string;
+	language: string | number | readonly string[] | undefined;
+	activeLanguage: string | null;
 };
 
 type FacetValue = {
@@ -53,6 +59,8 @@ type FacetValue = {
 	id: string;
 	code: string;
 	name: string;
+	language: string | number | readonly string[] | undefined;
+	activeLanguage: string | null;
 };
 
 type FeaturedAsset = {
@@ -73,6 +81,9 @@ export type Variant = {
 	sku: string;
 	stockLevel: string;
 	featuredAsset?: any;
+
+	language: string | number | readonly string[] | undefined;
+	activeLanguage: string | null;
 };
 
 // activeOrder
@@ -104,6 +115,8 @@ type ProductVariant = {
 	name: string;
 	price: number;
 	product: Product;
+	language: string | number | readonly string[] | undefined;
+	activeLanguage: string | null;
 };
 
 export type Line = {

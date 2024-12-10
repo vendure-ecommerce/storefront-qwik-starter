@@ -1,5 +1,5 @@
 import { Component, component$ } from '@builder.io/qwik';
-import { Link } from '@builder.io/qwik-city';
+import { LocalizedLink } from '../LocalizedLink';
 
 interface IProps {
 	Icon: Component<{ class: string }>;
@@ -11,7 +11,7 @@ interface IProps {
 export const Tab = component$(({ Icon, text, href, isActive }: IProps) => {
 	return (
 		<li>
-			<Link
+			<LocalizedLink
 				href={href}
 				class={`group w-full gap-x-2 max-w-[12rem] inline-flex items-center justify-around p-4 rounded-t-lg border-b-2 ${
 					isActive
@@ -25,7 +25,7 @@ export const Tab = component$(({ Icon, text, href, isActive }: IProps) => {
 					}`}
 				/>
 				<p class="flex-1">{text}</p>
-			</Link>
+			</LocalizedLink>
 		</li>
 	);
 });

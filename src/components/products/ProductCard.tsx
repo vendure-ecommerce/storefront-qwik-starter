@@ -2,7 +2,7 @@ import { component$ } from '@builder.io/qwik';
 
 import { Image } from 'qwik-image';
 import Price from './Price';
-import { LocalizedLink } from '../LocalizedLink';
+import { LocalizedLink } from '../locallizedclientlink/LocalizedLink';
 export default component$(
 	({ productAsset, productName, slug, priceWithTax, currencyCode }: any) => {
 		return (

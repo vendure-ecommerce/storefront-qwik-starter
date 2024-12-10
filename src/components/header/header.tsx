@@ -1,12 +1,13 @@
-// header.tsx
 import { $, component$, useContext, useVisibleTask$ } from '@builder.io/qwik';
-import { LocalizedLink } from '~/components/LocalizedLink';
+import { LocalizedLink } from '~/components/locallizedclientlink/LocalizedLink';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { getActiveCustomerQuery } from '~/providers/shop/customer/customer';
 import MenuIcon from '../icons/MenuIcon';
 import ShoppingBagIcon from '../icons/ShoppingBagIcon';
 import SearchBar from '../search-bar/SearchBar';
-
+import { isBrowser } from '@builder.io/qwik/build';
+import { createRequestOptions } from '~/utils/api';
+import { Image } from 'qwik-image';
 const languages = [
 	{ code: 'en', name: 'English', flag: '🇬🇧' },
 	{ code: 'fr', name: 'Français', flag: '🇫🇷' },
@@ -16,6 +17,19 @@ const languages = [
 ] as const;
 
 type LanguageCode = (typeof languages)[number]['code'];
+
+const detectBrowserLanguage = (): LanguageCode => {
+	if (!isBrowser) return 'en';
+
+	const browserLangs = navigator.languages || [navigator.language];
+	const simpleLangs = browserLangs.map((lang) => lang.split('-')[0]);
+
+	const matchedLang = simpleLangs.find((lang) =>
+		languages.some((supportedLang) => supportedLang.code === lang)
+	);
+
+	return (matchedLang as LanguageCode) || 'en';
+};
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
@@ -46,31 +60,41 @@ export default component$(() => {
 			}
 		}
 
-		// Handle language from URL path
 		const urlLang = window.location.pathname.split('/')[1];
+		const storedLang = localStorage.getItem('lang') as LanguageCode;
+
+		let selectedLang: LanguageCode;
+
 		if (urlLang && languages.some((l) => l.code === urlLang)) {
-			appState.language = urlLang as LanguageCode;
-			localStorage.setItem('lang', urlLang);
+			selectedLang = urlLang as LanguageCode;
+		} else if (storedLang && languages.some((l) => l.code === storedLang)) {
+			selectedLang = storedLang;
 		} else {
-			const storedLang = (localStorage.getItem('lang') as LanguageCode) || 'en';
-			if (urlLang !== storedLang) {
-				// Redirect to correct language path if needed
-				const currentPath = window.location.pathname.replace(/^\/[a-z]{2}/, '');
-				window.location.href = `/${storedLang}${currentPath || '/'}`;
-			}
-			appState.language = storedLang;
+			selectedLang = detectBrowserLanguage();
 		}
+
+		appState.language = selectedLang;
+		localStorage.setItem('lang', selectedLang);
+
+		// Redirect if URL doesn't match selected language
+		if (urlLang !== selectedLang) {
+			const currentPath = window.location.pathname.replace(/^\/[a-z]{2}/, '');
+			window.location.href = `/${selectedLang}${currentPath || '/'}`;
+		}
+
+		// Initialize API options with current language
+		createRequestOptions(selectedLang);
 	});
 
 	const switchLanguage = $((lang: LanguageCode) => {
 		if (lang === currentLang) return;
 
+		// Update app state and localStorage
 		appState.language = lang;
 		localStorage.setItem('lang', lang);
 
-		// Update Accept-Language header for API calls
-		const headers = new Headers();
-		headers.set('Accept-Language', lang);
+		// Force refresh requester options with new language
+		createRequestOptions(lang);
 
 		// Redirect to new language path
 		const currentPath = window.location.pathname.replace(/^\/[a-z]{2}/, '');
@@ -81,7 +105,6 @@ export default component$(() => {
 		<div class="bg-gradient-to-r from-blue-700 to-indigo-900 shadow-xl sticky top-0 z-10">
 			<header class="max-w-6xl mx-auto">
 				<div class="p-4 flex items-center space-x-4">
-					{/* Mobile Menu Button */}
 					<button
 						class="block sm:hidden text-white hover:text-gray-200 transition-colors"
 						onClick$={() => (appState.showMenu = !appState.showMenu)}
@@ -89,24 +112,24 @@ export default component$(() => {
 						<MenuIcon />
 					</button>
 
-					{/* Logo */}
 					<h1 class="text-white w-10">
 						<LocalizedLink href="/" class="hover:opacity-90 transition-opacity">
-							<img
+							<Image
+								// eslint-disable-next-line qwik/jsx-img
 								src="/cube-logo-small.webp"
 								width={40}
 								height={31}
 								alt="Vendure logo"
 								class="w-10 h-auto"
+								layout="fixed"
 							/>
 						</LocalizedLink>
 					</h1>
 
-					{/* Desktop Navigation */}
 					<nav class="hidden sm:flex space-x-6">
 						{collections.map((collection) => (
 							<LocalizedLink
-								className="text-sm md:text-base text-gray-200 hover:text-white transition-colors"
+								class="text-sm md:text-base text-gray-200 hover:text-white transition-colors"
 								href={`/collections/${collection.slug}`}
 								key={collection.id}
 							>
@@ -115,14 +138,11 @@ export default component$(() => {
 						))}
 					</nav>
 
-					{/* Search Bar */}
 					<div class="flex-1 block md:pr-8">
 						<SearchBar />
 					</div>
 
-					{/* Right Side Controls */}
 					<div class="flex items-center space-x-4">
-						{/* Language Selector */}
 						<div class="relative group">
 							<div class="flex items-center gap-2 bg-white/10 text-white px-3 py-2 rounded-lg cursor-pointer hover:bg-white/20 transition-all">
 								<span class="text-xl">
@@ -145,10 +165,10 @@ export default component$(() => {
 										</button>
 									))}
 								</div>
+								z
 							</div>
 						</div>
 
-						{/* Cart Button */}
 						<button
 							name="Cart"
 							aria-label={`${totalQuantity} items in cart`}

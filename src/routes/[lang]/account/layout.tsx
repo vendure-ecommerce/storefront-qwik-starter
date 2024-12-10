@@ -1,7 +1,7 @@
 import { Slot, component$, useContext, useVisibleTask$ } from '@builder.io/qwik';
 import { TabsContainer } from '~/components/account/TabsContainer';
 import { APP_STATE } from '~/constants';
-import { getActiveCustomerQuery } from '~/providers/shop/customer/customer';
+import { getActiveCustomerQuery } from '../../../providers/shop/customer/customer';
 import { fullNameWithTitle } from '~/utils';
 
 export default component$(() => {

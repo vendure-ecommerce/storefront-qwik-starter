@@ -1,55 +1,184 @@
+// import gql from 'graphql-tag';
+// import { Product, ProductQuery, SearchInput, SearchResponse } from '~/generated/graphql';
+// import { shopSdk } from '~/graphql-wrapper';
+
+// export const search = async (searchInput: SearchInput) => {
+// 	return await shopSdk
+// 		.search({ input: { groupByProduct: true, ...searchInput } })
+// 		.then((res) => res.search as SearchResponse);
+// };
+
+// export const searchQueryWithCollectionSlug = async (collectionSlug: string) =>
+// 	search({ collectionSlug });
+
+// export const searchQueryWithTerm = async (
+// 	collectionSlug: string,
+// 	term: string,
+// 	facetValueIds: string[]
+// ) => search({ collectionSlug, term, facetValueFilters: [{ or: facetValueIds }] });
+
+// export const getProductBySlug = async (slug: string) => {
+// 	return shopSdk.product({ slug }).then((res: ProductQuery) => res.product as Product);
+// };
+
+// export const detailedProductFragment = gql`
+// 	fragment DetailedProduct on Product {
+// 		id
+// 		name
+// 		description
+// 		collections {
+// 			id
+// 			slug
+// 			name
+// 			breadcrumbs {
+// 				id
+// 				name
+// 				slug
+// 			}
+// 		}
+// 		facetValues {
+// 			facet {
+// 				id
+// 				code
+// 				name
+// 			}
+// 			id
+// 			code
+// 			name
+// 		}
+// 		featuredAsset {
+// 			id
+// 			preview
+// 		}
+// 		assets {
+// 			id
+// 			preview
+// 		}
+// 		variants {
+// 			id
+// 			name
+// 			priceWithTax
+// 			currencyCode
+// 			sku
+// 			stockLevel
+// 			featuredAsset {
+// 				id
+// 				preview
+// 			}
+// 		}
+// 	}
+// `;
+
+// gql`
+// 	query product($slug: String, $id: ID) {
+// 		product(slug: $slug, id: $id) {
+// 			...DetailedProduct
+// 		}
+// 	}
+// `;
+
+// export const listedProductFragment = gql`
+// 	fragment ListedProduct on SearchResult {
+// 		productId
+// 		productName
+// 		slug
+// 		productAsset {
+// 			id
+// 			preview
+// 		}
+// 		currencyCode
+// 		priceWithTax {
+// 			... on PriceRange {
+// 				min
+// 				max
+// 			}
+// 			... on SinglePrice {
+// 				value
+// 			}
+// 		}
+// 	}
+// `;
+
+// gql`
+// 	query search($input: SearchInput!) {
+// 		search(input: $input) {
+// 			totalItems
+// 			items {
+// 				...ListedProduct
+// 			}
+// 			facetValues {
+// 				count
+// 				facetValue {
+// 					id
+// 					name
+// 					facet {
+// 						id
+// 						name
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// 	${listedProductFragment}
+// `;
+
 import gql from 'graphql-tag';
 import { Product, ProductQuery, SearchInput, SearchResponse } from '~/generated/graphql';
-import { shopSdk } from '~/graphql-wrapper';
+import { shopSdk, esShopSdk, frShopSdk, deShopSdk, itShopSdk } from '~/graphql-wrapper';
 
-export const search = async (searchInput: SearchInput, languageCode: string) => {
-	return await shopSdk
-		.search({
-			input: { groupByProduct: true, ...searchInput },
-			languageCode,
-		})
-		.then((res: { search: SearchResponse }) => res.search as SearchResponse);
+const getLanguageSpecificSdk = (language: string) => {
+	switch (language) {
+		case 'es':
+			return esShopSdk;
+		case 'fr':
+			return frShopSdk;
+		case 'de':
+			return deShopSdk;
+		case 'it':
+			return itShopSdk;
+		case 'en':
+			return shopSdk;
+		default:
+			return shopSdk;
+	}
 };
 
-export const searchQueryWithCollectionSlug = async (collectionSlug: string, languageCode: string) =>
-	search({ collectionSlug }, languageCode);
+export const search = async (searchInput: SearchInput, language: string = 'en') => {
+	const sdk = getLanguageSpecificSdk(language);
+	return await sdk
+		.search({ input: { groupByProduct: true, ...searchInput } })
+		.then((res) => res.search as SearchResponse);
+};
+
+export const searchQueryWithCollectionSlug = async (
+	collectionSlug: string,
+	language: string = 'en'
+) => search({ collectionSlug }, language);
 
 export const searchQueryWithTerm = async (
 	collectionSlug: string,
 	term: string,
 	facetValueIds: string[],
-	languageCode: string
-) =>
-	search(
-		{
-			collectionSlug,
-			term,
-			facetValueFilters: [{ or: facetValueIds }],
-		},
-		languageCode
-	);
+	language: string = 'en'
+) => search({ collectionSlug, term, facetValueFilters: [{ or: facetValueIds }] }, language);
 
-export const getProductBySlug = async (slug: string, languageCode: string) => {
-	return shopSdk
-		.product({
-			slug,
-			languageCode, // Pass directly as a variable
-		})
-		.then((res: ProductQuery) => res.product as Product);
+export const getProductBySlug = async (slug: string, language: string = 'en') => {
+	const sdk = getLanguageSpecificSdk(language);
+	return sdk.product({ slug }).then((res: ProductQuery) => res.product as Product);
 };
 
 export const detailedProductFragment = gql`
 	fragment DetailedProduct on Product {
 		id
-		name(languageCode: $languageCode)
-		description(languageCode: $languageCode)
+		name
+		description
 		collections {
 			id
 			slug
-			name(languageCode: $languageCode)
+			name
 			breadcrumbs {
 				id
-				name(languageCode: $languageCode)
+				name
 				slug
 			}
 		}
@@ -57,11 +186,11 @@ export const detailedProductFragment = gql`
 			facet {
 				id
 				code
-				name(languageCode: $languageCode)
+				name
 			}
 			id
 			code
-			name(languageCode: $languageCode)
+			name
 		}
 		featuredAsset {
 			id
@@ -73,7 +202,7 @@ export const detailedProductFragment = gql`
 		}
 		variants {
 			id
-			name(languageCode: $languageCode)
+			name
 			priceWithTax
 			currencyCode
 			sku
@@ -87,7 +216,7 @@ export const detailedProductFragment = gql`
 `;
 
 gql`
-	query product($slug: String, $id: ID, $languageCode: LanguageCode!) {
+	query product($slug: String, $id: ID) {
 		product(slug: $slug, id: $id) {
 			...DetailedProduct
 		}
@@ -97,7 +226,7 @@ gql`
 export const listedProductFragment = gql`
 	fragment ListedProduct on SearchResult {
 		productId
-		productName(languageCode: $languageCode)
+		productName
 		slug
 		productAsset {
 			id
@@ -117,7 +246,7 @@ export const listedProductFragment = gql`
 `;
 
 gql`
-	query search($input: SearchInput!, $languageCode: LanguageCode!) {
+	query search($input: SearchInput!) {
 		search(input: $input) {
 			totalItems
 			items {
@@ -127,10 +256,10 @@ gql`
 				count
 				facetValue {
 					id
-					name(languageCode: $languageCode)
+					name
 					facet {
 						id
-						name(languageCode: $languageCode)
+						name
 					}
 				}
 			}

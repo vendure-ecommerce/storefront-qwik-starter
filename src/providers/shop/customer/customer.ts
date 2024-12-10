@@ -59,14 +59,26 @@ export const updateCustomerAddressMutation = async (
 	token: string | undefined
 ) => {
 	console.log(token);
-	return shopSdk.updateCustomerAddressMutation({ input }, { token });
+	return shopSdk.updateCustomerAddressMutation(
+		{ input },
+		{
+			token: token,
+			languageCode: '',
+		}
+	);
 };
 
 export const createCustomerAddressMutation = (
 	input: CreateAddressInput,
 	token: string | undefined
 ) => {
-	return shopSdk.createCustomerAddressMutation({ input }, { token });
+	return shopSdk.createCustomerAddressMutation(
+		{ input },
+		{
+			token,
+			languageCode: '',
+		}
+	);
 };
 
 gql`

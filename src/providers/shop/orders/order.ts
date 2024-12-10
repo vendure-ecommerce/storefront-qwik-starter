@@ -22,11 +22,7 @@ export const getOrderByCodeQuery = async (code: string) => {
 	return shopSdk.orderByCode({ code }).then((res: OrderByCodeQuery) => res.orderByCode as Order);
 };
 
-export const addItemToOrderMutation = async (
-	productVariantId: string,
-	quantity: number,
-	lang: string
-) => {
+export const addItemToOrderMutation = async (productVariantId: string, quantity: number) => {
 	return shopSdk
 		.addItemToOrder({ productVariantId, quantity })
 		.then((res: AddItemToOrderMutation) => res.addItemToOrder);

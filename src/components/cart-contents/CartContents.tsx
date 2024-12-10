@@ -1,5 +1,6 @@
 import { component$, useComputed$, useContext, useSignal, useTask$ } from '@builder.io/qwik';
-import { Link, useLocation, useNavigate } from '@builder.io/qwik-city';
+import { useLocation, useNavigate } from '@builder.io/qwik-city';
+import { LocalizedLink } from '../LocalizedLink';
 import { Image } from 'qwik-image';
 import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
@@ -58,9 +59,9 @@ export default component$<{
 								<div>
 									<div class="flex justify-between text-base font-medium text-gray-900">
 										<h3>
-											<Link href={`/products/${line.productVariant.product.slug}/`}>
+											<LocalizedLink href={`/products/${line.productVariant.product.slug}/`}>
 												{line.productVariant.name}
-											</Link>
+											</LocalizedLink>
 										</h3>
 										<Price
 											priceWithTax={linePriceWithTax}
