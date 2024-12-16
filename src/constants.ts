@@ -1,5 +1,5 @@
 import { createContextId } from '@builder.io/qwik';
-import { ENV_VARIABLES } from '~/env';
+import { ENV_VARIABLES } from './env';
 import { AppState } from './types';
 
 export const APP_STATE = createContextId<AppState>('app_state');
