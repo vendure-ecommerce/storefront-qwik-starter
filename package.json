@@ -29,11 +29,10 @@
 		"preview": "qwik build preview && vite preview --open",
 		"start": "pnpm generate && vite --open --mode ssr",
 		"qwik": "qwik",
-		"generate-admin": "DOTENV_CONFIG_PATH=.env graphql-codegen -r dotenv/config --config codegen-admin.ts",
 		"generate-shop": "DOTENV_CONFIG_PATH=.env graphql-codegen -r dotenv/config --config codegen-shop.ts",
-		"generate-dev": "export IS_DEV=TRUE && pnpm generate-shop && pnpm generate-admin",
-		"generate-local": "export IS_LOCAL=TRUE && pnpm generate-shop && pnpm generate-admin",
-		"generate": "pnpm generate-shop && pnpm generate-admin"
+		"generate-dev": "export IS_DEV=TRUE && pnpm generate-shop",
+		"generate-local": "export IS_LOCAL=TRUE && pnpm generate-shop",
+		"generate": "pnpm generate-shop"
 	},
 	"devDependencies": {
 		"@angular/compiler": "^17.1.3",

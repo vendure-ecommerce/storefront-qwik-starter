@@ -51,7 +51,6 @@ const execute = async <R, V = Record<string, any>>(
 
 	if (isBrowser && response.token) {
 		setCookie(AUTH_TOKEN, response.token, 365);
-		// setCookie(ADMIN_AUTH_TOKEN, response.token, 365);
 	}
 
 	return response.data;

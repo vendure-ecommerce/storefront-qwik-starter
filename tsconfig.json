@@ -22,6 +22,6 @@
 		}
 	},
 	"files": ["./.eslintrc.cjs"],
-	"exclude": ["src/generated/graphql-admin.ts", "src/generated/graphql-shop.ts"],
-	"include": ["src", "tailwind.config.js", "codegen-shop.ts", "codegen-admin.ts"]
+	"exclude": ["src/generated/graphql-shop.ts"],
+	"include": ["src", "tailwind.config.js", "codegen-shop.ts"]
 }

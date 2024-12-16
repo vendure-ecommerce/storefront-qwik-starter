@@ -1,5 +1,4 @@
 // import { getSdk, type LogicalOperator } from '~/generated/graphql';
-import { getSdk as getAdminSdk } from '~/generated/graphql-admin';
 import { getSdk as getShopSdk, type LogicalOperator } from '~/generated/graphql-shop';
 import { requester } from '~/utils/api';
 
@@ -11,7 +10,7 @@ export interface Options {
 	// Auth bearer token
 	token?: string;
 	// The API URL to call. This can be the local shop API, dev shop API,
-	// dev admin API, production shop API..etc.
+	// production shop API..etc.
 	apiUrl?: string;
 	take?: number;
 	sort?: {
@@ -27,5 +26,3 @@ export interface Options {
 
 // @ts-ignore
 export const shopSdk = getShopSdk<Options>(requester);
-// @ts-ignore
-export const adminSdk = getAdminSdk<Options>(requester);
