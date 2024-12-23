@@ -29,8 +29,8 @@ export const Head = component$(() => {
 				<link key={key} {...l} />
 			))}
 
-			{head.styles.map((s, key) => (
-				<style key={key} {...s.props} dangerouslySetInnerHTML={s.style} />
+			{head.styles.map(({ key, style, ...props }) => (
+				<style key={key} {...props} dangerouslySetInnerHTML={style} />
 			))}
 
 			<meta name="description" content="Vendure Qwik Storefront" />
