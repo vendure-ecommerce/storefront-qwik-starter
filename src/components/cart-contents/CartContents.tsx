@@ -1,5 +1,5 @@
 import { component$, useComputed$, useContext, useSignal, useTask$ } from '@qwik.dev/core';
-import { Link, useLocation, useNavigate } from '@qwik.dev/router';
+import { useLocation, useNavigate } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
@@ -58,9 +58,9 @@ export default component$<{
 								<div>
 									<div class="flex justify-between text-base font-medium text-gray-900">
 										<h3>
-											<Link href={`/products/${line.productVariant.product.slug}/`}>
+											<a href={`/products/${line.productVariant.product.slug}/`}>
 												{line.productVariant.name}
-											</Link>
+											</a>
 										</h3>
 										<Price
 											priceWithTax={linePriceWithTax}
@@ -85,14 +85,11 @@ export default component$<{
 												}}
 												class="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 											>
-												<option value={1}>1</option>
-												<option value={2}>2</option>
-												<option value={3}>3</option>
-												<option value={4}>4</option>
-												<option value={5}>5</option>
-												<option value={6}>6</option>
-												<option value={7}>7</option>
-												<option value={8}>8</option>
+												{[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
+													<option key={num} value={num} selected={line.quantity === num}>
+														{num.toString()}
+													</option>
+												))}
 											</select>
 										</form>
 									) : (

@@ -1,5 +1,4 @@
 import { component$ } from '@qwik.dev/core';
-import { Link } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import { Collection } from '~/generated/graphql';
 
@@ -9,7 +8,7 @@ interface IProps {
 
 export default component$(({ collection }: IProps) => {
 	return (
-		<Link href={`/collections/${collection.slug}`} key={collection.id}>
+		<a href={`/collections/${collection.slug}`} key={collection.id}>
 			<div class="max-w-[300px] relative rounded-lg overflow-hidden hover:opacity-75 xl:w-auto mx-auto">
 				<div class="w-full h-full object-center object-cover">
 					<Image
@@ -25,6 +24,6 @@ export default component$(({ collection }: IProps) => {
 					{collection.name}
 				</span>
 			</div>
-		</Link>
+		</a>
 	);
 });
