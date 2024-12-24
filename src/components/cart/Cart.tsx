@@ -1,5 +1,5 @@
 import { component$, useContext } from '@qwik.dev/core';
-import { Link, useLocation } from '@qwik.dev/router';
+import { useLocation } from '@qwik.dev/router';
 import { APP_STATE } from '~/constants';
 import { isCheckoutPage } from '~/utils';
 import CartContents from '../cart-contents/CartContents';
@@ -56,12 +56,12 @@ export default component$(() => {
 												{$localize`Shipping will be calculated at checkout.`}
 											</p>
 											<div class="mt-6">
-												<Link
+												<a
 													href="/checkout/"
 													class="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700 w-full"
 												>
 													{$localize`Checkout`}
-												</Link>
+												</a>
 											</div>
 										</div>
 									)}

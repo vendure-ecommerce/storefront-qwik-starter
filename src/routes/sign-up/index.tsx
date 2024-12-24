@@ -1,5 +1,4 @@
 import { $, component$, useSignal } from '@qwik.dev/core';
-import { Link } from '@qwik.dev/router';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import { registerCustomerAccountMutation } from '~/providers/shop/account/account';
 import { isEnvVariableEnabled } from '~/utils';
@@ -47,9 +46,9 @@ export default component$(() => {
 				<h2 class="mt-6 text-center text-3xl text-gray-900">Create a new account</h2>
 				<p class="mt-2 text-center text-sm text-gray-600">
 					Or{' '}
-					<Link href="/sign-in" class="font-medium text-primary-600 hover:text-primary-500">
+					<a href="/sign-in" class="font-medium text-primary-600 hover:text-primary-500">
 						login to your existing account
-					</Link>
+					</a>
 				</p>
 			</div>
 

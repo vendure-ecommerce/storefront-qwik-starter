@@ -1,5 +1,5 @@
 import { component$, useComputed$, useContext, useSignal, useTask$ } from '@qwik.dev/core';
-import { Link, useLocation, useNavigate } from '@qwik.dev/router';
+import { useLocation, useNavigate } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
@@ -58,9 +58,9 @@ export default component$<{
 								<div>
 									<div class="flex justify-between text-base font-medium text-gray-900">
 										<h3>
-											<Link href={`/products/${line.productVariant.product.slug}/`}>
+											<a href={`/products/${line.productVariant.product.slug}/`}>
 												{line.productVariant.name}
-											</Link>
+											</a>
 										</h3>
 										<Price
 											priceWithTax={linePriceWithTax}

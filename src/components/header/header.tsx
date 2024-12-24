@@ -1,5 +1,4 @@
 import { $, component$, useContext, useVisibleTask$ } from '@qwik.dev/core';
-import { Link } from '@qwik.dev/router';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { logoutMutation } from '~/providers/shop/account/account';
 import { getActiveCustomerQuery } from '~/providers/shop/customer/customer';
@@ -64,7 +63,7 @@ export default component$(() => {
 								</p>
 							</div>
 							<div class="flex mr-[60px] 2xl:mr-0">
-								<Link
+								<a
 									href={appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? '/account' : '/sign-in'}
 									class="flex items-center space-x-1 pb-1 pr-2"
 								>
@@ -74,7 +73,7 @@ export default component$(() => {
 											? $localize`My Account`
 											: $localize`Sign In`}
 									</span>
-								</Link>
+								</a>
 								{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID && (
 									<button onClick$={logout} class="text-gray-700">
 										<div class="flex items-center cursor-pointer">
@@ -96,19 +95,19 @@ export default component$(() => {
 						<MenuIcon />
 					</button>
 					<h1 class="text-white w-10">
-						<Link href="/">
+						<a href="/">
 							<img src={`/cube-logo-small.webp`} width={40} height={31} alt="Vendure logo" />
-						</Link>
+						</a>
 					</h1>
 					<div class="hidden space-x-4 sm:block">
 						{collections.map((collection) => (
-							<Link
+							<a
 								class="text-sm md:text-base text-gray-200 hover:text-white"
 								href={`/collections/${collection.slug}`}
 								key={collection.id}
 							>
 								{collection.name}
-							</Link>
+							</a>
 						))}
 					</div>
 					<div class="flex-1 block md:pr-8">
