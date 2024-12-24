@@ -1,4 +1,4 @@
-import { $, component$, useComputed$, useContext, useSignal, useTask$ } from '@qwik.dev/core';
+import { component$, useComputed$, useContext, useSignal } from '@qwik.dev/core';
 import { DocumentHead, routeLoader$ } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import Alert from '~/components/alert/Alert';
@@ -9,7 +9,7 @@ import Price from '~/components/products/Price';
 import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import TopReviews from '~/components/top-reviews/TopReviews';
 import { APP_STATE } from '~/constants';
-import { Order, OrderLine, Product } from '~/generated/graphql';
+import { Order, OrderLine } from '~/generated/graphql';
 import { addItemToOrderMutation } from '~/providers/shop/orders/order';
 import { getProductBySlug } from '~/providers/shop/products/products';
 import { Variant } from '~/types';
@@ -31,19 +31,6 @@ export const useProductLoader = routeLoader$(async ({ params }) => {
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
-
-	const calculateQuantities = $((product: Product) => {
-		const result: Record<string, number> = {};
-		(product.variants || []).forEach((variant: Variant) => {
-			const orderLine = (appState.activeOrder?.lines || []).find(
-				(l: OrderLine) =>
-					l.productVariant.id === variant.id && l.productVariant.product.id === product.id
-			);
-			result[variant.id] = orderLine?.quantity || 0;
-		});
-		return result;
-	});
-
 	const productSignal = useProductLoader();
 	const currentImageSig = useSignal(productSignal.value.assets[0]);
 	const selectedVariantIdSignal = useSignal(productSignal.value.variants[0].id);
@@ -51,15 +38,24 @@ export default component$(() => {
 		productSignal.value.variants.find((v) => v.id === selectedVariantIdSignal.value)
 	);
 	const addItemToOrderErrorSignal = useSignal('');
-	const quantitySignal = useSignal<Record<string, number>>({});
-
-	useTask$(async (tracker) => {
-		tracker.track(() => appState.activeOrder);
-		quantitySignal.value = await calculateQuantities(productSignal.value);
+	const quantitySignal = useComputed$<Record<string, number>>(() => {
+		const result: Record<string, number> = {};
+		(productSignal.value.variants || []).forEach((variant: Variant) => {
+			const orderLine = (appState.activeOrder?.lines || []).find(
+				(l: OrderLine) =>
+					l.productVariant.id === variant.id &&
+					l.productVariant.product.id === productSignal.value.id
+			);
+			result[variant.id] = orderLine?.quantity || 0;
+		});
+		return result;
 	});
 
 	return (
 		<div>
+			{selectedVariantSignal.value?.id && (
+				<span class="hidden">{selectedVariantSignal.value?.id}</span>
+			)}
 			<div class="max-w-6xl mx-auto px-4 py-10">
 				<div>
 					<h2 class="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
@@ -139,6 +135,7 @@ export default component$(() => {
 								<Price
 									priceWithTax={selectedVariantSignal.value?.priceWithTax}
 									currencyCode={selectedVariantSignal.value?.currencyCode}
+									variantSig={selectedVariantSignal}
 									forcedClass="text-3xl text-gray-900 mr-4"
 								></Price>
 								<div class="flex sm:flex-col1 align-baseline">

@@ -1,14 +1,16 @@
-import { component$ } from '@qwik.dev/core';
+import { component$, Signal } from '@qwik.dev/core';
 import { CurrencyCode } from '~/types';
 import { formatPrice } from '~/utils';
 
 export default component$<{
 	priceWithTax: number | undefined;
 	currencyCode: CurrencyCode | string | undefined;
+	variantSig?: Signal<unknown>;
 	forcedClass?: string;
-}>(({ priceWithTax, currencyCode, forcedClass }: any) => {
+}>(({ priceWithTax, currencyCode, variantSig, forcedClass }: any) => {
 	return (
 		<div>
+			{variantSig?.value && <div class="hidden">{JSON.stringify(variantSig.value)}</div>}
 			{!currencyCode ? (
 				<div></div>
 			) : typeof priceWithTax === 'number' ? (
