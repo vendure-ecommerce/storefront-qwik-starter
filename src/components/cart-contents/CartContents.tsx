@@ -50,7 +50,7 @@ export default component$<{
 									height="100"
 									class="w-full h-full object-center object-cover"
 									src={line.featuredAsset?.preview + '?preset=thumb'}
-									alt={line.productVariant.name}
+									alt={`Image of: ${line.productVariant.name}`}
 								/>
 							</div>
 

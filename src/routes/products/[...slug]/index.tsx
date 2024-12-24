@@ -81,7 +81,7 @@ export default component$(() => {
 										width="400"
 										height="400"
 										src={currentImageSig.value.preview + '?w=400&h=400&format=webp'}
-										alt={currentImageSig.value.name}
+										alt={`Image of: ${currentImageSig.value.name}`}
 									/>
 								</div>
 								{productSignal.value.assets.length > 1 && (
@@ -97,7 +97,7 @@ export default component$(() => {
 												width="80"
 												height="80"
 												src={asset.preview + '?w=400&h=400&format=webp'}
-												alt={asset.name}
+												alt={`Image of: ${asset.name}`}
 												onClick$={() => {
 													currentImageSig.value = asset;
 												}}

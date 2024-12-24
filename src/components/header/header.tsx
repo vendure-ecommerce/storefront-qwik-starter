@@ -92,6 +92,7 @@ export default component$(() => {
 						class="block sm:hidden text-white"
 						onClick$={() => (appState.showMenu = !appState.showMenu)}
 					>
+						<span class="sr-only">Menu</span>
 						<MenuIcon />
 					</button>
 					<h1 class="text-white w-10">

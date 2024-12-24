@@ -17,7 +17,7 @@ export default component$(({ collection }: IProps) => {
 						width="300"
 						height="300"
 						src={collection.featuredAsset?.preview}
-						alt={collection.name}
+						alt={`Image of: ${collection.name}`}
 					/>
 				</div>
 				<span class="absolute w-full bottom-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50" />

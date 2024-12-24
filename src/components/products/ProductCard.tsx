@@ -13,7 +13,7 @@ export default component$(
 					width="200"
 					height="200"
 					src={productAsset?.preview + '?w=300&h=400&format=webp'}
-					alt={productName}
+					alt={`Image of: ${productName}`}
 				/>
 				<div class="h-2" />
 				<div class="text-sm text-gray-700">{productName}</div>
