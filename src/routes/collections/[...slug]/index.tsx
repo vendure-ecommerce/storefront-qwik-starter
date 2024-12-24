@@ -1,5 +1,5 @@
-import { $, QwikKeyboardEvent, component$, useStore, useTask$ } from '@builder.io/qwik';
-import { DocumentHead, routeLoader$, useLocation } from '@builder.io/qwik-city';
+import { $, component$, useStore, useTask$ } from '@qwik.dev/core';
+import { DocumentHead, routeLoader$, useLocation } from '@qwik.dev/router';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import Filters from '~/components/facet-filter-controls/Filters';
@@ -90,7 +90,7 @@ export default component$(() => {
 	return (
 		<div
 			class="max-w-6xl mx-auto px-4 py-10"
-			onKeyDown$={(event: QwikKeyboardEvent) => {
+			onKeyDown$={(event: KeyboardEvent) => {
 				if (event.key === 'Escape') {
 					state.showMenu = false;
 				}

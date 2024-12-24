@@ -1,5 +1,5 @@
-import { component$, useStore, useVisibleTask$ } from '@builder.io/qwik';
-import { useLocation } from '@builder.io/qwik-city';
+import { component$, useStore, useVisibleTask$ } from '@qwik.dev/core';
+import { useLocation } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import { Order } from '~/generated/graphql';
 import { getOrderByCodeQuery } from '~/providers/shop/orders/order';

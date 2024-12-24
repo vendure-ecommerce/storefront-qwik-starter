@@ -1,4 +1,4 @@
-import { Slot, component$, useContext, useVisibleTask$ } from '@builder.io/qwik';
+import { Slot, component$, useContext, useVisibleTask$ } from '@qwik.dev/core';
 import { TabsContainer } from '~/components/account/TabsContainer';
 import { APP_STATE } from '~/constants';
 import { getActiveCustomerQuery } from '~/providers/shop/customer/customer';

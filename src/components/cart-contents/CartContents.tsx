@@ -1,5 +1,5 @@
-import { component$, useComputed$, useContext, useSignal, useTask$ } from '@builder.io/qwik';
-import { Link, useLocation, useNavigate } from '@builder.io/qwik-city';
+import { component$, useComputed$, useContext, useSignal, useTask$ } from '@qwik.dev/core';
+import { Link, useLocation, useNavigate } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';

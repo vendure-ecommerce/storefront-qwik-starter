@@ -1,5 +1,5 @@
-import { $, component$, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
-import { Form, globalAction$, useLocation, useNavigate, z, zod$ } from '@builder.io/qwik-city';
+import { $, component$, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { Form, globalAction$, useLocation, useNavigate, z, zod$ } from '@qwik.dev/router';
 import AddressForm from '~/components/address-form/AddressForm';
 import { Button } from '~/components/buttons/Button';
 import CheckIcon from '~/components/icons/CheckIcon';

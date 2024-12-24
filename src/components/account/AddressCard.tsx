@@ -1,5 +1,5 @@
-import { QRL, component$ } from '@builder.io/qwik';
-import { useNavigate } from '@builder.io/qwik-city';
+import { QRL, component$ } from '@qwik.dev/core';
+import { useNavigate } from '@qwik.dev/router';
 import { ShippingAddress } from '~/types';
 import { Button } from '../buttons/Button';
 import { HighlightedButton } from '../buttons/HighlightedButton';

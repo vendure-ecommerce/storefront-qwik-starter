@@ -1,4 +1,4 @@
-import { component$ } from '@builder.io/qwik';
+import { component$ } from '@qwik.dev/core';
 import XCircleIcon from '../icons/XCircleIcon';
 
 export default component$<{ message: string }>(({ message }) => {

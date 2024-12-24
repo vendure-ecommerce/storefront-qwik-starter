@@ -1,4 +1,4 @@
-import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { component$, useSignal, useVisibleTask$ } from '@qwik.dev/core';
 import OrderCard from '~/components/account/OrderCard';
 import { Customer, Order } from '~/generated/graphql';
 import { getActiveCustomerOrdersQuery } from '~/providers/shop/customer/customer';

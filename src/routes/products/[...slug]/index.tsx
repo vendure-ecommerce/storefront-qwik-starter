@@ -1,5 +1,5 @@
-import { $, component$, useComputed$, useContext, useSignal, useTask$ } from '@builder.io/qwik';
-import { DocumentHead, routeLoader$ } from '@builder.io/qwik-city';
+import { $, component$, useComputed$, useContext, useSignal, useTask$ } from '@qwik.dev/core';
+import { DocumentHead, routeLoader$ } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';

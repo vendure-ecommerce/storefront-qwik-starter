@@ -6,7 +6,7 @@ import {
 	useSignal,
 	useTask$,
 	useVisibleTask$,
-} from '@builder.io/qwik';
+} from '@qwik.dev/core';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { Address, CreateAddressInput, CreateCustomerInput } from '~/generated/graphql';
 import { getActiveCustomerAddressesQuery } from '~/providers/shop/customer/customer';

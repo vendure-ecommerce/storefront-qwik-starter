@@ -1,4 +1,4 @@
-import { component$, useContext } from '@builder.io/qwik';
+import { component$, useContext } from '@qwik.dev/core';
 import { APP_STATE } from '~/constants';
 import CloseIcon from '../icons/CloseIcon';
 

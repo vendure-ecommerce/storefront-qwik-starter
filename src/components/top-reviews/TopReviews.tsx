@@ -1,6 +1,6 @@
 /* This example requires Tailwind CSS v2.0+ */
 
-import { component$ } from '@builder.io/qwik';
+import { component$ } from '@qwik.dev/core';
 import { Review } from '~/types';
 import StarIcon from '../icons/StarIcon';
 

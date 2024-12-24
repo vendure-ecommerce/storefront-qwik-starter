@@ -1,5 +1,5 @@
-import { component$ } from '@builder.io/qwik';
-import { useNavigate } from '@builder.io/qwik-city';
+import { component$ } from '@qwik.dev/core';
+import { useNavigate } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
 import { Order } from '~/generated/graphql';

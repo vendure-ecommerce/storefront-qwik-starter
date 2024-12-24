@@ -1,5 +1,5 @@
-import { $, component$, useContext, useStore, useVisibleTask$ } from '@builder.io/qwik';
-import { useNavigate } from '@builder.io/qwik-city';
+import { $, component$, useContext, useStore, useVisibleTask$ } from '@qwik.dev/core';
+import { useNavigate } from '@qwik.dev/router';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
 import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
@@ -82,13 +82,13 @@ export default component$(() => {
 											delete shippingAddress.defaultBillingAddress;
 
 											const setOrderShippingAddress = async () => {
-												const setOrderShippingAddress = await setOrderShippingAddressMutation(
-													shippingAddress
-												);
+												const setOrderShippingAddress =
+													await setOrderShippingAddressMutation(shippingAddress);
 
 												if (setOrderShippingAddress.__typename === 'Order') {
 													if (isEnvVariableEnabled('VITE_SHOW_PAYMENT_STEP')) {
 														state.step = 'PAYMENT';
+														window && window.scrollTo(0, 0);
 													} else {
 														confirmPayment();
 													}

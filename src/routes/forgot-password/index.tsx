@@ -1,4 +1,4 @@
-import { $, component$, useSignal } from '@builder.io/qwik';
+import { $, component$, useSignal } from '@qwik.dev/core';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import { requestPasswordResetMutation } from '~/providers/shop/account/account';
 

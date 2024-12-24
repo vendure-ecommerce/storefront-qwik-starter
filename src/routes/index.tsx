@@ -1,4 +1,4 @@
-import { component$, useContext } from '@builder.io/qwik';
+import { component$, useContext } from '@qwik.dev/core';
 import { Image } from 'qwik-image';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import { APP_STATE, HOMEPAGE_IMAGE } from '~/constants';

@@ -1,5 +1,5 @@
-import { $, component$, useSignal } from '@builder.io/qwik';
-import { Link, useNavigate } from '@builder.io/qwik-city';
+import { $, component$, useSignal } from '@qwik.dev/core';
+import { Link, useNavigate } from '@qwik.dev/router';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import { loginMutation } from '~/providers/shop/account/account';
 

@@ -1,4 +1,4 @@
-import { $, component$, QRL, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { $, component$, QRL, useSignal, useVisibleTask$ } from '@qwik.dev/core';
 import { getEligiblePaymentMethodsQuery } from '~/providers/shop/checkout/checkout';
 import { EligiblePaymentMethods } from '~/types';
 import CreditCardIcon from '../icons/CreditCardIcon';

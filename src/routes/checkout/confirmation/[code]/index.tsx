@@ -1,5 +1,5 @@
-import { PropFunction, component$, useStore, useVisibleTask$ } from '@builder.io/qwik';
-import { useLocation } from '@builder.io/qwik-city';
+import { QRL, component$, useStore, useVisibleTask$ } from '@qwik.dev/core';
+import { useLocation } from '@qwik.dev/router';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
 import CheckCircleIcon from '~/components/icons/CheckCircleIcon';
@@ -9,7 +9,7 @@ import { getOrderByCodeQuery } from '~/providers/shop/orders/order';
 
 type Step = 'SHIPPING' | 'PAYMENT' | 'CONFIRMATION';
 
-export default component$<{ onForward$: PropFunction<() => void> }>(() => {
+export default component$<{ onForward$: QRL<() => void> }>(() => {
 	const {
 		params: { code },
 	} = useLocation();

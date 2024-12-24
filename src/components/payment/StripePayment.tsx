@@ -1,12 +1,5 @@
-import {
-	$,
-	component$,
-	noSerialize,
-	useContext,
-	useStore,
-	useVisibleTask$,
-} from '@builder.io/qwik';
-import { useLocation } from '@builder.io/qwik-city';
+import { $, component$, noSerialize, useContext, useStore, useVisibleTask$ } from '@qwik.dev/core';
+import { useLocation } from '@qwik.dev/router';
 import { Stripe, StripeElements, loadStripe } from '@stripe/stripe-js';
 import { APP_STATE } from '~/constants';
 import { ENV_VARIABLES } from '~/env';

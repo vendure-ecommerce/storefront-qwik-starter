@@ -1,4 +1,4 @@
-import { component$ } from '@builder.io/qwik';
+import { component$ } from '@qwik.dev/core';
 import { Order } from '~/generated/graphql';
 import type { OrderPriceFields } from '~/types';
 import { formatPrice } from '~/utils';

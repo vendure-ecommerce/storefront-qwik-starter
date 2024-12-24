@@ -1,5 +1,5 @@
-import { $, component$, useContext, useSignal } from '@builder.io/qwik';
-import { useNavigate } from '@builder.io/qwik-city';
+import { $, component$, useContext, useSignal } from '@qwik.dev/core';
+import { useNavigate } from '@qwik.dev/router';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
 import { ErrorMessage } from '~/components/error-message/ErrorMessage';
 import CheckIcon from '~/components/icons/CheckIcon';

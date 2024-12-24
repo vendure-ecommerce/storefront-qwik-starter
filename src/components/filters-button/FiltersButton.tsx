@@ -1,4 +1,4 @@
-import { $, component$, QRL } from '@builder.io/qwik';
+import { $, component$, QRL } from '@qwik.dev/core';
 import FilterIcon from '../icons/FilterIcon';
 
 export default component$<{ onToggleMenu$: QRL<() => void> }>(({ onToggleMenu$ }) => {

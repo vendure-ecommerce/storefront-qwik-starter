@@ -1,4 +1,4 @@
-import { component$ } from '@builder.io/qwik';
+import { component$ } from '@qwik.dev/core';
 import { Review } from '~/types';
 
 export default component$<{ rating: number; review: Review }>(({ review, rating }) => {
