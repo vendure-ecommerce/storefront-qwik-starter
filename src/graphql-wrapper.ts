@@ -58,10 +58,7 @@ export type SortDirection = 'DESC' | 'ASC';
 export interface Options {
 	languageCode: string;
 	channelToken?: string;
-	// Auth bearer token
 	token?: string;
-	// The API URL to call. This can be the local shop API, dev shop API,
-	// dev admin API, production shop API..etc.
 	apiUrl?: string;
 	take?: number;
 	sort?: {
