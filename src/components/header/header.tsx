@@ -165,7 +165,6 @@ export default component$(() => {
 										</button>
 									))}
 								</div>
-								z
 							</div>
 						</div>
 
