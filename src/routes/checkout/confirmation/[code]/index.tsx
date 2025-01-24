@@ -58,7 +58,7 @@ export default component$<{ onForward$: QRL<() => void> }>(() => {
 										<div class="mb-6">
 											<CartContents order={store.order} />
 										</div>
-										<CartTotals order={store.order} />
+										<CartTotals order={store.order} readonly />
 									</div>
 								</div>
 							</div>

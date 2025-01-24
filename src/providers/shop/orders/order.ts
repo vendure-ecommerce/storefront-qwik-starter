@@ -12,6 +12,7 @@ import {
 	SetOrderShippingAddressMutation,
 	SetOrderShippingMethodMutation,
 } from '~/generated/graphql';
+import { ApplyCouponCodeMutation, RemoveCouponCodeMutation } from '~/generated/graphql-shop';
 import { shopSdk } from '~/graphql-wrapper';
 
 export const getActiveOrderQuery = async () => {
@@ -57,6 +58,38 @@ export const setCustomerForOrderMutation = async (input: CreateCustomerInput) =>
 		.setCustomerForOrder({ input })
 		.then((res: SetCustomerForOrderMutation) => res.setCustomerForOrder);
 };
+
+export const applyCouponCodeMutation = async (couponCode: string) => {
+	return shopSdk
+		.applyCouponCode({ couponCode })
+		.then((res: ApplyCouponCodeMutation) => res.applyCouponCode);
+};
+
+export const removeCouponCodeMutation = async (couponCode: string) => {
+	return shopSdk
+		.removeCouponCode({ couponCode })
+		.then((res: RemoveCouponCodeMutation) => res.removeCouponCode);
+};
+
+gql`
+	mutation applyCouponCode($couponCode: String!) {
+		applyCouponCode(couponCode: $couponCode) {
+			...OrderDetail
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+`;
+
+gql`
+	mutation removeCouponCode($couponCode: String!) {
+		removeCouponCode(couponCode: $couponCode) {
+			...OrderDetail
+		}
+	}
+`;
 
 gql`
 	mutation setOrderShippingAddress($input: CreateAddressInput!) {
@@ -115,6 +148,12 @@ gql`
 		createdAt
 		state
 		currencyCode
+		couponCodes
+		discounts {
+			type
+			description
+			amountWithTax
+		}
 		totalQuantity
 		subTotal
 		subTotalWithTax
