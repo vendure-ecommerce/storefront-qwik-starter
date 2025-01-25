@@ -3721,11 +3721,18 @@ export type AddPaymentToOrderMutation = {
 				createdAt: any;
 				state: string;
 				currencyCode: CurrencyCode;
+				couponCodes: Array<string>;
 				totalQuantity: number;
 				subTotal: any;
 				subTotalWithTax: any;
 				shippingWithTax: any;
 				totalWithTax: any;
+				discounts: Array<{
+					__typename?: 'Discount';
+					type: AdjustmentType;
+					description: string;
+					amountWithTax: any;
+				}>;
 				taxSummary: Array<{
 					__typename?: 'OrderTaxSummary';
 					description: string;
@@ -3793,11 +3800,18 @@ export type TransitionOrderToStateMutation = {
 				createdAt: any;
 				state: string;
 				currencyCode: CurrencyCode;
+				couponCodes: Array<string>;
 				totalQuantity: number;
 				subTotal: any;
 				subTotalWithTax: any;
 				shippingWithTax: any;
 				totalWithTax: any;
+				discounts: Array<{
+					__typename?: 'Discount';
+					type: AdjustmentType;
+					description: string;
+					amountWithTax: any;
+				}>;
 				taxSummary: Array<{
 					__typename?: 'OrderTaxSummary';
 					description: string;
@@ -4314,6 +4328,158 @@ export type CreateCustomerAddressMutationMutation = {
 	};
 };
 
+export type ApplyCouponCodeMutationVariables = Exact<{
+	couponCode: Scalars['String']['input'];
+}>;
+
+export type ApplyCouponCodeMutation = {
+	__typename?: 'Mutation';
+	applyCouponCode:
+		| { __typename?: 'CouponCodeExpiredError'; errorCode: ErrorCode; message: string }
+		| { __typename?: 'CouponCodeInvalidError'; errorCode: ErrorCode; message: string }
+		| { __typename?: 'CouponCodeLimitError'; errorCode: ErrorCode; message: string }
+		| {
+				__typename: 'Order';
+				id: string;
+				code: string;
+				active: boolean;
+				createdAt: any;
+				state: string;
+				currencyCode: CurrencyCode;
+				couponCodes: Array<string>;
+				totalQuantity: number;
+				subTotal: any;
+				subTotalWithTax: any;
+				shippingWithTax: any;
+				totalWithTax: any;
+				discounts: Array<{
+					__typename?: 'Discount';
+					type: AdjustmentType;
+					description: string;
+					amountWithTax: any;
+				}>;
+				taxSummary: Array<{
+					__typename?: 'OrderTaxSummary';
+					description: string;
+					taxRate: number;
+					taxTotal: any;
+				}>;
+				customer?: {
+					__typename?: 'Customer';
+					id: string;
+					firstName: string;
+					lastName: string;
+					emailAddress: string;
+				} | null;
+				shippingAddress?: {
+					__typename?: 'OrderAddress';
+					fullName?: string | null;
+					streetLine1?: string | null;
+					streetLine2?: string | null;
+					company?: string | null;
+					city?: string | null;
+					province?: string | null;
+					postalCode?: string | null;
+					countryCode?: string | null;
+					phoneNumber?: string | null;
+				} | null;
+				shippingLines: Array<{
+					__typename?: 'ShippingLine';
+					priceWithTax: any;
+					shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
+				}>;
+				lines: Array<{
+					__typename?: 'OrderLine';
+					id: string;
+					unitPriceWithTax: any;
+					linePriceWithTax: any;
+					quantity: number;
+					featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
+					productVariant: {
+						__typename?: 'ProductVariant';
+						id: string;
+						name: string;
+						price: any;
+						product: { __typename?: 'Product'; id: string; slug: string };
+					};
+				}>;
+		  };
+};
+
+export type RemoveCouponCodeMutationVariables = Exact<{
+	couponCode: Scalars['String']['input'];
+}>;
+
+export type RemoveCouponCodeMutation = {
+	__typename?: 'Mutation';
+	removeCouponCode?: {
+		__typename: 'Order';
+		id: string;
+		code: string;
+		active: boolean;
+		createdAt: any;
+		state: string;
+		currencyCode: CurrencyCode;
+		couponCodes: Array<string>;
+		totalQuantity: number;
+		subTotal: any;
+		subTotalWithTax: any;
+		shippingWithTax: any;
+		totalWithTax: any;
+		discounts: Array<{
+			__typename?: 'Discount';
+			type: AdjustmentType;
+			description: string;
+			amountWithTax: any;
+		}>;
+		taxSummary: Array<{
+			__typename?: 'OrderTaxSummary';
+			description: string;
+			taxRate: number;
+			taxTotal: any;
+		}>;
+		customer?: {
+			__typename?: 'Customer';
+			id: string;
+			firstName: string;
+			lastName: string;
+			emailAddress: string;
+		} | null;
+		shippingAddress?: {
+			__typename?: 'OrderAddress';
+			fullName?: string | null;
+			streetLine1?: string | null;
+			streetLine2?: string | null;
+			company?: string | null;
+			city?: string | null;
+			province?: string | null;
+			postalCode?: string | null;
+			countryCode?: string | null;
+			phoneNumber?: string | null;
+		} | null;
+		shippingLines: Array<{
+			__typename?: 'ShippingLine';
+			priceWithTax: any;
+			shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
+		}>;
+		lines: Array<{
+			__typename?: 'OrderLine';
+			id: string;
+			unitPriceWithTax: any;
+			linePriceWithTax: any;
+			quantity: number;
+			featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
+			productVariant: {
+				__typename?: 'ProductVariant';
+				id: string;
+				name: string;
+				price: any;
+				product: { __typename?: 'Product'; id: string; slug: string };
+			};
+		}>;
+	} | null;
+};
+
 export type SetOrderShippingAddressMutationVariables = Exact<{
 	input: CreateAddressInput;
 }>;
@@ -4330,11 +4496,18 @@ export type SetOrderShippingAddressMutation = {
 				createdAt: any;
 				state: string;
 				currencyCode: CurrencyCode;
+				couponCodes: Array<string>;
 				totalQuantity: number;
 				subTotal: any;
 				subTotalWithTax: any;
 				shippingWithTax: any;
 				totalWithTax: any;
+				discounts: Array<{
+					__typename?: 'Discount';
+					type: AdjustmentType;
+					description: string;
+					amountWithTax: any;
+				}>;
 				taxSummary: Array<{
 					__typename?: 'OrderTaxSummary';
 					description: string;
@@ -4402,11 +4575,18 @@ export type SetCustomerForOrderMutation = {
 				createdAt: any;
 				state: string;
 				currencyCode: CurrencyCode;
+				couponCodes: Array<string>;
 				totalQuantity: number;
 				subTotal: any;
 				subTotalWithTax: any;
 				shippingWithTax: any;
 				totalWithTax: any;
+				discounts: Array<{
+					__typename?: 'Discount';
+					type: AdjustmentType;
+					description: string;
+					amountWithTax: any;
+				}>;
 				taxSummary: Array<{
 					__typename?: 'OrderTaxSummary';
 					description: string;
@@ -4473,11 +4653,18 @@ export type AddItemToOrderMutation = {
 				createdAt: any;
 				state: string;
 				currencyCode: CurrencyCode;
+				couponCodes: Array<string>;
 				totalQuantity: number;
 				subTotal: any;
 				subTotalWithTax: any;
 				shippingWithTax: any;
 				totalWithTax: any;
+				discounts: Array<{
+					__typename?: 'Discount';
+					type: AdjustmentType;
+					description: string;
+					amountWithTax: any;
+				}>;
 				taxSummary: Array<{
 					__typename?: 'OrderTaxSummary';
 					description: string;
@@ -4546,11 +4733,18 @@ export type SetOrderShippingMethodMutation = {
 				createdAt: any;
 				state: string;
 				currencyCode: CurrencyCode;
+				couponCodes: Array<string>;
 				totalQuantity: number;
 				subTotal: any;
 				subTotalWithTax: any;
 				shippingWithTax: any;
 				totalWithTax: any;
+				discounts: Array<{
+					__typename?: 'Discount';
+					type: AdjustmentType;
+					description: string;
+					amountWithTax: any;
+				}>;
 				taxSummary: Array<{
 					__typename?: 'OrderTaxSummary';
 					description: string;
@@ -4608,11 +4802,18 @@ export type OrderDetailFragment = {
 	createdAt: any;
 	state: string;
 	currencyCode: CurrencyCode;
+	couponCodes: Array<string>;
 	totalQuantity: number;
 	subTotal: any;
 	subTotalWithTax: any;
 	shippingWithTax: any;
 	totalWithTax: any;
+	discounts: Array<{
+		__typename?: 'Discount';
+		type: AdjustmentType;
+		description: string;
+		amountWithTax: any;
+	}>;
 	taxSummary: Array<{
 		__typename?: 'OrderTaxSummary';
 		description: string;
@@ -4678,11 +4879,18 @@ export type AdjustOrderLineMutation = {
 				createdAt: any;
 				state: string;
 				currencyCode: CurrencyCode;
+				couponCodes: Array<string>;
 				totalQuantity: number;
 				subTotal: any;
 				subTotalWithTax: any;
 				shippingWithTax: any;
 				totalWithTax: any;
+				discounts: Array<{
+					__typename?: 'Discount';
+					type: AdjustmentType;
+					description: string;
+					amountWithTax: any;
+				}>;
 				taxSummary: Array<{
 					__typename?: 'OrderTaxSummary';
 					description: string;
@@ -4749,11 +4957,18 @@ export type RemoveOrderLineMutation = {
 				createdAt: any;
 				state: string;
 				currencyCode: CurrencyCode;
+				couponCodes: Array<string>;
 				totalQuantity: number;
 				subTotal: any;
 				subTotalWithTax: any;
 				shippingWithTax: any;
 				totalWithTax: any;
+				discounts: Array<{
+					__typename?: 'Discount';
+					type: AdjustmentType;
+					description: string;
+					amountWithTax: any;
+				}>;
 				taxSummary: Array<{
 					__typename?: 'OrderTaxSummary';
 					description: string;
@@ -4816,11 +5031,18 @@ export type ActiveOrderQuery = {
 		createdAt: any;
 		state: string;
 		currencyCode: CurrencyCode;
+		couponCodes: Array<string>;
 		totalQuantity: number;
 		subTotal: any;
 		subTotalWithTax: any;
 		shippingWithTax: any;
 		totalWithTax: any;
+		discounts: Array<{
+			__typename?: 'Discount';
+			type: AdjustmentType;
+			description: string;
+			amountWithTax: any;
+		}>;
 		taxSummary: Array<{
 			__typename?: 'OrderTaxSummary';
 			description: string;
@@ -4883,11 +5105,18 @@ export type OrderByCodeQuery = {
 		createdAt: any;
 		state: string;
 		currencyCode: CurrencyCode;
+		couponCodes: Array<string>;
 		totalQuantity: number;
 		subTotal: any;
 		subTotalWithTax: any;
 		shippingWithTax: any;
 		totalWithTax: any;
+		discounts: Array<{
+			__typename?: 'Discount';
+			type: AdjustmentType;
+			description: string;
+			amountWithTax: any;
+		}>;
 		taxSummary: Array<{
 			__typename?: 'OrderTaxSummary';
 			description: string;
@@ -5103,6 +5332,12 @@ export const OrderDetailFragmentDoc = gql`
 		createdAt
 		state
 		currencyCode
+		couponCodes
+		discounts {
+			type
+			description
+			amountWithTax
+		}
 		totalQuantity
 		subTotal
 		subTotalWithTax
@@ -5550,6 +5785,26 @@ export const CreateCustomerAddressMutationDocument = gql`
 	}
 	${AddressFragmentDoc}
 `;
+export const ApplyCouponCodeDocument = gql`
+	mutation applyCouponCode($couponCode: String!) {
+		applyCouponCode(couponCode: $couponCode) {
+			...OrderDetail
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+	${OrderDetailFragmentDoc}
+`;
+export const RemoveCouponCodeDocument = gql`
+	mutation removeCouponCode($couponCode: String!) {
+		removeCouponCode(couponCode: $couponCode) {
+			...OrderDetail
+		}
+	}
+	${OrderDetailFragmentDoc}
+`;
 export const SetOrderShippingAddressDocument = gql`
 	mutation setOrderShippingAddress($input: CreateAddressInput!) {
 		setOrderShippingAddress(input: $input) {
@@ -5943,6 +6198,26 @@ export function getSdk<C>(requester: Requester<C>) {
 				variables,
 				options
 			) as Promise<CreateCustomerAddressMutationMutation>;
+		},
+		applyCouponCode(
+			variables: ApplyCouponCodeMutationVariables,
+			options?: C
+		): Promise<ApplyCouponCodeMutation> {
+			return requester<ApplyCouponCodeMutation, ApplyCouponCodeMutationVariables>(
+				ApplyCouponCodeDocument,
+				variables,
+				options
+			) as Promise<ApplyCouponCodeMutation>;
+		},
+		removeCouponCode(
+			variables: RemoveCouponCodeMutationVariables,
+			options?: C
+		): Promise<RemoveCouponCodeMutation> {
+			return requester<RemoveCouponCodeMutation, RemoveCouponCodeMutationVariables>(
+				RemoveCouponCodeDocument,
+				variables,
+				options
+			) as Promise<RemoveCouponCodeMutation>;
 		},
 		setOrderShippingAddress(
 			variables: SetOrderShippingAddressMutationVariables,
