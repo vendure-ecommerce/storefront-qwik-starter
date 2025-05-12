@@ -42,7 +42,13 @@ export default component$(() => {
 	});
 
 	const updateCustomer = $(async (): Promise<void> => {
-		await updateCustomerMutation(appState.customer);
+		const updateInput = {
+			title: appState.customer.title,
+			firstName: appState.customer.firstName,
+			lastName: appState.customer.lastName,
+			phoneNumber: appState.customer.phoneNumber,
+		};
+		await updateCustomerMutation(updateInput);
 
 		appState.customer.emailAddress !== newEmail.value
 			? (showModal.value = true)
