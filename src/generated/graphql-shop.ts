@@ -2912,6 +2912,24 @@ export type ProvinceList = PaginatedList & {
 	totalItems: Scalars['Int']['output'];
 };
 
+export type PublicPaymentMethod = {
+	__typename?: 'PublicPaymentMethod';
+	code: Scalars['String']['output'];
+	description?: Maybe<Scalars['String']['output']>;
+	id: Scalars['ID']['output'];
+	name: Scalars['String']['output'];
+	translations: Array<PaymentMethodTranslation>;
+};
+
+export type PublicShippingMethod = {
+	__typename?: 'PublicShippingMethod';
+	code: Scalars['String']['output'];
+	description?: Maybe<Scalars['String']['output']>;
+	id: Scalars['ID']['output'];
+	name: Scalars['String']['output'];
+	translations: Array<ShippingMethodTranslation>;
+};
+
 export type Query = {
 	__typename?: 'Query';
 	/** The active Channel */
@@ -2924,6 +2942,10 @@ export type Query = {
 	 * query will once again return `null`.
 	 */
 	activeOrder?: Maybe<Order>;
+	/** Get active payment methods */
+	activePaymentMethods: Array<Maybe<PublicPaymentMethod>>;
+	/** Get active shipping methods */
+	activeShippingMethods: Array<Maybe<PublicShippingMethod>>;
 	/** An array of supported Countries */
 	availableCountries: Array<Country>;
 	/** Returns a Collection either by its id or slug. If neither 'id' nor 'slug' is specified, an error will result. */
@@ -3130,7 +3152,6 @@ export type SearchInput = {
 	collectionSlug?: InputMaybe<Scalars['String']['input']>;
 	facetValueFilters?: InputMaybe<Array<FacetValueFilterInput>>;
 	groupByProduct?: InputMaybe<Scalars['Boolean']['input']>;
-	inStock?: InputMaybe<Scalars['Boolean']['input']>;
 	skip?: InputMaybe<Scalars['Int']['input']>;
 	sort?: InputMaybe<SearchResultSortParameter>;
 	take?: InputMaybe<Scalars['Int']['input']>;
@@ -3144,10 +3165,22 @@ export type SearchReindexResponse = {
 
 export type SearchResponse = {
 	__typename?: 'SearchResponse';
+	cacheIdentifier?: Maybe<SearchResponseCacheIdentifier>;
 	collections: Array<CollectionResult>;
 	facetValues: Array<FacetValueResult>;
 	items: Array<SearchResult>;
 	totalItems: Scalars['Int']['output'];
+};
+
+/**
+ * This type is here to allow us to easily purge the Stellate cache
+ * of any search results where the collectionSlug is used. We cannot rely on
+ * simply purging the SearchResult type, because in the case of an empty 'items'
+ * array, Stellate cannot know that that particular query now needs to be purged.
+ */
+export type SearchResponseCacheIdentifier = {
+	__typename?: 'SearchResponseCacheIdentifier';
+	collectionSlug?: Maybe<Scalars['String']['output']>;
 };
 
 export type SearchResult = {
@@ -3158,7 +3191,6 @@ export type SearchResult = {
 	description: Scalars['String']['output'];
 	facetIds: Array<Scalars['ID']['output']>;
 	facetValueIds: Array<Scalars['ID']['output']>;
-	inStock: Scalars['Boolean']['output'];
 	price: SearchResultPrice;
 	priceWithTax: SearchResultPrice;
 	productAsset?: Maybe<SearchResultAsset>;

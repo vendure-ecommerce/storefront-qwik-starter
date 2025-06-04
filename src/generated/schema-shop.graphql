@@ -4229,6 +4229,22 @@ type ProvinceList implements PaginatedList {
 	totalItems: Int!
 }
 
+type PublicPaymentMethod {
+	code: String!
+	description: String
+	id: ID!
+	name: String!
+	translations: [PaymentMethodTranslation!]!
+}
+
+type PublicShippingMethod {
+	code: String!
+	description: String
+	id: ID!
+	name: String!
+	translations: [ShippingMethodTranslation!]!
+}
+
 type Query {
 	"""
 	The active Channel
@@ -4246,6 +4262,16 @@ type Query {
 	query will once again return `null`.
 	"""
 	activeOrder: Order
+
+	"""
+	Get active payment methods
+	"""
+	activePaymentMethods: [PublicPaymentMethod]!
+
+	"""
+	Get active shipping methods
+	"""
+	activeShippingMethods: [PublicShippingMethod]!
 
 	"""
 	An array of supported Countries
@@ -4441,7 +4467,6 @@ input SearchInput {
 	collectionSlug: String
 	facetValueFilters: [FacetValueFilterInput!]
 	groupByProduct: Boolean
-	inStock: Boolean
 	skip: Int
 	sort: SearchResultSortParameter
 	take: Int
@@ -4453,10 +4478,21 @@ type SearchReindexResponse {
 }
 
 type SearchResponse {
+	cacheIdentifier: SearchResponseCacheIdentifier
 	collections: [CollectionResult!]!
 	facetValues: [FacetValueResult!]!
 	items: [SearchResult!]!
 	totalItems: Int!
+}
+
+"""
+This type is here to allow us to easily purge the Stellate cache
+of any search results where the collectionSlug is used. We cannot rely on
+simply purging the SearchResult type, because in the case of an empty 'items'
+array, Stellate cannot know that that particular query now needs to be purged.
+"""
+type SearchResponseCacheIdentifier {
+	collectionSlug: String
 }
 
 type SearchResult {
@@ -4468,7 +4504,6 @@ type SearchResult {
 	description: String!
 	facetIds: [ID!]!
 	facetValueIds: [ID!]!
-	inStock: Boolean!
 	price: SearchResultPrice!
 	priceWithTax: SearchResultPrice!
 	productAsset: SearchResultAsset
