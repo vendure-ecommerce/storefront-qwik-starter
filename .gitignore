@@ -1,3 +1,5 @@
+
+*.env
 # Server
 one-click-deploy
 

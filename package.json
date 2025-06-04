@@ -32,17 +32,18 @@
 		"generate-shop": "DOTENV_CONFIG_PATH=.env graphql-codegen -r dotenv/config --config codegen-shop.ts",
 		"generate-dev": "export IS_DEV=TRUE && pnpm generate-shop",
 		"generate-local": "export IS_LOCAL=TRUE && pnpm generate-shop",
-		"generate": "pnpm generate-shop"
+		"generate": "pnpm generate-shop",
+		"test": "vitest"
 	},
 	"devDependencies": {
 		"@angular/compiler": "^17.1.3",
 		"@angular/compiler-cli": "^17.1.3",
-		"@qwik.dev/router": "2.0.0-alpha.10",
-		"@qwik.dev/core": "2.0.0-alpha.10",
 		"@graphql-codegen/cli": "^5.0.2",
 		"@graphql-codegen/introspection": "^4.0.2",
 		"@graphql-codegen/typescript": "^4.0.4",
 		"@graphql-codegen/typescript-operations": "^4.1.2",
+		"@qwik.dev/core": "2.0.0-alpha.10",
+		"@qwik.dev/router": "2.0.0-alpha.10",
 		"@tailwindcss/forms": "^0.5.7",
 		"@types/braintree-web-drop-in": "^1.39.3",
 		"@types/eslint": "8.56.2",
@@ -73,6 +74,7 @@
 		"graphql": "^16.8.1",
 		"graphql-tag": "^2.12.6",
 		"qwik-image": "0.0.16",
+		"vitest": "^3.2.1",
 		"zod": "^3.22.4"
 	},
 	"overrides": {

@@ -1,15 +1,50 @@
 import { $, component$, useSignal } from '@qwik.dev/core';
+import CheckIcon from '~/components/icons/CheckIcon';
+import EyeIcon from '~/components/icons/EyeIcon';
+import EyeSlashIcon from '~/components/icons/EyeSlashIcon';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import { registerCustomerAccountMutation } from '~/providers/shop/account/account';
-import { isEnvVariableEnabled } from '~/utils';
+import { isStrongPassword } from '~/utils/ensure-strong-password';
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regular expression for email validation
+
 export default component$(() => {
 	const email = useSignal('');
+	const isEmailValid = useSignal(false);
 	const firstName = useSignal('');
 	const lastName = useSignal('');
+	const isBasicInfoValid = useSignal(false);
+	const isPasswordVisible = useSignal(false);
 	const password = useSignal('');
+	const isPasswordValid = useSignal(false);
+	const passwordValidationMsg = useSignal(['Password is required']);
 	const confirmPassword = useSignal('');
+	const isConfirmPasswordValid = useSignal(false);
 	const successSignal = useSignal(false);
 	const error = useSignal('');
+
+	const validateEmail = $(() => {
+		isEmailValid.value = emailRegex.test(email.value);
+	});
+
+	const validateBasicInfo = $(() => {
+		isBasicInfoValid.value = firstName.value !== '' && lastName.value !== '' && isEmailValid.value;
+	});
+
+	const validatePassword = $(() => {
+		const validationResult = isStrongPassword(password.value, email.value);
+		isPasswordValid.value = validationResult.isValid;
+		if (!validationResult.isValid) {
+			passwordValidationMsg.value = validationResult.errorMessages;
+		} else {
+			passwordValidationMsg.value = [''];
+		}
+	});
+
+	const validateConfirmPassword = $(() => {
+		isConfirmPasswordValid.value = confirmPassword.value === password.value;
+	});
+
 	const registerCustomer = $(async (): Promise<void> => {
 		if (
 			email.value === '' ||
@@ -62,79 +97,170 @@ export default component$(() => {
 							</p>
 						</div>
 					)}
-					{isEnvVariableEnabled('VITE_IS_READONLY_INSTANCE') && (
-						<div class="mb-6 bg-yellow-50 border border-yellow-400 text-yellow-800 rounded p-4 text-center text-sm">
-							<p>
-								Account registration is not supported by the demo Vendure instance. In order to use
-								it, please connect to your own local / production instance.
-							</p>
-						</div>
-					)}
+
 					<div class="space-y-6">
 						<div>
 							<label class="block text-sm font-medium text-gray-700">Email address</label>
-							<div class="mt-1">
+							<div class="mt-1 relative">
 								<input
 									type="email"
 									autoComplete="email"
 									value={email.value}
 									required
-									onInput$={(_, el) => (email.value = el.value)}
+									onInput$={(_, el) => {
+										email.value = el.value;
+										validateEmail();
+										validateBasicInfo();
+									}}
 									class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
+								{isEmailValid.value && (
+									<div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+										<CheckIcon forcedClass="text-green-600 w-6 h-6" />
+									</div>
+								)}
 							</div>
+							{!isEmailValid.value && (
+								<p class="text-sm text-red-600 mt-2">Please enter a valid email address.</p>
+							)}
 						</div>
 
 						<div>
 							<label class="block text-sm font-medium text-gray-700">Firstname</label>
-							<div class="mt-1">
+							<div class="mt-1 relative">
 								<input
 									type="text"
 									value={firstName.value}
 									required
-									onInput$={(_, el) => (firstName.value = el.value)}
+									onInput$={(_, el) => {
+										firstName.value = el.value;
+										validateBasicInfo();
+									}}
 									class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
+								{firstName.value !== '' && (
+									<div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+										<CheckIcon forcedClass="text-green-600 w-6 h-6" />
+									</div>
+								)}
 							</div>
+							{firstName.value === '' && (
+								<p class="text-sm text-red-600 mt-2">Firstname is required.</p>
+							)}
 						</div>
 
 						<div>
 							<label class="block text-sm font-medium text-gray-700">Lastname</label>
-							<div class="mt-1">
+							<div class="mt-1 relative">
 								<input
 									type="text"
 									value={lastName.value}
 									required
-									onInput$={(_, el) => (lastName.value = el.value)}
+									onInput$={(_, el) => {
+										lastName.value = el.value;
+										validateBasicInfo();
+									}}
 									class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
+								{lastName.value !== '' && (
+									<div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+										<CheckIcon forcedClass="text-green-600 w-6 h-6" />
+									</div>
+								)}
 							</div>
+							{lastName.value === '' && (
+								<p class="text-sm text-red-600 mt-2">Lastname is required.</p>
+							)}
 						</div>
 
 						<div>
 							<label class="block text-sm font-medium text-gray-700">Password</label>
-							<div class="mt-1">
+							<div class="mt-1 relative">
 								<input
-									type="password"
+									type={isPasswordVisible.value ? 'text' : 'password'}
 									value={password.value}
 									required
-									onInput$={(_, el) => (password.value = el.value)}
-									class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+									disabled={!isBasicInfoValid.value}
+									onInput$={(_, el) => {
+										password.value = el.value;
+										validatePassword();
+										validateConfirmPassword();
+									}}
+									class={`appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm ${
+										!isBasicInfoValid.value ? 'bg-gray-100 cursor-not-allowed' : ''
+									}`}
 								/>
+								{isPasswordValid.value && (
+									<div class="absolute inset-y-0 right-6 pr-3 flex items-center">
+										<CheckIcon forcedClass="text-green-600 w-6 h-6" />
+									</div>
+								)}
+
+								<button
+									type="button"
+									class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 group"
+									onClick$={() => {
+										isPasswordVisible.value = !isPasswordVisible.value;
+									}}
+									disabled={!isBasicInfoValid.value}
+								>
+									{isPasswordVisible.value ? <EyeSlashIcon /> : <EyeIcon />}
+									<span class="absolute bottom-full mb-1 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2">
+										{isPasswordVisible.value ? 'Hide password' : 'Show password'}
+									</span>
+								</button>
 							</div>
+							{!isPasswordValid.value && password.value !== '' && (
+								<div class="text-sm text-red-600 mt-2">
+									{passwordValidationMsg.value.map((msg) => (
+										<p key={msg}>{msg}</p>
+									))}
+								</div>
+							)}
 						</div>
 
 						<div>
 							<label class="block text-sm font-medium text-gray-700">Repeat Password</label>
-							<div class="mt-1">
+
+							<div class="mt-1 relative">
 								<input
-									type="password"
+									type={isPasswordVisible.value ? 'text' : 'password'}
 									value={confirmPassword.value}
 									required
-									onInput$={(_, el) => (confirmPassword.value = el.value)}
-									class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+									disabled={!isBasicInfoValid.value || !isPasswordValid.value}
+									onInput$={(_, el) => {
+										confirmPassword.value = el.value;
+										validateConfirmPassword();
+									}}
+									class={`appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm ${
+										!isBasicInfoValid.value || !isPasswordValid.value
+											? 'bg-gray-100 cursor-not-allowed'
+											: ''
+									}`}
 								/>
+								{isConfirmPasswordValid.value && (
+									<div class="absolute inset-y-0 right-6 pr-3 flex items-center">
+										<CheckIcon forcedClass="text-green-600 w-6 h-6" />
+									</div>
+								)}
+
+								<button
+									type="button"
+									class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 group"
+									onClick$={() => {
+										isPasswordVisible.value = !isPasswordVisible.value;
+									}}
+									disabled={!isBasicInfoValid.value}
+								>
+									{isPasswordVisible.value ? <EyeSlashIcon /> : <EyeIcon />}
+									<span class="absolute bottom-full mb-1 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2">
+										{isPasswordVisible.value ? 'Hide password' : 'Show password'}
+									</span>
+								</button>
 							</div>
+							{!isConfirmPasswordValid.value && confirmPassword.value !== '' && (
+								<p class="text-sm text-red-600 mt-2">Passwords do not match.</p>
+							)}
 						</div>
 
 						{error.value !== '' && (
@@ -154,7 +280,14 @@ export default component$(() => {
 						)}
 						<div>
 							<button
-								class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+								class={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 ${
+									!isBasicInfoValid.value || !isPasswordValid.value || !isConfirmPasswordValid.value
+										? 'opacity-50 cursor-not-allowed'
+										: ''
+								}`}
+								disabled={
+									!isBasicInfoValid.value || !isPasswordValid.value || !isConfirmPasswordValid.value
+								}
 								onClick$={registerCustomer}
 							>
 								Sign up
