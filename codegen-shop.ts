@@ -1,6 +1,7 @@
 import type { CodegenConfig } from '@graphql-codegen/cli';
 import { DEV_API, LOCAL_API, PROD_API } from './src/constants';
 
+// The IS_DEV and IS_LOCAL environment variables are used in package.json scripts
 let GRAPHQL_API = import.meta.env.IS_DEV
 	? DEV_API
 	: import.meta.env.IS_LOCAL

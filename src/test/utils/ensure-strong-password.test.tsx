@@ -21,10 +21,15 @@ const testCases = [
 ];
 
 testCases.forEach(({ password, description, validation }) => {
-	test(`isStrongPassword - ${description}`, () => {
+	test(`isStrongPassword with email input - ${description}`, () => {
 		const result = isStrongPassword(password, email);
 		expect(result.isValid).toBe(validation);
 	});
+});
+
+test('isStrongPassword - valid password without email', () => {
+	const result = isStrongPassword('some_email@email.ccm456');
+	expect(result.isValid).toBe(false);
 });
 
 // test the output of the function, it should be an object with a boolean and an array of strings

@@ -1,10 +1,14 @@
 import { $, component$, useSignal } from '@qwik.dev/core';
 import { useLocation, useNavigate } from '@qwik.dev/router';
+import { PasswordInput } from '~/components/account/PasswordInput';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import { resetPasswordMutation } from '~/providers/shop/account/account';
 
 export default component$(() => {
 	const password = useSignal('');
+	const confirmPassword = useSignal('');
+	const isPasswordValid = useSignal(false);
+	const isConfirmPasswordValid = useSignal(false);
 	const error = useSignal('');
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -23,26 +27,24 @@ export default component$(() => {
 	return (
 		<div class="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
 			<div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-				<div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+				<div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 space-y-6">
 					<h2 class="mt-6 text-center text-3xl text-gray-900">Reset password</h2>
 					<p class="mt-2 text-center text-sm text-gray-600">Choose a new password</p>
-					<div>
-						<div class="mt-1 mb-8">
-							<input
-								type="password"
-								value={password.value}
-								required
-								onInput$={(_, el) => (password.value = el.value)}
-								onKeyUp$={(ev, el) => {
-									error.value = '';
-									if (ev.key === 'Enter' && !!el.value) {
-										reset();
-									}
-								}}
-								class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-							/>
-						</div>
-					</div>
+
+					<PasswordInput
+						label="Password"
+						fieldValue={password}
+						completeSignal={isPasswordValid}
+						incompleteSignal={isConfirmPasswordValid}
+						checkStrongPassword={true}
+					/>
+
+					<PasswordInput
+						label="Repeat Password"
+						fieldValue={confirmPassword}
+						completeSignal={isConfirmPasswordValid}
+						passwordToBeRepeated={password}
+					/>
 					{error.value !== '' && (
 						<div class="rounded-md bg-red-50 p-4 mb-8">
 							<div class="flex">
@@ -60,8 +62,10 @@ export default component$(() => {
 					)}
 					<div>
 						<button
-							class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+							class={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 
+								${!isPasswordValid.value || !isConfirmPasswordValid.value ? 'opacity-50 cursor-not-allowed' : ''}`}
 							onClick$={reset}
+							disabled={!isPasswordValid.value || !isConfirmPasswordValid.value}
 						>
 							Reset password
 						</button>

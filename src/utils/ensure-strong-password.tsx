@@ -51,13 +51,26 @@ const isCommonPassword = (password: string): IndividualPasswordValidationResult 
 	return { isValid: true };
 };
 
-const containsEmail = (password: string, email: string): IndividualPasswordValidationResult => {
-	const emailRegex = new RegExp(email.replace(/@/g, '@'), 'i');
-	if (emailRegex.test(password)) {
-		return {
-			isValid: false,
-			errorMessage: 'Must not contain the email.',
-		};
+const containsEmail = (password: string, email?: string): IndividualPasswordValidationResult => {
+	// if no email is provided, we will just check if the password contains '.+@\w+\.\w+'
+	if (!email) {
+		const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/;
+		if (emailRegex.test(password)) {
+			return {
+				isValid: false,
+				errorMessage: 'Must not contain an email address.',
+			};
+		}
+	}
+	// if email is provided, we will check if the password contains the email
+	else {
+		const emailRegex = new RegExp(email?.replace(/@/g, '@'), 'i');
+		if (emailRegex.test(password)) {
+			return {
+				isValid: false,
+				errorMessage: 'Must not contain the email.',
+			};
+		}
 	}
 	return { isValid: true };
 };
@@ -73,7 +86,7 @@ const containsEmail = (password: string, email: string): IndividualPasswordValid
  */
 export const isStrongPassword = (
 	password: string,
-	email: string
+	email?: string
 ): OverallPasswordValidationResult => {
 	const validations = [
 		isLongEnough(password),

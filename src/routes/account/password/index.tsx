@@ -20,10 +20,16 @@ export default component$(() => {
 	const updatePassword = $(async () => {
 		errorMessage.value = '';
 		if (newPassword.value === confirmPassword.value) {
-			const updateCustomerPassword = await updateCustomerPasswordMutation(
-				currentPassword.value,
-				newPassword.value
-			);
+			const updateCustomerPassword = await updateCustomerPasswordMutation({
+				currentPassword: currentPassword.value,
+				newPassword: newPassword.value,
+			});
+			console.log(updateCustomerPassword);
+
+			if (updateCustomerPassword.__typename === 'Success') {
+				navigate('/account');
+				return;
+			}
 
 			switch (updateCustomerPassword.__typename) {
 				case 'PasswordValidationError':
@@ -34,9 +40,6 @@ export default component$(() => {
 					break;
 				case 'NativeAuthStrategyError':
 					errorMessage.value = 'Login method mismatch!';
-					break;
-				default:
-					navigate('/account');
 					break;
 			}
 		} else {

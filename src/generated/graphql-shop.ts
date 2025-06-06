@@ -119,6 +119,7 @@ export const AssetType = {
 
 export type AssetType = (typeof AssetType)[keyof typeof AssetType];
 export type AuthenticationInput = {
+	google?: InputMaybe<GoogleAuthInput>;
 	native?: InputMaybe<NativeAuthInput>;
 };
 
@@ -853,6 +854,12 @@ export type CustomerListOptions = {
 	take?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type CustomerRegisterStatusReturn = {
+	__typename?: 'CustomerRegisterStatusReturn';
+	isCustomer: Scalars['Boolean']['output'];
+	isVerified: Scalars['Boolean']['output'];
+};
+
 export type CustomerSortParameter = {
 	createdAt?: InputMaybe<SortOrder>;
 	emailAddress?: InputMaybe<SortOrder>;
@@ -1203,6 +1210,10 @@ export const GlobalFlag = {
 } as const;
 
 export type GlobalFlag = (typeof GlobalFlag)[keyof typeof GlobalFlag];
+export type GoogleAuthInput = {
+	token: Scalars['String']['input'];
+};
+
 /** Returned when attempting to set the Customer on a guest checkout when the configured GuestCheckoutStrategy does not allow it. */
 export type GuestCheckoutError = ErrorResult & {
 	__typename?: 'GuestCheckoutError';
@@ -1860,6 +1871,7 @@ export type Mutation = {
 };
 
 export type MutationAddItemToOrderArgs = {
+	customFields?: InputMaybe<OrderLineCustomFieldsInput>;
 	productVariantId: Scalars['ID']['input'];
 	quantity: Scalars['Int']['input'];
 };
@@ -1869,6 +1881,7 @@ export type MutationAddPaymentToOrderArgs = {
 };
 
 export type MutationAdjustOrderLineArgs = {
+	customFields?: InputMaybe<OrderLineCustomFieldsInput>;
 	orderLineId: Scalars['ID']['input'];
 	quantity: Scalars['Int']['input'];
 };
@@ -2159,7 +2172,7 @@ export type OrderLimitError = ErrorResult & {
 export type OrderLine = Node & {
 	__typename?: 'OrderLine';
 	createdAt: Scalars['DateTime']['output'];
-	customFields?: Maybe<Scalars['JSON']['output']>;
+	customFields?: Maybe<OrderLineCustomFields>;
 	/** The price of the line including discounts, excluding tax */
 	discountedLinePrice: Scalars['Money']['output'];
 	/** The price of the line including discounts and tax */
@@ -2218,6 +2231,25 @@ export type OrderLine = Node & {
 	/** Non-zero if the unitPriceWithTax has changed since it was initially added to Order */
 	unitPriceWithTaxChangeSinceAdded: Scalars['Money']['output'];
 	updatedAt: Scalars['DateTime']['output'];
+};
+
+export type OrderLineCustomFields = {
+	__typename?: 'OrderLineCustomFields';
+	base_color?: Maybe<Scalars['String']['output']>;
+	font_bottom?: Maybe<Scalars['String']['output']>;
+	font_top?: Maybe<Scalars['String']['output']>;
+	primary_color?: Maybe<Scalars['String']['output']>;
+	text_bottom?: Maybe<Scalars['String']['output']>;
+	text_top?: Maybe<Scalars['String']['output']>;
+};
+
+export type OrderLineCustomFieldsInput = {
+	base_color?: InputMaybe<Scalars['String']['input']>;
+	font_bottom?: InputMaybe<Scalars['String']['input']>;
+	font_top?: InputMaybe<Scalars['String']['input']>;
+	primary_color?: InputMaybe<Scalars['String']['input']>;
+	text_bottom?: InputMaybe<Scalars['String']['input']>;
+	text_top?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type OrderList = PaginatedList & {
@@ -2655,7 +2687,7 @@ export type Product = Node & {
 	assets: Array<Asset>;
 	collections: Array<Collection>;
 	createdAt: Scalars['DateTime']['output'];
-	customFields?: Maybe<Scalars['JSON']['output']>;
+	customFields?: Maybe<ProductCustomFields>;
 	description: Scalars['String']['output'];
 	enabled: Scalars['Boolean']['output'];
 	facetValues: Array<FacetValue>;
@@ -2677,10 +2709,16 @@ export type ProductVariantListArgs = {
 	options?: InputMaybe<ProductVariantListOptions>;
 };
 
+export type ProductCustomFields = {
+	__typename?: 'ProductCustomFields';
+	customizableOption?: Maybe<Scalars['String']['output']>;
+};
+
 export type ProductFilterParameter = {
 	_and?: InputMaybe<Array<ProductFilterParameter>>;
 	_or?: InputMaybe<Array<ProductFilterParameter>>;
 	createdAt?: InputMaybe<DateOperators>;
+	customizableOption?: InputMaybe<StringOperators>;
 	description?: InputMaybe<StringOperators>;
 	enabled?: InputMaybe<BooleanOperators>;
 	id?: InputMaybe<IdOperators>;
@@ -2756,6 +2794,7 @@ export type ProductOptionTranslation = {
 
 export type ProductSortParameter = {
 	createdAt?: InputMaybe<SortOrder>;
+	customizableOption?: InputMaybe<SortOrder>;
 	description?: InputMaybe<SortOrder>;
 	id?: InputMaybe<SortOrder>;
 	name?: InputMaybe<SortOrder>;
@@ -2912,24 +2951,6 @@ export type ProvinceList = PaginatedList & {
 	totalItems: Scalars['Int']['output'];
 };
 
-export type PublicPaymentMethod = {
-	__typename?: 'PublicPaymentMethod';
-	code: Scalars['String']['output'];
-	description?: Maybe<Scalars['String']['output']>;
-	id: Scalars['ID']['output'];
-	name: Scalars['String']['output'];
-	translations: Array<PaymentMethodTranslation>;
-};
-
-export type PublicShippingMethod = {
-	__typename?: 'PublicShippingMethod';
-	code: Scalars['String']['output'];
-	description?: Maybe<Scalars['String']['output']>;
-	id: Scalars['ID']['output'];
-	name: Scalars['String']['output'];
-	translations: Array<ShippingMethodTranslation>;
-};
-
 export type Query = {
 	__typename?: 'Query';
 	/** The active Channel */
@@ -2942,16 +2963,13 @@ export type Query = {
 	 * query will once again return `null`.
 	 */
 	activeOrder?: Maybe<Order>;
-	/** Get active payment methods */
-	activePaymentMethods: Array<Maybe<PublicPaymentMethod>>;
-	/** Get active shipping methods */
-	activeShippingMethods: Array<Maybe<PublicShippingMethod>>;
 	/** An array of supported Countries */
 	availableCountries: Array<Country>;
 	/** Returns a Collection either by its id or slug. If neither 'id' nor 'slug' is specified, an error will result. */
 	collection?: Maybe<Collection>;
 	/** A list of Collections available to the shop */
 	collections: CollectionList;
+	customerRegisterStatus: CustomerRegisterStatusReturn;
 	/** Returns a list of payment methods and their eligibility based on the current active Order */
 	eligiblePaymentMethods: Array<PaymentMethodQuote>;
 	/** Returns a list of eligible shipping methods based on the current active Order */
@@ -2960,7 +2978,7 @@ export type Query = {
 	facet?: Maybe<Facet>;
 	/** A list of Facets available to the shop */
 	facets: FacetList;
-	generateBraintreeClientToken?: Maybe<Scalars['String']['output']>;
+	generateBraintreeClientToken: Scalars['String']['output'];
 	/** Returns information about the current authenticated User */
 	me?: Maybe<CurrentUser>;
 	/** Returns the possible next states that the activeOrder can transition to */
@@ -2992,6 +3010,10 @@ export type QueryCollectionArgs = {
 
 export type QueryCollectionsArgs = {
 	options?: InputMaybe<CollectionListOptions>;
+};
+
+export type QueryCustomerRegisterStatusArgs = {
+	email: Scalars['String']['input'];
 };
 
 export type QueryFacetArgs = {
@@ -3152,6 +3174,7 @@ export type SearchInput = {
 	collectionSlug?: InputMaybe<Scalars['String']['input']>;
 	facetValueFilters?: InputMaybe<Array<FacetValueFilterInput>>;
 	groupByProduct?: InputMaybe<Scalars['Boolean']['input']>;
+	inStock?: InputMaybe<Scalars['Boolean']['input']>;
 	skip?: InputMaybe<Scalars['Int']['input']>;
 	sort?: InputMaybe<SearchResultSortParameter>;
 	take?: InputMaybe<Scalars['Int']['input']>;
@@ -3165,22 +3188,10 @@ export type SearchReindexResponse = {
 
 export type SearchResponse = {
 	__typename?: 'SearchResponse';
-	cacheIdentifier?: Maybe<SearchResponseCacheIdentifier>;
 	collections: Array<CollectionResult>;
 	facetValues: Array<FacetValueResult>;
 	items: Array<SearchResult>;
 	totalItems: Scalars['Int']['output'];
-};
-
-/**
- * This type is here to allow us to easily purge the Stellate cache
- * of any search results where the collectionSlug is used. We cannot rely on
- * simply purging the SearchResult type, because in the case of an empty 'items'
- * array, Stellate cannot know that that particular query now needs to be purged.
- */
-export type SearchResponseCacheIdentifier = {
-	__typename?: 'SearchResponseCacheIdentifier';
-	collectionSlug?: Maybe<Scalars['String']['output']>;
 };
 
 export type SearchResult = {
@@ -3191,6 +3202,7 @@ export type SearchResult = {
 	description: Scalars['String']['output'];
 	facetIds: Array<Scalars['ID']['output']>;
 	facetValueIds: Array<Scalars['ID']['output']>;
+	inStock: Scalars['Boolean']['output'];
 	price: SearchResultPrice;
 	priceWithTax: SearchResultPrice;
 	productAsset?: Maybe<SearchResultAsset>;
@@ -3923,7 +3935,7 @@ export type GenerateBraintreeClientTokenQueryVariables = Exact<{
 
 export type GenerateBraintreeClientTokenQuery = {
 	__typename?: 'Query';
-	generateBraintreeClientToken?: string | null;
+	generateBraintreeClientToken: string;
 };
 
 export type CollectionsQueryVariables = Exact<{ [key: string]: never }>;
@@ -4079,12 +4091,12 @@ export type ActiveCustomerOrdersQuery = {
 	} | null;
 };
 
-export type UpdateCustomerPasswordMutationMutationVariables = Exact<{
+export type UpdateCustomerPasswordMutationVariables = Exact<{
 	currentPassword: Scalars['String']['input'];
 	newPassword: Scalars['String']['input'];
 }>;
 
-export type UpdateCustomerPasswordMutationMutation = {
+export type UpdateCustomerPasswordMutation = {
 	__typename?: 'Mutation';
 	updateCustomerPassword:
 		| { __typename: 'InvalidCredentialsError'; errorCode: ErrorCode; message: string }
@@ -4092,218 +4104,6 @@ export type UpdateCustomerPasswordMutationMutation = {
 		| { __typename: 'PasswordValidationError'; errorCode: ErrorCode; message: string }
 		| { __typename: 'Success'; success: boolean };
 };
-
-type ErrorResult_AlreadyLoggedInError_Fragment = {
-	__typename: 'AlreadyLoggedInError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_CouponCodeExpiredError_Fragment = {
-	__typename: 'CouponCodeExpiredError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_CouponCodeInvalidError_Fragment = {
-	__typename: 'CouponCodeInvalidError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_CouponCodeLimitError_Fragment = {
-	__typename: 'CouponCodeLimitError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_EmailAddressConflictError_Fragment = {
-	__typename: 'EmailAddressConflictError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_GuestCheckoutError_Fragment = {
-	__typename: 'GuestCheckoutError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_IdentifierChangeTokenExpiredError_Fragment = {
-	__typename: 'IdentifierChangeTokenExpiredError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_IdentifierChangeTokenInvalidError_Fragment = {
-	__typename: 'IdentifierChangeTokenInvalidError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_IneligiblePaymentMethodError_Fragment = {
-	__typename: 'IneligiblePaymentMethodError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_IneligibleShippingMethodError_Fragment = {
-	__typename: 'IneligibleShippingMethodError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_InsufficientStockError_Fragment = {
-	__typename: 'InsufficientStockError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_InvalidCredentialsError_Fragment = {
-	__typename: 'InvalidCredentialsError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_MissingPasswordError_Fragment = {
-	__typename: 'MissingPasswordError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_NativeAuthStrategyError_Fragment = {
-	__typename: 'NativeAuthStrategyError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_NegativeQuantityError_Fragment = {
-	__typename: 'NegativeQuantityError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_NoActiveOrderError_Fragment = {
-	__typename: 'NoActiveOrderError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_NotVerifiedError_Fragment = {
-	__typename: 'NotVerifiedError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_OrderInterceptorError_Fragment = {
-	__typename: 'OrderInterceptorError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_OrderLimitError_Fragment = {
-	__typename: 'OrderLimitError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_OrderModificationError_Fragment = {
-	__typename: 'OrderModificationError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_OrderPaymentStateError_Fragment = {
-	__typename: 'OrderPaymentStateError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_OrderStateTransitionError_Fragment = {
-	__typename: 'OrderStateTransitionError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_PasswordAlreadySetError_Fragment = {
-	__typename: 'PasswordAlreadySetError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_PasswordResetTokenExpiredError_Fragment = {
-	__typename: 'PasswordResetTokenExpiredError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_PasswordResetTokenInvalidError_Fragment = {
-	__typename: 'PasswordResetTokenInvalidError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_PasswordValidationError_Fragment = {
-	__typename: 'PasswordValidationError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_PaymentDeclinedError_Fragment = {
-	__typename: 'PaymentDeclinedError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_PaymentFailedError_Fragment = {
-	__typename: 'PaymentFailedError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_VerificationTokenExpiredError_Fragment = {
-	__typename: 'VerificationTokenExpiredError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-type ErrorResult_VerificationTokenInvalidError_Fragment = {
-	__typename: 'VerificationTokenInvalidError';
-	errorCode: ErrorCode;
-	message: string;
-};
-
-export type ErrorResultFragment =
-	| ErrorResult_AlreadyLoggedInError_Fragment
-	| ErrorResult_CouponCodeExpiredError_Fragment
-	| ErrorResult_CouponCodeInvalidError_Fragment
-	| ErrorResult_CouponCodeLimitError_Fragment
-	| ErrorResult_EmailAddressConflictError_Fragment
-	| ErrorResult_GuestCheckoutError_Fragment
-	| ErrorResult_IdentifierChangeTokenExpiredError_Fragment
-	| ErrorResult_IdentifierChangeTokenInvalidError_Fragment
-	| ErrorResult_IneligiblePaymentMethodError_Fragment
-	| ErrorResult_IneligibleShippingMethodError_Fragment
-	| ErrorResult_InsufficientStockError_Fragment
-	| ErrorResult_InvalidCredentialsError_Fragment
-	| ErrorResult_MissingPasswordError_Fragment
-	| ErrorResult_NativeAuthStrategyError_Fragment
-	| ErrorResult_NegativeQuantityError_Fragment
-	| ErrorResult_NoActiveOrderError_Fragment
-	| ErrorResult_NotVerifiedError_Fragment
-	| ErrorResult_OrderInterceptorError_Fragment
-	| ErrorResult_OrderLimitError_Fragment
-	| ErrorResult_OrderModificationError_Fragment
-	| ErrorResult_OrderPaymentStateError_Fragment
-	| ErrorResult_OrderStateTransitionError_Fragment
-	| ErrorResult_PasswordAlreadySetError_Fragment
-	| ErrorResult_PasswordResetTokenExpiredError_Fragment
-	| ErrorResult_PasswordResetTokenInvalidError_Fragment
-	| ErrorResult_PasswordValidationError_Fragment
-	| ErrorResult_PaymentDeclinedError_Fragment
-	| ErrorResult_PaymentFailedError_Fragment
-	| ErrorResult_VerificationTokenExpiredError_Fragment
-	| ErrorResult_VerificationTokenInvalidError_Fragment;
 
 export type DeleteCustomerAddressMutationVariables = Exact<{
 	id: Scalars['ID']['input'];
@@ -5348,13 +5148,6 @@ export const AddressFragmentDoc = gql`
 		__typename
 	}
 `;
-export const ErrorResultFragmentDoc = gql`
-	fragment ErrorResult on ErrorResult {
-		errorCode
-		message
-		__typename
-	}
-`;
 export const OrderDetailFragmentDoc = gql`
 	fragment OrderDetail on Order {
 		__typename
@@ -5779,18 +5572,19 @@ export const ActiveCustomerOrdersDocument = gql`
 		}
 	}
 `;
-export const UpdateCustomerPasswordMutationDocument = gql`
-	mutation updateCustomerPasswordMutation($currentPassword: String!, $newPassword: String!) {
+export const UpdateCustomerPasswordDocument = gql`
+	mutation updateCustomerPassword($currentPassword: String!, $newPassword: String!) {
 		updateCustomerPassword(currentPassword: $currentPassword, newPassword: $newPassword) {
+			__typename
 			... on Success {
 				success
-				__typename
 			}
-			...ErrorResult
-			__typename
+			... on ErrorResult {
+				errorCode
+				message
+			}
 		}
 	}
-	${ErrorResultFragmentDoc}
 `;
 export const DeleteCustomerAddressDocument = gql`
 	mutation deleteCustomerAddress($id: ID!) {
@@ -6182,18 +5976,15 @@ export function getSdk<C>(requester: Requester<C>) {
 				options
 			) as Promise<ActiveCustomerOrdersQuery>;
 		},
-		updateCustomerPasswordMutation(
-			variables: UpdateCustomerPasswordMutationMutationVariables,
+		updateCustomerPassword(
+			variables: UpdateCustomerPasswordMutationVariables,
 			options?: C
-		): Promise<UpdateCustomerPasswordMutationMutation> {
-			return requester<
-				UpdateCustomerPasswordMutationMutation,
-				UpdateCustomerPasswordMutationMutationVariables
-			>(
-				UpdateCustomerPasswordMutationDocument,
+		): Promise<UpdateCustomerPasswordMutation> {
+			return requester<UpdateCustomerPasswordMutation, UpdateCustomerPasswordMutationVariables>(
+				UpdateCustomerPasswordDocument,
 				variables,
 				options
-			) as Promise<UpdateCustomerPasswordMutationMutation>;
+			) as Promise<UpdateCustomerPasswordMutation>;
 		},
 		deleteCustomerAddress(
 			variables: DeleteCustomerAddressMutationVariables,

@@ -1,5 +1,4 @@
 
-*.env
 # Server
 one-click-deploy
 
@@ -45,3 +44,4 @@ lerna-debug.log*
 !.yarn/releases
 
 # Cloudflare
+.env

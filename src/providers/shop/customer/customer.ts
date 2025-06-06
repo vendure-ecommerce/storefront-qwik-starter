@@ -7,8 +7,8 @@ import {
 	CreateAddressInput,
 	Customer,
 	UpdateAddressInput,
-	UpdateCustomerPasswordMutationMutation,
-} from '~/generated/graphql';
+	UpdateCustomerPasswordMutation,
+} from '~/generated/graphql-shop';
 import { shopSdk } from '~/graphql-wrapper';
 
 export const getActiveCustomerQuery = async () => {
@@ -23,13 +23,13 @@ export const getActiveCustomerAddressesQuery = async () => {
 		.then((res: ActiveCustomerAddressesQuery) => res.activeCustomer as Customer);
 };
 
-export const updateCustomerPasswordMutation = async (
-	currentPassword: string,
-	newPassword: string
-) => {
+export const updateCustomerPasswordMutation = async (input: {
+	currentPassword: string;
+	newPassword: string;
+}) => {
 	return shopSdk
-		.updateCustomerPasswordMutation({ currentPassword, newPassword })
-		.then((res: UpdateCustomerPasswordMutationMutation) => res.updateCustomerPassword);
+		.updateCustomerPassword(input)
+		.then((res: UpdateCustomerPasswordMutation) => res.updateCustomerPassword);
 };
 
 export const deleteCustomerAddressMutation = async (id: string) => {
@@ -163,21 +163,17 @@ gql`
 `;
 
 gql`
-	mutation updateCustomerPasswordMutation($currentPassword: String!, $newPassword: String!) {
+	mutation updateCustomerPassword($currentPassword: String!, $newPassword: String!) {
 		updateCustomerPassword(currentPassword: $currentPassword, newPassword: $newPassword) {
+			__typename
 			... on Success {
 				success
-				__typename
 			}
-			...ErrorResult
-			__typename
+			... on ErrorResult {
+				errorCode
+				message
+			}
 		}
-	}
-
-	fragment ErrorResult on ErrorResult {
-		errorCode
-		message
-		__typename
 	}
 `;
 

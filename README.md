@@ -94,7 +94,7 @@ Any string can be marked for translation by using the `$localize` template funct
 
 ```typescript
 export default component$((props: { name: string }) => {
-	return <span>{$localize`Hello ${props.name}!`}</span>;
+ return <span>{$localize`Hello ${props.name}!`}</span>;
 });
 ```
 
@@ -143,3 +143,7 @@ The resulting language should match your browser language. You can also override
 - [Qwik Github](https://github.com/BuilderIO/qwik)
 - [@QwikDev](https://twitter.com/QwikDev)
 - [Qwik Discord](https://qwik.builder.io/chat)
+
+## Note
+
+- Connection to ship-api is defined in `src/raphql-wrapper` -> `baseUrl`, which was point to `.env`-> `VITE_VENDURE_PROD_URL` or `VITE_VENDURE_DEV_URL`
