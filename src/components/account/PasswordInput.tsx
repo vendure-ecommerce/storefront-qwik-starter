@@ -83,7 +83,7 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 
 	return (
 		<div>
-			<label class="block text-sm font-medium text-gray-700">{props.label}</label>
+			<label>{props.label}</label>
 			<div class="mt-1 relative">
 				<input
 					type={isPasswordVisible.value ? 'text' : 'password'}
@@ -114,9 +114,7 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 							props.completeSignal.value = true;
 						}
 					}}
-					class={`appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm ${
-						props.isDisabled ? 'bg-gray-100 cursor-not-allowed' : ''
-					}`}
+					class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 				/>
 				{props.completeSignal.value && (
 					<div class="absolute inset-y-0 right-6 pr-3 flex items-center">
@@ -137,8 +135,8 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 					</span>
 				</button>
 			</div>
-			{!isValid.value && (
-				<div class="text-sm text-red-600 mt-2">
+			{!isValid.value && !props.completeSignal.value && (
+				<div class="text-xs text-red-600 mt-2">
 					{invalidateMessages?.value.map((msg) => <p key={msg}>{msg}</p>)}
 				</div>
 			)}
