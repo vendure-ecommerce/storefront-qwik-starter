@@ -1,12 +1,10 @@
 import { $, component$, useContext, useSignal } from '@qwik.dev/core';
-import { useNavigate } from '@qwik.dev/router';
 import { PasswordInput } from '~/components/account/PasswordInput';
 import { ErrorMessage } from '~/components/error-message/ErrorMessage';
 import { APP_STATE } from '~/constants';
 import { updateCustomerPasswordMutation } from '~/providers/shop/customer/customer';
 
 export default component$(() => {
-	const navigate = useNavigate();
 	const appState = useContext(APP_STATE);
 	const currentPassword = useSignal('');
 	const isCurrentPasswordValid = useSignal(false);
@@ -15,6 +13,7 @@ export default component$(() => {
 	const errorMessage = useSignal('');
 	const isNewPasswordValid = useSignal(false);
 	const isConfirmPasswordValid = useSignal(false);
+	const successSignal = useSignal(false);
 
 	const updatePassword = $(async () => {
 		errorMessage.value = '';
@@ -26,7 +25,8 @@ export default component$(() => {
 			console.log(updateCustomerPassword);
 
 			if (updateCustomerPassword.__typename === 'Success') {
-				navigate('/account');
+				successSignal.value = true;
+				isConfirmPasswordValid.value = false;
 				return;
 			}
 
@@ -49,6 +49,17 @@ export default component$(() => {
 	return appState.customer ? (
 		<div class="max-w-6xl m-auto rounded-lg p-4 space-y-4 flex justify-center">
 			<form class="bg-white shadow-lg rounded-lg w-[20rem] py-4 px-6 text-sm text-gray-500 space-y-6 mt-1 relative">
+				{successSignal.value && (
+					<div class="mb-6 bg-yellow-50 border border-yellow-400 text-yellow-800 rounded p-4 text-center text-sm">
+						<p>
+							Password Changed successfully! You can now &nbsp;
+							<a href="/account" class="font-medium text-primary-600 hover:text-primary-500">
+								return to your account
+							</a>
+							.
+						</p>
+					</div>
+				)}
 				<PasswordInput
 					label="Current Password"
 					fieldValue={currentPassword}
@@ -81,12 +92,9 @@ export default component$(() => {
 				>
 					Change Password
 				</button>
-				{errorMessage.value !== '' && (
+				{errorMessage.value !== '' && !successSignal.value && (
 					<div class="p-4">
-						<ErrorMessage
-							heading="We ran into a problem changing your password!"
-							message={errorMessage.value}
-						/>
+						<ErrorMessage heading="Oops!" message={errorMessage.value} />
 					</div>
 				)}
 			</form>
