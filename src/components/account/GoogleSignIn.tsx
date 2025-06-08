@@ -1,16 +1,19 @@
 import { $, component$, useVisibleTask$ } from '@qwik.dev/core';
 import { useNavigate } from '@qwik.dev/router';
-import { GOOGLE_CLIENT_ID } from '~/constants';
 import { authenticateMutation } from '~/providers/shop/account/account';
 
 /**
- * The Google Client ID is used for Google Sign-In in routes/sign-in.tsx. You can create a new one in the
- * There is no need to hide this as this is a public key.
- * You can find it in in GCP -> [Your GCP project] -> Google Auth Platform -> Client -> [Your App]
+ * GoogleSignInButton component
+ *
+ * The Google Client ID is used for Google Sign-In in routes/sign-in.tsx.
+ * You can create a new one in the GCP console -> [Your GCP project] -> Google Auth Platform -> Clients
  * Also in the same place you need to set the allowed redirect URIs to your app's URL.
+ *
+ * Note that There is no need to hide this as this is a public key.
+ * However you can define it in `.env` with key `VITE_GOOGLE_CLIENT_ID` (Note VITE_ prefix is required for Vite to expose it to the client-side code),
+ * Then edit `src/env.ts` and `src/constants.ts` so you can use it in your app.
  */
-
-export const GoogleSignInButton = component$(() => {
+export const GoogleSignInButton = component$((props: { googleClientId: string }) => {
 	const navigate = useNavigate();
 
 	const googleSignInCallback = $(async (response: any) => {
@@ -35,7 +38,7 @@ export const GoogleSignInButton = component$(() => {
 			script.onload = () => {
 				// Initialize Google Identity Services after the script is loaded
 				google.accounts.id.initialize({
-					client_id: GOOGLE_CLIENT_ID,
+					client_id: props.googleClientId,
 					callback: googleSignInCallback,
 				});
 			};
@@ -43,7 +46,7 @@ export const GoogleSignInButton = component$(() => {
 		} else {
 			// Initialize Google Identity Services if the library is already loaded
 			google.accounts.id.initialize({
-				client_id: GOOGLE_CLIENT_ID,
+				client_id: props.googleClientId,
 				callback: googleSignInCallback,
 			});
 		}

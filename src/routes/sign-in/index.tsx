@@ -4,6 +4,7 @@ import XCircleIcon from '~/components/icons/XCircleIcon';
 import { loginMutation } from '~/providers/shop/account/account';
 
 import { GoogleSignInButton } from '~/components/account/GoogleSignIn';
+import { GOOGLE_CLIENT_ID } from '~/constants';
 
 export default component$(() => {
 	const navigate = useNavigate();
@@ -89,7 +90,7 @@ export default component$(() => {
 							</div>
 						</div>
 						<div class="mt-4">
-							<GoogleSignInButton />
+							<GoogleSignInButton googleClientId={GOOGLE_CLIENT_ID} />
 						</div>
 
 						{error.value !== '' && (
