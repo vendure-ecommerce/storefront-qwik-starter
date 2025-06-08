@@ -12,6 +12,7 @@ interface PasswordInputProps {
 	incompleteSignal?: Signal<boolean>; // external signal to indicate other fields are not valid (e.g. repeat password will set to be invalid if the password is being edited)
 	checkStrongPassword?: boolean;
 	passwordToBeRepeated?: Signal<string>; // if set, it will check if the password is repeated correctly
+	withoutCompleteMark?: boolean; // if true, it will show a check icon when the password is valid
 }
 
 /**
@@ -116,7 +117,7 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 					}}
 					class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 				/>
-				{props.completeSignal.value && (
+				{!props.withoutCompleteMark && props.completeSignal.value && (
 					<div class="absolute inset-y-0 right-6 pr-3 flex items-center">
 						<CheckIcon forcedClass="text-green-600 w-6 h-6" />
 					</div>
