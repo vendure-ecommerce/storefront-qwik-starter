@@ -1,7 +1,7 @@
-import { $, component$, useVisibleTask$ } from '@qwik.dev/core';
+import { $, component$, useSignal, useVisibleTask$ } from '@qwik.dev/core';
 import { useNavigate } from '@qwik.dev/router';
 import { authenticateMutation } from '~/providers/shop/account/account';
-
+import { SpinnerWaitingAnimation } from '../icons/SpinnerWaitingAnimation';
 /**
  * GoogleSignInButton component
  *
@@ -15,17 +15,22 @@ import { authenticateMutation } from '~/providers/shop/account/account';
  */
 export const GoogleSignInButton = component$((props: { googleClientId: string }) => {
 	const navigate = useNavigate();
+	const isLoading = useSignal(false);
+	const errorMessage = useSignal('');
 
 	const googleSignInCallback = $(async (response: any) => {
 		if (!response.credential) {
-			console.error('Google Sign-In failed: No credential received.');
+			errorMessage.value = 'Google Sign-In failed: No credential received';
+			isLoading.value = false;
 			return;
 		}
 		const result = await authenticateMutation({ google: { token: response.credential } });
 		if (result.__typename !== 'CurrentUser') {
-			console.error('Google Sign-In failed:', result.message);
+			errorMessage.value = `Google Sign-In failed: ${result.message}`;
+			isLoading.value = false;
 			return;
 		}
+		isLoading.value = false;
 		navigate('/account');
 	});
 
@@ -53,19 +58,39 @@ export const GoogleSignInButton = component$((props: { googleClientId: string })
 	});
 
 	return (
-		<button
-			class="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-			onClick$={() => {
-				// Trigger Google login flow
-				window.google.accounts.id.prompt();
-			}}
-		>
-			<img
-				src="https://developers.google.com/identity/images/g-logo.png"
-				alt="Google Logo"
-				class="h-5 w-5 mr-2"
-			/>
-			Sign in with Google
-		</button>
+		<div>
+			<button
+				class="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+				disabled={isLoading.value}
+				onClick$={() => {
+					// Trigger Google login flow
+					isLoading.value = true;
+					window.google.accounts.id.prompt((notification) => {
+						console.log('Google Sign-In notification:', notification);
+						// if hanged, it is because user's Chrome ->settings -> Privacy and security -> Site Settings -> permissions
+						if (notification.i !== 'credential_returned') {
+							errorMessage.value =
+								'Google Sign-In failed: Browser blocked the request (Chrome -> Settings -> Privacy and security -> Site Settings -> [this site] -> reset permissions)';
+							isLoading.value = false;
+						}
+					});
+				}}
+			>
+				<>
+					<img
+						src="https://developers.google.com/identity/images/g-logo.png"
+						alt="Google Logo"
+						class="h-5 w-5 mr-2"
+					/>
+					Sign in with Google
+					{isLoading.value && (
+						<div class="flex items-center justify-center">
+							<SpinnerWaitingAnimation forcedClass="w-5 h-5 text-gray-500 animate-spin" />
+						</div>
+					)}
+				</>
+			</button>
+			{errorMessage.value && <div class="mt-2 text-red-600 text-sm">{errorMessage.value}</div>}
+		</div>
 	);
 });
