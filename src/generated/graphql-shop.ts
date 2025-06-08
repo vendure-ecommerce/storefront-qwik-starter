@@ -3610,6 +3610,19 @@ export type Zone = Node & {
 	updatedAt: Scalars['DateTime']['output'];
 };
 
+export type AuthenticateMutationVariables = Exact<{
+	input: AuthenticationInput;
+	rememberMe?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+export type AuthenticateMutation = {
+	__typename?: 'Mutation';
+	authenticate:
+		| { __typename: 'CurrentUser'; id: string; identifier: string }
+		| { __typename: 'InvalidCredentialsError'; errorCode: ErrorCode; message: string }
+		| { __typename: 'NotVerifiedError'; errorCode: ErrorCode; message: string };
+};
+
 export type LoginMutationVariables = Exact<{
 	email: Scalars['String']['input'];
 	password: Scalars['String']['input'];
@@ -5286,6 +5299,21 @@ export const ListedProductFragmentDoc = gql`
 		}
 	}
 `;
+export const AuthenticateDocument = gql`
+	mutation authenticate($input: AuthenticationInput!, $rememberMe: Boolean) {
+		authenticate(input: $input, rememberMe: $rememberMe) {
+			__typename
+			... on CurrentUser {
+				id
+				identifier
+			}
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+`;
 export const LoginDocument = gql`
 	mutation login($email: String!, $password: String!, $rememberMe: Boolean) {
 		login(username: $email, password: $password, rememberMe: $rememberMe) {
@@ -5756,6 +5784,16 @@ export type Requester<C = {}> = <R, V>(
 ) => Promise<R> | AsyncIterable<R>;
 export function getSdk<C>(requester: Requester<C>) {
 	return {
+		authenticate(
+			variables: AuthenticateMutationVariables,
+			options?: C
+		): Promise<AuthenticateMutation> {
+			return requester<AuthenticateMutation, AuthenticateMutationVariables>(
+				AuthenticateDocument,
+				variables,
+				options
+			) as Promise<AuthenticateMutation>;
+		},
 		login(variables: LoginMutationVariables, options?: C): Promise<LoginMutation> {
 			return requester<LoginMutation, LoginMutationVariables>(
 				LoginDocument,

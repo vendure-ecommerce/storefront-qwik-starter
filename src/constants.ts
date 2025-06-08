@@ -17,3 +17,4 @@ export const DEFAULT_LOCALE = 'en';
 export const DEV_API = ENV_VARIABLES.VITE_VENDURE_DEV_URL || 'https://readonlydemo.vendure.io';
 export const PROD_API = ENV_VARIABLES.VITE_VENDURE_PROD_URL || 'https://readonlydemo.vendure.io';
 export const LOCAL_API = ENV_VARIABLES.VITE_VENDURE_LOCAL_URL || 'http://localhost:3000';
+export const GOOGLE_CLIENT_ID = ENV_VARIABLES.VITE_GOOGLE_CLIENT_ID || 'your-google-client-id';

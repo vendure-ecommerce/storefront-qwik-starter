@@ -3,6 +3,8 @@ import { useNavigate } from '@qwik.dev/router';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import { loginMutation } from '~/providers/shop/account/account';
 
+import { GoogleSignInButton } from '~/components/account/GoogleSignIn';
+
 export default component$(() => {
 	const navigate = useNavigate();
 	const email = useSignal('');
@@ -18,6 +20,7 @@ export default component$(() => {
 			error.value = login.message;
 		}
 	});
+
 	return (
 		<div class="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
 			<div class="sm:mx-auto sm:w-full sm:max-w-md">
@@ -32,15 +35,6 @@ export default component$(() => {
 
 			<div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
 				<div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-					<div class="mb-6 bg-yellow-50 border border-yellow-400 text-yellow-800 rounded p-4 text-center text-sm">
-						<p>Demo credentials</p>
-						<p>
-							Email address: <span class="font-bold">test@vendure.io</span>
-						</p>
-						<p>
-							Password: <span class="font-bold">test</span>
-						</p>
-					</div>
 					<div class="space-y-6">
 						<div>
 							<label class="block text-sm font-medium text-gray-700">Email address</label>
@@ -93,6 +87,9 @@ export default component$(() => {
 									Forgot your password?
 								</button>
 							</div>
+						</div>
+						<div class="mt-4">
+							<GoogleSignInButton />
 						</div>
 
 						{error.value !== '' && (
