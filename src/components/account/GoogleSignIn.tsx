@@ -1,7 +1,7 @@
-import { $, component$, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { $, component$, useOnDocument, useSignal } from '@qwik.dev/core';
 import { useNavigate } from '@qwik.dev/router';
 import { authenticateMutation } from '~/providers/shop/account/account';
-import { SpinnerWaitingAnimation } from '../icons/SpinnerWaitingAnimation';
+
 /**
  * GoogleSignInButton component
  *
@@ -34,62 +34,72 @@ export const GoogleSignInButton = component$((props: { googleClientId: string })
 		navigate('/account');
 	});
 
-	useVisibleTask$(() => {
-		// Check if the Google Identity Services library is already loaded
-		if (!window.google?.accounts?.id) {
-			const script = document.createElement('script');
-			script.src = 'https://accounts.google.com/gsi/client';
-			script.async = true;
-			script.onload = () => {
-				// Initialize Google Identity Services after the script is loaded
-				google.accounts.id.initialize({
-					client_id: props.googleClientId,
-					callback: googleSignInCallback,
-				});
-			};
-			document.head.appendChild(script);
-		} else {
-			// Initialize Google Identity Services if the library is already loaded
-			google.accounts.id.initialize({
-				client_id: props.googleClientId,
-				callback: googleSignInCallback,
-			});
-		}
-	});
+	const googleSignInInitOptions = {
+		client_id: props.googleClientId,
+		callback: googleSignInCallback,
+		auto_select: true,
+		use_fedcm_for_prompt: true,
+		use_fedcm_for_button: true,
+	};
+
+	// useVisibleTask will run on the browser after rendering, as we need to do DOM manipulation.
+	// This is runs on the client only, and will not block rendering.
+	// see https://qwik.dev/docs/components/tasks/#usevisibletask
+	// https://qwik.dev/docs/guides/best-practices/#register-dom-events-with-useon-useonwindow-or-useondocument
+	// useOnDocument is used to register the event listener on the document, which is considered better than useVisibleTask for this case.
+	useOnDocument(
+		'DOMContentLoaded',
+		$(() => {
+			// Check if the Google Identity Services library is already loaded
+			// Reference: https://developers.google.com/identity/gsi/web/reference/js-reference
+			if (!window.google?.accounts?.id) {
+				const script = document.createElement('script');
+				script.src = 'https://accounts.google.com/gsi/client';
+				script.async = true;
+				script.onload = () => {
+					// Initialize Google Identity Services after the script is loaded
+					google.accounts.id.initialize(googleSignInInitOptions);
+
+					// Render the Google Sign-In button
+					const buttonContainer = document.getElementById('google-signin-button');
+					if (buttonContainer) {
+						google.accounts.id.renderButton(buttonContainer, {
+							theme: 'outline',
+							size: 'large',
+							type: 'standard',
+						});
+					}
+				};
+				document.head.appendChild(script);
+			} else {
+				// Initialize Google Identity Services if the library is already loaded
+				google.accounts.id.initialize(googleSignInInitOptions);
+
+				// Render the Google Sign-In button
+				const buttonContainer = document.getElementById('google-signin-button');
+				if (buttonContainer) {
+					google.accounts.id.renderButton(buttonContainer, {
+						theme: 'outline',
+						size: 'large',
+						type: 'standard',
+					});
+				}
+			}
+		})
+	);
 
 	return (
 		<div>
-			<button
-				class="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-				disabled={isLoading.value}
+			<div
+				id="google-signin-button"
+				class="flex justify-center"
 				onClick$={() => {
-					// Trigger Google login flow
-					isLoading.value = true;
-					window.google.accounts.id.prompt((notification) => {
-						console.log('Google Sign-In notification:', notification);
-						// if hanged, it is because user's Chrome ->settings -> Privacy and security -> Site Settings -> permissions
-						if (notification.i !== 'credential_returned') {
-							errorMessage.value =
-								'Google Sign-In failed: Browser blocked the request (Chrome -> Settings -> Privacy and security -> Site Settings -> [this site] -> reset permissions)';
-							isLoading.value = false;
-						}
-					});
+					if (!isLoading.value) {
+						isLoading.value = true;
+						google.accounts.id.prompt();
+					}
 				}}
-			>
-				<>
-					<img
-						src="https://developers.google.com/identity/images/g-logo.png"
-						alt="Google Logo"
-						class="h-5 w-5 mr-2"
-					/>
-					Sign in with Google
-					{isLoading.value && (
-						<div class="flex items-center justify-center">
-							<SpinnerWaitingAnimation forcedClass="w-5 h-5 text-gray-500 animate-spin" />
-						</div>
-					)}
-				</>
-			</button>
+			></div>
 			{errorMessage.value && <div class="mt-2 text-red-600 text-sm">{errorMessage.value}</div>}
 		</div>
 	);
