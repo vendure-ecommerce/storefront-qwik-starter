@@ -51,11 +51,11 @@ importers:
         specifier: ^4.1.2
         version: 4.4.0(graphql@16.10.0)
       '@qwik.dev/core':
-        specifier: 2.0.0-alpha.10
-        version: 2.0.0-alpha.10(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17))
+        specifier: 2.0.0-beta.1
+        version: 2.0.0-beta.1(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17))
       '@qwik.dev/router':
-        specifier: 2.0.0-alpha.10
-        version: 2.0.0-alpha.10(acorn@8.14.0)(rollup@4.41.0)(typescript@5.3.3)(vite@5.4.6(@types/node@20.11.17))
+        specifier: 2.0.0-beta.1
+        version: 2.0.0-beta.1(acorn@8.14.0)(rollup@4.41.0)(typescript@5.3.3)(vite@5.4.6(@types/node@20.11.17))
       '@tailwindcss/forms':
         specifier: ^0.5.7
         version: 0.5.9(tailwindcss@3.4.1)
@@ -84,8 +84,8 @@ importers:
         specifier: 8.57.0
         version: 8.57.0
       eslint-plugin-qwik:
-        specifier: 2.0.0-alpha.10
-        version: 2.0.0-alpha.10(eslint@8.57.0)(typescript@5.3.3)
+        specifier: 2.0.0-beta.1
+        version: 2.0.0-beta.1(eslint@8.57.0)(typescript@5.3.3)
       husky:
         specifier: ^9.0.10
         version: 9.1.7
@@ -1870,10 +1870,10 @@ packages:
       }
     engines: { node: '>=14' }
 
-  '@qwik.dev/core@2.0.0-alpha.10':
+  '@qwik.dev/core@2.0.0-beta.1':
     resolution:
       {
-        integrity: sha512-hQr+IKyyUPbSMqBY/xYJAI6e4O5ZrxI7IWLmqsQu+QYGLUVoJH7JOflVrejPibngBciR8t1Vr4+GF8ooN1j5cQ==,
+        integrity: sha512-9ErVePoFTzwgK67snrEXS3r+W769fnpI5hkaldgm0z9pxHElVdzRChrUNYEKWbo8hWHwmqeWuP6moGGA3d4s5Q==,
       }
     engines: { node: ^18.17.0 || ^20.3.0 || >=21.0.0 }
     hasBin: true
@@ -1887,10 +1887,10 @@ packages:
       vitest:
         optional: true
 
-  '@qwik.dev/router@2.0.0-alpha.10':
+  '@qwik.dev/router@2.0.0-beta.1':
     resolution:
       {
-        integrity: sha512-bJkuHcyfsch2Lt8bGkkWlcoPvHJ5xvNN+T9E6TWR2dQ8Zf5znDQ8E8ahghFlKoCFmdUbLxZRfMqzX1O3LWZRtg==,
+        integrity: sha512-dCzr/dAYsM/9h8XxYpd1MHyRxOXApab5qU6ELMu5FLUmTlYK6gLMPQrwuxv7oxC4KRXPfETxJrX4vl9ffKiC1w==,
       }
     engines: { node: ^18.17.0 || ^20.3.0 || >=21.0.0 }
     peerDependencies:
@@ -3617,10 +3617,10 @@ packages:
       }
     engines: { node: '>=10' }
 
-  eslint-plugin-qwik@2.0.0-alpha.10:
+  eslint-plugin-qwik@2.0.0-beta.1:
     resolution:
       {
-        integrity: sha512-oGhy1mO2ABx6yAtFgvppvnYa8QZNsGkq01PSV8tHSNAE6haS1SC4uNCljPgRCNPHBgwCC0hZcgEXdbLNKq8Qsw==,
+        integrity: sha512-MtEHZLdfvHHzH30yDUCOoefOuOhgnRmzPwf4L0LZjnihgrHgO56sTpHuzjopxzX6qddKhmUreWY2QBlREJjyzw==,
       }
     engines: { node: ^18.17.0 || ^20.3.0 || >=21.0.0 }
     peerDependencies:
@@ -8344,7 +8344,7 @@ snapshots:
 
   '@mdx-js/mdx@3.1.0(acorn@8.14.0)':
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       '@types/estree-jsx': 1.0.5
       '@types/hast': 3.0.4
       '@types/mdx': 2.0.13
@@ -8387,7 +8387,7 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@qwik.dev/core@2.0.0-alpha.10(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17))':
+  '@qwik.dev/core@2.0.0-beta.1(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17))':
     dependencies:
       csstype: 3.1.3
       rollup: 4.41.0
@@ -8395,7 +8395,7 @@ snapshots:
     optionalDependencies:
       prettier: 3.2.5
 
-  '@qwik.dev/router@2.0.0-alpha.10(acorn@8.14.0)(rollup@4.41.0)(typescript@5.3.3)(vite@5.4.6(@types/node@20.11.17))':
+  '@qwik.dev/router@2.0.0-beta.1(acorn@8.14.0)(rollup@4.41.0)(typescript@5.3.3)(vite@5.4.6(@types/node@20.11.17))':
     dependencies:
       '@mdx-js/mdx': 3.1.0(acorn@8.14.0)
       '@types/mdx': 2.0.13
@@ -8417,7 +8417,7 @@ snapshots:
 
   '@rollup/pluginutils@5.1.4(rollup@4.41.0)':
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       estree-walker: 2.0.2
       picomatch: 4.0.2
     optionalDependencies:
@@ -8551,7 +8551,7 @@ snapshots:
 
   '@types/acorn@4.0.6':
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
 
   '@types/applepayjs@14.0.9': {}
 
@@ -8599,7 +8599,7 @@ snapshots:
 
   '@types/estree-jsx@1.0.5':
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
 
   '@types/estree@1.0.6': {}
 
@@ -9548,7 +9548,7 @@ snapshots:
 
   escape-string-regexp@4.0.0: {}
 
-  eslint-plugin-qwik@2.0.0-alpha.10(eslint@8.57.0)(typescript@5.3.3):
+  eslint-plugin-qwik@2.0.0-beta.1(eslint@8.57.0)(typescript@5.3.3):
     dependencies:
       '@typescript-eslint/utils': 8.32.1(eslint@8.57.0)(typescript@5.3.3)
       eslint: 8.57.0
@@ -9627,7 +9627,7 @@ snapshots:
 
   estree-util-attach-comments@3.0.0:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
 
   estree-util-build-jsx@3.0.1:
     dependencies:
@@ -9640,7 +9640,7 @@ snapshots:
 
   estree-util-scope@1.0.0:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       devlop: 1.1.0
 
   estree-util-to-js@2.0.0:
@@ -9660,7 +9660,7 @@ snapshots:
 
   estree-walker@3.0.3:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
 
   esutils@2.0.3: {}
 
@@ -9950,7 +9950,7 @@ snapshots:
 
   hast-util-to-estree@3.1.0:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       '@types/estree-jsx': 1.0.5
       '@types/hast': 3.0.4
       comma-separated-tokens: 2.0.3
@@ -9971,7 +9971,7 @@ snapshots:
 
   hast-util-to-jsx-runtime@2.3.2:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       '@types/hast': 3.0.4
       '@types/unist': 3.0.3
       comma-separated-tokens: 2.0.3
@@ -10496,7 +10496,7 @@ snapshots:
 
   micromark-extension-mdx-expression@3.0.0:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       devlop: 1.1.0
       micromark-factory-mdx-expression: 2.0.2
       micromark-factory-space: 2.0.1
@@ -10508,7 +10508,7 @@ snapshots:
   micromark-extension-mdx-jsx@3.0.1:
     dependencies:
       '@types/acorn': 4.0.6
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       devlop: 1.1.0
       estree-util-is-identifier-name: 3.0.0
       micromark-factory-mdx-expression: 2.0.2
@@ -10525,7 +10525,7 @@ snapshots:
 
   micromark-extension-mdxjs-esm@3.0.0:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       devlop: 1.1.0
       micromark-core-commonmark: 2.0.2
       micromark-util-character: 2.1.1
@@ -10561,7 +10561,7 @@ snapshots:
 
   micromark-factory-mdx-expression@2.0.2:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       devlop: 1.1.0
       micromark-factory-space: 2.0.1
       micromark-util-character: 2.1.1
@@ -10626,7 +10626,7 @@ snapshots:
   micromark-util-events-to-acorn@2.0.2:
     dependencies:
       '@types/acorn': 4.0.6
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       '@types/unist': 3.0.3
       devlop: 1.1.0
       estree-util-visit: 2.0.0
@@ -11034,7 +11034,7 @@ snapshots:
 
   recma-build-jsx@1.0.0:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       estree-util-build-jsx: 3.0.1
       vfile: 6.0.2
 
@@ -11050,14 +11050,14 @@ snapshots:
 
   recma-parse@1.0.0:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       esast-util-from-js: 2.0.1
       unified: 11.0.5
       vfile: 6.0.2
 
   recma-stringify@1.0.0:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       estree-util-to-js: 2.0.0
       unified: 11.0.5
       vfile: 6.0.2
@@ -11086,7 +11086,7 @@ snapshots:
 
   rehype-recma@1.0.0:
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       '@types/hast': 3.0.4
       hast-util-to-estree: 3.1.0
     transitivePeerDependencies:
