@@ -2,6 +2,7 @@
 import { component$, useVisibleTask$ } from '@builder.io/qwik';
 
 import { Select } from '@qwik-ui/headless';
+import { useComputed$, useSignal } from '@qwik.dev/core';
 import { FONT_MENU, FontMenuItem } from './data';
 
 export const getGoogleFontLink = (): string => {
@@ -64,10 +65,13 @@ export const subtractiveFontOptions: FontOption[] = getFontOptions(FONT_MENU, fa
 
 interface FontSelectorProps {
 	fontOptions: FontOption[];
-	selectorHeight?: string; // Optional height for the selector, e.g. '15rem'
 }
 
-export default component$(({ fontOptions, selectorHeight }: FontSelectorProps) => {
+export default component$(({ fontOptions }: FontSelectorProps) => {
+	const selectedValue = useSignal<string>(fontOptions[0].value); // This has to be a string to match the Select component's value type (Select.item.value)
+	const selectedFontInfo = useComputed$(() => {
+		return getFontInfoFromID(selectedValue.value);
+	});
 	useVisibleTask$(() => {
 		const fontLink = getGoogleFontLink();
 		const existingLink = document.querySelector(`link[href="${fontLink}"]`);
@@ -80,24 +84,22 @@ export default component$(({ fontOptions, selectorHeight }: FontSelectorProps) =
 		}
 	});
 
-	const defaultFontOption = fontOptions[0];
-
 	return (
-		<Select.Root>
+		<Select.Root bind:value={selectedValue}>
 			<Select.Label>Select Additive Font </Select.Label>
 			<Select.Trigger class="select-trigger">
 				<Select.DisplayValue
-					placeholder={defaultFontOption.label}
+					placeholder="Select a font"
 					style={{
-						fontFamily: defaultFontOption.fontFamily,
-						fontWeight: defaultFontOption.fontWeight,
-						fontStyle: defaultFontOption.fontStyle,
+						fontFamily: selectedFontInfo.value.fontFamily,
+						fontWeight: selectedFontInfo.value.fontWeight,
+						fontStyle: selectedFontInfo.value.fontStyle,
 					}}
 				/>
 			</Select.Trigger>
 			<Select.Popover class="select-popover">
 				{fontOptions.map((option) => (
-					<Select.Item key={option.value} disabled={option.isDisabled}>
+					<Select.Item key={option.value} value={option.value} disabled={option.isDisabled}>
 						<Select.ItemLabel
 							class="select-item-label"
 							style={{

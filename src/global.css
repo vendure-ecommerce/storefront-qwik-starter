@@ -12,7 +12,7 @@
 	}
 
 	.select-trigger {
-		@apply appearance-none min-w-32 w-full bg-white border border-gray-300 rounded-md px-4 text-base text-gray-900 placeholder-gray-500 hover:bg-blue-200;
+		@apply min-w-32 w-full bg-white border border-gray-300 rounded-md px-4 text-base text-gray-900 placeholder-gray-500 hover:bg-blue-200;
 	}
 
 	.select-trigger:focus {
@@ -20,10 +20,14 @@
 	}
 
 	.select-popover {
-		@apply appearance-none min-w-32 mt-0 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 py-1 text-base overflow-y-auto focus:outline-none sm:text-sm;
+		@apply min-w-32 mt-0 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 py-1 text-base overflow-y-auto focus:outline-none sm:text-sm;
 	}
 
 	.select-item-label {
-		@apply cursor-pointer w-full ml-2 select-none text-gray-900 hover:bg-blue-200;
+		@apply min-w-32 w-full bg-white px-4 text-base text-gray-900 placeholder-gray-500 flex items-center justify-between cursor-pointer relative py-1;
+	}
+
+	.select-item-label:hover {
+		@apply bg-white border border-gray-300 rounded-md bg-blue-200;
 	}
 }
