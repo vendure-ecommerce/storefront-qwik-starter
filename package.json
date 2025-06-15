@@ -42,6 +42,7 @@
 		"@graphql-codegen/introspection": "^4.0.2",
 		"@graphql-codegen/typescript": "^4.0.4",
 		"@graphql-codegen/typescript-operations": "^4.1.2",
+		"@qwik-ui/headless": "^0.6.8",
 		"@qwik.dev/core": "2.0.0-alpha.10",
 		"@qwik.dev/router": "2.0.0-alpha.10",
 		"@tailwindcss/forms": "^0.5.7",
