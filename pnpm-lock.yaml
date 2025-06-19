@@ -51,11 +51,11 @@ importers:
         specifier: ^4.1.2
         version: 4.4.0(graphql@16.10.0)
       '@qwik.dev/core':
-        specifier: 2.0.0-beta.1
-        version: 2.0.0-beta.1(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17))
+        specifier: 2.0.0-beta.2
+        version: 2.0.0-beta.2(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17))
       '@qwik.dev/router':
-        specifier: 2.0.0-beta.1
-        version: 2.0.0-beta.1(acorn@8.14.0)(rollup@4.41.0)(typescript@5.3.3)(vite@5.4.6(@types/node@20.11.17))
+        specifier: 2.0.0-beta.2
+        version: 2.0.0-beta.2(acorn@8.14.0)(rollup@4.41.0)(typescript@5.3.3)(vite@5.4.6(@types/node@20.11.17))
       '@tailwindcss/forms':
         specifier: ^0.5.7
         version: 0.5.9(tailwindcss@3.4.1)
@@ -84,8 +84,8 @@ importers:
         specifier: 8.57.0
         version: 8.57.0
       eslint-plugin-qwik:
-        specifier: 2.0.0-beta.1
-        version: 2.0.0-beta.1(eslint@8.57.0)(typescript@5.3.3)
+        specifier: 2.0.0-beta.2
+        version: 2.0.0-beta.2(eslint@8.57.0)(typescript@5.3.3)
       husky:
         specifier: ^9.0.10
         version: 9.1.7
@@ -1870,10 +1870,10 @@ packages:
       }
     engines: { node: '>=14' }
 
-  '@qwik.dev/core@2.0.0-beta.1':
+  '@qwik.dev/core@2.0.0-beta.2':
     resolution:
       {
-        integrity: sha512-9ErVePoFTzwgK67snrEXS3r+W769fnpI5hkaldgm0z9pxHElVdzRChrUNYEKWbo8hWHwmqeWuP6moGGA3d4s5Q==,
+        integrity: sha512-btY+cMWMu9O9ugGFZDcgREtjUjfeqOXc9bCGkRGe54yq59JOSI7Hvl0uKXctuVbC6H98HVoErw+h6aY6fsrp3A==,
       }
     engines: { node: ^18.17.0 || ^20.3.0 || >=21.0.0 }
     hasBin: true
@@ -1887,10 +1887,10 @@ packages:
       vitest:
         optional: true
 
-  '@qwik.dev/router@2.0.0-beta.1':
+  '@qwik.dev/router@2.0.0-beta.2':
     resolution:
       {
-        integrity: sha512-dCzr/dAYsM/9h8XxYpd1MHyRxOXApab5qU6ELMu5FLUmTlYK6gLMPQrwuxv7oxC4KRXPfETxJrX4vl9ffKiC1w==,
+        integrity: sha512-dKG/aHNCHXTjLHRgtmT324nvb+LsS6naenIjfk2B5vtfmwrrGjohn1/ufvkIy+KoLPKPQXl00IAYMHoycyAA5g==,
       }
     engines: { node: ^18.17.0 || ^20.3.0 || >=21.0.0 }
     peerDependencies:
@@ -3617,10 +3617,10 @@ packages:
       }
     engines: { node: '>=10' }
 
-  eslint-plugin-qwik@2.0.0-beta.1:
+  eslint-plugin-qwik@2.0.0-beta.2:
     resolution:
       {
-        integrity: sha512-MtEHZLdfvHHzH30yDUCOoefOuOhgnRmzPwf4L0LZjnihgrHgO56sTpHuzjopxzX6qddKhmUreWY2QBlREJjyzw==,
+        integrity: sha512-3MlqRIN3fs8vjB9Z8xHnODRZ30kBSvK3l7a19AGLtDcZ2DrcPwtlgI2kJyXOhJACB5ap3HF2ePIImwEGln41pQ==,
       }
     engines: { node: ^18.17.0 || ^20.3.0 || >=21.0.0 }
     peerDependencies:
@@ -8387,7 +8387,7 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@qwik.dev/core@2.0.0-beta.1(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17))':
+  '@qwik.dev/core@2.0.0-beta.2(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17))':
     dependencies:
       csstype: 3.1.3
       rollup: 4.41.0
@@ -8395,7 +8395,7 @@ snapshots:
     optionalDependencies:
       prettier: 3.2.5
 
-  '@qwik.dev/router@2.0.0-beta.1(acorn@8.14.0)(rollup@4.41.0)(typescript@5.3.3)(vite@5.4.6(@types/node@20.11.17))':
+  '@qwik.dev/router@2.0.0-beta.2(acorn@8.14.0)(rollup@4.41.0)(typescript@5.3.3)(vite@5.4.6(@types/node@20.11.17))':
     dependencies:
       '@mdx-js/mdx': 3.1.0(acorn@8.14.0)
       '@types/mdx': 2.0.13
@@ -9548,7 +9548,7 @@ snapshots:
 
   escape-string-regexp@4.0.0: {}
 
-  eslint-plugin-qwik@2.0.0-beta.1(eslint@8.57.0)(typescript@5.3.3):
+  eslint-plugin-qwik@2.0.0-beta.2(eslint@8.57.0)(typescript@5.3.3):
     dependencies:
       '@typescript-eslint/utils': 8.32.1(eslint@8.57.0)(typescript@5.3.3)
       eslint: 8.57.0
