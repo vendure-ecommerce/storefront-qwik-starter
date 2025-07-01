@@ -1,8 +1,8 @@
 // Qwik select references: https://qwikui.com/docs/headless/select/
-import { component$, useVisibleTask$ } from '@builder.io/qwik';
+import { component$, Signal, useVisibleTask$ } from '@builder.io/qwik';
 
 import { Select } from '@qwik-ui/headless';
-import { useComputed$, useSignal } from '@qwik.dev/core';
+import { useComputed$ } from '@qwik.dev/core';
 import { FONT_MENU, FontMenuItem } from './data';
 
 export const getGoogleFontLink = (): string => {
@@ -60,15 +60,17 @@ function getFontOptions(fontMenuItems: FontMenuItem[], isAdditive: boolean): Fon
 	});
 }
 
-export const additiveFontOptions: FontOption[] = getFontOptions(FONT_MENU, true);
-export const subtractiveFontOptions: FontOption[] = getFontOptions(FONT_MENU, false);
+export const AdditiveFontOptions: FontOption[] = getFontOptions(FONT_MENU, true);
+export const SubtractiveFontOptions: FontOption[] = getFontOptions(FONT_MENU, false);
 
 interface FontSelectorProps {
+	fieldTitle?: string; // Optional title for the font selector
 	fontOptions: FontOption[];
+	selectedValue: Signal<string>; // This is the selected font value, which will be bound to the Select component, e.g. `const selectedFont = useSignal<string>('Comic_Neue__bold');`
 }
 
-export default component$(({ fontOptions }: FontSelectorProps) => {
-	const selectedValue = useSignal<string>(fontOptions[0].value); // This has to be a string to match the Select component's value type (Select.item.value)
+export default component$(({ fieldTitle, fontOptions, selectedValue }: FontSelectorProps) => {
+	// const selectedValue = useSignal<string>(fontOptions[0].value); // This has to be a string to match the Select component's value type (Select.item.value), e.g. 'Crimson_Text__bold_italic'
 	const selectedFontInfo = useComputed$(() => {
 		return getFontInfoFromID(selectedValue.value);
 	});
@@ -86,7 +88,7 @@ export default component$(({ fontOptions }: FontSelectorProps) => {
 
 	return (
 		<Select.Root bind:value={selectedValue}>
-			<Select.Label>Select Additive Font </Select.Label>
+			<Select.Label>{fieldTitle ? fieldTitle : 'Select Font'}</Select.Label>
 			<Select.Trigger class="select-trigger">
 				<Select.DisplayValue
 					placeholder="Select a font"
