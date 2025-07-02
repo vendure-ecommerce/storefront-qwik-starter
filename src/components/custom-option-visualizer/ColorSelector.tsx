@@ -32,7 +32,7 @@ function getContrastColor(hex: string): string {
 	// Calculate the brightness of the color
 	const brightness = (r * 299 + g * 587 + b * 114) / 1000;
 	// Return black for light colors and white for dark colors
-	return brightness > 125 ? '#000000' : '#FFFFFF';
+	return brightness > 190 ? '#565656FF' : '#FFFFFF';
 }
 
 const colorTag = (color: FILAMENT_COLOR) => {
