@@ -73,6 +73,7 @@
 		"@builder.io/qwik-react": "^0.5.6",
 		"@graphql-codegen/typescript-generic-sdk": "^4.0.1",
 		"@qwik.dev/react": "2.0.0-beta.1",
+		"@qwikest/icons": "^0.0.13",
 		"@react-oauth/google": "^0.12.2",
 		"@stripe/stripe-js": "^3.0.0",
 		"braintree-web-drop-in": "^1.42.0",

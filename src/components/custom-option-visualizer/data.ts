@@ -1,4 +1,4 @@
-type FILAMENT_COLOR = {
+export type FILAMENT_COLOR = {
 	name: string; // name of the color used in storing parameters
 	display_name: string; // name of the color shown in the selector
 	hex_code: string;

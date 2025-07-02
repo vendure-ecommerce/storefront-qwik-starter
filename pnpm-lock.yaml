@@ -22,6 +22,9 @@ importers:
       '@qwik.dev/react':
         specifier: 2.0.0-beta.1
         version: 2.0.0-beta.1(@qwik.dev/core@2.0.0-alpha.10(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17))(vitest@3.2.1(@types/debug@4.1.12)(@types/node@20.11.17)))(@types/react-dom@18.3.7(@types/react@19.1.6))(@types/react@19.1.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.4.6(@types/node@20.11.17))
+      '@qwikest/icons':
+        specifier: ^0.0.13
+        version: 0.0.13(@builder.io/qwik@1.14.1(vite@5.4.6(@types/node@20.11.17)))
       '@react-oauth/google':
         specifier: ^0.12.2
         version: 0.12.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1984,6 +1987,15 @@ packages:
     engines: { node: ^18.17.0 || ^20.3.0 || >=21.0.0 }
     peerDependencies:
       vite: '>=5 <7'
+
+  '@qwikest/icons@0.0.13':
+    resolution:
+      {
+        integrity: sha512-e0wY8vmx0nDSUiuCATlk+ojTvdBV4txIGHHWjZW5SRkv4XB8H9+3WSDcLPz0ItUdRyzcrohE9k2jtQI/98aRPA==,
+      }
+    engines: { node: '>=15.0.0' }
+    peerDependencies:
+      '@builder.io/qwik': '>=1.0.0'
 
   '@react-oauth/google@0.12.2':
     resolution:
@@ -8873,6 +8885,10 @@ snapshots:
       - rollup
       - supports-color
       - typescript
+
+  '@qwikest/icons@0.0.13(@builder.io/qwik@1.14.1(vite@5.4.6(@types/node@20.11.17)))':
+    dependencies:
+      '@builder.io/qwik': 1.14.1(vite@5.4.6(@types/node@20.11.17))
 
   '@react-oauth/google@0.12.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:

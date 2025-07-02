@@ -24,10 +24,14 @@
 	}
 
 	.select-item-label {
-		@apply min-w-32 w-full bg-white px-4 text-base text-gray-900 placeholder-gray-500 flex items-center justify-between cursor-pointer relative py-1;
+		@apply min-w-32 w-full bg-white px-4 text-base text-gray-900 placeholder-gray-500 flex items-center cursor-pointer relative py-1;
 	}
 
 	.select-item-label:hover {
 		@apply bg-white border border-gray-300 rounded-md bg-blue-200;
+	}
+
+	.color-tag {
+		@apply rounded-full inline-block mr-2 py-0 px-3;
 	}
 }

@@ -1,18 +1,26 @@
 import { component$, useSignal } from '@qwik.dev/core';
+import ColorSelector from '~/components/custom-option-visualizer/ColorSelector';
+import { FILAMENT_COLORS } from '~/components/custom-option-visualizer/data';
 import FontSelector, {
 	AdditiveFontOptions,
 } from '~/components/custom-option-visualizer/FontSelector';
 
 export default component$(() => {
 	const selectedFont = useSignal<string>('Comic_Neue__bold');
+	const selectedColor = useSignal<string>('latte_brown');
+
+	// filter colors to only those that are supported and not disabled
+	const availableColors = FILAMENT_COLORS.filter(
+		(color) => color.is_supported && !color.is_disabled
+	).map((color) => ({
+		name: color.name,
+		display_name: color.display_name,
+		hex_code: color.hex_code,
+	}));
+
 	return (
 		<div>
 			<div>
-				<h1>Custom Option Visualizer</h1>
-				<p>
-					This page is for testing custom options in the Select component. Select a font to see how
-					it looks.
-				</p>
 				<FontSelector
 					fontOptions={AdditiveFontOptions}
 					selectedValue={selectedFont}
@@ -22,6 +30,14 @@ export default component$(() => {
 
 			<div>
 				<h1>Selected Font: {selectedFont.value}</h1>
+			</div>
+
+			<div>
+				<ColorSelector
+					fieldTitle="Top Color"
+					colorOptions={availableColors}
+					selectedValue={selectedColor}
+				/>
 			</div>
 		</div>
 	);

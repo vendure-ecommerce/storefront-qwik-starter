@@ -88,7 +88,7 @@ export default component$(({ fieldTitle, fontOptions, selectedValue }: FontSelec
 
 	return (
 		<Select.Root bind:value={selectedValue}>
-			<Select.Label>{fieldTitle ? fieldTitle : 'Select Font'}</Select.Label>
+			<Select.Label>{fieldTitle || 'Select Font'}</Select.Label>
 			<Select.Trigger class="select-trigger">
 				<Select.DisplayValue
 					placeholder="Select a font"
