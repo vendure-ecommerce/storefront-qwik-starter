@@ -77,6 +77,7 @@
 		"@react-oauth/google": "^0.12.2",
 		"@stripe/stripe-js": "^3.0.0",
 		"braintree-web-drop-in": "^1.42.0",
+		"canvas": "^3.1.2",
 		"graphql": "^16.8.1",
 		"graphql-tag": "^2.12.6",
 		"qwik-image": "0.0.16",

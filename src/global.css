@@ -34,4 +34,8 @@
 	.color-tag {
 		@apply rounded-full inline-block mr-2 py-0 px-3;
 	}
+
+	.custom-input-text {
+		@apply w-full border rounded-md py-0 px-2 border-gray-300;
+	}
 }

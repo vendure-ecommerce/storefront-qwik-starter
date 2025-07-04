@@ -12,7 +12,7 @@ export const getGoogleFontLink = (): string => {
 	return `https://fonts.googleapis.com/css2?family=${fontFamilies}&display=swap`;
 };
 
-function getFontInfoFromID(font_id: string): {
+export function getFontInfoFromID(font_id: string): {
 	fontFamily: string;
 	fontWeight: string;
 	fontStyle: string;

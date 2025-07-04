@@ -147,3 +147,25 @@ The resulting language should match your browser language. You can also override
 ## Note
 
 - Connection to ship-api is defined in `src/raphql-wrapper` -> `baseUrl`, which was point to `.env`-> `VITE_VENDURE_PROD_URL` or `VITE_VENDURE_DEV_URL`
+
+## The setup for `node-canvas`
+
+I use node-cavas to generate image for customizable product. The usage is to generate a canvas in server side (Note that usually canvas is generated at client side). As I could not find a good solution in qwik to generate canvas interactively at client side, I use node-canvas to generate the image in server side and then send the image to client side.
+
+Note that node-canas requires some native libraries to be installed on the server. You can find the installation instructions in the [node-canvas documentation](https://github.com/Automattic/node-canvas)
+
+For what I did, I run (on my Mac):
+
+```bash
+brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman python-setuptools
+```
+
+Then I installed the node-canvas package:
+
+```bash
+pnpm install node-canvas
+```
+
+```bash
+pnpm rebuild canvas
+```

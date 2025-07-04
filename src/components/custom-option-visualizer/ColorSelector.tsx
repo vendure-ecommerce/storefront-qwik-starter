@@ -9,19 +9,14 @@ interface ColorSelectorProps {
 	selectedValue: Signal<string>; // The currently selected color value (this should be a filament color name, e.g. 'lemon_yellow')
 }
 
-function getColorInfoFromID(color_name: string): FILAMENT_COLOR {
-	const color = FILAMENT_COLORS.find((c) => c.name === color_name);
+export function getHexColorByName(name: string): string {
+	// e.g. 'lemon_yellow' -> '#F7D959'
+	const color = FILAMENT_COLORS.find((color) => color.name === name);
 	if (!color) {
-		console.error(`Color not found for name: ${color_name}`);
-		return {
-			name: '',
-			display_name: 'Unknown Color',
-			hex_code: '#000000', // Default to black if not found
-			is_disabled: true, // Mark as disabled if not found
-			is_supported: false, // Not supported if not found
-		};
+		console.error(`Color not found for name: ${name}`);
+		return '#FFFFFF'; // Default to white if color not found
 	}
-	return color;
+	return color.hex_code;
 }
 
 function getContrastColor(hex: string): string {
@@ -67,7 +62,6 @@ export default component$(({ fieldTitle, colorOptions, selectedValue }: ColorSel
 					))}
 				</Select.Popover>
 			</Select.Root>
-			<p>The selected color is {selectedValue.value}.</p>
 		</div>
 	);
 });
