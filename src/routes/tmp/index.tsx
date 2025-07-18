@@ -1,11 +1,12 @@
 import { component$, useSignal } from '@qwik.dev/core';
 import ColorSelector from '~/components/custom-option-visualizer/ColorSelector';
-import { BuildPlateVisualizer } from '~/components/custom-option-visualizer/CustomVisualizer';
 import { FILAMENT_COLORS } from '~/components/custom-option-visualizer/data';
 import FontSelector, {
 	AdditiveFontOptions,
 	SubtractiveFontOptions,
 } from '~/components/custom-option-visualizer/FontSelector';
+
+import { BuildPlateVisualizerV2 } from '~/components/custom-option-visualizer/CustomVisualizerV2';
 
 export default component$(() => {
 	const text_top = useSignal<string>('Happy');
@@ -25,58 +26,60 @@ export default component$(() => {
 	}));
 
 	return (
-		<div>
+		<>
 			<div>
-				<label> Top Plate Text </label>
-				<input
-					type="text"
-					value={text_top.value}
-					onInput$={(e: any) => (text_top.value = e.target.value)}
-					placeholder="Top Plate Text"
-					class="custom-input-text"
-				/>
+				<div>
+					<label> Top Plate Text </label>
+					<input
+						type="text"
+						value={text_top.value}
+						onInput$={(e: any) => (text_top.value = e.target.value)}
+						placeholder="Top Plate Text"
+						class="custom-input-text"
+					/>
 
-				<label> Bottom Plate Text </label>
-				<input
-					type="text"
-					value={text_bottom.value}
-					onInput$={(e: any) => (text_bottom.value = e.target.value)}
-					placeholder="Bottom Plate Text"
-					class="custom-input-text"
-				/>
+					<label> Bottom Plate Text </label>
+					<input
+						type="text"
+						value={text_bottom.value}
+						onInput$={(e: any) => (text_bottom.value = e.target.value)}
+						placeholder="Bottom Plate Text"
+						class="custom-input-text"
+					/>
 
-				<FontSelector
-					fieldTitle="Top Plate font"
-					fontOptions={AdditiveFontOptions}
-					selectedValue={font_top}
-				/>
+					<FontSelector
+						fieldTitle="Top Plate font"
+						fontOptions={AdditiveFontOptions}
+						selectedValue={font_top}
+					/>
 
-				<FontSelector
-					fieldTitle="Bottom Plate font"
-					fontOptions={SubtractiveFontOptions}
-					selectedValue={font_bottom}
-				/>
+					<FontSelector
+						fieldTitle="Bottom Plate font"
+						fontOptions={SubtractiveFontOptions}
+						selectedValue={font_bottom}
+					/>
 
-				<ColorSelector
-					fieldTitle="Primary Color"
-					colorOptions={availableColors}
-					selectedValue={primary_color}
-				/>
+					<ColorSelector
+						fieldTitle="Primary Color"
+						colorOptions={availableColors}
+						selectedValue={primary_color}
+					/>
 
-				<ColorSelector
-					fieldTitle="Base Color"
-					colorOptions={availableColors}
-					selectedValue={base_color}
+					<ColorSelector
+						fieldTitle="Base Color"
+						colorOptions={availableColors}
+						selectedValue={base_color}
+					/>
+				</div>
+				<BuildPlateVisualizerV2
+					text_top={text_top}
+					text_bottom={text_bottom}
+					font_top={font_top}
+					font_bottom={font_bottom}
+					primary_color={primary_color}
+					base_color={base_color}
 				/>
 			</div>
-			<BuildPlateVisualizer
-				text_top={text_top}
-				text_bottom={text_bottom}
-				font_top={font_top}
-				font_bottom={font_bottom}
-				primary_color={primary_color}
-				base_color={base_color}
-			/>
-		</div>
+		</>
 	);
 });
