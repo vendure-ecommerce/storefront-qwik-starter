@@ -4,6 +4,10 @@ import { component$, Signal, useSignal, useVisibleTask$ } from '@qwik.dev/core';
 import { getHexColorByName } from './ColorSelector';
 import { getFontInfoFromID } from './FontSelector';
 
+// drawing's top left position on the canvas for the margin
+const START_X = 50;
+const START_Y = 30;
+
 export type ItemOptions = {
 	text_top: Signal<string>;
 	text_bottom: Signal<string>;
@@ -14,11 +18,9 @@ export type ItemOptions = {
 };
 
 function getFontCanvasString(
-	itemOptions: ItemOptions,
-	is_subtractive: boolean,
+	font: string, // font is in the format of "Crimson_Text__bold_italic"
 	font_size_multiplier: number = 1.0
 ): string {
-	let font = is_subtractive ? itemOptions.font_bottom.value : itemOptions.font_top.value;
 	let fontInfo = getFontInfoFromID(font);
 	const font_option_text = `${fontInfo.fontStyle} normal normal ${BUILD_DIMS.font_size * font_size_multiplier}px ${fontInfo.fontFamily}`;
 	return font_option_text;
@@ -42,18 +44,15 @@ function getTextBoundingBox(
 	is_subtractive: boolean
 ): BboxInfo {
 	// get xywh of the text bounding box
-	let font_string = getFontCanvasString(itemOptions, is_subtractive);
+	let raw_font = is_subtractive ? itemOptions.font_bottom.value : itemOptions.font_top.value;
+	let font_string = getFontCanvasString(raw_font);
 	ctx.font = font_string;
 	let text = is_subtractive ? itemOptions.text_bottom.value : itemOptions.text_top.value;
 	let textMetrics_raw = ctx.measureText(text);
 	let textHeight_raw =
 		textMetrics_raw.actualBoundingBoxAscent + textMetrics_raw.actualBoundingBoxDescent;
 
-	let font_string_adjusted = getFontCanvasString(
-		itemOptions,
-		is_subtractive,
-		BUILD_DIMS.font_size / textHeight_raw
-	);
+	let font_string_adjusted = getFontCanvasString(raw_font, BUILD_DIMS.font_size / textHeight_raw);
 	ctx.font = font_string_adjusted;
 	let textMetrics = ctx.measureText(text);
 	let textHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent;
@@ -78,9 +77,6 @@ function getTextBoundingBox(
 		font_string: font_string_adjusted,
 	};
 }
-
-const start_x = 50;
-const start_y = 30;
 
 async function draw_a_blank_plate_v2(
 	itemOptions: ItemOptions,
@@ -110,8 +106,8 @@ async function draw_a_blank_plate_v2(
 	ctx.beginPath();
 	// The overall outer shape
 	ctx.roundRect(
-		start_x - text_padding - BUILD_DIMS.ring_width,
-		start_y - text_padding,
+		START_X - text_padding - BUILD_DIMS.ring_width,
+		START_Y - text_padding,
 		text_width + 2 * text_padding + BUILD_DIMS.ring_width,
 		overall_height,
 		8
@@ -119,8 +115,8 @@ async function draw_a_blank_plate_v2(
 
 	// The ring hole
 	ctx.roundRect(
-		start_x - text_padding - BUILD_DIMS.ring_width + BUILD_DIMS.offset_ring_hole,
-		start_y - text_padding + BUILD_DIMS.offset_ring_hole,
+		START_X - text_padding - BUILD_DIMS.ring_width + BUILD_DIMS.offset_ring_hole,
+		START_Y - text_padding + BUILD_DIMS.offset_ring_hole,
 		BUILD_DIMS.w_ring_hole,
 		overall_height - BUILD_DIMS.offset_ring_hole * 2,
 		5
@@ -132,8 +128,8 @@ async function draw_a_blank_plate_v2(
 	ctx.strokeStyle = getHexColorByName(itemOptions.base_color.value);
 	ctx.beginPath();
 	ctx.roundRect(
-		start_x - BUILD_DIMS.text_margin,
-		start_y - BUILD_DIMS.text_margin,
+		START_X - BUILD_DIMS.text_margin,
+		START_Y - BUILD_DIMS.text_margin,
 		text_width + 2 * BUILD_DIMS.text_margin,
 		overall_height - 2 * BUILD_DIMS.boarder_width,
 		3
@@ -160,7 +156,7 @@ function draw_text(
 	ctx.fillStyle = color;
 	ctx.font = bbox.font_string;
 	let x_offset = (base_width - bbox.w) / 2;
-	ctx.fillText(text, start_x + x_offset + bbox.text_start_x_offset, bbox.text_start_y);
+	ctx.fillText(text, START_X + x_offset + bbox.text_start_x_offset, bbox.text_start_y);
 	ctx.stroke();
 }
 
@@ -176,15 +172,18 @@ export const BuildPlateVisualizerV2 = component$((itemOptions: ItemOptions) => {
 
 		const canvas_additive = document.getElementById('canvas_additive') as HTMLCanvasElement;
 		const canvas_subtractive = document.getElementById('canvas_subtractive') as HTMLCanvasElement;
+		const canvas_stacked = document.getElementById('canvas_stacked') as HTMLCanvasElement;
 
 		const ctx_t = canvas_additive.getContext('2d');
 		const ctx_b = canvas_subtractive.getContext('2d');
-		if (!ctx_t || !ctx_b) {
+		const ctx_stacked = canvas_stacked.getContext('2d');
+
+		if (!ctx_t || !ctx_b || !ctx_stacked) {
 			throw new Error('Failed to get 2D context');
 		}
 
-		const bbox_top = getTextBoundingBox(itemOptions, ctx_t, start_x, start_y, false);
-		const bbox_btm = getTextBoundingBox(itemOptions, ctx_b, start_x, start_y, true);
+		const bbox_top = getTextBoundingBox(itemOptions, ctx_t, START_X, START_Y, false);
+		const bbox_btm = getTextBoundingBox(itemOptions, ctx_b, START_X, START_Y, true);
 		const text_width = Math.max(bbox_top.w, bbox_btm.w);
 
 		draw_a_blank_plate_v2(
@@ -209,17 +208,42 @@ export const BuildPlateVisualizerV2 = component$((itemOptions: ItemOptions) => {
 
 		const boardWidth =
 			text_width + BUILD_DIMS.ring_width + 2 * (BUILD_DIMS.text_margin + BUILD_DIMS.boarder_width);
+
+		ctx_stacked.clearRect(0, 0, canvas_stacked.width, canvas_stacked.height);
+
+		canvas_stacked.height = 200;
+		canvas_stacked.width = boardWidth + START_X;
+		ctx_stacked.drawImage(canvas_additive, 0, 0);
+		ctx_stacked.drawImage(canvas_subtractive, 0, 80);
+
 		boardWidth_cm.value = parseFloat(((px2mm * boardWidth) / 10).toFixed(1));
 	});
 
 	return (
-		<div class="overflow-auto overflow-y-hidden p-0 bg-white">
+		<div class="overflow-auto p-0 bg-white">
 			<div>
-				<canvas id="canvas_additive" class="w-400 h-auto" />
-				<canvas id="canvas_subtractive" class="w-400 h-auto" />
+				<canvas id="canvas_additive" class="w-400 h-auto hidden" />
+				<canvas id="canvas_subtractive" class="w-400 h-auto hidden" />
+				<canvas id="canvas_stacked" class="w-400 h-800" />
 			</div>
 			<div class="text-center text-sm text-gray-500 mt-2">
 				Board width (estimated): {boardWidth_cm.value} cm
+			</div>
+
+			{/* A button to save canvas_stacked */}
+			<div class="text-center mt-4">
+				<button
+					class="bg-blue-500 text-white px-4 py-2 rounded"
+					onClick$={() => {
+						const canvas = document.getElementById('canvas_stacked') as HTMLCanvasElement;
+						const link = document.createElement('a');
+						link.download = 'canvas_stacked.jpg';
+						link.href = canvas.toDataURL('image/jpeg', 0.5);
+						link.click();
+					}}
+				>
+					Save Canvas
+				</button>
 			</div>
 		</div>
 	);
