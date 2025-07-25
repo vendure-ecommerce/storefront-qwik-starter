@@ -150,7 +150,8 @@ The resulting language should match your browser language. You can also override
 
 ## The setup for `node-canvas`
 
-I use node-cavas to generate image for customizable product. The usage is to generate a canvas in server side (Note that usually canvas is generated at client side). As I could not find a good solution in qwik to generate canvas interactively at client side, I use node-canvas to generate the image in server side and then send the image to client side.
+(Legacy note as I am not using it anymore. The cusomizable image is generated in the client side now)
+In the past, I usd node-cavas to generate image for customizable product. The usage is to generate a canvas in server side (Note that usually canvas is generated at client side). As I could not find a good solution in qwik to generate canvas interactively at client side, I use node-canvas to generate the image in server side and then send the image to client side.
 
 Note that node-canas requires some native libraries to be installed on the server. You can find the installation instructions in the [node-canvas documentation](https://github.com/Automattic/node-canvas)
 

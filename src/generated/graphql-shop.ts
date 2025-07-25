@@ -415,6 +415,29 @@ export type CreateAddressInput = {
 	streetLine2?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type CreateCustomNameTagError = ErrorResult & {
+	__typename?: 'CreateCustomNameTagError';
+	errorCode: ErrorCode;
+	message: Scalars['String']['output'];
+};
+
+export type CreateCustomNameTagInput = {
+	filamentColorIdBase?: InputMaybe<Scalars['ID']['input']>;
+	filamentColorIdPrimary?: InputMaybe<Scalars['ID']['input']>;
+	fontMenuIdBottom?: InputMaybe<Scalars['ID']['input']>;
+	fontMenuIdTop?: InputMaybe<Scalars['ID']['input']>;
+	isTopAdditive: Scalars['Boolean']['input'];
+	textBottom?: InputMaybe<Scalars['String']['input']>;
+	textTop?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateCustomNameTagResult = CreateCustomNameTagError | CreateCustomNameTagSuccess;
+
+export type CreateCustomNameTagSuccess = {
+	__typename?: 'CreateCustomNameTagSuccess';
+	customNameTagId: Scalars['ID']['output'];
+};
+
 export type CreateCustomerInput = {
 	customFields?: InputMaybe<Scalars['JSON']['input']>;
 	emailAddress: Scalars['String']['input'];
@@ -788,6 +811,21 @@ export type CustomFieldConfig =
 	| StructCustomFieldConfig
 	| TextCustomFieldConfig;
 
+export type CustomNameTag = Node & {
+	__typename?: 'CustomNameTag';
+	asset?: Maybe<Asset>;
+	baseColor?: Maybe<FilamentColor>;
+	createdAt: Scalars['DateTime']['output'];
+	fontBottom?: Maybe<FontMenuItem>;
+	fontTop?: Maybe<FontMenuItem>;
+	id: Scalars['ID']['output'];
+	isTopAdditive?: Maybe<Scalars['Boolean']['output']>;
+	primaryColor?: Maybe<FilamentColor>;
+	textBottom?: Maybe<Scalars['String']['output']>;
+	textTop?: Maybe<Scalars['String']['output']>;
+	updatedAt: Scalars['DateTime']['output'];
+};
+
 export type Customer = Node & {
 	__typename?: 'Customer';
 	addresses?: Maybe<Array<Address>>;
@@ -852,12 +890,6 @@ export type CustomerListOptions = {
 	sort?: InputMaybe<CustomerSortParameter>;
 	/** Takes n results, for use in pagination */
 	take?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type CustomerRegisterStatusReturn = {
-	__typename?: 'CustomerRegisterStatusReturn';
-	isCustomer: Scalars['Boolean']['output'];
-	isVerified: Scalars['Boolean']['output'];
 };
 
 export type CustomerSortParameter = {
@@ -963,6 +995,8 @@ export const ErrorCode = {
 	CouponCodeExpiredError: 'COUPON_CODE_EXPIRED_ERROR',
 	CouponCodeInvalidError: 'COUPON_CODE_INVALID_ERROR',
 	CouponCodeLimitError: 'COUPON_CODE_LIMIT_ERROR',
+	CreateCustomNameTagError: 'CREATE_CUSTOM_NAME_TAG_ERROR',
+	CreateCustomNameTagFailed: 'CREATE_CUSTOM_NAME_TAG_FAILED',
 	EmailAddressConflictError: 'EMAIL_ADDRESS_CONFLICT_ERROR',
 	GuestCheckoutError: 'GUEST_CHECKOUT_ERROR',
 	IdentifierChangeTokenExpiredError: 'IDENTIFIER_CHANGE_TOKEN_EXPIRED_ERROR',
@@ -1150,6 +1184,18 @@ export type FacetValueTranslation = {
 	updatedAt: Scalars['DateTime']['output'];
 };
 
+export type FilamentColor = Node & {
+	__typename?: 'FilamentColor';
+	createdAt: Scalars['DateTime']['output'];
+	displayName: Scalars['String']['output'];
+	hexCode: Scalars['String']['output'];
+	id: Scalars['ID']['output'];
+	isOutOfStock: Scalars['Boolean']['output'];
+	isSupported: Scalars['Boolean']['output'];
+	name: Scalars['String']['output'];
+	updatedAt: Scalars['DateTime']['output'];
+};
+
 export type FloatCustomFieldConfig = CustomField & {
 	__typename?: 'FloatCustomFieldConfig';
 	description?: Maybe<Array<LocalizedString>>;
@@ -1178,6 +1224,17 @@ export type FloatStructFieldConfig = StructField & {
 	step?: Maybe<Scalars['Float']['output']>;
 	type: Scalars['String']['output'];
 	ui?: Maybe<Scalars['JSON']['output']>;
+};
+
+export type FontMenuItem = Node & {
+	__typename?: 'FontMenuItem';
+	additiveFontId: Scalars['String']['output'];
+	createdAt: Scalars['DateTime']['output'];
+	id: Scalars['ID']['output'];
+	isDisabled: Scalars['Boolean']['output'];
+	name: Scalars['String']['output'];
+	subtractiveFontId: Scalars['String']['output'];
+	updatedAt: Scalars['DateTime']['output'];
 };
 
 export type Fulfillment = Node & {
@@ -1781,6 +1838,7 @@ export type Mutation = {
 	authenticate: AuthenticationResult;
 	/** Create a new Customer Address */
 	createCustomerAddress: Address;
+	createOrRetrieveCustomNameTag: CreateCustomNameTagResult;
 	createStripePaymentIntent?: Maybe<Scalars['String']['output']>;
 	/** Delete an existing Address */
 	deleteCustomerAddress: Success;
@@ -1897,6 +1955,10 @@ export type MutationAuthenticateArgs = {
 
 export type MutationCreateCustomerAddressArgs = {
 	input: CreateAddressInput;
+};
+
+export type MutationCreateOrRetrieveCustomNameTagArgs = {
+	input: CreateCustomNameTagInput;
 };
 
 export type MutationDeleteCustomerAddressArgs = {
@@ -2235,21 +2297,11 @@ export type OrderLine = Node & {
 
 export type OrderLineCustomFields = {
 	__typename?: 'OrderLineCustomFields';
-	base_color?: Maybe<Scalars['String']['output']>;
-	font_bottom?: Maybe<Scalars['String']['output']>;
-	font_top?: Maybe<Scalars['String']['output']>;
-	primary_color?: Maybe<Scalars['String']['output']>;
-	text_bottom?: Maybe<Scalars['String']['output']>;
-	text_top?: Maybe<Scalars['String']['output']>;
+	customNameTag?: Maybe<CustomNameTag>;
 };
 
 export type OrderLineCustomFieldsInput = {
-	base_color?: InputMaybe<Scalars['String']['input']>;
-	font_bottom?: InputMaybe<Scalars['String']['input']>;
-	font_top?: InputMaybe<Scalars['String']['input']>;
-	primary_color?: InputMaybe<Scalars['String']['input']>;
-	text_bottom?: InputMaybe<Scalars['String']['input']>;
-	text_top?: InputMaybe<Scalars['String']['input']>;
+	customNameTagId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type OrderList = PaginatedList & {
@@ -2711,14 +2763,14 @@ export type ProductVariantListArgs = {
 
 export type ProductCustomFields = {
 	__typename?: 'ProductCustomFields';
-	customizableOption?: Maybe<Scalars['String']['output']>;
+	customizableType?: Maybe<Scalars['String']['output']>;
 };
 
 export type ProductFilterParameter = {
 	_and?: InputMaybe<Array<ProductFilterParameter>>;
 	_or?: InputMaybe<Array<ProductFilterParameter>>;
 	createdAt?: InputMaybe<DateOperators>;
-	customizableOption?: InputMaybe<StringOperators>;
+	customizableType?: InputMaybe<StringOperators>;
 	description?: InputMaybe<StringOperators>;
 	enabled?: InputMaybe<BooleanOperators>;
 	id?: InputMaybe<IdOperators>;
@@ -2794,7 +2846,7 @@ export type ProductOptionTranslation = {
 
 export type ProductSortParameter = {
 	createdAt?: InputMaybe<SortOrder>;
-	customizableOption?: InputMaybe<SortOrder>;
+	customizableType?: InputMaybe<SortOrder>;
 	description?: InputMaybe<SortOrder>;
 	id?: InputMaybe<SortOrder>;
 	name?: InputMaybe<SortOrder>;
@@ -2969,7 +3021,6 @@ export type Query = {
 	collection?: Maybe<Collection>;
 	/** A list of Collections available to the shop */
 	collections: CollectionList;
-	customerRegisterStatus: CustomerRegisterStatusReturn;
 	/** Returns a list of payment methods and their eligibility based on the current active Order */
 	eligiblePaymentMethods: Array<PaymentMethodQuote>;
 	/** Returns a list of eligible shipping methods based on the current active Order */
@@ -2978,6 +3029,9 @@ export type Query = {
 	facet?: Maybe<Facet>;
 	/** A list of Facets available to the shop */
 	facets: FacetList;
+	filamentColorFindAll: Array<FilamentColor>;
+	filamentColorFindSupported: Array<FilamentColor>;
+	fontMenuFindAll: Array<FontMenuItem>;
 	generateBraintreeClientToken: Scalars['String']['output'];
 	/** Returns information about the current authenticated User */
 	me?: Maybe<CurrentUser>;
@@ -3010,10 +3064,6 @@ export type QueryCollectionArgs = {
 
 export type QueryCollectionsArgs = {
 	options?: InputMaybe<CollectionListOptions>;
-};
-
-export type QueryCustomerRegisterStatusArgs = {
-	email: Scalars['String']['input'];
 };
 
 export type QueryFacetArgs = {

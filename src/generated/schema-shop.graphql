@@ -388,6 +388,27 @@ input CreateAddressInput {
 	streetLine2: String
 }
 
+type CreateCustomNameTagError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+input CreateCustomNameTagInput {
+	filamentColorIdBase: ID
+	filamentColorIdPrimary: ID
+	fontMenuIdBottom: ID
+	fontMenuIdTop: ID
+	isTopAdditive: Boolean!
+	textBottom: String
+	textTop: String
+}
+
+union CreateCustomNameTagResult = CreateCustomNameTagError | CreateCustomNameTagSuccess
+
+type CreateCustomNameTagSuccess {
+	customNameTagId: ID!
+}
+
 input CreateCustomerInput {
 	customFields: JSON
 	emailAddress: String!
@@ -1228,6 +1249,20 @@ union CustomFieldConfig =
 	| StructCustomFieldConfig
 	| TextCustomFieldConfig
 
+type CustomNameTag implements Node {
+	asset: Asset
+	baseColor: FilamentColor
+	createdAt: DateTime!
+	fontBottom: FontMenuItem
+	fontTop: FontMenuItem
+	id: ID!
+	isTopAdditive: Boolean
+	primaryColor: FilamentColor
+	textBottom: String
+	textTop: String
+	updatedAt: DateTime!
+}
+
 type Customer implements Node {
 	addresses: [Address!]
 	createdAt: DateTime!
@@ -1295,11 +1330,6 @@ input CustomerListOptions {
 	Takes n results, for use in pagination
 	"""
 	take: Int
-}
-
-type CustomerRegisterStatusReturn {
-	isCustomer: Boolean!
-	isVerified: Boolean!
 }
 
 input CustomerSortParameter {
@@ -1415,6 +1445,8 @@ enum ErrorCode {
 	COUPON_CODE_EXPIRED_ERROR
 	COUPON_CODE_INVALID_ERROR
 	COUPON_CODE_LIMIT_ERROR
+	CREATE_CUSTOM_NAME_TAG_ERROR
+	CREATE_CUSTOM_NAME_TAG_FAILED
 	EMAIL_ADDRESS_CONFLICT_ERROR
 	GUEST_CHECKOUT_ERROR
 	IDENTIFIER_CHANGE_TOKEN_EXPIRED_ERROR
@@ -1621,6 +1653,17 @@ type FacetValueTranslation {
 	updatedAt: DateTime!
 }
 
+type FilamentColor implements Node {
+	createdAt: DateTime!
+	displayName: String!
+	hexCode: String!
+	id: ID!
+	isOutOfStock: Boolean!
+	isSupported: Boolean!
+	name: String!
+	updatedAt: DateTime!
+}
+
 type FloatCustomFieldConfig implements CustomField {
 	description: [LocalizedString!]
 	internal: Boolean
@@ -1647,6 +1690,16 @@ type FloatStructFieldConfig implements StructField {
 	step: Float
 	type: String!
 	ui: JSON
+}
+
+type FontMenuItem implements Node {
+	additiveFontId: String!
+	createdAt: DateTime!
+	id: ID!
+	isDisabled: Boolean!
+	name: String!
+	subtractiveFontId: String!
+	updatedAt: DateTime!
 }
 
 type Fulfillment implements Node {
@@ -2762,6 +2815,7 @@ type Mutation {
 	Create a new Customer Address
 	"""
 	createCustomerAddress(input: CreateAddressInput!): Address!
+	createOrRetrieveCustomNameTag(input: CreateCustomNameTagInput!): CreateCustomNameTagResult!
 	createStripePaymentIntent: String
 
 	"""
@@ -3236,21 +3290,11 @@ type OrderLine implements Node {
 }
 
 type OrderLineCustomFields {
-	base_color: String
-	font_bottom: String
-	font_top: String
-	primary_color: String
-	text_bottom: String
-	text_top: String
+	customNameTag: CustomNameTag
 }
 
 input OrderLineCustomFieldsInput {
-	base_color: String
-	font_bottom: String
-	font_top: String
-	primary_color: String
-	text_bottom: String
-	text_top: String
+	customNameTagId: ID
 }
 
 type OrderList implements PaginatedList {
@@ -4018,14 +4062,14 @@ type Product implements Node {
 }
 
 type ProductCustomFields {
-	customizableOption: String
+	customizableType: String
 }
 
 input ProductFilterParameter {
 	_and: [ProductFilterParameter!]
 	_or: [ProductFilterParameter!]
 	createdAt: DateOperators
-	customizableOption: StringOperators
+	customizableType: StringOperators
 	description: StringOperators
 	enabled: BooleanOperators
 	id: IDOperators
@@ -4110,7 +4154,7 @@ type ProductOptionTranslation {
 
 input ProductSortParameter {
 	createdAt: SortOrder
-	customizableOption: SortOrder
+	customizableType: SortOrder
 	description: SortOrder
 	id: SortOrder
 	name: SortOrder
@@ -4303,7 +4347,6 @@ type Query {
 	A list of Collections available to the shop
 	"""
 	collections(options: CollectionListOptions): CollectionList!
-	customerRegisterStatus(email: String!): CustomerRegisterStatusReturn!
 
 	"""
 	Returns a list of payment methods and their eligibility based on the current active Order
@@ -4324,6 +4367,9 @@ type Query {
 	A list of Facets available to the shop
 	"""
 	facets(options: FacetListOptions): FacetList!
+	filamentColorFindAll: [FilamentColor!]!
+	filamentColorFindSupported: [FilamentColor!]!
+	fontMenuFindAll: [FontMenuItem!]!
 	generateBraintreeClientToken(includeCustomerId: Boolean, orderId: ID): String!
 
 	"""
