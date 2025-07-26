@@ -816,8 +816,8 @@ export type CustomNameTag = Node & {
 	asset?: Maybe<Asset>;
 	baseColor?: Maybe<FilamentColor>;
 	createdAt: Scalars['DateTime']['output'];
-	fontBottom?: Maybe<FontMenuItem>;
-	fontTop?: Maybe<FontMenuItem>;
+	fontBottom?: Maybe<FontMenu>;
+	fontTop?: Maybe<FontMenu>;
 	id: Scalars['ID']['output'];
 	isTopAdditive?: Maybe<Scalars['Boolean']['output']>;
 	primaryColor?: Maybe<FilamentColor>;
@@ -1226,8 +1226,8 @@ export type FloatStructFieldConfig = StructField & {
 	ui?: Maybe<Scalars['JSON']['output']>;
 };
 
-export type FontMenuItem = Node & {
-	__typename?: 'FontMenuItem';
+export type FontMenu = Node & {
+	__typename?: 'FontMenu';
 	additiveFontId: Scalars['String']['output'];
 	createdAt: Scalars['DateTime']['output'];
 	id: Scalars['ID']['output'];
@@ -3031,7 +3031,7 @@ export type Query = {
 	facets: FacetList;
 	filamentColorFindAll: Array<FilamentColor>;
 	filamentColorFindSupported: Array<FilamentColor>;
-	fontMenuFindAll: Array<FontMenuItem>;
+	fontMenuFindAll: Array<FontMenu>;
 	generateBraintreeClientToken: Scalars['String']['output'];
 	/** Returns information about the current authenticated User */
 	me?: Maybe<CurrentUser>;
@@ -4223,6 +4223,45 @@ export type CreateCustomerAddressMutationMutation = {
 	};
 };
 
+export type FontMenuFindAllQueryVariables = Exact<{ [key: string]: never }>;
+
+export type FontMenuFindAllQuery = {
+	__typename?: 'Query';
+	fontMenuFindAll: Array<{
+		__typename?: 'FontMenu';
+		id: string;
+		name: string;
+		additiveFontId: string;
+		subtractiveFontId: string;
+		isDisabled: boolean;
+	}>;
+};
+
+export type FilamentColorFindSupportedQueryVariables = Exact<{ [key: string]: never }>;
+
+export type FilamentColorFindSupportedQuery = {
+	__typename?: 'Query';
+	filamentColorFindSupported: Array<{
+		__typename?: 'FilamentColor';
+		id: string;
+		name: string;
+		displayName: string;
+		hexCode: string;
+		isOutOfStock: boolean;
+	}>;
+};
+
+export type CreateOrRetrieveCustomNameTagMutationVariables = Exact<{
+	input: CreateCustomNameTagInput;
+}>;
+
+export type CreateOrRetrieveCustomNameTagMutation = {
+	__typename?: 'Mutation';
+	createOrRetrieveCustomNameTag:
+		| { __typename?: 'CreateCustomNameTagError'; errorCode: ErrorCode; message: string }
+		| { __typename?: 'CreateCustomNameTagSuccess'; customNameTagId: string };
+};
+
 export type ApplyCouponCodeMutationVariables = Exact<{
 	couponCode: Scalars['String']['input'];
 }>;
@@ -4533,6 +4572,7 @@ export type SetCustomerForOrderMutation = {
 export type AddItemToOrderMutationVariables = Exact<{
 	productVariantId: Scalars['ID']['input'];
 	quantity: Scalars['Int']['input'];
+	customFields?: InputMaybe<OrderLineCustomFieldsInput>;
 }>;
 
 export type AddItemToOrderMutation = {
@@ -5689,6 +5729,41 @@ export const CreateCustomerAddressMutationDocument = gql`
 	}
 	${AddressFragmentDoc}
 `;
+export const FontMenuFindAllDocument = gql`
+	query fontMenuFindAll {
+		fontMenuFindAll {
+			id
+			name
+			additiveFontId
+			subtractiveFontId
+			isDisabled
+		}
+	}
+`;
+export const FilamentColorFindSupportedDocument = gql`
+	query filamentColorFindSupported {
+		filamentColorFindSupported {
+			id
+			name
+			displayName
+			hexCode
+			isOutOfStock
+		}
+	}
+`;
+export const CreateOrRetrieveCustomNameTagDocument = gql`
+	mutation createOrRetrieveCustomNameTag($input: CreateCustomNameTagInput!) {
+		createOrRetrieveCustomNameTag(input: $input) {
+			... on CreateCustomNameTagError {
+				errorCode
+				message
+			}
+			... on CreateCustomNameTagSuccess {
+				customNameTagId
+			}
+		}
+	}
+`;
 export const ApplyCouponCodeDocument = gql`
 	mutation applyCouponCode($couponCode: String!) {
 		applyCouponCode(couponCode: $couponCode) {
@@ -5734,8 +5809,16 @@ export const SetCustomerForOrderDocument = gql`
 	${OrderDetailFragmentDoc}
 `;
 export const AddItemToOrderDocument = gql`
-	mutation addItemToOrder($productVariantId: ID!, $quantity: Int!) {
-		addItemToOrder(productVariantId: $productVariantId, quantity: $quantity) {
+	mutation addItemToOrder(
+		$productVariantId: ID!
+		$quantity: Int!
+		$customFields: OrderLineCustomFieldsInput
+	) {
+		addItemToOrder(
+			productVariantId: $productVariantId
+			quantity: $quantity
+			customFields: $customFields
+		) {
 			...OrderDetail
 			... on ErrorResult {
 				errorCode
@@ -6109,6 +6192,39 @@ export function getSdk<C>(requester: Requester<C>) {
 				variables,
 				options
 			) as Promise<CreateCustomerAddressMutationMutation>;
+		},
+		fontMenuFindAll(
+			variables?: FontMenuFindAllQueryVariables,
+			options?: C
+		): Promise<FontMenuFindAllQuery> {
+			return requester<FontMenuFindAllQuery, FontMenuFindAllQueryVariables>(
+				FontMenuFindAllDocument,
+				variables,
+				options
+			) as Promise<FontMenuFindAllQuery>;
+		},
+		filamentColorFindSupported(
+			variables?: FilamentColorFindSupportedQueryVariables,
+			options?: C
+		): Promise<FilamentColorFindSupportedQuery> {
+			return requester<FilamentColorFindSupportedQuery, FilamentColorFindSupportedQueryVariables>(
+				FilamentColorFindSupportedDocument,
+				variables,
+				options
+			) as Promise<FilamentColorFindSupportedQuery>;
+		},
+		createOrRetrieveCustomNameTag(
+			variables: CreateOrRetrieveCustomNameTagMutationVariables,
+			options?: C
+		): Promise<CreateOrRetrieveCustomNameTagMutation> {
+			return requester<
+				CreateOrRetrieveCustomNameTagMutation,
+				CreateOrRetrieveCustomNameTagMutationVariables
+			>(
+				CreateOrRetrieveCustomNameTagDocument,
+				variables,
+				options
+			) as Promise<CreateOrRetrieveCustomNameTagMutation>;
 		},
 		applyCouponCode(
 			variables: ApplyCouponCodeMutationVariables,

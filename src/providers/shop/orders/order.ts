@@ -12,7 +12,11 @@ import {
 	SetOrderShippingAddressMutation,
 	SetOrderShippingMethodMutation,
 } from '~/generated/graphql';
-import { ApplyCouponCodeMutation, RemoveCouponCodeMutation } from '~/generated/graphql-shop';
+import {
+	ApplyCouponCodeMutation,
+	OrderLineCustomFieldsInput,
+	RemoveCouponCodeMutation,
+} from '~/generated/graphql-shop';
 import { shopSdk } from '~/graphql-wrapper';
 
 export const getActiveOrderQuery = async () => {
@@ -23,9 +27,17 @@ export const getOrderByCodeQuery = async (code: string) => {
 	return shopSdk.orderByCode({ code }).then((res: OrderByCodeQuery) => res.orderByCode as Order);
 };
 
-export const addItemToOrderMutation = async (productVariantId: string, quantity: number) => {
+export const addItemToOrderMutation = async (
+	productVariantId: string,
+	quantity: number,
+	customFields: OrderLineCustomFieldsInput | undefined
+) => {
 	return shopSdk
-		.addItemToOrder({ productVariantId, quantity })
+		.addItemToOrder({
+			productVariantId,
+			quantity,
+			customFields: customFields ? customFields : undefined,
+		})
 		.then((res: AddItemToOrderMutation) => res.addItemToOrder);
 };
 
@@ -116,8 +128,16 @@ gql`
 `;
 
 gql`
-	mutation addItemToOrder($productVariantId: ID!, $quantity: Int!) {
-		addItemToOrder(productVariantId: $productVariantId, quantity: $quantity) {
+	mutation addItemToOrder(
+		$productVariantId: ID!
+		$quantity: Int!
+		$customFields: OrderLineCustomFieldsInput
+	) {
+		addItemToOrder(
+			productVariantId: $productVariantId
+			quantity: $quantity
+			customFields: $customFields
+		) {
 			...OrderDetail
 			... on ErrorResult {
 				errorCode

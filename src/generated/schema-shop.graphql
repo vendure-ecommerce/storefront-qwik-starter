@@ -1253,8 +1253,8 @@ type CustomNameTag implements Node {
 	asset: Asset
 	baseColor: FilamentColor
 	createdAt: DateTime!
-	fontBottom: FontMenuItem
-	fontTop: FontMenuItem
+	fontBottom: FontMenu
+	fontTop: FontMenu
 	id: ID!
 	isTopAdditive: Boolean
 	primaryColor: FilamentColor
@@ -1692,7 +1692,7 @@ type FloatStructFieldConfig implements StructField {
 	ui: JSON
 }
 
-type FontMenuItem implements Node {
+type FontMenu implements Node {
 	additiveFontId: String!
 	createdAt: DateTime!
 	id: ID!
@@ -4369,7 +4369,7 @@ type Query {
 	facets(options: FacetListOptions): FacetList!
 	filamentColorFindAll: [FilamentColor!]!
 	filamentColorFindSupported: [FilamentColor!]!
-	fontMenuFindAll: [FontMenuItem!]!
+	fontMenuFindAll: [FontMenu!]!
 	generateBraintreeClientToken(includeCustomerId: Boolean, orderId: ID): String!
 
 	"""
