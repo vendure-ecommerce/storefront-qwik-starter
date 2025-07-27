@@ -214,89 +214,121 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 			false // bottom plate is always subtractive
 		);
 
-		const canvas_top = document.getElementById('canvas_top') as HTMLCanvasElement;
-		const canvas_bottom = document.getElementById('canvas_bottom') as HTMLCanvasElement;
-		const canvas_stacked = document.getElementById('canvas_stacked') as HTMLCanvasElement;
+		let bbox_top: BboxInfo | undefined;
+		let bbox_btm: BboxInfo | undefined;
+		let canvas_top: HTMLCanvasElement | undefined;
+		let ctx_t: CanvasRenderingContext2D | null | undefined;
+		let canvas_bottom: HTMLCanvasElement | undefined;
+		let ctx_b: CanvasRenderingContext2D | null | undefined;
 
-		const ctx_t = canvas_top.getContext('2d');
-		const ctx_b = canvas_bottom.getContext('2d');
-		const ctx_stacked = canvas_stacked.getContext('2d');
+		if (buildOption.build_top_plate) {
+			canvas_top = document.getElementById('canvas_top') as HTMLCanvasElement;
+			ctx_t = canvas_top.getContext('2d');
+			if (!ctx_t) throw new Error('Failed to get 2D context for top canvas');
 
-		if (!ctx_t || !ctx_b || !ctx_stacked) {
-			throw new Error('Failed to get 2D context');
+			bbox_top = getTextBoundingBox(
+				font_top,
+				buildOption.text_top.value,
+				ctx_t,
+				TEXT_START_X,
+				START_Y
+			);
 		}
 
-		const bbox_top = getTextBoundingBox(
-			font_top,
-			buildOption.text_top.value,
-			ctx_t,
-			TEXT_START_X,
-			START_Y
-		);
+		if (buildOption.build_bottom_plate) {
+			canvas_bottom = document.getElementById('canvas_bottom') as HTMLCanvasElement;
+			ctx_b = canvas_bottom.getContext('2d');
+			if (!ctx_b) throw new Error('Failed to get 2D context for bottom canvas');
 
-		const bbox_btm = getTextBoundingBox(
-			font_bottom,
-			buildOption.text_bottom.value,
-			ctx_b,
-			TEXT_START_X,
-			START_Y
-		);
+			bbox_btm = getTextBoundingBox(
+				font_bottom,
+				buildOption.text_bottom.value,
+				ctx_b,
+				TEXT_START_X,
+				START_Y
+			);
+		}
 
-		const text_width = Math.max(bbox_top.w, bbox_btm.w);
+		let text_width: number;
+		if (buildOption.build_top_plate && buildOption.build_bottom_plate) {
+			text_width = Math.max(bbox_top!.w, bbox_btm!.w);
+		} else if (buildOption.build_top_plate) {
+			text_width = bbox_top!.w;
+		} else if (buildOption.build_bottom_plate) {
+			text_width = bbox_btm!.w;
+		} else {
+			throw new Error('At least one plate must be built');
+		}
 
 		// top blank plate: it can be either additive or subtractive
-		draw_a_blank_plate_v3(
-			canvas_top,
-			primary_color_hex,
-			base_color_hex,
-			ctx_t,
-			text_width,
-			!buildOption.is_top_additive.value
-		);
+		if (canvas_top && ctx_t && bbox_top) {
+			draw_a_blank_plate_v3(
+				canvas_top,
+				primary_color_hex,
+				base_color_hex,
+				ctx_t,
+				text_width,
+				!buildOption.is_top_additive.value
+			);
+
+			// draw text on the top
+			draw_text(
+				buildOption.text_top.value,
+				buildOption.is_top_additive.value ? primary_color_hex : base_color_hex,
+				ctx_t,
+				bbox_top,
+				text_width
+			);
+		}
+
 		// bottom blank plate: it is always subtractive
-		draw_a_blank_plate_v3(
-			canvas_bottom,
-			primary_color_hex,
-			base_color_hex,
-			ctx_b,
-			text_width,
-			true,
-			true
-		);
-
-		// draw text on the top
-		draw_text(
-			buildOption.text_top.value,
-			buildOption.is_top_additive.value ? primary_color_hex : base_color_hex,
-			ctx_t,
-			bbox_top,
-			text_width
-		);
-
-		// draw text on the bottom
-		draw_text(buildOption.text_bottom.value, base_color_hex, ctx_b, bbox_btm, text_width, true);
+		if (canvas_bottom && ctx_b && bbox_btm) {
+			draw_a_blank_plate_v3(
+				canvas_bottom,
+				primary_color_hex,
+				base_color_hex,
+				ctx_b,
+				text_width,
+				true,
+				true
+			);
+			// draw text on the bottom
+			draw_text(buildOption.text_bottom.value, base_color_hex, ctx_b, bbox_btm, text_width, true);
+		}
 
 		const boardWidth =
 			text_width +
 			buildDimsPX.ring_width +
 			2 * (buildDimsPX.text_margin + buildDimsPX.boarder_width);
-
-		ctx_stacked.clearRect(0, 0, canvas_stacked.width, canvas_stacked.height);
-
-		canvas_stacked.height = 200;
-		canvas_stacked.width = boardWidth + TEXT_START_X;
-		ctx_stacked.drawImage(canvas_top, 0, 0);
-		ctx_stacked.drawImage(canvas_bottom, 0, 80);
-
 		boardWidth_cm.value = parseFloat(((px2mm * boardWidth) / 10).toFixed(1));
+
+		if (canvas_top && canvas_bottom) {
+			const canvas_stacked = document.getElementById('canvas_stacked') as HTMLCanvasElement;
+			const ctx_stacked = canvas_stacked.getContext('2d');
+			if (!ctx_stacked) throw new Error('Failed to get 2D context for stacked canvas');
+			ctx_stacked.clearRect(0, 0, canvas_stacked.width, canvas_stacked.height);
+
+			canvas_stacked.height = 200;
+			canvas_stacked.width = boardWidth + TEXT_START_X;
+			ctx_stacked.drawImage(canvas_top, 0, 0);
+			ctx_stacked.drawImage(canvas_bottom, 0, 80);
+		}
 	});
 
 	return (
 		<div class="overflow-auto p-0 bg-white">
 			<div>
-				<canvas id="canvas_top" class="w-400 h-auto hidden" />
-				<canvas id="canvas_bottom" class="w-400 h-auto hidden" />
-				<canvas id="canvas_stacked" class="w-400 h-800" />
+				{buildOption.build_top_plate && buildOption.build_bottom_plate ? (
+					<>
+						<canvas id="canvas_top" class="w-400 h-auto hidden" />
+						<canvas id="canvas_bottom" class="w-400 h-auto hidden" />
+						<canvas id="canvas_stacked" class="w-400 h-800" />
+					</>
+				) : buildOption.build_top_plate ? (
+					<canvas id="canvas_top" class="w-400 h-auto" />
+				) : (
+					<canvas id="canvas_bottom" class="w-400 h-auto" />
+				)}
 			</div>
 			<div class="text-center text-sm text-gray-500 mt-2">
 				Board width (estimated): {boardWidth_cm.value} cm
