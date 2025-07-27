@@ -7,7 +7,7 @@ import {
 } from '~/providers/shop/orders/customizable-order';
 
 import { routeLoader$ } from '@qwik.dev/router';
-import { BuildPlateVisualizerV2 } from '~/components/custom-option-visualizer/CustomVisualizerV2';
+import { BuildPlateVisualizerV3 } from '~/components/custom-option-visualizer/CustomVisualizerV3';
 
 export const useFilamentColor = routeLoader$(async () => {
 	return await filamentColorFindSupported();
@@ -105,7 +105,7 @@ export default component$(() => {
 						selectedValue={base_color_id}
 					/>
 				</div>
-				<BuildPlateVisualizerV2
+				<BuildPlateVisualizerV3
 					text_top={text_top}
 					text_bottom={text_bottom}
 					font_top={font_top}
@@ -118,8 +118,8 @@ export default component$(() => {
 			<div>
 				<p>Selected Primary Color Hex: {primary_color_hex.value}</p>
 				<p>Selected Base Color Hex: {base_color_hex.value}</p>
-				<p>Top font Id: {font_top.value}</p>
-				<p>Bottom font Id: {font_bottom.value}</p>
+				<p>Top font: {font_top.value}</p>
+				<p>Bottom font: {font_bottom.value}</p>
 			</div>
 		</>
 	);
