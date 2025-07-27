@@ -1,4 +1,4 @@
-import { component$, useComputed$, useSignal } from '@qwik.dev/core';
+import { component$, useSignal } from '@qwik.dev/core';
 import ColorSelector from '~/components/custom-option-visualizer/ColorSelector';
 import FontSelector from '~/components/custom-option-visualizer/FontSelector';
 import {
@@ -39,25 +39,6 @@ export default component$(() => {
 	const primary_color_id = useSignal<string>(defaultPrimaryColorId);
 	const base_color_id = useSignal<string>(defaultBaseColorId);
 	const is_top_additive = useSignal<boolean>(true);
-
-	const primary_color_hex = useComputed$(() => {
-		const color = FilamentColorSignal.value.find((c) => c.id === primary_color_id.value);
-		return color ? color.hexCode : '#FFFFFFFF';
-	});
-	const base_color_hex = useComputed$(() => {
-		const color = FilamentColorSignal.value.find((c) => c.id === base_color_id.value);
-		return color ? color.hexCode : '#884040FF';
-	});
-
-	const font_top = useComputed$(() => {
-		const font = FontMenuSignal.value.find((f) => f.id === font_top_id.value);
-		return font ? (is_top_additive.value ? font.additiveFontId : font.subtractiveFontId) : '';
-	});
-
-	const font_bottom = useComputed$(() => {
-		const font = FontMenuSignal.value.find((f) => f.id === font_bottom_id.value);
-		return font ? font.subtractiveFontId : '';
-	});
 
 	return (
 		<>
@@ -106,20 +87,24 @@ export default component$(() => {
 					/>
 				</div>
 				<BuildPlateVisualizerV3
+					font_menu={FontMenuSignal.value}
+					filament_color={FilamentColorSignal.value}
 					text_top={text_top}
 					text_bottom={text_bottom}
-					font_top={font_top}
-					font_bottom={font_bottom}
-					primary_color_hex={primary_color_hex}
-					base_color_hex={base_color_hex}
+					font_id_top={font_top_id}
+					font_id_bottom={font_bottom_id}
+					primary_color_id={primary_color_id}
+					base_color_id={base_color_id}
 					is_top_additive={is_top_additive}
+					build_top_plate={true}
+					build_bottom_plate={true}
 				/>
 			</div>
 			<div>
-				<p>Selected Primary Color Hex: {primary_color_hex.value}</p>
-				<p>Selected Base Color Hex: {base_color_hex.value}</p>
-				<p>Top font: {font_top.value}</p>
-				<p>Bottom font: {font_bottom.value}</p>
+				<p>Selected Primary Color id: {primary_color_id.value}</p>
+				<p>Selected Base Color id: {base_color_id.value}</p>
+				<p>Top font id: {font_top_id.value}</p>
+				<p>Bottom font id: {font_bottom_id.value}</p>
 			</div>
 		</>
 	);

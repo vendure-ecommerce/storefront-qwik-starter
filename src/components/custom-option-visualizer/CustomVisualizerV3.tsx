@@ -1,20 +1,25 @@
 import { buildDimsPX, px2mm } from './constants';
 
 import { component$, Signal, useSignal, useVisibleTask$ } from '@qwik.dev/core';
-import { getFontInfoFromID } from './FontSelector';
+import { FILAMENT_COLOR } from './ColorSelector';
+import { FONT_MENU, getFontInfoFromID } from './FontSelector';
 
 // drawing's top left position on the canvas for the margin
 const TEXT_START_X = 50;
 const START_Y = 30;
 
-export type ItemOptions = {
+export type BuildOptions = {
+	font_menu: FONT_MENU[];
+	filament_color: FILAMENT_COLOR[];
 	text_top: Signal<string>;
 	text_bottom: Signal<string>;
-	font_top: Signal<string>;
-	font_bottom: Signal<string>;
-	primary_color_hex: Signal<string>;
-	base_color_hex: Signal<string>;
+	font_id_top: Signal<string>;
+	font_id_bottom: Signal<string>;
+	primary_color_id: Signal<string>;
+	base_color_id: Signal<string>;
 	is_top_additive: Signal<boolean>;
+	build_top_plate: boolean;
+	build_bottom_plate: boolean;
 };
 
 function getFontCanvasString(
@@ -143,6 +148,26 @@ async function draw_a_blank_plate_v3(
 	// ctx.strokeStyle = 'black';
 }
 
+function color_id_2_hex(color_id: string, colorOptions: FILAMENT_COLOR[]): string {
+	const color = colorOptions.find((c) => c.id === color_id);
+	if (!color) {
+		throw new Error(`Color with id ${color_id} not found`);
+	}
+	return color.hexCode;
+}
+
+function font_id_2_font_string(
+	font_id: string,
+	font_menu: FONT_MENU[],
+	is_additive: boolean = true
+): string {
+	const font = font_menu.find((f) => f.id === font_id);
+	if (!font) {
+		throw new Error(`Font with id ${font_id} not found`);
+	}
+	return is_additive ? font.additiveFontId : font.subtractiveFontId;
+}
+
 function draw_text(
 	text: string,
 	text_color_hex: string,
@@ -159,18 +184,35 @@ function draw_text(
 	ctx.stroke();
 }
 
-export const BuildPlateVisualizerV3 = component$((itemOptions: ItemOptions) => {
+export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => {
 	const boardWidth_cm = useSignal<number>(0);
 	useVisibleTask$(({ track }) => {
-		track(() => itemOptions.text_top.value);
-		track(() => itemOptions.text_bottom.value);
-		track(() => itemOptions.font_top.value);
-		track(() => itemOptions.font_bottom.value);
-		track(() => itemOptions.primary_color_hex.value);
-		track(() => itemOptions.base_color_hex.value);
-		track(() => itemOptions.is_top_additive.value);
+		track(() => buildOption.text_top.value);
+		track(() => buildOption.text_bottom.value);
+		track(() => buildOption.font_id_top.value);
+		track(() => buildOption.font_id_bottom.value);
+		track(() => buildOption.primary_color_id.value);
+		track(() => buildOption.base_color_id.value);
+		track(() => buildOption.is_top_additive.value);
 
-		console.log('BuildPlateVisualizerV3: re-rendering with itemOptions:', itemOptions);
+		const primary_color_hex = color_id_2_hex(
+			buildOption.primary_color_id.value,
+			buildOption.filament_color
+		);
+		const base_color_hex = color_id_2_hex(
+			buildOption.base_color_id.value,
+			buildOption.filament_color
+		);
+		const font_top = font_id_2_font_string(
+			buildOption.font_id_top.value,
+			buildOption.font_menu,
+			buildOption.is_top_additive.value
+		);
+		const font_bottom = font_id_2_font_string(
+			buildOption.font_id_bottom.value,
+			buildOption.font_menu,
+			false // bottom plate is always subtractive
+		);
 
 		const canvas_top = document.getElementById('canvas_top') as HTMLCanvasElement;
 		const canvas_bottom = document.getElementById('canvas_bottom') as HTMLCanvasElement;
@@ -185,16 +227,16 @@ export const BuildPlateVisualizerV3 = component$((itemOptions: ItemOptions) => {
 		}
 
 		const bbox_top = getTextBoundingBox(
-			itemOptions.font_top.value,
-			itemOptions.text_top.value,
+			font_top,
+			buildOption.text_top.value,
 			ctx_t,
 			TEXT_START_X,
 			START_Y
 		);
 
 		const bbox_btm = getTextBoundingBox(
-			itemOptions.font_bottom.value,
-			itemOptions.text_bottom.value,
+			font_bottom,
+			buildOption.text_bottom.value,
 			ctx_b,
 			TEXT_START_X,
 			START_Y
@@ -205,17 +247,17 @@ export const BuildPlateVisualizerV3 = component$((itemOptions: ItemOptions) => {
 		// top blank plate: it can be either additive or subtractive
 		draw_a_blank_plate_v3(
 			canvas_top,
-			itemOptions.primary_color_hex.value,
-			itemOptions.base_color_hex.value,
+			primary_color_hex,
+			base_color_hex,
 			ctx_t,
 			text_width,
-			!itemOptions.is_top_additive.value
+			!buildOption.is_top_additive.value
 		);
 		// bottom blank plate: it is always subtractive
 		draw_a_blank_plate_v3(
 			canvas_bottom,
-			itemOptions.primary_color_hex.value,
-			itemOptions.base_color_hex.value,
+			primary_color_hex,
+			base_color_hex,
 			ctx_b,
 			text_width,
 			true,
@@ -224,24 +266,15 @@ export const BuildPlateVisualizerV3 = component$((itemOptions: ItemOptions) => {
 
 		// draw text on the top
 		draw_text(
-			itemOptions.text_top.value,
-			itemOptions.is_top_additive.value
-				? itemOptions.primary_color_hex.value
-				: itemOptions.base_color_hex.value,
+			buildOption.text_top.value,
+			buildOption.is_top_additive.value ? primary_color_hex : base_color_hex,
 			ctx_t,
 			bbox_top,
 			text_width
 		);
 
 		// draw text on the bottom
-		draw_text(
-			itemOptions.text_bottom.value,
-			itemOptions.base_color_hex.value,
-			ctx_b,
-			bbox_btm,
-			text_width,
-			true
-		);
+		draw_text(buildOption.text_bottom.value, base_color_hex, ctx_b, bbox_btm, text_width, true);
 
 		const boardWidth =
 			text_width +
