@@ -7,6 +7,7 @@ import {
 } from '~/providers/shop/orders/customizable-order';
 
 import { routeLoader$ } from '@qwik.dev/router';
+import { BuildPlateVisualizerV2 } from '~/components/custom-option-visualizer/CustomVisualizerV2';
 
 export const useFilamentColor = routeLoader$(async () => {
 	return await filamentColorFindSupported();
@@ -33,10 +34,11 @@ export default component$(() => {
 
 	const text_top = useSignal<string>('Happy');
 	const text_bottom = useSignal<string>('Day');
-	const font_top = useSignal<string>(defaultFontId);
-	const font_bottom = useSignal<string>(defaultFontId);
+	const font_top_id = useSignal<string>(defaultFontId);
+	const font_bottom_id = useSignal<string>(defaultFontId);
 	const primary_color_id = useSignal<string>(defaultPrimaryColorId);
 	const base_color_id = useSignal<string>(defaultBaseColorId);
+	const is_top_additive = useSignal<boolean>(true);
 
 	const primary_color_hex = useComputed$(() => {
 		const color = FilamentColorSignal.value.find((c) => c.id === primary_color_id.value);
@@ -45,6 +47,16 @@ export default component$(() => {
 	const base_color_hex = useComputed$(() => {
 		const color = FilamentColorSignal.value.find((c) => c.id === base_color_id.value);
 		return color ? color.hexCode : '#884040FF';
+	});
+
+	const font_top = useComputed$(() => {
+		const font = FontMenuSignal.value.find((f) => f.id === font_top_id.value);
+		return font ? (is_top_additive.value ? font.additiveFontId : font.subtractiveFontId) : '';
+	});
+
+	const font_bottom = useComputed$(() => {
+		const font = FontMenuSignal.value.find((f) => f.id === font_bottom_id.value);
+		return font ? font.subtractiveFontId : '';
 	});
 
 	return (
@@ -72,13 +84,13 @@ export default component$(() => {
 					<FontSelector
 						fieldTitle="Top Plate font"
 						fontMenu={FontMenuSignal.value}
-						selectedValue={font_top}
+						selectedValue={font_top_id}
 					/>
 
 					<FontSelector
 						fieldTitle="Bottom Plate font"
 						fontMenu={FontMenuSignal.value}
-						selectedValue={font_bottom}
+						selectedValue={font_bottom_id}
 					/>
 
 					<ColorSelector
@@ -93,18 +105,15 @@ export default component$(() => {
 						selectedValue={base_color_id}
 					/>
 				</div>
-				{/* <BuildPlateVisualizerV2
-						text_top={text_top}
-						text_bottom={text_bottom}
-						font_top={font_top}
-						font_bottom={font_bottom}
-						primary_color_hex={
-							colorsResource.value?.find((c) => c.name === primary_color_id.value)?.hexCode ?? '#FFFFFFFF'
-						}
-						base_color_hex={
-							colorsResource.value?.find((c) => c.name === base_color_name.value)?.hexCode ?? '#884040FF'
-						}
-					/> */}
+				<BuildPlateVisualizerV2
+					text_top={text_top}
+					text_bottom={text_bottom}
+					font_top={font_top}
+					font_bottom={font_bottom}
+					primary_color_hex={primary_color_hex}
+					base_color_hex={base_color_hex}
+					is_top_additive={is_top_additive}
+				/>
 			</div>
 			<div>
 				<p>Selected Primary Color Hex: {primary_color_hex.value}</p>

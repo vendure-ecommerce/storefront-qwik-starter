@@ -12,8 +12,9 @@ export type ItemOptions = {
 	text_bottom: Signal<string>;
 	font_top: Signal<string>;
 	font_bottom: Signal<string>;
-	primary_color_hex: string;
-	base_color_hex: string;
+	primary_color_hex: Signal<string>;
+	base_color_hex: Signal<string>;
+	is_top_additive: Signal<boolean>;
 };
 
 function getFontCanvasString(
@@ -36,29 +37,29 @@ type BboxInfo = {
 };
 
 function getTextBoundingBox(
-	itemOptions: ItemOptions,
+	raw_font_string: string, // e.g. crimson_text__bold_italic
+	text: string, // e.g. 'Happy'
 	ctx: CanvasRenderingContext2D,
 	text_x: number,
-	text_y: number,
-	is_subtractive: boolean
+	text_y: number
 ): BboxInfo {
 	// get xywh of the text bounding box
-	let raw_font = is_subtractive ? itemOptions.font_bottom.value : itemOptions.font_top.value;
-	let font_string = getFontCanvasString(raw_font);
+	let font_string = getFontCanvasString(raw_font_string);
 	ctx.font = font_string;
-	let text = is_subtractive ? itemOptions.text_bottom.value : itemOptions.text_top.value;
 	let textMetrics_raw = ctx.measureText(text);
 	let textHeight_raw =
 		textMetrics_raw.actualBoundingBoxAscent + textMetrics_raw.actualBoundingBoxDescent;
 
-	let font_string_adjusted = getFontCanvasString(raw_font, BUILD_DIMS.font_size / textHeight_raw);
+	let font_string_adjusted = getFontCanvasString(
+		raw_font_string,
+		BUILD_DIMS.font_size / textHeight_raw
+	);
 	ctx.font = font_string_adjusted;
 	let textMetrics = ctx.measureText(text);
 	let textHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent;
 
-	let font = is_subtractive ? itemOptions.font_bottom.value : itemOptions.font_top.value;
 	let italic_adjustment =
-		getFontInfoFromID(font).fontStyle === 'italic'
+		getFontInfoFromID(raw_font_string).fontStyle === 'italic'
 			? BUILD_DIMS.text_extra_margin_right_for_italic
 			: BUILD_DIMS.text_extra_margin_right;
 
@@ -78,19 +79,15 @@ function getTextBoundingBox(
 }
 
 async function draw_a_blank_plate_v2(
-	itemOptions: ItemOptions,
-	canvas_additive: HTMLCanvasElement,
-	canvas_subtractive: HTMLCanvasElement,
+	canvasElement: HTMLCanvasElement,
+	primary_color_hex: string,
+	base_color_hex: string,
 	ctx: CanvasRenderingContext2D,
 	text_width: number,
 	is_subtractive = false
 ) {
 	// clear the canvas
-	if (!is_subtractive) {
-		ctx.clearRect(0, 0, canvas_additive.width, canvas_additive.height);
-	} else {
-		ctx.clearRect(0, 0, canvas_subtractive.width, canvas_subtractive.height);
-	}
+	ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 	ctx.lineWidth = 0;
 
 	let text_padding = BUILD_DIMS.text_margin + BUILD_DIMS.boarder_width;
@@ -100,7 +97,7 @@ async function draw_a_blank_plate_v2(
 	// set the canvas width to fit the plate
 	ctx.canvas.width = overall_width + 20;
 
-	ctx.fillStyle = itemOptions.primary_color_hex.value;
+	ctx.fillStyle = primary_color_hex;
 	ctx.strokeStyle = 'black';
 	ctx.beginPath();
 	// The overall outer shape
@@ -124,7 +121,7 @@ async function draw_a_blank_plate_v2(
 	ctx.fill('evenodd');
 
 	ctx.lineWidth = BUILD_DIMS.back_skirt_channel_width;
-	ctx.strokeStyle = itemOptions.base_color_hex.value;
+	ctx.strokeStyle = base_color_hex;
 	ctx.beginPath();
 	ctx.roundRect(
 		START_X - BUILD_DIMS.text_margin,
@@ -135,24 +132,20 @@ async function draw_a_blank_plate_v2(
 	);
 	ctx.stroke();
 	if (!is_subtractive) {
-		ctx.fillStyle = itemOptions.base_color_hex.value;
+		ctx.fillStyle = base_color_hex;
 		ctx.fill();
 	}
 	// ctx.strokeStyle = 'black';
 }
 
 function draw_text(
-	itemOptions: ItemOptions,
+	text: string,
+	text_color_hex: string,
 	ctx: CanvasRenderingContext2D,
 	bbox: BboxInfo,
-	base_width: number,
-	is_subtractive: boolean
+	base_width: number
 ) {
-	let text = is_subtractive ? itemOptions.text_bottom.value : itemOptions.text_top.value;
-	let color = is_subtractive
-		? itemOptions.base_color_hex.value
-		: itemOptions.primary_color_hex.value;
-	ctx.fillStyle = color;
+	ctx.fillStyle = text_color_hex;
 	ctx.font = bbox.font_string;
 	let x_offset = (base_width - bbox.w) / 2;
 	ctx.fillText(text, START_X + x_offset + bbox.text_start_x_offset, bbox.text_start_y);
@@ -166,46 +159,80 @@ export const BuildPlateVisualizerV2 = component$((itemOptions: ItemOptions) => {
 		track(() => itemOptions.text_bottom.value);
 		track(() => itemOptions.font_top.value);
 		track(() => itemOptions.font_bottom.value);
-		track(() => itemOptions.primary_color_hex);
-		track(() => itemOptions.base_color_hex);
+		track(() => itemOptions.primary_color_hex.value);
+		track(() => itemOptions.base_color_hex.value);
+		track(() => itemOptions.is_top_additive.value);
 
 		console.log('BuildPlateVisualizerV2: re-rendering with itemOptions:', itemOptions);
 
-		const canvas_additive = document.getElementById('canvas_additive') as HTMLCanvasElement;
-		const canvas_subtractive = document.getElementById('canvas_subtractive') as HTMLCanvasElement;
+		const canvas_top = document.getElementById('canvas_top') as HTMLCanvasElement;
+		const canvas_bottom = document.getElementById('canvas_bottom') as HTMLCanvasElement;
 		const canvas_stacked = document.getElementById('canvas_stacked') as HTMLCanvasElement;
 
-		const ctx_t = canvas_additive.getContext('2d');
-		const ctx_b = canvas_subtractive.getContext('2d');
+		const ctx_t = canvas_top.getContext('2d');
+		const ctx_b = canvas_bottom.getContext('2d');
 		const ctx_stacked = canvas_stacked.getContext('2d');
 
 		if (!ctx_t || !ctx_b || !ctx_stacked) {
 			throw new Error('Failed to get 2D context');
 		}
 
-		const bbox_top = getTextBoundingBox(itemOptions, ctx_t, START_X, START_Y, false);
-		const bbox_btm = getTextBoundingBox(itemOptions, ctx_b, START_X, START_Y, true);
+		const bbox_top = getTextBoundingBox(
+			itemOptions.font_top.value,
+			itemOptions.text_top.value,
+			ctx_t,
+			START_X,
+			START_Y
+		);
+
+		const bbox_btm = getTextBoundingBox(
+			itemOptions.font_bottom.value,
+			itemOptions.text_bottom.value,
+			ctx_b,
+			START_X,
+			START_Y
+		);
+
 		const text_width = Math.max(bbox_top.w, bbox_btm.w);
 
+		// top blank plate: it can be either additive or subtractive
 		draw_a_blank_plate_v2(
-			itemOptions,
-			canvas_additive,
-			canvas_subtractive,
+			canvas_top,
+			itemOptions.primary_color_hex.value,
+			itemOptions.base_color_hex.value,
 			ctx_t,
 			text_width,
-			false
+			!itemOptions.is_top_additive.value
 		);
+		// bottom blank plate: it is always subtractive
 		draw_a_blank_plate_v2(
-			itemOptions,
-			canvas_additive,
-			canvas_subtractive,
+			canvas_bottom,
+			itemOptions.primary_color_hex.value,
+			itemOptions.base_color_hex.value,
 			ctx_b,
 			text_width,
 			true
 		);
 
-		draw_text(itemOptions, ctx_t, bbox_top, text_width, false);
-		draw_text(itemOptions, ctx_b, bbox_btm, text_width, true);
+		// draw text on the top
+		draw_text(
+			itemOptions.text_top.value,
+			itemOptions.is_top_additive.value
+				? itemOptions.primary_color_hex.value
+				: itemOptions.base_color_hex.value,
+			ctx_t,
+			bbox_top,
+			text_width
+		);
+
+		// draw text on the bottom
+		draw_text(
+			itemOptions.text_bottom.value,
+			itemOptions.base_color_hex.value,
+			ctx_b,
+			bbox_btm,
+			text_width
+		);
 
 		const boardWidth =
 			text_width + BUILD_DIMS.ring_width + 2 * (BUILD_DIMS.text_margin + BUILD_DIMS.boarder_width);
@@ -214,8 +241,8 @@ export const BuildPlateVisualizerV2 = component$((itemOptions: ItemOptions) => {
 
 		canvas_stacked.height = 200;
 		canvas_stacked.width = boardWidth + START_X;
-		ctx_stacked.drawImage(canvas_additive, 0, 0);
-		ctx_stacked.drawImage(canvas_subtractive, 0, 80);
+		ctx_stacked.drawImage(canvas_top, 0, 0);
+		ctx_stacked.drawImage(canvas_bottom, 0, 80);
 
 		boardWidth_cm.value = parseFloat(((px2mm * boardWidth) / 10).toFixed(1));
 	});
@@ -223,8 +250,8 @@ export const BuildPlateVisualizerV2 = component$((itemOptions: ItemOptions) => {
 	return (
 		<div class="overflow-auto p-0 bg-white">
 			<div>
-				<canvas id="canvas_additive" class="w-400 h-auto hidden" />
-				<canvas id="canvas_subtractive" class="w-400 h-auto hidden" />
+				<canvas id="canvas_top" class="w-400 h-auto hidden" />
+				<canvas id="canvas_bottom" class="w-400 h-auto hidden" />
 				<canvas id="canvas_stacked" class="w-400 h-800" />
 			</div>
 			<div class="text-center text-sm text-gray-500 mt-2">
