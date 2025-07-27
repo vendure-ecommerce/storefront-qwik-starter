@@ -1,29 +1,51 @@
-import { component$, useSignal } from '@qwik.dev/core';
+import { component$, useComputed$, useSignal } from '@qwik.dev/core';
 import ColorSelector from '~/components/custom-option-visualizer/ColorSelector';
-import { FILAMENT_COLORS } from '~/components/custom-option-visualizer/data';
-import FontSelector, {
-	AdditiveFontOptions,
-	SubtractiveFontOptions,
-} from '~/components/custom-option-visualizer/FontSelector';
+import FontSelector from '~/components/custom-option-visualizer/FontSelector';
+import {
+	filamentColorFindSupported,
+	fontMenuFindAll,
+} from '~/providers/shop/orders/customizable-order';
 
-import { BuildPlateVisualizerV2 } from '~/components/custom-option-visualizer/CustomVisualizerV2';
+import { routeLoader$ } from '@qwik.dev/router';
+
+export const useFilamentColor = routeLoader$(async () => {
+	return await filamentColorFindSupported();
+});
+
+export const useFontMenu = routeLoader$(async () => {
+	return await fontMenuFindAll();
+});
 
 export default component$(() => {
+	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
+	const FontMenuSignal = useFontMenu(); // Load the Font_Menu from db
+
+	const defaultPrimaryColorId = FilamentColorSignal.value.find((c) => c.name === 'latte_brown')?.id;
+	const defaultBaseColorId = FilamentColorSignal.value.find((c) => c.name === 'ivory_white')?.id;
+	if (!defaultPrimaryColorId || !defaultBaseColorId) {
+		throw new Error('Default colors not found in FilamentColorSignal!');
+	}
+
+	const defaultFontId = FontMenuSignal.value.find((f) => f.name === 'Comic Neue')?.id;
+	if (!defaultFontId) {
+		throw new Error('Default fonts not found in FontMenuSignal!');
+	}
+
 	const text_top = useSignal<string>('Happy');
 	const text_bottom = useSignal<string>('Day');
-	const font_top = useSignal<string>('Comic_Neue__bold');
-	const font_bottom = useSignal<string>('Comic_Neue__bold');
-	const primary_color = useSignal<string>('latte_brown');
-	const base_color = useSignal<string>('charcoal');
+	const font_top = useSignal<string>(defaultFontId);
+	const font_bottom = useSignal<string>(defaultFontId);
+	const primary_color_id = useSignal<string>(defaultPrimaryColorId);
+	const base_color_id = useSignal<string>(defaultBaseColorId);
 
-	// filter colors to only those that are supported and not disabled
-	const availableColors = FILAMENT_COLORS.filter(
-		(color) => color.is_supported && !color.is_disabled
-	).map((color) => ({
-		name: color.name,
-		display_name: color.display_name,
-		hex_code: color.hex_code,
-	}));
+	const primary_color_hex = useComputed$(() => {
+		const color = FilamentColorSignal.value.find((c) => c.id === primary_color_id.value);
+		return color ? color.hexCode : '#FFFFFFFF';
+	});
+	const base_color_hex = useComputed$(() => {
+		const color = FilamentColorSignal.value.find((c) => c.id === base_color_id.value);
+		return color ? color.hexCode : '#884040FF';
+	});
 
 	return (
 		<>
@@ -49,36 +71,46 @@ export default component$(() => {
 
 					<FontSelector
 						fieldTitle="Top Plate font"
-						fontOptions={AdditiveFontOptions}
+						fontMenu={FontMenuSignal.value}
 						selectedValue={font_top}
 					/>
 
 					<FontSelector
 						fieldTitle="Bottom Plate font"
-						fontOptions={SubtractiveFontOptions}
+						fontMenu={FontMenuSignal.value}
 						selectedValue={font_bottom}
 					/>
 
 					<ColorSelector
 						fieldTitle="Primary Color"
-						colorOptions={availableColors}
-						selectedValue={primary_color}
+						colorOptions={FilamentColorSignal.value}
+						selectedValue={primary_color_id}
 					/>
 
 					<ColorSelector
 						fieldTitle="Base Color"
-						colorOptions={availableColors}
-						selectedValue={base_color}
+						colorOptions={FilamentColorSignal.value}
+						selectedValue={base_color_id}
 					/>
 				</div>
-				<BuildPlateVisualizerV2
-					text_top={text_top}
-					text_bottom={text_bottom}
-					font_top={font_top}
-					font_bottom={font_bottom}
-					primary_color={primary_color}
-					base_color={base_color}
-				/>
+				{/* <BuildPlateVisualizerV2
+						text_top={text_top}
+						text_bottom={text_bottom}
+						font_top={font_top}
+						font_bottom={font_bottom}
+						primary_color_hex={
+							colorsResource.value?.find((c) => c.name === primary_color_id.value)?.hexCode ?? '#FFFFFFFF'
+						}
+						base_color_hex={
+							colorsResource.value?.find((c) => c.name === base_color_name.value)?.hexCode ?? '#884040FF'
+						}
+					/> */}
+			</div>
+			<div>
+				<p>Selected Primary Color Hex: {primary_color_hex.value}</p>
+				<p>Selected Base Color Hex: {base_color_hex.value}</p>
+				<p>Top font Id: {font_top.value}</p>
+				<p>Bottom font Id: {font_bottom.value}</p>
 			</div>
 		</>
 	);

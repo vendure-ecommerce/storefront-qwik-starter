@@ -1,22 +1,21 @@
 import { component$, Signal } from '@builder.io/qwik';
-
 import { Select } from '@qwik-ui/headless';
-import { FILAMENT_COLOR, FILAMENT_COLORS } from './data';
+import { FilamentColorFindSupportedQuery } from '~/generated/graphql-shop';
+
+/**
+ FILAMENT_COLOR type should be as follows:
+	id: string;
+	name: string;
+	displayName: string;
+	hexCode: string;
+	isOutOfStock: boolean;
+ */
+export type FILAMENT_COLOR = FilamentColorFindSupportedQuery['filamentColorFindSupported'][number];
 
 interface ColorSelectorProps {
 	fieldTitle?: string; // The title of the field, e.g. "Filament Color"
 	colorOptions: FILAMENT_COLOR[]; // The list of color options to display
 	selectedValue: Signal<string>; // The currently selected color value (this should be a filament color name, e.g. 'lemon_yellow')
-}
-
-export function getHexColorByName(name: string): string {
-	// e.g. 'lemon_yellow' -> '#F7D959'
-	const color = FILAMENT_COLORS.find((color) => color.name === name);
-	if (!color) {
-		console.error(`Color not found for name: ${name}`);
-		return '#FFFFFF'; // Default to white if color not found
-	}
-	return color.hex_code;
 }
 
 function getContrastColor(hex: string): string {
@@ -35,18 +34,25 @@ const colorTag = (color: FILAMENT_COLOR) => {
 		<span
 			class="color-tag"
 			style={{
-				backgroundColor: color.hex_code,
-				border: color.hex_code === '#FFFFFF' ? '1px solid #000000' : 'none', // Add a border for white color to make it visible
-				color: getContrastColor(color.hex_code), // Ensure text is readable against the background
+				backgroundColor: color.hexCode,
+				border: color.hexCode === '#FFFFFF' ? '1px solid #000000' : 'none', // Add a border for white color to make it visible
+				color: getContrastColor(color.hexCode), // Ensure text is readable against the background
 			}}
 		>
 			{' '}
-			{color.display_name}{' '}
+			{color.displayName}{' '}
 		</span>
 	);
 };
 
 export default component$(({ fieldTitle, colorOptions, selectedValue }: ColorSelectorProps) => {
+	// const FilamentColorSignal = useFilamentColor();
+
+	// throw an error if the selectedValue is not in the FilamentColorSignal.value
+	if (!colorOptions.some((c) => c.id === selectedValue.value)) {
+		throw new Error(`The default value "${selectedValue.value}" is not a valid filament color id!`);
+	}
+
 	return (
 		<div>
 			<Select.Root bind:value={selectedValue}>
@@ -56,7 +62,7 @@ export default component$(({ fieldTitle, colorOptions, selectedValue }: ColorSel
 				</Select.Trigger>
 				<Select.Popover class="select-popover">
 					{colorOptions.map((color) => (
-						<Select.Item key={color.name} value={color.name} disabled={false}>
+						<Select.Item key={color.id} value={color.id} disabled={false}>
 							<Select.ItemLabel class="select-item-label">{colorTag(color)}</Select.ItemLabel>
 						</Select.Item>
 					))}

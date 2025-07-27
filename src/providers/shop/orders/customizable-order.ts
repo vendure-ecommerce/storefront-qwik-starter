@@ -12,7 +12,7 @@ export const fontMenuFindAll = async () => {
 };
 
 export const filamentColorFindSupported = async () => {
-	return shopSdk
+	return await shopSdk
 		.filamentColorFindSupported()
 		.then((res: FilamentColorFindSupportedQuery) => res.filamentColorFindSupported);
 };

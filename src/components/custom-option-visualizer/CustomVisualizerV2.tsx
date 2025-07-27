@@ -1,7 +1,6 @@
 import { BUILD_DIMS, px2mm } from './constants';
 
 import { component$, Signal, useSignal, useVisibleTask$ } from '@qwik.dev/core';
-import { getHexColorByName } from './ColorSelector';
 import { getFontInfoFromID } from './FontSelector';
 
 // drawing's top left position on the canvas for the margin
@@ -13,8 +12,8 @@ export type ItemOptions = {
 	text_bottom: Signal<string>;
 	font_top: Signal<string>;
 	font_bottom: Signal<string>;
-	primary_color: Signal<string>;
-	base_color: Signal<string>;
+	primary_color_hex: string;
+	base_color_hex: string;
 };
 
 function getFontCanvasString(
@@ -101,7 +100,7 @@ async function draw_a_blank_plate_v2(
 	// set the canvas width to fit the plate
 	ctx.canvas.width = overall_width + 20;
 
-	ctx.fillStyle = getHexColorByName(itemOptions.primary_color.value);
+	ctx.fillStyle = itemOptions.primary_color_hex.value;
 	ctx.strokeStyle = 'black';
 	ctx.beginPath();
 	// The overall outer shape
@@ -125,7 +124,7 @@ async function draw_a_blank_plate_v2(
 	ctx.fill('evenodd');
 
 	ctx.lineWidth = BUILD_DIMS.back_skirt_channel_width;
-	ctx.strokeStyle = getHexColorByName(itemOptions.base_color.value);
+	ctx.strokeStyle = itemOptions.base_color_hex.value;
 	ctx.beginPath();
 	ctx.roundRect(
 		START_X - BUILD_DIMS.text_margin,
@@ -136,7 +135,7 @@ async function draw_a_blank_plate_v2(
 	);
 	ctx.stroke();
 	if (!is_subtractive) {
-		ctx.fillStyle = getHexColorByName(itemOptions.base_color.value);
+		ctx.fillStyle = itemOptions.base_color_hex.value;
 		ctx.fill();
 	}
 	// ctx.strokeStyle = 'black';
@@ -151,8 +150,8 @@ function draw_text(
 ) {
 	let text = is_subtractive ? itemOptions.text_bottom.value : itemOptions.text_top.value;
 	let color = is_subtractive
-		? getHexColorByName(itemOptions.base_color.value)
-		: getHexColorByName(itemOptions.primary_color.value);
+		? itemOptions.base_color_hex.value
+		: itemOptions.primary_color_hex.value;
 	ctx.fillStyle = color;
 	ctx.font = bbox.font_string;
 	let x_offset = (base_width - bbox.w) / 2;
@@ -167,8 +166,10 @@ export const BuildPlateVisualizerV2 = component$((itemOptions: ItemOptions) => {
 		track(() => itemOptions.text_bottom.value);
 		track(() => itemOptions.font_top.value);
 		track(() => itemOptions.font_bottom.value);
-		track(() => itemOptions.primary_color.value);
-		track(() => itemOptions.base_color.value);
+		track(() => itemOptions.primary_color_hex);
+		track(() => itemOptions.base_color_hex);
+
+		console.log('BuildPlateVisualizerV2: re-rendering with itemOptions:', itemOptions);
 
 		const canvas_additive = document.getElementById('canvas_additive') as HTMLCanvasElement;
 		const canvas_subtractive = document.getElementById('canvas_subtractive') as HTMLCanvasElement;
