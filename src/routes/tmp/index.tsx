@@ -1,13 +1,13 @@
 import { component$, useSignal } from '@qwik.dev/core';
+import { routeLoader$ } from '@qwik.dev/router';
 import ColorSelector from '~/components/custom-option-visualizer/ColorSelector';
-import FontSelector from '~/components/custom-option-visualizer/FontSelector';
+import CustomTextInput from '~/components/custom-option-visualizer/CustomTextInput';
+import { BuildPlateVisualizerV3 } from '~/components/custom-option-visualizer/CustomVisualizerV3';
 import {
+	createOrRetrieveCustomNameTag,
 	filamentColorFindSupported,
 	fontMenuFindAll,
 } from '~/providers/shop/orders/customizable-order';
-
-import { routeLoader$ } from '@qwik.dev/router';
-import { BuildPlateVisualizerV3 } from '~/components/custom-option-visualizer/CustomVisualizerV3';
 
 export const useFilamentColor = routeLoader$(async () => {
 	return await filamentColorFindSupported();
@@ -39,39 +39,30 @@ export default component$(() => {
 	const primary_color_id = useSignal<string>(defaultPrimaryColorId);
 	const base_color_id = useSignal<string>(defaultBaseColorId);
 	const is_top_additive = useSignal<boolean>(true);
+	const custom_name_tag_id = useSignal<string | null>(null);
+	const is_top_text_valid = useSignal<boolean>(true);
+	const is_bottom_text_valid = useSignal<boolean>(true);
 
 	return (
 		<>
 			<div>
 				<div>
-					<label> Top Plate Text </label>
-					<input
-						type="text"
-						value={text_top.value}
-						onInput$={(e: any) => (text_top.value = e.target.value)}
-						placeholder="Top Plate Text"
-						class="custom-input-text"
+					<label> Top Plate Text</label>
+					<CustomTextInput
+						fieldTitle="Top Plate Text"
+						fontMenu={FontMenuSignal.value}
+						text={text_top}
+						fontId={font_top_id}
+						isTextValid={is_top_text_valid}
 					/>
 
 					<label> Bottom Plate Text </label>
-					<input
-						type="text"
-						value={text_bottom.value}
-						onInput$={(e: any) => (text_bottom.value = e.target.value)}
-						placeholder="Bottom Plate Text"
-						class="custom-input-text"
-					/>
-
-					<FontSelector
-						fieldTitle="Top Plate font"
+					<CustomTextInput
+						fieldTitle="Bottom Plate Text"
 						fontMenu={FontMenuSignal.value}
-						selectedValue={font_top_id}
-					/>
-
-					<FontSelector
-						fieldTitle="Bottom Plate font"
-						fontMenu={FontMenuSignal.value}
-						selectedValue={font_bottom_id}
+						text={text_bottom}
+						fontId={font_bottom_id}
+						isTextValid={is_bottom_text_valid}
 					/>
 
 					<ColorSelector
@@ -105,6 +96,44 @@ export default component$(() => {
 				<p>Selected Base Color id: {base_color_id.value}</p>
 				<p>Top font id: {font_top_id.value}</p>
 				<p>Bottom font id: {font_bottom_id.value}</p>
+			</div>
+			<div class="text-center mt-4">
+				{/* A button to create or retrieve custom name tag */}
+				<button
+					onClick$={async () => {
+						const input = {
+							textTop: text_top.value,
+							textBottom: text_bottom.value,
+							fontMenuIdTop: font_top_id.value,
+							fontMenuIdBottom: font_bottom_id.value,
+							filamentColorIdPrimary: primary_color_id.value,
+							filamentColorIdBase: base_color_id.value,
+							isTopAdditive: is_top_additive.value,
+						};
+						try {
+							const result = await createOrRetrieveCustomNameTag(input);
+
+							console.log('Custom Name Tag created or retrieved:', result);
+							if ('customNameTagId' in result) {
+								custom_name_tag_id.value = result.customNameTagId;
+								console.log('saving custom name tag:', result);
+							} else if (result.__typename === 'CreateCustomNameTagError') {
+								console.error(
+									'Error creating custom name tag:',
+									result.message,
+									'Error code:',
+									result.errorCode
+								);
+							}
+						} catch (error) {
+							console.error('Error creating or retrieving custom name tag:', error);
+						}
+					}}
+					class="bg-blue-500 text-white px-4 py-2 rounded"
+				>
+					Create Custom Name Tag
+				</button>
+				<p> Custom Name Tag ID: {custom_name_tag_id.value}</p>
 			</div>
 		</>
 	);
