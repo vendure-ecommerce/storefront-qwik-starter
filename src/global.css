@@ -19,16 +19,20 @@
 		@apply outline-none ring-2 ring-offset-2 ring-offset-gray-800 ring-white border-white placeholder-gray-400;
 	}
 
-	.select-font-trigger-button {
-		@apply w-fit border rounded-md py-0.5 px-0.5 items-center justify-center text-base font-medium text-white bg-white hover:bg-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-primary-500;
+	.select-trigger-button {
+		@apply w-fit border rounded-md py-0.5 px-0.5 bg-white hover:bg-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500;
 	}
 
 	.select-popover {
 		@apply w-fit mt-0 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 py-1 overflow-y-auto focus:outline-none sm:text-sm;
 	}
 
+	.select-color-popover {
+		@apply w-fit mt-0 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 py-1 overflow-y-auto focus:outline-none sm:text-sm;
+	}
+
 	.select-item-label {
-		@apply w-fit bg-white px-4 text-base text-gray-900 placeholder-gray-500 flex items-center cursor-pointer relative py-1;
+		@apply w-fit px-2 bg-white text-base text-gray-900 placeholder-gray-500 cursor-pointer py-0.5;
 	}
 
 	.select-item-label:hover {
@@ -40,10 +44,15 @@
 	}
 
 	.custom-input-text {
-		@apply w-full border max-w-48 rounded-md py-0 px-2 border-gray-300;
+		/* @apply w-full border max-w-48 rounded-md py-0 px-2 border-gray-300 focus:ring-offset-2; */
+		@apply appearance-none min-w-0 max-w-48 bg-white border border-gray-300 rounded-md py-1 px-1 text-base text-gray-900 placeholder-gray-500;
+	}
+
+	.custom-input-text:focus {
+		@apply outline-none ring-2 ring-offset-2 ring-primary-500;
 	}
 
 	.custom-input-container {
-		@apply flex items-center relative my-1;
+		@apply flex items-center relative my-1 px-2;
 	}
 }

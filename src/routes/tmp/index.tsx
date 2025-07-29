@@ -1,6 +1,6 @@
 import { component$, useSignal } from '@qwik.dev/core';
 import { routeLoader$ } from '@qwik.dev/router';
-import ColorSelector from '~/components/custom-option-visualizer/ColorSelector';
+import ColorSelector from '~/components/custom-option-visualizer/ColorSelectorV2';
 import CustomTextInput from '~/components/custom-option-visualizer/CustomTextInput';
 import { BuildPlateVisualizerV3 } from '~/components/custom-option-visualizer/CustomVisualizerV3';
 import {
@@ -69,12 +69,14 @@ export default component$(() => {
 						fieldTitle="Primary Color"
 						colorOptions={FilamentColorSignal.value}
 						selectedValue={primary_color_id}
+						isBackgroundColor={false}
 					/>
 
 					<ColorSelector
 						fieldTitle="Base Color"
 						colorOptions={FilamentColorSignal.value}
 						selectedValue={base_color_id}
+						isBackgroundColor={true}
 					/>
 				</div>
 				<BuildPlateVisualizerV3

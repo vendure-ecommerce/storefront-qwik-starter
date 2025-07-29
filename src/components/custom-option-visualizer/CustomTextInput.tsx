@@ -113,13 +113,18 @@ export default component$(
 								text.value = e.target.value;
 							}
 						}}
+						style={{
+							fontFamily: selectedFontInfo.value.fontFamily,
+							fontWeight: selectedFontInfo.value.fontWeight,
+							fontStyle: selectedFontInfo.value.fontStyle,
+						}}
 						class="custom-input-text"
 					/>
 					<div
-						class={`px-2 flex item-center ${isTextValid.value ? '' : 'opacity-50 pointer-events-none'}`}
+						class={`px-1 flex item-center ${isTextValid.value ? '' : 'opacity-50 pointer-events-none'}`}
 					>
 						<Select.Root bind:value={fontId}>
-							<Select.Trigger class="select-font-trigger-button" title="Select Font">
+							<Select.Trigger class="select-trigger-button" title="Select Font">
 								<FontIcon />
 							</Select.Trigger>
 							<Select.Popover class="select-popover">
