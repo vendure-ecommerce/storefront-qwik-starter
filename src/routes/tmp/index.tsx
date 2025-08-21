@@ -50,6 +50,25 @@ export default component$(() => {
 	return (
 		<>
 			<div>
+				<div>
+					<label> Top Plate Text</label>
+					<TextWithFontInput
+						fieldTitle="Top Plate Text"
+						fontMenu={FontMenuSignal.value}
+						text={text_top}
+						fontId={font_top_id}
+						isTextValid={is_top_text_valid}
+					/>
+
+					<label> Bottom Plate Text </label>
+					<TextWithFontInput
+						fieldTitle="Bottom Plate Text"
+						fontMenu={FontMenuSignal.value}
+						text={text_bottom}
+						fontId={font_bottom_id}
+						isTextValid={is_bottom_text_valid}
+					/>
+				</div>
 				<div
 					class={`border-2 border-gray-500 bg-gray-200 rounded-lg h-auto p-0 w-fit`}
 					// style={{ width: `${canvas_width_px}px` }}
@@ -97,22 +116,6 @@ export default component$(() => {
 							show_estimated_board_width={true}
 							output_top_canvas_element_id={canvas_top_element_id}
 						/>
-						<div class="flex flex-col justify-evenly">
-							<TextWithFontInput
-								fieldTitle="Top Plate Text"
-								fontMenu={FontMenuSignal.value}
-								text={text_top}
-								fontId={font_top_id}
-								isTextValid={is_top_text_valid}
-							/>
-							<TextWithFontInput
-								fieldTitle="Bottom Plate Text"
-								fontMenu={FontMenuSignal.value}
-								text={text_bottom}
-								fontId={font_bottom_id}
-								isTextValid={is_bottom_text_valid}
-							/>
-						</div>
 					</div>
 				</div>
 			</div>
