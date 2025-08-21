@@ -20,6 +20,9 @@ export type BuildOptions = {
 	is_top_additive: Signal<boolean>;
 	build_top_plate: boolean;
 	build_bottom_plate: boolean;
+	build_canvas_width_px?: number; // Optional: if provided, will set the canvas width to this value
+	show_estimated_board_width?: boolean; // Optional: if true, will show the estimated board width
+	output_canvas_element_id?: string; // Optional: if provided, will set the output canvas element ID
 };
 
 function getFontCanvasString(
@@ -303,7 +306,9 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 		boardWidth_cm.value = parseFloat(((px2mm * boardWidth) / 10).toFixed(1));
 
 		if (canvas_top && canvas_bottom) {
-			const canvas_stacked = document.getElementById('canvas_stacked') as HTMLCanvasElement;
+			const canvas_stacked = document.getElementById(
+				buildOption.output_canvas_element_id || 'canvas_stacked'
+			) as HTMLCanvasElement;
 			const ctx_stacked = canvas_stacked.getContext('2d');
 			if (!ctx_stacked) throw new Error('Failed to get 2D context for stacked canvas');
 			ctx_stacked.clearRect(0, 0, canvas_stacked.width, canvas_stacked.height);
@@ -315,40 +320,29 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 		}
 	});
 
+	let build_canvas_width = buildOption.build_canvas_width_px || 100;
+	let output_canvas_element_id = buildOption.output_canvas_element_id || 'canvas_stacked';
+
 	return (
-		<div class="overflow-auto p-0 bg-white">
+		<div class="px-3 bg-white rounded-b-lg">
 			<div>
 				{buildOption.build_top_plate && buildOption.build_bottom_plate ? (
 					<>
-						<canvas id="canvas_top" class="w-400 h-auto hidden" />
-						<canvas id="canvas_bottom" class="w-400 h-auto hidden" />
-						<canvas id="canvas_stacked" class="w-400 h-800" />
+						<canvas id="canvas_top" class={`w-[${build_canvas_width}px] h-auto hidden`} />
+						<canvas id="canvas_bottom" class={`w-[${build_canvas_width}px] h-auto hidden`} />
+						<canvas id={output_canvas_element_id} class={`w-[${build_canvas_width}px] h-auto`} />
 					</>
 				) : buildOption.build_top_plate ? (
-					<canvas id="canvas_top" class="w-400 h-auto" />
+					<canvas id="canvas_top" class={`w-[${build_canvas_width}px] h-auto`} />
 				) : (
-					<canvas id="canvas_bottom" class="w-400 h-auto" />
+					<canvas id="canvas_bottom" class={`w-[${build_canvas_width}px] h-auto`} />
 				)}
 			</div>
-			<div class="text-center text-sm text-gray-500 mt-2">
-				Board width (estimated): {boardWidth_cm.value} cm
-			</div>
-
-			{/* A button to save canvas_stacked */}
-			<div class="text-center mt-4">
-				<button
-					class="bg-blue-500 text-white px-4 py-2 rounded"
-					onClick$={() => {
-						const canvas = document.getElementById('canvas_stacked') as HTMLCanvasElement;
-						const link = document.createElement('a');
-						link.download = 'canvas_stacked.jpg';
-						link.href = canvas.toDataURL('image/jpeg', 0.5);
-						link.click();
-					}}
-				>
-					Save Canvas
-				</button>
-			</div>
+			{buildOption.show_estimated_board_width && (
+				<div class="text-center text-sm text-gray-500">
+					Board width (estimated): {boardWidth_cm.value} cm
+				</div>
+			)}
 		</div>
 	);
 });

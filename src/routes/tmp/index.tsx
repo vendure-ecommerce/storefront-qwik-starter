@@ -1,8 +1,8 @@
 import { component$, useSignal } from '@qwik.dev/core';
 import { routeLoader$ } from '@qwik.dev/router';
 import ColorSelector from '~/components/custom-option-visualizer/ColorSelectorV2';
-import CustomTextInput from '~/components/custom-option-visualizer/CustomTextInput';
 import { BuildPlateVisualizerV3 } from '~/components/custom-option-visualizer/CustomVisualizerV3';
+import TextWithFontInput from '~/components/custom-option-visualizer/TextWithFontInput';
 import {
 	createOrRetrieveCustomNameTag,
 	filamentColorFindSupported,
@@ -16,6 +16,9 @@ export const useFilamentColor = routeLoader$(async () => {
 export const useFontMenu = routeLoader$(async () => {
 	return await fontMenuFindAll();
 });
+
+const canvas_width_px = 300; // or 300, note that not any width is supported
+const canvas_element_id = 'canvas_stacked'; // The ID of the canvas element to render the visualizer
 
 export default component$(() => {
 	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
@@ -48,7 +51,7 @@ export default component$(() => {
 			<div>
 				<div>
 					<label> Top Plate Text</label>
-					<CustomTextInput
+					<TextWithFontInput
 						fieldTitle="Top Plate Text"
 						fontMenu={FontMenuSignal.value}
 						text={text_top}
@@ -57,48 +60,65 @@ export default component$(() => {
 					/>
 
 					<label> Bottom Plate Text </label>
-					<CustomTextInput
+					<TextWithFontInput
 						fieldTitle="Bottom Plate Text"
 						fontMenu={FontMenuSignal.value}
 						text={text_bottom}
 						fontId={font_bottom_id}
 						isTextValid={is_bottom_text_valid}
 					/>
-
-					<ColorSelector
-						fieldTitle="Primary Color"
-						colorOptions={FilamentColorSignal.value}
-						selectedValue={primary_color_id}
-						isBackgroundColor={false}
-					/>
-
-					<ColorSelector
-						fieldTitle="Base Color"
-						colorOptions={FilamentColorSignal.value}
-						selectedValue={base_color_id}
-						isBackgroundColor={true}
+				</div>
+				<div
+					class={`border-2 border-gray-500 bg-gray-200 rounded-lg w-[${canvas_width_px}px] h-auto p-0`}
+				>
+					<div class="flex justify-end">
+						<ColorSelector
+							fieldTitle="Primary Color"
+							colorOptions={FilamentColorSignal.value}
+							selectedValue={primary_color_id}
+							isBackgroundColor={false}
+						/>
+						<ColorSelector
+							fieldTitle="Base Color"
+							colorOptions={FilamentColorSignal.value}
+							selectedValue={base_color_id}
+							isBackgroundColor={true}
+						/>
+					</div>
+					<BuildPlateVisualizerV3
+						font_menu={FontMenuSignal.value}
+						filament_color={FilamentColorSignal.value}
+						text_top={text_top}
+						text_bottom={text_bottom}
+						font_id_top={font_top_id}
+						font_id_bottom={font_bottom_id}
+						primary_color_id={primary_color_id}
+						base_color_id={base_color_id}
+						is_top_additive={is_top_additive}
+						build_top_plate={true}
+						build_bottom_plate={true}
+						build_canvas_width_px={canvas_width_px}
+						show_estimated_board_width={true}
+						output_canvas_element_id={canvas_element_id}
 					/>
 				</div>
-				<BuildPlateVisualizerV3
-					font_menu={FontMenuSignal.value}
-					filament_color={FilamentColorSignal.value}
-					text_top={text_top}
-					text_bottom={text_bottom}
-					font_id_top={font_top_id}
-					font_id_bottom={font_bottom_id}
-					primary_color_id={primary_color_id}
-					base_color_id={base_color_id}
-					is_top_additive={is_top_additive}
-					build_top_plate={true}
-					build_bottom_plate={true}
-				/>
 			</div>
-			<div>
-				<p>Selected Primary Color id: {primary_color_id.value}</p>
-				<p>Selected Base Color id: {base_color_id.value}</p>
-				<p>Top font id: {font_top_id.value}</p>
-				<p>Bottom font id: {font_bottom_id.value}</p>
+
+			<div class="text-center mt-4">
+				<button
+					class="bg-blue-500 text-white px-4 py-2 rounded"
+					onClick$={() => {
+						const canvas = document.getElementById(canvas_element_id) as HTMLCanvasElement;
+						const link = document.createElement('a');
+						link.download = 'rendered_name_tag.jpg';
+						link.href = canvas.toDataURL('image/jpeg', 0.5);
+						link.click();
+					}}
+				>
+					Save Canvas
+				</button>
 			</div>
+
 			<div class="text-center mt-4">
 				{/* A button to create or retrieve custom name tag */}
 				<button

@@ -24,7 +24,7 @@ interface ColorSelectorProps {
 const colorTag = (color: FILAMENT_COLOR) => {
 	return (
 		<span
-			class="rounded-full inline-block min-h-4 min-w-4 px-0"
+			class="rounded-full inline-block h-4 w-4 px-0"
 			style={{
 				backgroundColor: color.hexCode,
 				border: color.hexCode === '#FFFFFF' ? '1px solid #000000' : 'none', // Add a border for white color to make it visible
@@ -47,8 +47,9 @@ export default component$(
 		return (
 			<div class="custom-input-container px-2">
 				<Select.Root bind:value={selectedValue}>
-					<Select.Trigger class="select-trigger-button" title={fieldTitle || 'Select Color'}>
+					<Select.Trigger class="select-trigger-button flex" title={fieldTitle || 'Select Color'}>
 						{isBackgroundColor ? <BackgroundColorIcon /> : <TextColorIcon />}
+						{colorTag(colorOptions.find((c) => c.id === selectedValue.value)!)}
 					</Select.Trigger>
 					<Select.Popover class="select-color-popover">
 						{colorOptions.map((color) => (

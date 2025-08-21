@@ -59,7 +59,7 @@ function getFontOptions(fontMenuItems: FONT_MENU[]): FontOption[] {
 	});
 }
 
-interface CustomTextInputProps {
+interface TextWithFontProps {
 	fieldTitle?: string; // Optional title for the font selector
 	fontMenu: FONT_MENU[];
 	text: Signal<string>; // This is the text input value, e.g. `const textInput = useSignal<string>('Hello World');`
@@ -73,7 +73,7 @@ function isValidText(text: string): boolean {
 }
 
 export default component$(
-	({ fieldTitle, fontMenu, text, fontId, isTextValid }: CustomTextInputProps) => {
+	({ fieldTitle, fontMenu, text, fontId, isTextValid }: TextWithFontProps) => {
 		// const fontId = useSignal<string>(fontOptions[0].value); // This has to be a string to match the Select component's value type (Select.item.value), e.g. 'Crimson_Text__bold_italic'
 		const fontOptions = getFontOptions(fontMenu);
 		const selectedFontInfo = useComputed$(() => {
