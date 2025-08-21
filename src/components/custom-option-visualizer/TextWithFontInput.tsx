@@ -2,9 +2,11 @@
 import { component$, Signal, useVisibleTask$ } from '@builder.io/qwik';
 
 import { Select } from '@qwik-ui/headless';
-import { useComputed$ } from '@qwik.dev/core';
+import { useComputed$, useSignal } from '@qwik.dev/core';
 import { FontMenuFindAllQuery } from '~/generated/graphql-shop';
 import FontIcon from '../icons/FontIcon';
+import GoPreviousIcon from '../icons/GoPreviousIcon';
+import PencilIcon from '../icons/PencilIcon';
 
 // import { FONT_MENU, FontMenuItem } from './data';
 /**
@@ -76,6 +78,7 @@ export default component$(
 	({ fieldTitle, fontMenu, text, fontId, isTextValid }: TextWithFontProps) => {
 		// const fontId = useSignal<string>(fontOptions[0].value); // This has to be a string to match the Select component's value type (Select.item.value), e.g. 'Crimson_Text__bold_italic'
 		const fontOptions = getFontOptions(fontMenu);
+		const showInput = useSignal<boolean>(false);
 		const selectedFontInfo = useComputed$(() => {
 			const raw_font_string = fontMenu.find((f) => f.id === fontId.value)?.additiveFontId;
 			if (!raw_font_string) {
@@ -101,25 +104,39 @@ export default component$(
 		return (
 			<div>
 				<div class="custom-input-container">
-					<input
-						type="text"
-						value={text.value}
-						onInput$={(e: any) => {
-							if (isValidText(e.target.value)) {
-								isTextValid.value = true;
-								text.value = e.target.value;
-							} else {
-								isTextValid.value = false;
-								text.value = e.target.value;
-							}
-						}}
-						style={{
-							fontFamily: selectedFontInfo.value.fontFamily,
-							fontWeight: selectedFontInfo.value.fontWeight,
-							fontStyle: selectedFontInfo.value.fontStyle,
-						}}
-						class="custom-input-text"
-					/>
+					{showInput.value ? (
+						<>
+							<button
+								onClick$={() => (showInput.value = false)}
+								class="px-1"
+								title="Close Text Input"
+							>
+								<GoPreviousIcon />
+							</button>
+							<input
+								type="text"
+								value={text.value}
+								onInput$={(e: any) => {
+									if (isValidText(e.target.value)) {
+										isTextValid.value = true;
+										text.value = e.target.value;
+									} else {
+										isTextValid.value = false;
+									}
+								}}
+								style={{
+									fontFamily: selectedFontInfo.value.fontFamily,
+									fontWeight: selectedFontInfo.value.fontWeight,
+									fontStyle: selectedFontInfo.value.fontStyle,
+								}}
+								class="custom-input-text"
+							/>
+						</>
+					) : (
+						<button onClick$={() => (showInput.value = true)}>
+							<PencilIcon />
+						</button>
+					)}
 					<div
 						class={`px-1 flex item-center ${isTextValid.value ? '' : 'opacity-50 pointer-events-none'}`}
 					>

@@ -42,7 +42,7 @@ export default component$(() => {
 	const font_bottom_id = useSignal<string>(defaultFontId);
 	const primary_color_id = useSignal<string>(defaultPrimaryColorId);
 	const base_color_id = useSignal<string>(defaultBaseColorId);
-	const is_top_additive = useSignal<boolean>(false);
+	const is_top_additive = useSignal<boolean>(true);
 	const custom_name_tag_id = useSignal<string | null>(null);
 	const is_top_text_valid = useSignal<boolean>(true);
 	const is_bottom_text_valid = useSignal<boolean>(true);
@@ -50,30 +50,11 @@ export default component$(() => {
 	return (
 		<>
 			<div>
-				<div>
-					<label> Top Plate Text</label>
-					<TextWithFontInput
-						fieldTitle="Top Plate Text"
-						fontMenu={FontMenuSignal.value}
-						text={text_top}
-						fontId={font_top_id}
-						isTextValid={is_top_text_valid}
-					/>
-
-					<label> Bottom Plate Text </label>
-					<TextWithFontInput
-						fieldTitle="Bottom Plate Text"
-						fontMenu={FontMenuSignal.value}
-						text={text_bottom}
-						fontId={font_bottom_id}
-						isTextValid={is_bottom_text_valid}
-					/>
-				</div>
 				<div
 					class={`border-2 border-gray-500 bg-gray-200 rounded-lg h-auto p-0 w-fit`}
 					// style={{ width: `${canvas_width_px}px` }}
 				>
-					<div class="flex">
+					<div class="flex justify-center">
 						<ColorSelector
 							fieldTitle="Primary Color"
 							colorOptions={FilamentColorSignal.value}
@@ -99,7 +80,7 @@ export default component$(() => {
 							</span> */}
 						</button>
 					</div>
-					<div class="bg-white rounded-b-lg flex ">
+					<div class="bg-white rounded-b-lg flex">
 						<BuildPlateVisualizerV3
 							font_menu={FontMenuSignal.value}
 							filament_color={FilamentColorSignal.value}
@@ -113,9 +94,28 @@ export default component$(() => {
 							build_top_plate={true}
 							build_bottom_plate={true}
 							build_canvas_width_px={canvas_width_px}
-							show_estimated_board_width={true}
+							show_estimated_board_width={false}
 							output_top_canvas_element_id={canvas_top_element_id}
 						/>
+						<div class="flex flex-col justify-evenly">
+							{/* <label> Top Plate Text</label> */}
+							<TextWithFontInput
+								fieldTitle="Top Plate Text"
+								fontMenu={FontMenuSignal.value}
+								text={text_top}
+								fontId={font_top_id}
+								isTextValid={is_top_text_valid}
+							/>
+
+							{/* <label> Bottom Plate Text </label> */}
+							<TextWithFontInput
+								fieldTitle="Bottom Plate Text"
+								fontMenu={FontMenuSignal.value}
+								text={text_bottom}
+								fontId={font_bottom_id}
+								isTextValid={is_bottom_text_valid}
+							/>
+						</div>
 					</div>
 				</div>
 			</div>

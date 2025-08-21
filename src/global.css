@@ -45,7 +45,7 @@
 
 	.custom-input-text {
 		/* @apply w-full border max-w-48 rounded-md py-0 px-2 border-gray-300 focus:ring-offset-2; */
-		@apply appearance-none min-w-0 max-w-48 bg-white border border-gray-300 rounded-md py-1 px-1 text-base text-gray-900 placeholder-gray-500;
+		@apply appearance-none min-w-0 max-w-32 overflow-x-scroll bg-white border border-gray-300 rounded-md py-1 px-1 text-base text-gray-900 placeholder-gray-500;
 	}
 
 	.custom-input-text:focus {
