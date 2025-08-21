@@ -6,7 +6,7 @@ import { FONT_MENU, getFontInfoFromID } from './FontSelector';
 
 // drawing's top left position on the canvas for the margin
 const TEXT_START_X = 50;
-const START_Y = 30;
+const START_Y = 20;
 
 export type BuildOptions = {
 	font_menu: FONT_MENU[];
@@ -22,7 +22,8 @@ export type BuildOptions = {
 	build_bottom_plate: boolean;
 	build_canvas_width_px?: number; // Optional: if provided, will set the canvas width to this value
 	show_estimated_board_width?: boolean; // Optional: if true, will show the estimated board width
-	output_canvas_element_id?: string; // Optional: if provided, will set the output canvas element ID
+	output_top_canvas_element_id?: string; // Optional: if provided, will set the output canvas element ID
+	output_bottom_canvas_element_id?: string; // Optional: if provided, will set the output canvas element ID
 };
 
 function getFontCanvasString(
@@ -106,6 +107,7 @@ async function draw_a_blank_plate_v3(
 
 	// set the canvas width to fit the plate
 	ctx.canvas.width = overall_width + 20;
+	ctx.canvas.height = overall_height + START_Y;
 
 	ctx.fillStyle = primary_color_hex;
 	ctx.strokeStyle = 'black';
@@ -223,9 +225,11 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 		let ctx_t: CanvasRenderingContext2D | null | undefined;
 		let canvas_bottom: HTMLCanvasElement | undefined;
 		let ctx_b: CanvasRenderingContext2D | null | undefined;
+		let top_canvas_id = buildOption.output_top_canvas_element_id || 'canvas_top';
+		let bottom_canvas_id = buildOption.output_bottom_canvas_element_id || 'canvas_bottom';
 
 		if (buildOption.build_top_plate) {
-			canvas_top = document.getElementById('canvas_top') as HTMLCanvasElement;
+			canvas_top = document.getElementById(top_canvas_id) as HTMLCanvasElement;
 			ctx_t = canvas_top.getContext('2d');
 			if (!ctx_t) throw new Error('Failed to get 2D context for top canvas');
 
@@ -239,7 +243,7 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 		}
 
 		if (buildOption.build_bottom_plate) {
-			canvas_bottom = document.getElementById('canvas_bottom') as HTMLCanvasElement;
+			canvas_bottom = document.getElementById(bottom_canvas_id) as HTMLCanvasElement;
 			ctx_b = canvas_bottom.getContext('2d');
 			if (!ctx_b) throw new Error('Failed to get 2D context for bottom canvas');
 
@@ -305,54 +309,46 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 			2 * (buildDimsPX.text_margin + buildDimsPX.boarder_width);
 		boardWidth_cm.value = parseFloat(((px2mm * boardWidth) / 10).toFixed(1));
 
-		if (canvas_top && canvas_bottom) {
-			const canvas_stacked = document.getElementById(
-				buildOption.output_canvas_element_id || 'canvas_stacked'
-			) as HTMLCanvasElement;
-			const ctx_stacked = canvas_stacked.getContext('2d');
-			if (!ctx_stacked) throw new Error('Failed to get 2D context for stacked canvas');
-			ctx_stacked.clearRect(0, 0, canvas_stacked.width, canvas_stacked.height);
+		// if (canvas_top && canvas_bottom) {
+		// 	const canvas_stacked = document.getElementById(
+		// 		buildOption.output_canvas_element_id || 'canvas_stacked'
+		// 	) as HTMLCanvasElement;
+		// 	const ctx_stacked = canvas_stacked.getContext('2d');
+		// 	if (!ctx_stacked) throw new Error('Failed to get 2D context for stacked canvas');
+		// 	ctx_stacked.clearRect(0, 0, canvas_stacked.width, canvas_stacked.height);
 
-			canvas_stacked.height = 200;
-			canvas_stacked.width = boardWidth + TEXT_START_X;
-			ctx_stacked.drawImage(canvas_top, 0, 0);
-			ctx_stacked.drawImage(canvas_bottom, 0, 80);
-		}
+		// 	canvas_stacked.height = 200;
+		// 	canvas_stacked.width = boardWidth + TEXT_START_X;
+		// 	ctx_stacked.drawImage(canvas_top, 0, 0);
+		// 	ctx_stacked.drawImage(canvas_bottom, 0, buildDimsPX.overall_height + START_Y / 2);
+		// }
 	});
 
 	let build_canvas_width = buildOption.build_canvas_width_px || 100;
-	let output_canvas_element_id = buildOption.output_canvas_element_id || 'canvas_stacked';
+
+	let top_canvas_id = buildOption.output_top_canvas_element_id || 'canvas_top';
+	let bottom_canvas_id = buildOption.output_bottom_canvas_element_id || 'canvas_bottom';
+	// let output_canvas_element_id = buildOption.output_canvas_element_id || 'canvas_stacked';
 
 	return (
-		<div class="px-3 bg-white rounded-b-lg">
-			<div>
-				{buildOption.build_top_plate && buildOption.build_bottom_plate ? (
-					<>
-						<canvas
-							id="canvas_top"
-							class={`h-auto hidden`}
-							style={{ width: `${build_canvas_width}px` }}
-						/>
-						<canvas
-							id="canvas_bottom"
-							class={`h-auto hidden`}
-							style={{ width: `${build_canvas_width}px` }}
-						/>
-						<canvas
-							id={output_canvas_element_id}
-							class={`h-auto`}
-							style={{ width: `${build_canvas_width}px` }}
-						/>
-					</>
-				) : buildOption.build_top_plate ? (
-					<canvas id="canvas_top" class={`h-auto`} style={{ width: `${build_canvas_width}px` }} />
-				) : (
-					<canvas
-						id="canvas_bottom"
-						class={`h-auto`}
-						style={{ width: `${build_canvas_width}px` }}
-					/>
-				)}
+		<div class="bg-transparent" style={{ width: `${build_canvas_width}px` }}>
+			<div title="Plate Visualizer">
+				<canvas
+					id={top_canvas_id}
+					class={`${buildOption.build_top_plate ? '' : 'hidden'}`}
+					style={{
+						width: `${build_canvas_width}px`,
+						height: '100%',
+					}}
+				/>
+				<canvas
+					id={bottom_canvas_id}
+					class={`${buildOption.build_bottom_plate ? '' : 'hidden'}`}
+					style={{
+						width: `${build_canvas_width}px`,
+						height: '100%',
+					}}
+				/>
 			</div>
 			{buildOption.show_estimated_board_width && (
 				<div class="text-center text-sm text-gray-500">

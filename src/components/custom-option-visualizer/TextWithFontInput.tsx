@@ -2,10 +2,11 @@
 import { component$, Signal, useVisibleTask$ } from '@builder.io/qwik';
 
 import { Select } from '@qwik-ui/headless';
-import { useComputed$ } from '@qwik.dev/core';
+import { useComputed$, useSignal } from '@qwik.dev/core';
 import { FontMenuFindAllQuery } from '~/generated/graphql-shop';
 import FontIcon from '../icons/FontIcon';
-
+import GoPreviousIcon from '../icons/GoPreviousIcon';
+import PencilIcon from '../icons/PencilIcon';
 // import { FONT_MENU, FontMenuItem } from './data';
 /**
  
@@ -76,6 +77,7 @@ export default component$(
 	({ fieldTitle, fontMenu, text, fontId, isTextValid }: TextWithFontProps) => {
 		// const fontId = useSignal<string>(fontOptions[0].value); // This has to be a string to match the Select component's value type (Select.item.value), e.g. 'Crimson_Text__bold_italic'
 		const fontOptions = getFontOptions(fontMenu);
+		const showInput = useSignal<boolean>(false);
 		const selectedFontInfo = useComputed$(() => {
 			const raw_font_string = fontMenu.find((f) => f.id === fontId.value)?.additiveFontId;
 			if (!raw_font_string) {
@@ -100,53 +102,75 @@ export default component$(
 
 		return (
 			<div>
-				<div class="custom-input-container">
-					<input
-						type="text"
-						value={text.value}
-						onInput$={(e: any) => {
-							if (isValidText(e.target.value)) {
-								isTextValid.value = true;
-								text.value = e.target.value;
-							} else {
-								isTextValid.value = false;
-								text.value = e.target.value;
-							}
-						}}
-						style={{
-							fontFamily: selectedFontInfo.value.fontFamily,
-							fontWeight: selectedFontInfo.value.fontWeight,
-							fontStyle: selectedFontInfo.value.fontStyle,
-						}}
-						class="custom-input-text"
-					/>
-					<div
-						class={`px-1 flex item-center ${isTextValid.value ? '' : 'opacity-50 pointer-events-none'}`}
+				{!showInput.value ? (
+					<button
+						type="button"
+						class="px-1"
+						onClick$={() => (showInput.value = true)}
+						title="Edit Text"
 					>
-						<Select.Root bind:value={fontId}>
-							<Select.Trigger class="select-trigger-button" title="Select Font">
-								<FontIcon />
-							</Select.Trigger>
-							<Select.Popover class="select-popover">
-								{fontOptions.map((option) => (
-									<Select.Item key={option.id} value={option.id} disabled={option.isDisabled}>
-										<Select.ItemLabel
-											class="select-item-label"
-											style={{
-												fontFamily: option.fontFamily,
-												fontWeight: 'normal',
-												fontStyle: option.fontStyle,
-											}}
-											title={option.name} // Show full name on hover
-										>
-											{text.value}
-										</Select.ItemLabel>
-									</Select.Item>
-								))}
-							</Select.Popover>
-						</Select.Root>
-					</div>
-				</div>
+						<PencilIcon />
+					</button>
+				) : (
+					<>
+						<div class="custom-input-container">
+							{isTextValid.value && (
+								<button
+									type="button"
+									class="px-1"
+									onClick$={() => (showInput.value = false)}
+									title="Confirm Text"
+								>
+									<GoPreviousIcon />
+								</button>
+							)}
+							<input
+								type="text"
+								value={text.value}
+								onInput$={(e: any) => {
+									if (isValidText(e.target.value)) {
+										isTextValid.value = true;
+										text.value = e.target.value;
+									} else {
+										isTextValid.value = false;
+									}
+								}}
+								style={{
+									fontFamily: selectedFontInfo.value.fontFamily,
+									fontWeight: selectedFontInfo.value.fontWeight,
+									fontStyle: selectedFontInfo.value.fontStyle,
+								}}
+								class="custom-input-text"
+							/>
+							<div
+								class={`px-1 flex item-center ${isTextValid.value ? '' : 'opacity-50 pointer-events-none'}`}
+							>
+								<Select.Root bind:value={fontId}>
+									<Select.Trigger class="select-trigger-button" title="Select Font">
+										<FontIcon />
+									</Select.Trigger>
+									<Select.Popover class="select-popover">
+										{fontOptions.map((option) => (
+											<Select.Item key={option.id} value={option.id} disabled={option.isDisabled}>
+												<Select.ItemLabel
+													class="select-item-label"
+													style={{
+														fontFamily: option.fontFamily,
+														fontWeight: 'normal',
+														fontStyle: option.fontStyle,
+													}}
+													title={option.name}
+												>
+													{text.value}
+												</Select.ItemLabel>
+											</Select.Item>
+										))}
+									</Select.Popover>
+								</Select.Root>
+							</div>
+						</div>
+					</>
+				)}
 				{!isTextValid.value && (
 					<div class="text-red-500 text-xs">
 						Text must be less than 16 characters and cannot be empty.
