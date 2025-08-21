@@ -17,7 +17,7 @@ export const useFontMenu = routeLoader$(async () => {
 	return await fontMenuFindAll();
 });
 
-const canvas_width_px = 300; // or 300, note that not any width is supported
+const canvas_width_px = 300;
 const canvas_element_id = 'canvas_stacked'; // The ID of the canvas element to render the visualizer
 
 export default component$(() => {
@@ -69,7 +69,8 @@ export default component$(() => {
 					/>
 				</div>
 				<div
-					class={`border-2 border-gray-500 bg-gray-200 rounded-lg w-[${canvas_width_px}px] h-auto p-0`}
+					class={`border-2 border-gray-500 bg-gray-200 rounded-lg h-auto p-0`}
+					style={{ width: `${canvas_width_px}px` }}
 				>
 					<div class="flex justify-end">
 						<ColorSelector

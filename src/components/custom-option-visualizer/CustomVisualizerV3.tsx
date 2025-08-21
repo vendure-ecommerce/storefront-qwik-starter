@@ -328,14 +328,30 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 			<div>
 				{buildOption.build_top_plate && buildOption.build_bottom_plate ? (
 					<>
-						<canvas id="canvas_top" class={`w-[${build_canvas_width}px] h-auto hidden`} />
-						<canvas id="canvas_bottom" class={`w-[${build_canvas_width}px] h-auto hidden`} />
-						<canvas id={output_canvas_element_id} class={`w-[${build_canvas_width}px] h-auto`} />
+						<canvas
+							id="canvas_top"
+							class={`h-auto hidden`}
+							style={{ width: `${build_canvas_width}px` }}
+						/>
+						<canvas
+							id="canvas_bottom"
+							class={`h-auto hidden`}
+							style={{ width: `${build_canvas_width}px` }}
+						/>
+						<canvas
+							id={output_canvas_element_id}
+							class={`h-auto`}
+							style={{ width: `${build_canvas_width}px` }}
+						/>
 					</>
 				) : buildOption.build_top_plate ? (
-					<canvas id="canvas_top" class={`w-[${build_canvas_width}px] h-auto`} />
+					<canvas id="canvas_top" class={`h-auto`} style={{ width: `${build_canvas_width}px` }} />
 				) : (
-					<canvas id="canvas_bottom" class={`w-[${build_canvas_width}px] h-auto`} />
+					<canvas
+						id="canvas_bottom"
+						class={`h-auto`}
+						style={{ width: `${build_canvas_width}px` }}
+					/>
 				)}
 			</div>
 			{buildOption.show_estimated_board_width && (
