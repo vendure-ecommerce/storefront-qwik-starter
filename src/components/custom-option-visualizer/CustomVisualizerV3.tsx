@@ -12,13 +12,13 @@ const START_Y = 20;
 export type BuildOptions = {
 	font_menu: FONT_MENU[];
 	filament_color: FILAMENT_COLOR[];
-	text_top: Signal<string>;
-	text_bottom: Signal<string>;
-	font_id_top: Signal<string>;
-	font_id_bottom: Signal<string>;
+	text_top?: Signal<string>;
+	text_bottom?: Signal<string>;
+	font_id_top?: Signal<string>;
+	font_id_bottom?: Signal<string>;
 	primary_color_id: Signal<string>;
 	base_color_id: Signal<string>;
-	is_top_additive: Signal<boolean>;
+	is_top_additive?: Signal<boolean>;
 	is_build_valid: Signal<boolean>;
 	build_top_plate: boolean;
 	build_bottom_plate: boolean;
@@ -192,68 +192,71 @@ function draw_text(
 	ctx.stroke();
 }
 
-export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => {
+export const BuildPlateVisualizerV3 = component$((args: BuildOptions) => {
 	const boardWidth_cm = useSignal<number>(0);
-	useVisibleTask$(({ track }) => {
-		track(() => buildOption.text_top.value);
-		track(() => buildOption.text_bottom.value);
-		track(() => buildOption.font_id_top.value);
-		track(() => buildOption.font_id_bottom.value);
-		track(() => buildOption.primary_color_id.value);
-		track(() => buildOption.base_color_id.value);
-		track(() => buildOption.is_top_additive.value);
-		track(() => buildOption.is_build_valid.value);
 
-		const primary_color_hex = color_id_2_hex(
-			buildOption.primary_color_id.value,
-			buildOption.filament_color
-		);
-		const base_color_hex = color_id_2_hex(
-			buildOption.base_color_id.value,
-			buildOption.filament_color
-		);
-		const font_top = font_id_2_font_string(
-			buildOption.font_id_top.value,
-			buildOption.font_menu,
-			buildOption.is_top_additive.value
-		);
-		const font_bottom = font_id_2_font_string(
-			buildOption.font_id_bottom.value,
-			buildOption.font_menu,
-			false // bottom plate is always subtractive
-		);
+	if (!args.build_top_plate && !args.build_bottom_plate) {
+		throw new Error('At least one plate must be built');
+	}
+
+	useVisibleTask$(({ track }) => {
+		track(() => args.text_top?.value);
+		track(() => args.text_bottom?.value);
+		track(() => args.font_id_top?.value);
+		track(() => args.font_id_bottom?.value);
+		track(() => args.primary_color_id.value);
+		track(() => args.base_color_id.value);
+		track(() => args.is_top_additive?.value);
+		track(() => args.is_build_valid.value);
+
+		const primary_color_hex = color_id_2_hex(args.primary_color_id.value, args.filament_color);
+		const base_color_hex = color_id_2_hex(args.base_color_id.value, args.filament_color);
 
 		let bbox_top: BboxInfo | undefined;
-		let bbox_btm: BboxInfo | undefined;
 		let canvas_top: HTMLCanvasElement | undefined;
 		let ctx_t: CanvasRenderingContext2D | null | undefined;
+		let top_canvas_id = args.output_top_canvas_element_id || 'canvas_top';
+
+		let bbox_btm: BboxInfo | undefined;
 		let canvas_bottom: HTMLCanvasElement | undefined;
 		let ctx_b: CanvasRenderingContext2D | null | undefined;
-		let top_canvas_id = buildOption.output_top_canvas_element_id || 'canvas_top';
-		let bottom_canvas_id = buildOption.output_bottom_canvas_element_id || 'canvas_bottom';
+		let bottom_canvas_id = args.output_bottom_canvas_element_id || 'canvas_bottom';
 
-		if (buildOption.build_top_plate) {
+		if (args.build_top_plate) {
+			if (!args.text_top || !args.font_id_top || !args.is_top_additive) {
+				throw new Error(
+					'text_top, font_id_top, and is_top_additive must be provided for the top plate.'
+				);
+			}
 			canvas_top = document.getElementById(top_canvas_id) as HTMLCanvasElement;
 			ctx_t = canvas_top.getContext('2d');
 			if (!ctx_t) throw new Error('Failed to get 2D context for top canvas');
 
-			bbox_top = getTextBoundingBox(
-				font_top,
-				buildOption.text_top.value,
-				ctx_t,
-				TEXT_START_X,
-				START_Y
+			const font_top = font_id_2_font_string(
+				args.font_id_top.value,
+				args.font_menu,
+				args.is_top_additive.value
 			);
+
+			bbox_top = getTextBoundingBox(font_top, args.text_top.value, ctx_t, TEXT_START_X, START_Y);
 		}
 
-		if (buildOption.build_bottom_plate) {
+		if (args.build_bottom_plate) {
+			if (!args.text_bottom || !args.font_id_bottom) {
+				throw new Error('text_bottom and font_id_bottom must be provided for the bottom plate.');
+			}
 			canvas_bottom = document.getElementById(bottom_canvas_id) as HTMLCanvasElement;
 			ctx_b = canvas_bottom.getContext('2d');
 			if (!ctx_b) throw new Error('Failed to get 2D context for bottom canvas');
 
+			const font_bottom = font_id_2_font_string(
+				args.font_id_bottom.value,
+				args.font_menu,
+				false // bottom plate is always subtractive
+			);
 			bbox_btm = getTextBoundingBox(
 				font_bottom,
-				buildOption.text_bottom.value,
+				args.text_bottom.value,
 				ctx_b,
 				TEXT_START_X,
 				START_Y
@@ -261,31 +264,31 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 		}
 
 		let text_width: number;
-		if (buildOption.build_top_plate && buildOption.build_bottom_plate) {
+		if (args.build_top_plate && args.build_bottom_plate) {
 			text_width = Math.max(bbox_top!.w, bbox_btm!.w);
-		} else if (buildOption.build_top_plate) {
+		} else if (args.build_top_plate) {
 			text_width = bbox_top!.w;
-		} else if (buildOption.build_bottom_plate) {
+		} else if (args.build_bottom_plate) {
 			text_width = bbox_btm!.w;
 		} else {
 			throw new Error('At least one plate must be built');
 		}
 
 		// top blank plate: it can be either additive or subtractive
-		if (canvas_top && ctx_t && bbox_top) {
+		if (canvas_top && ctx_t && bbox_top && args.text_top && args.is_top_additive) {
 			draw_a_blank_plate_v3(
 				canvas_top,
 				primary_color_hex,
 				base_color_hex,
 				ctx_t,
 				text_width,
-				!buildOption.is_top_additive.value
+				!args.is_top_additive.value
 			);
 
 			// draw text on the top
 			draw_text(
-				buildOption.text_top.value,
-				buildOption.is_top_additive.value ? primary_color_hex : base_color_hex,
+				args.text_top.value,
+				args.is_top_additive.value ? primary_color_hex : base_color_hex,
 				ctx_t,
 				bbox_top,
 				text_width
@@ -293,7 +296,7 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 		}
 
 		// bottom blank plate: it is always subtractive
-		if (canvas_bottom && ctx_b && bbox_btm) {
+		if (canvas_bottom && ctx_b && bbox_btm && args.text_bottom) {
 			draw_a_blank_plate_v3(
 				canvas_bottom,
 				primary_color_hex,
@@ -304,7 +307,7 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 				true
 			);
 			// draw text on the bottom
-			draw_text(buildOption.text_bottom.value, base_color_hex, ctx_b, bbox_btm, text_width, true);
+			draw_text(args.text_bottom.value, base_color_hex, ctx_b, bbox_btm, text_width, true);
 		}
 
 		const boardWidth =
@@ -314,14 +317,14 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 		boardWidth_cm.value = parseFloat(((px2mm * boardWidth) / 10).toFixed(1));
 
 		if (boardWidth_cm.value > CONSTRAINTS.maxPlateWidth) {
-			buildOption.is_build_valid.value = false;
+			args.is_build_valid.value = false;
 		} else {
-			buildOption.is_build_valid.value = true;
+			args.is_build_valid.value = true;
 		}
 
-		if (buildOption.output_concatenated_canvas_element_id) {
+		if (args.output_concatenated_canvas_element_id) {
 			const canvas_stacked = document.getElementById(
-				buildOption.output_concatenated_canvas_element_id
+				args.output_concatenated_canvas_element_id
 			) as HTMLCanvasElement;
 			const ctx_stacked = canvas_stacked.getContext('2d');
 			if (!ctx_stacked) throw new Error('Failed to get 2D context for stacked canvas');
@@ -345,10 +348,10 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 		}
 	});
 
-	let build_canvas_width = buildOption.build_canvas_width_px || 100;
+	let build_canvas_width = args.build_canvas_width_px || 100;
 
-	let top_canvas_id = buildOption.output_top_canvas_element_id || 'canvas_top';
-	let bottom_canvas_id = buildOption.output_bottom_canvas_element_id || 'canvas_bottom';
+	let top_canvas_id = args.output_top_canvas_element_id || 'canvas_top';
+	let bottom_canvas_id = args.output_bottom_canvas_element_id || 'canvas_bottom';
 	// let output_canvas_element_id = buildOption.output_canvas_element_id || 'canvas_stacked';
 
 	return (
@@ -356,7 +359,7 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 			<div title="Plate Visualizer">
 				<canvas
 					id={top_canvas_id}
-					class={`${buildOption.build_top_plate ? '' : 'hidden'}`}
+					class={`${args.build_top_plate ? '' : 'hidden'}`}
 					style={{
 						width: `${build_canvas_width}px`,
 						height: '100%',
@@ -364,16 +367,16 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 				/>
 				<canvas
 					id={bottom_canvas_id}
-					class={`${buildOption.build_bottom_plate ? '' : 'hidden'}`}
+					class={`${args.build_bottom_plate ? '' : 'hidden'}`}
 					style={{
 						width: `${build_canvas_width}px`,
 						height: '100%',
 					}}
 				/>
-				{buildOption.show_estimated_board_width && (
+				{args.show_estimated_board_width && (
 					<div class="text-center text-sm text-gray-500">
 						Board width (estimated): {boardWidth_cm.value} cm
-						{!buildOption.is_build_valid.value && (
+						{!args.is_build_valid.value && (
 							<span class="text-red-500">
 								{' '}
 								(Error: build exceeds {CONSTRAINTS.maxPlateWidth} cm)
@@ -381,10 +384,10 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 						)}
 					</div>
 				)}
-				{buildOption.output_concatenated_canvas_element_id && (
+				{args.output_concatenated_canvas_element_id && (
 					<div class="mt-2 hidden">
 						<canvas
-							id={buildOption.output_concatenated_canvas_element_id}
+							id={args.output_concatenated_canvas_element_id}
 							style={{
 								width: `${build_canvas_width}px`,
 								height: '100%',
