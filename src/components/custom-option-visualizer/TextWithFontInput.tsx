@@ -6,8 +6,8 @@ import { useComputed$, useSignal } from '@qwik.dev/core';
 import { FontMenuFindAllQuery } from '~/generated/graphql-shop';
 import FontIcon from '../icons/FontIcon';
 import GoPreviousIcon from '../icons/GoPreviousIcon';
-import PencilIcon from '../icons/PencilIcon';
-
+import PencilEditIcon from '../icons/PencilEditIcon';
+import { CONSTRAINTS } from './constants';
 // import { FONT_MENU, FontMenuItem } from './data';
 /**
  
@@ -69,9 +69,34 @@ interface TextWithFontProps {
 	isTextValid: Signal<boolean>; // This is a signal to indicate if the text input is valid, e.g. `const isTextValid = useSignal<boolean>(true);`
 }
 
-function isValidText(text: string): boolean {
+function isValidText(text: string): {
+	isValid: boolean;
+	message: string;
+} {
 	// Add your validation logic here, e.g. check length, characters, etc.
-	return text.length > 0 && text.length <= 16; // Example: valid if length is between 1 and 16 characters
+	// not allowing trailing and leading spaces
+	if (text.trim() !== text) {
+		return { isValid: false, message: 'Text cannot have leading or trailing spaces.' };
+	}
+	if (text.length === 0) {
+		return { isValid: false, message: 'Text is required.' };
+	}
+	if (text.length > CONSTRAINTS.maxTextLength) {
+		return {
+			isValid: false,
+			message: `Text must be ${CONSTRAINTS.maxTextLength} characters or less.`,
+		};
+	}
+	//test if characters are in CONSTRAINTS.validSpecialChars
+	const regex = new RegExp(`^[${CONSTRAINTS.validSpecialChars}]+$`);
+	if (!regex.test(text)) {
+		return {
+			isValid: false,
+			message: 'Contains invalid characters.',
+		};
+	}
+
+	return { isValid: true, message: '' };
 }
 
 export default component$(
@@ -79,6 +104,7 @@ export default component$(
 		// const fontId = useSignal<string>(fontOptions[0].value); // This has to be a string to match the Select component's value type (Select.item.value), e.g. 'Crimson_Text__bold_italic'
 		const fontOptions = getFontOptions(fontMenu);
 		const showInput = useSignal<boolean>(false);
+		const invalidTextMessage = useSignal<string>('');
 		const selectedFontInfo = useComputed$(() => {
 			const raw_font_string = fontMenu.find((f) => f.id === fontId.value)?.additiveFontId;
 			if (!raw_font_string) {
@@ -98,7 +124,7 @@ export default component$(
 				document.head.appendChild(linkElement);
 			}
 			// Check if the text is valid on initial load
-			isTextValid.value = isValidText(text.value);
+			({ isValid: isTextValid.value, message: invalidTextMessage.value } = isValidText(text.value));
 		});
 
 		return (
@@ -108,7 +134,7 @@ export default component$(
 						<>
 							<button
 								onClick$={() => (showInput.value = false)}
-								class="px-1"
+								class={`px-1 ${isTextValid.value ? '' : 'opacity-50 pointer-events-none'}`}
 								title="Close Text Input"
 							>
 								<GoPreviousIcon />
@@ -117,11 +143,12 @@ export default component$(
 								type="text"
 								value={text.value}
 								onInput$={(e: any) => {
-									if (isValidText(e.target.value)) {
+									if (isValidText(e.target.value).isValid) {
 										isTextValid.value = true;
 										text.value = e.target.value;
 									} else {
 										isTextValid.value = false;
+										invalidTextMessage.value = isValidText(e.target.value).message;
 									}
 								}}
 								style={{
@@ -133,8 +160,8 @@ export default component$(
 							/>
 						</>
 					) : (
-						<button onClick$={() => (showInput.value = true)}>
-							<PencilIcon />
+						<button title="Edit" onClick$={() => (showInput.value = true)}>
+							<PencilEditIcon />
 						</button>
 					)}
 					<div
@@ -164,11 +191,11 @@ export default component$(
 						</Select.Root>
 					</div>
 				</div>
-				{!isTextValid.value && (
-					<div class="text-red-500 text-xs">
-						Text must be less than 16 characters and cannot be empty.
-					</div>
-				)}
+				{/* {!isTextValid.value && ( */}
+				<div class={`text-red-500 text-xs ${!isTextValid.value ? '' : 'opacity-0'}`}>
+					{invalidTextMessage.value || 'Invalid text input. Please correct it.'}
+				</div>
+				{/* )} */}
 			</div>
 		);
 	}

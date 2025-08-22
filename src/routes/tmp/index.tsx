@@ -54,7 +54,7 @@ export default component$(() => {
 					class={`border-2 border-gray-500 bg-gray-200 rounded-lg h-auto p-0 w-fit`}
 					// style={{ width: `${canvas_width_px}px` }}
 				>
-					<div class="flex justify-center">
+					<div class="flex">
 						<ColorSelector
 							fieldTitle="Primary Color"
 							colorOptions={FilamentColorSignal.value}
@@ -94,7 +94,7 @@ export default component$(() => {
 							build_top_plate={true}
 							build_bottom_plate={true}
 							build_canvas_width_px={canvas_width_px}
-							show_estimated_board_width={false}
+							show_estimated_board_width={true}
 							output_top_canvas_element_id={canvas_top_element_id}
 						/>
 						<div class="flex flex-col justify-evenly">
