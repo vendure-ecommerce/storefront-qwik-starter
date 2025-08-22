@@ -19,7 +19,7 @@ export const useFontMenu = routeLoader$(async () => {
 });
 
 const canvas_width_px = 250;
-const canvas_top_element_id = 'canvas_top_element_id'; // The ID of the canvas element to render the visualizer
+const canvas_stacked_element_id = 'canvas_stacked_element_id'; // The ID of the canvas element to render the visualizer
 
 export default component$(() => {
 	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
@@ -46,6 +46,7 @@ export default component$(() => {
 	const custom_name_tag_id = useSignal<string | null>(null);
 	const is_top_text_valid = useSignal<boolean>(true);
 	const is_bottom_text_valid = useSignal<boolean>(true);
+	const is_build_valid = useSignal<boolean>(true);
 
 	return (
 		<>
@@ -75,9 +76,6 @@ export default component$(() => {
 							}}
 						>
 							<DarkModeIcon />
-							{/* <span class="ml-1">
-								{is_top_additive.value ? 'Top Additive' : 'Top Subtractive'}
-							</span> */}
 						</button>
 					</div>
 					<div class="bg-white rounded-b-lg flex">
@@ -91,14 +89,14 @@ export default component$(() => {
 							primary_color_id={primary_color_id}
 							base_color_id={base_color_id}
 							is_top_additive={is_top_additive}
+							is_build_valid={is_build_valid}
 							build_top_plate={true}
 							build_bottom_plate={true}
 							build_canvas_width_px={canvas_width_px}
 							show_estimated_board_width={true}
-							output_top_canvas_element_id={canvas_top_element_id}
+							// output_concatenated_canvas_element_id={canvas_stacked_element_id}
 						/>
-						<div class="flex flex-col justify-evenly">
-							{/* <label> Top Plate Text</label> */}
+						<div class="flex flex-col justify-around p-2">
 							<TextWithFontInput
 								fieldTitle="Top Plate Text"
 								fontMenu={FontMenuSignal.value}
@@ -106,8 +104,6 @@ export default component$(() => {
 								fontId={font_top_id}
 								isTextValid={is_top_text_valid}
 							/>
-
-							{/* <label> Bottom Plate Text </label> */}
 							<TextWithFontInput
 								fieldTitle="Bottom Plate Text"
 								fontMenu={FontMenuSignal.value}
@@ -124,7 +120,7 @@ export default component$(() => {
 				<button
 					class="bg-blue-500 text-white px-4 py-2 rounded"
 					onClick$={() => {
-						const canvas = document.getElementById(canvas_top_element_id) as HTMLCanvasElement;
+						const canvas = document.getElementById(canvas_stacked_element_id) as HTMLCanvasElement;
 						const link = document.createElement('a');
 						link.download = 'rendered_name_tag.jpg';
 						link.href = canvas.toDataURL('image/jpeg', 0.5);

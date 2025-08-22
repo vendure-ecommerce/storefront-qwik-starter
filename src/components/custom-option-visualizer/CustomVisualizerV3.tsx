@@ -3,6 +3,7 @@ import { buildDimsPX, px2mm } from './constants';
 import { component$, Signal, useSignal, useVisibleTask$ } from '@qwik.dev/core';
 import { FILAMENT_COLOR } from './ColorSelector';
 import { FONT_MENU, getFontInfoFromID } from './FontSelector';
+import { CONSTRAINTS } from './constants';
 
 // drawing's top left position on the canvas for the margin
 const TEXT_START_X = 50;
@@ -18,12 +19,14 @@ export type BuildOptions = {
 	primary_color_id: Signal<string>;
 	base_color_id: Signal<string>;
 	is_top_additive: Signal<boolean>;
+	is_build_valid: Signal<boolean>;
 	build_top_plate: boolean;
 	build_bottom_plate: boolean;
 	build_canvas_width_px?: number; // Optional: if provided, will set the canvas width to this value
 	show_estimated_board_width?: boolean; // Optional: if true, will show the estimated board width
 	output_top_canvas_element_id?: string; // Optional: if provided, will set the output canvas element ID
 	output_bottom_canvas_element_id?: string; // Optional: if provided, will set the output canvas element ID
+	output_concatenated_canvas_element_id?: string; // Optional: if provided, will set the output concatenated canvas element ID
 };
 
 function getFontCanvasString(
@@ -199,6 +202,7 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 		track(() => buildOption.primary_color_id.value);
 		track(() => buildOption.base_color_id.value);
 		track(() => buildOption.is_top_additive.value);
+		track(() => buildOption.is_build_valid.value);
 
 		const primary_color_hex = color_id_2_hex(
 			buildOption.primary_color_id.value,
@@ -309,19 +313,36 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 			2 * (buildDimsPX.text_margin + buildDimsPX.boarder_width);
 		boardWidth_cm.value = parseFloat(((px2mm * boardWidth) / 10).toFixed(1));
 
-		// if (canvas_top && canvas_bottom) {
-		// 	const canvas_stacked = document.getElementById(
-		// 		buildOption.output_canvas_element_id || 'canvas_stacked'
-		// 	) as HTMLCanvasElement;
-		// 	const ctx_stacked = canvas_stacked.getContext('2d');
-		// 	if (!ctx_stacked) throw new Error('Failed to get 2D context for stacked canvas');
-		// 	ctx_stacked.clearRect(0, 0, canvas_stacked.width, canvas_stacked.height);
+		if (boardWidth_cm.value > CONSTRAINTS.maxPlateWidth) {
+			buildOption.is_build_valid.value = false;
+		} else {
+			buildOption.is_build_valid.value = true;
+		}
 
-		// 	canvas_stacked.height = 200;
-		// 	canvas_stacked.width = boardWidth + TEXT_START_X;
-		// 	ctx_stacked.drawImage(canvas_top, 0, 0);
-		// 	ctx_stacked.drawImage(canvas_bottom, 0, buildDimsPX.overall_height + START_Y / 2);
-		// }
+		if (buildOption.output_concatenated_canvas_element_id) {
+			const canvas_stacked = document.getElementById(
+				buildOption.output_concatenated_canvas_element_id
+			) as HTMLCanvasElement;
+			const ctx_stacked = canvas_stacked.getContext('2d');
+			if (!ctx_stacked) throw new Error('Failed to get 2D context for stacked canvas');
+			ctx_stacked.clearRect(0, 0, canvas_stacked.width, canvas_stacked.height);
+			canvas_stacked.width =
+				boardWidth + TEXT_START_X - buildDimsPX.text_padding - buildDimsPX.ring_width + 5;
+			const single_canvas_height = buildDimsPX.overall_height + START_Y / 2;
+			if (canvas_top && canvas_bottom) {
+				canvas_stacked.height = single_canvas_height * 2;
+				ctx_stacked.drawImage(canvas_top, 0, 0);
+				ctx_stacked.drawImage(canvas_bottom, 0, single_canvas_height);
+			} else {
+				// filter out the case where none of the canvases are built
+				if (!ctx_stacked) throw new Error('Failed to get 2D context for stacked canvas');
+				const singleCanvas = canvas_top ?? canvas_bottom;
+				if (singleCanvas) {
+					canvas_stacked.height = single_canvas_height;
+					ctx_stacked.drawImage(singleCanvas, 0, 0);
+				}
+			}
+		}
 	});
 
 	let build_canvas_width = buildOption.build_canvas_width_px || 100;
@@ -331,7 +352,7 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 	// let output_canvas_element_id = buildOption.output_canvas_element_id || 'canvas_stacked';
 
 	return (
-		<div class="bg-transparent" style={{ width: `${build_canvas_width}px` }}>
+		<div class="bg-transparent h-fit" style={{ width: `${build_canvas_width}px` }}>
 			<div title="Plate Visualizer">
 				<canvas
 					id={top_canvas_id}
@@ -349,12 +370,29 @@ export const BuildPlateVisualizerV3 = component$((buildOption: BuildOptions) => 
 						height: '100%',
 					}}
 				/>
+				{buildOption.show_estimated_board_width && (
+					<div class="text-center text-sm text-gray-500">
+						Board width (estimated): {boardWidth_cm.value} cm
+						{!buildOption.is_build_valid.value && (
+							<span class="text-red-500">
+								{' '}
+								(Error: build exceeds {CONSTRAINTS.maxPlateWidth} cm)
+							</span>
+						)}
+					</div>
+				)}
+				{buildOption.output_concatenated_canvas_element_id && (
+					<div class="mt-2 hidden">
+						<canvas
+							id={buildOption.output_concatenated_canvas_element_id}
+							style={{
+								width: `${build_canvas_width}px`,
+								height: '100%',
+							}}
+						/>
+					</div>
+				)}
 			</div>
-			{buildOption.show_estimated_board_width && (
-				<div class="text-center text-sm text-gray-500">
-					Board width (estimated): {boardWidth_cm.value} cm
-				</div>
-			)}
 		</div>
 	);
 });

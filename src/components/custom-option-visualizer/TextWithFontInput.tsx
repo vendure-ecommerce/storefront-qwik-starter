@@ -192,7 +192,7 @@ export default component$(
 					</div>
 				</div>
 				{/* {!isTextValid.value && ( */}
-				<div class={`text-red-500 text-xs ${!isTextValid.value ? '' : 'opacity-0'}`}>
+				<div class={`text-red-500 text-xs px-8 h-1 ${!isTextValid.value ? '' : 'w-0 opacity-0'}`}>
 					{invalidTextMessage.value || 'Invalid text input. Please correct it.'}
 				</div>
 				{/* )} */}
