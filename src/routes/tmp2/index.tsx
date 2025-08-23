@@ -1,18 +1,6 @@
 import { component$, useSignal } from '@qwik.dev/core';
-import { routeLoader$ } from '@qwik.dev/router';
 import BuildCustomNameTag from '~/components/custom-option-visualizer/BuildCustomNameTag';
-import {
-	filamentColorFindSupported,
-	fontMenuFindAll,
-} from '~/providers/shop/orders/customizable-order';
-
-export const useFilamentColor = routeLoader$(async () => {
-	return await filamentColorFindSupported();
-});
-
-export const useFontMenu = routeLoader$(async () => {
-	return await fontMenuFindAll();
-});
+import { useFilamentColor, useFontMenu } from '../tmp2/layout';
 
 export default component$(() => {
 	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
@@ -23,7 +11,6 @@ export default component$(() => {
 	if (!defaultPrimaryColorId || !defaultBaseColorId) {
 		throw new Error('Default colors not found in FilamentColorSignal!');
 	}
-
 	const defaultFontId = FontMenuSignal.value.find((f) => f.name === 'Comic Neue')?.id;
 	if (!defaultFontId) {
 		throw new Error('Default fonts not found in FontMenuSignal!');
@@ -56,6 +43,11 @@ export default component$(() => {
 				build_bottom_plate={true}
 				show_estimated_board_width={true}
 			/>
+			<p>
+				{is_atc_allowed.value
+					? 'Build is valid, ATC allowed'
+					: 'Build is NOT valid, please check the inputs'}
+			</p>
 		</>
 	);
 });
