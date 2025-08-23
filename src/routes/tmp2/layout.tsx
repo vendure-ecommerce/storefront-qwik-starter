@@ -1,10 +1,17 @@
 import { component$, Slot, useVisibleTask$ } from '@qwik.dev/core';
 import { routeLoader$ } from '@qwik.dev/router';
-import { getGoogleFontLink } from '~/components/custom-option-visualizer/TextWithFontInput';
+import { FONT_MENU } from '~/components/custom-option-visualizer/TextWithFontInput';
 import {
 	filamentColorFindSupported,
 	fontMenuFindAll,
 } from '~/providers/shop/orders/customizable-order';
+
+const getGoogleFontLink = (fontMenuItems: FONT_MENU[]): string => {
+	const fontFamilies = fontMenuItems
+		.map((font) => font.name.split(' (')[0].replace(/ /g, '+'))
+		.join('&family='); // join the font family with &family=
+	return `https://fonts.googleapis.com/css2?family=${fontFamilies}&display=swap`;
+};
 
 export const useFilamentColor = routeLoader$(async () => {
 	return await filamentColorFindSupported();

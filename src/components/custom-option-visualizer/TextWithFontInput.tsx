@@ -20,13 +20,6 @@ import { CONSTRAINTS } from './constants';
  */
 export type FONT_MENU = FontMenuFindAllQuery['fontMenuFindAll'][number];
 
-export const getGoogleFontLink = (fontMenuItems: FONT_MENU[]): string => {
-	const fontFamilies = fontMenuItems
-		.map((font) => font.name.split(' (')[0].replace(/ /g, '+'))
-		.join('&family='); // join the font family with &family=
-	return `https://fonts.googleapis.com/css2?family=${fontFamilies}&display=swap`;
-};
-
 export function getFontInfoFromID(fontId: string): {
 	fontFamily: string;
 	fontWeight: string;
@@ -114,15 +107,6 @@ export default component$(
 		});
 
 		useVisibleTask$(() => {
-			const fontLink = getGoogleFontLink(fontMenu);
-			const existingLink = document.querySelector(`link[href="${fontLink}"]`);
-
-			if (!existingLink) {
-				const linkElement = document.createElement('link');
-				linkElement.rel = 'stylesheet';
-				linkElement.href = fontLink;
-				document.head.appendChild(linkElement);
-			}
 			// Check if the text is valid on initial load
 			({ isValid: isTextValid.value, message: invalidTextMessage.value } = isValidText(text.value));
 		});
