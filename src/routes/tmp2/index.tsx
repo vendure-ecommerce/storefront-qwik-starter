@@ -24,6 +24,7 @@ export default component$(() => {
 	const base_color_id = useSignal<string>(defaultBaseColorId);
 	const is_top_additive = useSignal<boolean>(true);
 	const is_atc_allowed = useSignal<boolean>(true);
+	const atc_disabled_reason = useSignal<string>('None');
 
 	return (
 		<>
@@ -32,6 +33,7 @@ export default component$(() => {
 				FontMenuSignal={FontMenuSignal}
 				primary_color_id={primary_color_id}
 				is_atc_allowed={is_atc_allowed}
+				atc_disabled_reason={atc_disabled_reason}
 				base_color_id={base_color_id}
 				canvas_width_px={250}
 				text_top={text_top}
@@ -43,11 +45,7 @@ export default component$(() => {
 				build_bottom_plate={true}
 				show_estimated_board_width={true}
 			/>
-			<p>
-				{is_atc_allowed.value
-					? 'Build is valid, ATC allowed'
-					: 'Build is NOT valid, please check the inputs'}
-			</p>
+			<p>{is_atc_allowed.value ? 'Build is valid, ATC allowed' : atc_disabled_reason.value}</p>
 		</>
 	);
 });

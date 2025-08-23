@@ -1,4 +1,4 @@
-import { component$, ReadonlySignal, Signal, useSignal } from '@qwik.dev/core';
+import { component$, ReadonlySignal, Signal, useComputed$, useSignal } from '@qwik.dev/core';
 import ColorSelector from '~/components/custom-option-visualizer/ColorSelectorV2';
 import { BuildPlateVisualizerV3 } from '~/components/custom-option-visualizer/CustomVisualizerV3';
 import TextWithFontInput from '~/components/custom-option-visualizer/TextWithFontInput';
@@ -10,6 +10,7 @@ interface BuildCustomNameTagProps {
 	primary_color_id: Signal<string>; // Primary color ID
 	base_color_id: Signal<string>; // Base color ID
 	is_atc_allowed: Signal<boolean>; // Whether ATC (Add to Cart) is allowed
+	atc_disabled_reason: Signal<string>; // Reason why ATC is disabled
 	canvas_width_px?: number; // Width of the canvas in pixels
 	text_top?: Signal<string>; // Text for the top plate
 	text_bottom?: Signal<string>; // Text for the bottom plate
@@ -28,6 +29,7 @@ export default component$(
 		primary_color_id,
 		base_color_id,
 		is_atc_allowed,
+		atc_disabled_reason,
 		canvas_width_px = 250,
 		text_top,
 		text_bottom,
@@ -44,9 +46,25 @@ export default component$(
 		const is_top_text_valid = useSignal<boolean>(true);
 		const is_bottom_text_valid = useSignal<boolean>(true);
 		const is_build_valid = useSignal<boolean>(true);
+		const is_primary_and_base_color_different = useComputed$(() => {
+			return primary_color_id.value !== base_color_id.value;
+		});
 
 		is_atc_allowed.value =
-			is_top_text_valid.value && is_bottom_text_valid.value && is_build_valid.value;
+			is_top_text_valid.value &&
+			is_bottom_text_valid.value &&
+			is_build_valid.value &&
+			is_primary_and_base_color_different.value;
+
+		if (!is_primary_and_base_color_different.value) {
+			atc_disabled_reason.value = 'Primary color and base color cannot be the same.';
+		} else if (!is_top_text_valid.value || !is_bottom_text_valid.value) {
+			atc_disabled_reason.value = 'One or more text inputs are invalid.';
+		} else if (!is_build_valid.value) {
+			atc_disabled_reason.value = 'The current build is too long';
+		} else {
+			atc_disabled_reason.value = 'None';
+		}
 
 		return (
 			<>
