@@ -1,27 +1,19 @@
-import { component$, useSignal } from '@qwik.dev/core';
+import { component$, useContext, useSignal } from '@qwik.dev/core';
 import BuildCustomNameTag from '~/components/custom-option-visualizer/BuildCustomNameTag';
-import { useFilamentColor, useFontMenu } from '../tmp2/layout';
+import { DEFAULT_OPTIONS_FOR_NAME_TAG, useFilamentColor, useFontMenu } from '../tmp2/layout';
 
 export default component$(() => {
 	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
 	const FontMenuSignal = useFontMenu(); // Load the Font_Menu from db
 
-	const defaultPrimaryColorId = FilamentColorSignal.value.find((c) => c.name === 'latte_brown')?.id;
-	const defaultBaseColorId = FilamentColorSignal.value.find((c) => c.name === 'ivory_white')?.id;
-	if (!defaultPrimaryColorId || !defaultBaseColorId) {
-		throw new Error('Default colors not found in FilamentColorSignal!');
-	}
-	const defaultFontId = FontMenuSignal.value.find((f) => f.name === 'Comic Neue')?.id;
-	if (!defaultFontId) {
-		throw new Error('Default fonts not found in FontMenuSignal!');
-	}
+	const defaultOptionsForNameTag = useContext(DEFAULT_OPTIONS_FOR_NAME_TAG);
 
 	const text_top = useSignal<string>('Happy');
 	const text_bottom = useSignal<string>('Day');
-	const font_top_id = useSignal<string>(defaultFontId);
-	const font_bottom_id = useSignal<string>(defaultFontId);
-	const primary_color_id = useSignal<string>(defaultPrimaryColorId);
-	const base_color_id = useSignal<string>(defaultBaseColorId);
+	const font_top_id = useSignal<string>(defaultOptionsForNameTag.fontId);
+	const font_bottom_id = useSignal<string>(defaultOptionsForNameTag.fontId);
+	const primary_color_id = useSignal<string>(defaultOptionsForNameTag.primaryColorId);
+	const base_color_id = useSignal<string>(defaultOptionsForNameTag.baseColorId);
 	const is_top_additive = useSignal<boolean>(true);
 	const is_atc_allowed = useSignal<boolean>(true);
 	const atc_disabled_reason = useSignal<string>('None');

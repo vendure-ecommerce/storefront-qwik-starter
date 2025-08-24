@@ -1,10 +1,21 @@
-import { component$, Slot, useVisibleTask$ } from '@qwik.dev/core';
+import {
+	component$,
+	createContextId,
+	Slot,
+	useContextProvider,
+	useStore,
+	useVisibleTask$,
+} from '@qwik.dev/core';
 import { routeLoader$ } from '@qwik.dev/router';
 import { FONT_MENU } from '~/components/custom-option-visualizer/TextWithFontInput';
 import {
 	filamentColorFindSupported,
 	fontMenuFindAll,
 } from '~/providers/shop/orders/customizable-order';
+
+const DEFAULT_PRIMARY_COLOR_NAME = 'latte_brown';
+const DEFAULT_BASE_COLOR_NAME = 'ivory_white';
+const DEFAULT_FONT_NAME = 'Comic Neue';
 
 const getGoogleFontLink = (fontMenuItems: FONT_MENU[]): string => {
 	const fontFamilies = fontMenuItems
@@ -21,8 +32,43 @@ export const useFontMenu = routeLoader$(async () => {
 	return await fontMenuFindAll();
 });
 
+interface DefaultOptionsForNameTag {
+	primaryColorId: string;
+	baseColorId: string;
+	fontId: string;
+}
+
+// Create a context to hold the default options for the name tag, that can be accessed in child components
+export const DEFAULT_OPTIONS_FOR_NAME_TAG = createContextId<DefaultOptionsForNameTag>(
+	'default_options_for_name_tag' // A unique string to identify the context
+);
+
 export default component$(() => {
+	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
+
 	const FontMenuSignal = useFontMenu(); // Load the Font_Menu from db
+
+	const defaultPrimaryColorId = FilamentColorSignal.value.find(
+		(c) => c.name === DEFAULT_PRIMARY_COLOR_NAME
+	)?.id;
+	const defaultBaseColorId = FilamentColorSignal.value.find(
+		(c) => c.name === DEFAULT_BASE_COLOR_NAME
+	)?.id;
+	if (!defaultPrimaryColorId || !defaultBaseColorId) {
+		throw new Error('Default colors not found in FilamentColorSignal!');
+	}
+	const defaultFontId = FontMenuSignal.value.find((f) => f.name === DEFAULT_FONT_NAME)?.id;
+	if (!defaultFontId) {
+		throw new Error('Default fonts not found in FontMenuSignal!');
+	}
+
+	const defaultOptionsForNameTag = useStore<DefaultOptionsForNameTag>({
+		primaryColorId: defaultPrimaryColorId,
+		baseColorId: defaultBaseColorId,
+		fontId: defaultFontId,
+	});
+
+	useContextProvider(DEFAULT_OPTIONS_FOR_NAME_TAG, defaultOptionsForNameTag);
 
 	useVisibleTask$(() => {
 		const fontLink = getGoogleFontLink(FontMenuSignal.value);
