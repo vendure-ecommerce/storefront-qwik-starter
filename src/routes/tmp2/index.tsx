@@ -1,5 +1,6 @@
 import { component$, useContext, useSignal } from '@qwik.dev/core';
 import BuildCustomNameTag from '~/components/custom-option-visualizer/BuildCustomNameTag';
+import { createOrRetrieveCustomNameTag } from '~/providers/shop/orders/customizable-order';
 import { DEFAULT_OPTIONS_FOR_NAME_TAG, useFilamentColor, useFontMenu } from '../tmp2/layout';
 
 export default component$(() => {
@@ -17,6 +18,8 @@ export default component$(() => {
 	const is_top_additive = useSignal<boolean>(true);
 	const is_atc_allowed = useSignal<boolean>(true);
 	const atc_disabled_reason = useSignal<string>('None');
+
+	const custom_name_tag_id = useSignal<string | null>(null);
 
 	return (
 		<>
@@ -38,6 +41,45 @@ export default component$(() => {
 				show_estimated_board_width={true}
 			/>
 			<p>{is_atc_allowed.value ? 'Build is valid, ATC allowed' : atc_disabled_reason.value}</p>
+
+			<div class="text-center mt-4">
+				{/* A button to create or retrieve custom name tag */}
+				<button
+					onClick$={async () => {
+						const input = {
+							textTop: text_top.value,
+							textBottom: text_bottom.value,
+							fontMenuIdTop: font_top_id.value,
+							fontMenuIdBottom: font_bottom_id.value,
+							filamentColorIdPrimary: primary_color_id.value,
+							filamentColorIdBase: base_color_id.value,
+							isTopAdditive: is_top_additive.value,
+						};
+						try {
+							const result = await createOrRetrieveCustomNameTag(input);
+
+							console.log('Custom Name Tag created or retrieved:', result);
+							if ('customNameTagId' in result) {
+								custom_name_tag_id.value = result.customNameTagId;
+								console.log('saving custom name tag:', result);
+							} else if (result.__typename === 'CreateCustomNameTagError') {
+								console.error(
+									'Error creating custom name tag:',
+									result.message,
+									'Error code:',
+									result.errorCode
+								);
+							}
+						} catch (error) {
+							console.error('Error creating or retrieving custom name tag:', error);
+						}
+					}}
+					class="bg-blue-500 text-white px-4 py-2 rounded"
+				>
+					Create Custom Name Tag
+				</button>
+				<p> Custom Name Tag ID: {custom_name_tag_id.value}</p>
+			</div>
 		</>
 	);
 });
