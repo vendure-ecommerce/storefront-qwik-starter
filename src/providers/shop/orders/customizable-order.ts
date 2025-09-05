@@ -1,9 +1,8 @@
 import gql from 'graphql-tag';
 import {
-	CreateCustomNameTagInput,
-	CreateOrRetrieveCustomNameTagMutation,
 	FilamentColorFindSupportedQuery,
 	FontMenuFindAllQuery,
+	GetCustomBuildOptionQuery,
 } from '~/generated/graphql-shop';
 import { shopSdk } from '~/graphql-wrapper';
 
@@ -17,11 +16,11 @@ export const filamentColorFindSupported = async () => {
 		.then((res: FilamentColorFindSupportedQuery) => res.filamentColorFindSupported);
 };
 
-export const createOrRetrieveCustomNameTag = async (input: CreateCustomNameTagInput) => {
-	return shopSdk
-		.createOrRetrieveCustomNameTag({ input })
-		.then((res: CreateOrRetrieveCustomNameTagMutation) => res.createOrRetrieveCustomNameTag);
-};
+// export const createOrRetrieveCustomNameTag = async (input: CreateCustomNameTagInput) => {
+// 	return shopSdk
+// 		.createOrRetrieveCustomNameTag({ input })
+// 		.then((res: CreateOrRetrieveCustomNameTagMutation) => res.createOrRetrieveCustomNameTag);
+// };
 
 gql`
 	query fontMenuFindAll {
@@ -47,16 +46,57 @@ gql`
 	}
 `;
 
+// gql`
+// 	mutation createOrRetrieveCustomNameTag($input: CreateCustomNameTagInput!) {
+// 		createOrRetrieveCustomNameTag(input: $input) {
+// 			... on CreateCustomNameTagError {
+// 				errorCode
+// 				message
+// 			}
+// 			... on CreateCustomNameTagSuccess {
+// 				customNameTagId
+// 			}
+// 		}
+// 	}
+// `;
+
 gql`
-	mutation createOrRetrieveCustomNameTag($input: CreateCustomNameTagInput!) {
-		createOrRetrieveCustomNameTag(input: $input) {
-			... on CreateCustomNameTagError {
+	query getCustomBuildOption($customVariantId: ID!) {
+		getCustomBuildOption(customVariantId: $customVariantId) {
+			... on CustomNameTag {
+				__typename
+				id
+				isTopAdditive
+				textTop
+				textBottom
+				fontTop {
+					id
+				}
+				fontBottom {
+					id
+				}
+				primaryColor {
+					id
+				}
+				baseColor {
+					id
+				}
+			}
+			... on DummyBuildOption {
+				__typename
+				dummyField
+			}
+			... on GetCustomBuildOptionError {
+				__typename
 				errorCode
 				message
-			}
-			... on CreateCustomNameTagSuccess {
-				customNameTagId
 			}
 		}
 	}
 `;
+
+export const getCustomBuildOption = async (customVariantId: string) => {
+	return shopSdk
+		.getCustomBuildOption({ customVariantId })
+		.then((res: GetCustomBuildOptionQuery) => res.getCustomBuildOption);
+};

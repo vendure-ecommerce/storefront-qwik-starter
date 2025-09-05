@@ -1,5 +1,32 @@
 union ActiveOrderResult = NoActiveOrderError | Order
 
+input AddItemInput {
+	customFields: OrderLineCustomFieldsInput
+	productVariantId: ID!
+	quantity: Int!
+}
+
+input AddItemToOrderV2Input {
+	"""
+	The customization option input for custom name tag.
+	"""
+	customNameTag: CreateCustomNameTagInput
+
+	"""
+	Optional asset associated with this orderLine item for this customization option
+	(only in effect when customizable input is provided).
+	This will be stored in the associated customVariant.asset field.
+	"""
+	customizableAssetId: ID
+
+	"""
+	Optional dummy field for future extension
+	"""
+	dummyField: CreateDummyInput
+	productVariantId: ID!
+	quantity: Int!
+}
+
 union AddPaymentToOrderResult =
 	| IneligiblePaymentMethodError
 	| NoActiveOrderError
@@ -98,6 +125,8 @@ type AuthenticationMethod implements Node {
 union AuthenticationResult = CurrentUser | InvalidCredentialsError | NotVerifiedError
 
 type BooleanCustomFieldConfig implements CustomField {
+	deprecated: Boolean
+	deprecationReason: String
 	description: [LocalizedString!]
 	internal: Boolean
 	label: [LocalizedString!]
@@ -388,25 +417,18 @@ input CreateAddressInput {
 	streetLine2: String
 }
 
-type CreateCustomNameTagError implements ErrorResult {
-	errorCode: ErrorCode!
-	message: String!
-}
-
 input CreateCustomNameTagInput {
-	filamentColorIdBase: ID
-	filamentColorIdPrimary: ID
+	"""
+	Optional asset associated with this customization option
+	"""
+	assetId: ID
+	filamentColorIdBase: ID!
+	filamentColorIdPrimary: ID!
 	fontMenuIdBottom: ID
 	fontMenuIdTop: ID
 	isTopAdditive: Boolean!
 	textBottom: String
 	textTop: String
-}
-
-union CreateCustomNameTagResult = CreateCustomNameTagError | CreateCustomNameTagSuccess
-
-type CreateCustomNameTagSuccess {
-	customNameTagId: ID!
 }
 
 input CreateCustomerInput {
@@ -416,6 +438,13 @@ input CreateCustomerInput {
 	lastName: String!
 	phoneNumber: String
 	title: String
+}
+
+"""
+Dummy input for future extension
+"""
+input CreateDummyInput {
+	dummyField: String!
 }
 
 """
@@ -1225,6 +1254,8 @@ type CurrentUserChannel {
 }
 
 interface CustomField {
+	deprecated: Boolean
+	deprecationReason: String
 	description: [LocalizedString!]
 	internal: Boolean
 	label: [LocalizedString!]
@@ -1250,16 +1281,41 @@ union CustomFieldConfig =
 	| TextCustomFieldConfig
 
 type CustomNameTag implements Node {
-	asset: Asset
 	baseColor: FilamentColor
-	createdAt: DateTime!
+	createdAt: DateTime
 	fontBottom: FontMenu
 	fontTop: FontMenu
 	id: ID!
 	isTopAdditive: Boolean
+	orderId: ID
 	primaryColor: FilamentColor
 	textBottom: String
 	textTop: String
+	updatedAt: DateTime
+}
+
+"""
+This is the join table to link OrderLine with different customizable options.
+Note that OrderLine.customFields.CustomVariantId is the foreign key that links to this entity.
+
+There is a ManyToOne relation from OrderLine to CustomVariant, the relation is setup in the plugin configuration.
+
+Plugin: Customizable-Order-Plugin
+"""
+type CustomVariant implements Node {
+	"""
+	Optional asset to represent this custom variant, e.g. a preview image
+	"""
+	asset: Asset
+	createdAt: DateTime!
+	customizableEntity: CustomizableEntity!
+
+	"""
+	This may link to different entities based on the customizableEntity
+	"""
+	customizableOptionId: ID!
+	id: ID!
+	orderId: ID!
 	updatedAt: DateTime!
 }
 
@@ -1344,6 +1400,18 @@ input CustomerSortParameter {
 }
 
 """
+The pick list of customizable CustomizableEntity
+The name will be the entity name of the associated entity, e.g. CustomNameTag
+"""
+type CustomizableEntity implements Node {
+	createdAt: DateTime!
+	description: String
+	id: ID!
+	name: String!
+	updatedAt: DateTime!
+}
+
+"""
 Operators for filtering on a list of Date fields
 """
 input DateListOperators {
@@ -1376,6 +1444,8 @@ Expects the same validation formats as the `<input type="datetime-local">` HTML 
 See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local#Additional_attributes
 """
 type DateTimeCustomFieldConfig implements CustomField {
+	deprecated: Boolean
+	deprecationReason: String
 	description: [LocalizedString!]
 	internal: Boolean
 	label: [LocalizedString!]
@@ -1433,6 +1503,13 @@ type Discount {
 }
 
 """
+This is a dummy build option for future extension
+"""
+type DummyBuildOption {
+	dummyField: String!
+}
+
+"""
 Returned when attempting to create a Customer with an email address already registered to an existing User.
 """
 type EmailAddressConflictError implements ErrorResult {
@@ -1441,13 +1518,16 @@ type EmailAddressConflictError implements ErrorResult {
 }
 
 enum ErrorCode {
+	ADD_CUSTOM_VARIANT_TO_ORDER_FAILED
 	ALREADY_LOGGED_IN_ERROR
 	COUPON_CODE_EXPIRED_ERROR
 	COUPON_CODE_INVALID_ERROR
 	COUPON_CODE_LIMIT_ERROR
-	CREATE_CUSTOM_NAME_TAG_ERROR
-	CREATE_CUSTOM_NAME_TAG_FAILED
+	DELETE_CUSTOM_VARIANT_FAILED
 	EMAIL_ADDRESS_CONFLICT_ERROR
+	GET_CUSTOM_BUILD_OPTION_ERROR
+	GET_CUSTOM_BUILD_OPTION_FAILED
+	GET_CUSTOM_NAME_TAG_FAILED
 	GUEST_CHECKOUT_ERROR
 	IDENTIFIER_CHANGE_TOKEN_EXPIRED_ERROR
 	IDENTIFIER_CHANGE_TOKEN_INVALID_ERROR
@@ -1658,13 +1738,23 @@ type FilamentColor implements Node {
 	displayName: String!
 	hexCode: String!
 	id: ID!
+
+	"""
+	If true, this color is out of stock and cannot be selected
+	"""
 	isOutOfStock: Boolean!
+
+	"""
+	If false, this color will not be shown in the selector
+	"""
 	isSupported: Boolean!
 	name: String!
 	updatedAt: DateTime!
 }
 
 type FloatCustomFieldConfig implements CustomField {
+	deprecated: Boolean
+	deprecationReason: String
 	description: [LocalizedString!]
 	internal: Boolean
 	label: [LocalizedString!]
@@ -1696,6 +1786,10 @@ type FontMenu implements Node {
 	additiveFontId: String!
 	createdAt: DateTime!
 	id: ID!
+
+	"""
+	If true, it will be shown in the selector but not selectable
+	"""
 	isDisabled: Boolean!
 	name: String!
 	subtractiveFontId: String!
@@ -1721,6 +1815,13 @@ type FulfillmentLine {
 	orderLineId: ID!
 	quantity: Int!
 }
+
+type GetCustomBuildOptionError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+union GetCustomBuildOptionResult = CustomNameTag | DummyBuildOption | GetCustomBuildOptionError
 
 enum GlobalFlag {
 	FALSE
@@ -1889,6 +1990,8 @@ type InsufficientStockError implements ErrorResult {
 }
 
 type IntCustomFieldConfig implements CustomField {
+	deprecated: Boolean
+	deprecationReason: String
 	description: [LocalizedString!]
 	internal: Boolean
 	label: [LocalizedString!]
@@ -2727,6 +2830,8 @@ enum LanguageCode {
 }
 
 type LocaleStringCustomFieldConfig implements CustomField {
+	deprecated: Boolean
+	deprecationReason: String
 	description: [LocalizedString!]
 	internal: Boolean
 	label: [LocalizedString!]
@@ -2742,6 +2847,8 @@ type LocaleStringCustomFieldConfig implements CustomField {
 }
 
 type LocaleTextCustomFieldConfig implements CustomField {
+	deprecated: Boolean
+	deprecationReason: String
 	description: [LocalizedString!]
 	internal: Boolean
 	label: [LocalizedString!]
@@ -2788,6 +2895,19 @@ type Mutation {
 	): UpdateOrderItemsResult!
 
 	"""
+	The replacement for addItemToOrder, in additional to the original functionality,
+	user can optionally provide customization input to create a customization entity entry and the associated CustomVariant entry.
+
+	E.g. if the input is about a new CustomNameTag, a new CustomNameTag and a new CustomVariant will be created.
+	"""
+	addItemToOrderV2(input: AddItemToOrderV2Input!): UpdateOrderItemsResult!
+
+	"""
+	Adds mutliple items to the Order. Returns a list of errors for each item that failed to add. It will still add successful items.
+	"""
+	addItemsToOrder(inputs: [AddItemInput!]!): UpdateMultipleOrderItemsResult!
+
+	"""
 	Add a Payment to the Order
 	"""
 	addPaymentToOrder(input: PaymentInput!): AddPaymentToOrderResult!
@@ -2800,6 +2920,12 @@ type Mutation {
 		orderLineId: ID!
 		quantity: Int!
 	): UpdateOrderItemsResult!
+
+	"""
+	The replacement for adjustOrderLine,
+	if the quantity is set to 0, it also cleans up the associated CustomVariant and the associated customization entity entry.
+	"""
+	adjustOrderLineV2(orderLineId: ID!, quantity: Int!): UpdateOrderItemsResult!
 
 	"""
 	Applies the given coupon code to the active Order
@@ -2815,7 +2941,6 @@ type Mutation {
 	Create a new Customer Address
 	"""
 	createCustomerAddress(input: CreateAddressInput!): Address!
-	createOrRetrieveCustomNameTag(input: CreateCustomNameTagInput!): CreateCustomNameTagResult!
 	createStripePaymentIntent: String
 
 	"""
@@ -2873,6 +2998,12 @@ type Mutation {
 	Remove an OrderLine from the Order
 	"""
 	removeOrderLine(orderLineId: ID!): RemoveOrderItemsResult!
+
+	"""
+	The replacement for removeOrderLine,
+	which also cleans up the associated CustomVariant and the associated customization entity entry.
+	"""
+	removeOrderLineV2(orderLineId: ID!): RemoveOrderItemsResult!
 
 	"""
 	Requests a password reset email to be sent
@@ -3290,11 +3421,11 @@ type OrderLine implements Node {
 }
 
 type OrderLineCustomFields {
-	customNameTag: CustomNameTag
+	customVariant: CustomVariant
 }
 
 input OrderLineCustomFieldsInput {
-	customNameTagId: ID
+	customVariantId: ID
 }
 
 type OrderList implements PaginatedList {
@@ -4037,7 +4168,7 @@ type Product implements Node {
 	assets: [Asset!]!
 	collections: [Collection!]!
 	createdAt: DateTime!
-	customFields: ProductCustomFields
+	customFields: JSON
 	description: String!
 	enabled: Boolean!
 	facetValues: [FacetValue!]!
@@ -4061,15 +4192,10 @@ type Product implements Node {
 	variants: [ProductVariant!]!
 }
 
-type ProductCustomFields {
-	customizableType: String
-}
-
 input ProductFilterParameter {
 	_and: [ProductFilterParameter!]
 	_or: [ProductFilterParameter!]
 	createdAt: DateOperators
-	customizableType: StringOperators
 	description: StringOperators
 	enabled: BooleanOperators
 	id: IDOperators
@@ -4154,7 +4280,6 @@ type ProductOptionTranslation {
 
 input ProductSortParameter {
 	createdAt: SortOrder
-	customizableType: SortOrder
 	description: SortOrder
 	id: SortOrder
 	name: SortOrder
@@ -4176,7 +4301,7 @@ type ProductVariant implements Node {
 	assets: [Asset!]!
 	createdAt: DateTime!
 	currencyCode: CurrencyCode!
-	customFields: JSON
+	customFields: ProductVariantCustomFields
 	facetValues: [FacetValue!]!
 	featuredAsset: Asset
 	id: ID!
@@ -4195,11 +4320,16 @@ type ProductVariant implements Node {
 	updatedAt: DateTime!
 }
 
+type ProductVariantCustomFields {
+	customizableEntity: String
+}
+
 input ProductVariantFilterParameter {
 	_and: [ProductVariantFilterParameter!]
 	_or: [ProductVariantFilterParameter!]
 	createdAt: DateOperators
 	currencyCode: StringOperators
+	customizableEntity: StringOperators
 	id: IDOperators
 	languageCode: StringOperators
 	name: StringOperators
@@ -4245,6 +4375,7 @@ input ProductVariantListOptions {
 
 input ProductVariantSortParameter {
 	createdAt: SortOrder
+	customizableEntity: SortOrder
 	id: SortOrder
 	name: SortOrder
 	price: SortOrder
@@ -4315,6 +4446,24 @@ type ProvinceList implements PaginatedList {
 	totalItems: Int!
 }
 
+type PublicPaymentMethod {
+	code: String!
+	customFields: JSON
+	description: String
+	id: ID!
+	name: String!
+	translations: [PaymentMethodTranslation!]!
+}
+
+type PublicShippingMethod {
+	code: String!
+	customFields: JSON
+	description: String
+	id: ID!
+	name: String!
+	translations: [ShippingMethodTranslation!]!
+}
+
 type Query {
 	"""
 	The active Channel
@@ -4332,6 +4481,16 @@ type Query {
 	query will once again return `null`.
 	"""
 	activeOrder: Order
+
+	"""
+	Get active payment methods
+	"""
+	activePaymentMethods: [PublicPaymentMethod]!
+
+	"""
+	Get active shipping methods
+	"""
+	activeShippingMethods: [PublicShippingMethod]!
 
 	"""
 	An array of supported Countries
@@ -4371,6 +4530,21 @@ type Query {
 	filamentColorFindSupported: [FilamentColor!]!
 	fontMenuFindAll: [FontMenu!]!
 	generateBraintreeClientToken(includeCustomerId: Boolean, orderId: ID): String!
+
+	"""
+	Given a customVariantId (which is linked from OrderLine.customFields.customVariantId),
+	return the associated customization option entry.
+
+	Note that the return type is a union of different possible customization option entities,
+	e.g. CustomNameTag, DummyBuildOption (for future extension), or an error type GetCustomBuildOptionError.
+
+	E.g. if the customVariantId links to a CustomVariant which in turn links to a CustomNameTag entry,
+	then the returned type will be CustomNameTag.
+
+	One can use '__typename' to determine the actual type of the returned entry.
+	E.g. if '__typename' is 'CustomNameTag', then the returned entry can be cast to 'CustomNameTag' type.
+	"""
+	getCustomBuildOption(customVariantId: ID!): GetCustomBuildOptionResult!
 
 	"""
 	Returns information about the current authenticated User
@@ -4478,6 +4652,8 @@ input RegisterCustomerInput {
 }
 
 type RelationCustomFieldConfig implements CustomField {
+	deprecated: Boolean
+	deprecationReason: String
 	description: [LocalizedString!]
 	entity: String!
 	internal: Boolean
@@ -4680,6 +4856,8 @@ enum SortOrder {
 }
 
 type StringCustomFieldConfig implements CustomField {
+	deprecated: Boolean
+	deprecationReason: String
 	description: [LocalizedString!]
 	internal: Boolean
 	label: [LocalizedString!]
@@ -4734,6 +4912,8 @@ type StringStructFieldConfig implements StructField {
 }
 
 type StructCustomFieldConfig implements CustomField {
+	deprecated: Boolean
+	deprecationReason: String
 	description: [LocalizedString!]
 	fields: [StructFieldConfig!]!
 	internal: Boolean
@@ -4828,6 +5008,8 @@ type TaxRateList implements PaginatedList {
 }
 
 type TextCustomFieldConfig implements CustomField {
+	deprecated: Boolean
+	deprecationReason: String
 	description: [LocalizedString!]
 	internal: Boolean
 	label: [LocalizedString!]
@@ -4894,9 +5076,28 @@ union UpdateCustomerPasswordResult =
 	| PasswordValidationError
 	| Success
 
+"""
+Returned when multiple items are added to an Order.
+The errorResults array contains the errors that occurred for each item, if any.
+"""
+type UpdateMultipleOrderItemsResult {
+	errorResults: [UpdateOrderItemErrorResult!]!
+	order: Order!
+}
+
 input UpdateOrderInput {
 	customFields: JSON
 }
+
+"""
+Union type of all possible errors that can occur when adding or removing items from an Order.
+"""
+union UpdateOrderItemErrorResult =
+	| InsufficientStockError
+	| NegativeQuantityError
+	| OrderInterceptorError
+	| OrderLimitError
+	| OrderModificationError
 
 union UpdateOrderItemsResult =
 	| InsufficientStockError

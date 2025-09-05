@@ -10,7 +10,7 @@ import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import TopReviews from '~/components/top-reviews/TopReviews';
 import { APP_STATE } from '~/constants';
 import { Order, OrderLine } from '~/generated/graphql';
-import { addItemToOrderMutation } from '~/providers/shop/orders/order';
+import { addItemToOrderV2Mutation } from '~/providers/shop/orders/order';
 import { getProductBySlug } from '~/providers/shop/products/products';
 import { Variant } from '~/types';
 import { cleanUpParams, generateDocumentHead, isEnvVariableEnabled } from '~/utils';
@@ -153,10 +153,10 @@ export default component$(() => {
 										}}
 										onClick$={async () => {
 											if (quantitySignal.value[selectedVariantIdSignal.value] <= 7) {
-												const addItemToOrder = await addItemToOrderMutation(
-													selectedVariantIdSignal.value,
-													1
-												);
+												const addItemToOrder = await addItemToOrderV2Mutation({
+													productVariantId: selectedVariantIdSignal.value,
+													quantity: 1,
+												});
 												if (addItemToOrder.__typename !== 'Order') {
 													addItemToOrderErrorSignal.value = addItemToOrder.errorCode;
 												} else {

@@ -1,6 +1,5 @@
 import { component$, useContext, useSignal } from '@qwik.dev/core';
 import BuildCustomNameTag from '~/components/custom-option-visualizer/BuildCustomNameTag';
-import { createOrRetrieveCustomNameTag } from '~/providers/shop/orders/customizable-order';
 import { DEFAULT_OPTIONS_FOR_NAME_TAG, useFilamentColor, useFontMenu } from '../tmp2/layout';
 
 export default component$(() => {
@@ -56,20 +55,22 @@ export default component$(() => {
 							isTopAdditive: is_top_additive.value,
 						};
 						try {
-							const result = await createOrRetrieveCustomNameTag(input);
-
-							console.log('Custom Name Tag created or retrieved:', result);
-							if ('customNameTagId' in result) {
-								custom_name_tag_id.value = result.customNameTagId;
-								console.log('saving custom name tag:', result);
-							} else if (result.__typename === 'CreateCustomNameTagError') {
-								console.error(
-									'Error creating custom name tag:',
-									result.message,
-									'Error code:',
-									result.errorCode
-								);
-							}
+							console.log('Creating or retrieving custom name tag with input:', input);
+							// const addItemToOrder = await addItemToOrderV2Mutation(
+							// 	{
+							// 		productVariantId: 'cl0x3z1l80000qzrmn8v6ft6h', // Custom Name Tag Variant ID
+							// 		quantity: 1,
+							// 		customNameTag: {
+							// 			textTop: text_top.value,
+							// 			textBottom: text_bottom.value,
+							// 			fontMenuIdTop: font_top_id.value,
+							// 			fontMenuIdBottom: font_bottom_id.value,
+							// 			filamentColorIdPrimary: primary_color_id.value,
+							// 			filamentColorIdBase: base_color_id.value,
+							// 			isTopAdditive: is_top_additive.value,
+							// 		},
+							// 	}
+							// )
 						} catch (error) {
 							console.error('Error creating or retrieving custom name tag:', error);
 						}

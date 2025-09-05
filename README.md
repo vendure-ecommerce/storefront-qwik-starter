@@ -203,7 +203,7 @@ Note that variables type CreateCustomNameTagInput can already be found because i
 pnpm run generate
 ```
 
-This will provide you the types for the query and mutation you just wrote. so you can use it in the shopSdk.
+This will provide you the types for the query and mutation you just wrote. so you can use it in the `shopSdk`.
 For example, now you should have defined `CreateOrRetrieveCustomNameTagMutation` in the `./generated/graphql-shop.ts` file.
 
 4. Define the function to call the mutation in the same file, e.g. `src/providers/shop/orders/customizable-order.ts`:

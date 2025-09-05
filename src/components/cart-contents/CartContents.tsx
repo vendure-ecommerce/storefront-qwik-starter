@@ -3,7 +3,10 @@ import { useLocation, useNavigate } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
-import { adjustOrderLineMutation, removeOrderLineMutation } from '~/providers/shop/orders/order';
+import {
+	adjustOrderLineV2Mutation,
+	removeOrderLineV2Mutation,
+} from '~/providers/shop/orders/order';
 import { isCheckoutPage } from '~/utils';
 import Price from '../products/Price';
 
@@ -23,7 +26,7 @@ export default component$<{
 		let id: NodeJS.Timeout;
 		if (currentOrderLineSignal.value) {
 			id = setTimeout(async () => {
-				appState.activeOrder = await adjustOrderLineMutation(
+				appState.activeOrder = await adjustOrderLineV2Mutation(
 					currentOrderLineSignal.value!.id,
 					currentOrderLineSignal.value!.value
 				);
@@ -105,7 +108,7 @@ export default component$<{
 												value={line.id}
 												class="font-medium text-primary-600 hover:text-primary-500"
 												onClick$={async () => {
-													appState.activeOrder = await removeOrderLineMutation(line.id);
+													appState.activeOrder = await removeOrderLineV2Mutation(line.id);
 													if (
 														appState.activeOrder?.lines?.length === 0 &&
 														isCheckoutPage(location.url.toString())
