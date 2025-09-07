@@ -1,6 +1,6 @@
 import { component$, useContext } from '@qwik.dev/core';
 
-import { PRODUCT_VARIANT_CONTEXT, useProductLoader } from '../layout';
+import { useProductLoader } from '../layout';
 
 import Alert from '~/components/alert/Alert';
 import CheckIcon from '~/components/icons/CheckIcon';
@@ -11,6 +11,7 @@ import { Order } from '~/generated/graphql';
 import { addItemToOrderV2Mutation } from '~/providers/shop/orders/order';
 
 import { useComputed$, useSignal } from '@qwik.dev/core';
+import ProductVariantSelector from '~/components/products/ProductVariantSelector';
 import { APP_STATE } from '~/constants';
 import { OrderLine } from '~/generated/graphql';
 import { Variant } from '~/types';
@@ -31,8 +32,8 @@ export default component$(() => {
 		});
 		return result;
 	});
-	const selectedVariantIdSignal = useContext(PRODUCT_VARIANT_CONTEXT).id;
 
+	const selectedVariantIdSignal = useSignal(productSignal.value.variants[0].id);
 	const selectedVariantSignal = useComputed$(() =>
 		productSignal.value.variants.find((v) => v.id === selectedVariantIdSignal.value)
 	);
@@ -99,6 +100,12 @@ export default component$(() => {
 				<div class="mt-4">
 					<Alert message={addItemToOrderErrorSignal.value} />
 				</div>
+			)}
+			{1 < productSignal.value.variants.length && (
+				<ProductVariantSelector
+					productVariants={productSignal.value.variants}
+					selectedVariantIdSignal={selectedVariantIdSignal}
+				></ProductVariantSelector>
 			)}
 		</>
 	);

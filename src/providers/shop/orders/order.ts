@@ -229,9 +229,6 @@ gql`
 					id
 					slug
 				}
-				customFields {
-					customizableEntity
-				}
 			}
 			customFields {
 				customVariant {

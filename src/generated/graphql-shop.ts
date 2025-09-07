@@ -439,8 +439,6 @@ export type CreateAddressInput = {
 };
 
 export type CreateCustomNameTagInput = {
-	/** Optional asset associated with this customization option */
-	assetId?: InputMaybe<Scalars['ID']['input']>;
 	filamentColorIdBase: Scalars['ID']['input'];
 	filamentColorIdPrimary: Scalars['ID']['input'];
 	fontMenuIdBottom?: InputMaybe<Scalars['ID']['input']>;
@@ -2856,7 +2854,7 @@ export type Product = Node & {
 	assets: Array<Asset>;
 	collections: Array<Collection>;
 	createdAt: Scalars['DateTime']['output'];
-	customFields?: Maybe<Scalars['JSON']['output']>;
+	customFields?: Maybe<ProductCustomFields>;
 	description: Scalars['String']['output'];
 	enabled: Scalars['Boolean']['output'];
 	facetValues: Array<FacetValue>;
@@ -2878,10 +2876,16 @@ export type ProductVariantListArgs = {
 	options?: InputMaybe<ProductVariantListOptions>;
 };
 
+export type ProductCustomFields = {
+	__typename?: 'ProductCustomFields';
+	customizableEntityName?: Maybe<Scalars['String']['output']>;
+};
+
 export type ProductFilterParameter = {
 	_and?: InputMaybe<Array<ProductFilterParameter>>;
 	_or?: InputMaybe<Array<ProductFilterParameter>>;
 	createdAt?: InputMaybe<DateOperators>;
+	customizableEntityName?: InputMaybe<StringOperators>;
 	description?: InputMaybe<StringOperators>;
 	enabled?: InputMaybe<BooleanOperators>;
 	id?: InputMaybe<IdOperators>;
@@ -2957,6 +2961,7 @@ export type ProductOptionTranslation = {
 
 export type ProductSortParameter = {
 	createdAt?: InputMaybe<SortOrder>;
+	customizableEntityName?: InputMaybe<SortOrder>;
 	description?: InputMaybe<SortOrder>;
 	id?: InputMaybe<SortOrder>;
 	name?: InputMaybe<SortOrder>;
@@ -3001,7 +3006,7 @@ export type ProductVariant = Node & {
 
 export type ProductVariantCustomFields = {
 	__typename?: 'ProductVariantCustomFields';
-	customizableEntity?: Maybe<Scalars['String']['output']>;
+	customBuildJson?: Maybe<Scalars['String']['output']>;
 };
 
 export type ProductVariantFilterParameter = {
@@ -3009,7 +3014,7 @@ export type ProductVariantFilterParameter = {
 	_or?: InputMaybe<Array<ProductVariantFilterParameter>>;
 	createdAt?: InputMaybe<DateOperators>;
 	currencyCode?: InputMaybe<StringOperators>;
-	customizableEntity?: InputMaybe<StringOperators>;
+	customBuildJson?: InputMaybe<StringOperators>;
 	id?: InputMaybe<IdOperators>;
 	languageCode?: InputMaybe<StringOperators>;
 	name?: InputMaybe<StringOperators>;
@@ -3042,7 +3047,7 @@ export type ProductVariantListOptions = {
 
 export type ProductVariantSortParameter = {
 	createdAt?: InputMaybe<SortOrder>;
-	customizableEntity?: InputMaybe<SortOrder>;
+	customBuildJson?: InputMaybe<SortOrder>;
 	id?: InputMaybe<SortOrder>;
 	name?: InputMaybe<SortOrder>;
 	price?: InputMaybe<SortOrder>;
@@ -4068,10 +4073,6 @@ export type AddPaymentToOrderMutation = {
 						name: string;
 						price: any;
 						product: { __typename?: 'Product'; id: string; slug: string };
-						customFields?: {
-							__typename?: 'ProductVariantCustomFields';
-							customizableEntity?: string | null;
-						} | null;
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
@@ -4159,10 +4160,6 @@ export type TransitionOrderToStateMutation = {
 						name: string;
 						price: any;
 						product: { __typename?: 'Product'; id: string; slug: string };
-						customFields?: {
-							__typename?: 'ProductVariantCustomFields';
-							customizableEntity?: string | null;
-						} | null;
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
@@ -4555,10 +4552,6 @@ export type ApplyCouponCodeMutation = {
 						name: string;
 						price: any;
 						product: { __typename?: 'Product'; id: string; slug: string };
-						customFields?: {
-							__typename?: 'ProductVariantCustomFields';
-							customizableEntity?: string | null;
-						} | null;
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
@@ -4641,10 +4634,6 @@ export type RemoveCouponCodeMutation = {
 				name: string;
 				price: any;
 				product: { __typename?: 'Product'; id: string; slug: string };
-				customFields?: {
-					__typename?: 'ProductVariantCustomFields';
-					customizableEntity?: string | null;
-				} | null;
 			};
 			customFields?: {
 				__typename?: 'OrderLineCustomFields';
@@ -4729,10 +4718,6 @@ export type SetOrderShippingAddressMutation = {
 						name: string;
 						price: any;
 						product: { __typename?: 'Product'; id: string; slug: string };
-						customFields?: {
-							__typename?: 'ProductVariantCustomFields';
-							customizableEntity?: string | null;
-						} | null;
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
@@ -4820,10 +4805,6 @@ export type SetCustomerForOrderMutation = {
 						name: string;
 						price: any;
 						product: { __typename?: 'Product'; id: string; slug: string };
-						customFields?: {
-							__typename?: 'ProductVariantCustomFields';
-							customizableEntity?: string | null;
-						} | null;
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
@@ -4911,10 +4892,6 @@ export type AddItemToOrderMutation = {
 						name: string;
 						price: any;
 						product: { __typename?: 'Product'; id: string; slug: string };
-						customFields?: {
-							__typename?: 'ProductVariantCustomFields';
-							customizableEntity?: string | null;
-						} | null;
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
@@ -5003,10 +4980,6 @@ export type SetOrderShippingMethodMutation = {
 						name: string;
 						price: any;
 						product: { __typename?: 'Product'; id: string; slug: string };
-						customFields?: {
-							__typename?: 'ProductVariantCustomFields';
-							customizableEntity?: string | null;
-						} | null;
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
@@ -5084,10 +5057,6 @@ export type OrderDetailFragment = {
 			name: string;
 			price: any;
 			product: { __typename?: 'Product'; id: string; slug: string };
-			customFields?: {
-				__typename?: 'ProductVariantCustomFields';
-				customizableEntity?: string | null;
-			} | null;
 		};
 		customFields?: {
 			__typename?: 'OrderLineCustomFields';
@@ -5173,10 +5142,6 @@ export type AdjustOrderLineMutation = {
 						name: string;
 						price: any;
 						product: { __typename?: 'Product'; id: string; slug: string };
-						customFields?: {
-							__typename?: 'ProductVariantCustomFields';
-							customizableEntity?: string | null;
-						} | null;
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
@@ -5263,10 +5228,6 @@ export type RemoveOrderLineMutation = {
 						name: string;
 						price: any;
 						product: { __typename?: 'Product'; id: string; slug: string };
-						customFields?: {
-							__typename?: 'ProductVariantCustomFields';
-							customizableEntity?: string | null;
-						} | null;
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
@@ -5349,10 +5310,6 @@ export type ActiveOrderQuery = {
 				name: string;
 				price: any;
 				product: { __typename?: 'Product'; id: string; slug: string };
-				customFields?: {
-					__typename?: 'ProductVariantCustomFields';
-					customizableEntity?: string | null;
-				} | null;
 			};
 			customFields?: {
 				__typename?: 'OrderLineCustomFields';
@@ -5435,10 +5392,6 @@ export type OrderByCodeQuery = {
 				name: string;
 				price: any;
 				product: { __typename?: 'Product'; id: string; slug: string };
-				customFields?: {
-					__typename?: 'ProductVariantCustomFields';
-					customizableEntity?: string | null;
-				} | null;
 			};
 			customFields?: {
 				__typename?: 'OrderLineCustomFields';
@@ -5524,10 +5477,6 @@ export type AddItemToOrderV2Mutation = {
 						name: string;
 						price: any;
 						product: { __typename?: 'Product'; id: string; slug: string };
-						customFields?: {
-							__typename?: 'ProductVariantCustomFields';
-							customizableEntity?: string | null;
-						} | null;
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
@@ -5617,10 +5566,6 @@ export type AdjustOrderLineV2Mutation = {
 						name: string;
 						price: any;
 						product: { __typename?: 'Product'; id: string; slug: string };
-						customFields?: {
-							__typename?: 'ProductVariantCustomFields';
-							customizableEntity?: string | null;
-						} | null;
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
@@ -5707,10 +5652,6 @@ export type RemoveOrderLineV2Mutation = {
 						name: string;
 						price: any;
 						product: { __typename?: 'Product'; id: string; slug: string };
-						customFields?: {
-							__typename?: 'ProductVariantCustomFields';
-							customizableEntity?: string | null;
-						} | null;
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
@@ -5763,9 +5704,13 @@ export type DetailedProductFragment = {
 		featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 		customFields?: {
 			__typename?: 'ProductVariantCustomFields';
-			customizableEntity?: string | null;
+			customBuildJson?: string | null;
 		} | null;
 	}>;
+	customFields?: {
+		__typename?: 'ProductCustomFields';
+		customizableEntityName?: string | null;
+	} | null;
 };
 
 export type ProductQueryVariables = Exact<{
@@ -5812,9 +5757,13 @@ export type ProductQuery = {
 			featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 			customFields?: {
 				__typename?: 'ProductVariantCustomFields';
-				customizableEntity?: string | null;
+				customBuildJson?: string | null;
 			} | null;
 		}>;
+		customFields?: {
+			__typename?: 'ProductCustomFields';
+			customizableEntityName?: string | null;
+		} | null;
 	} | null;
 };
 
@@ -5951,9 +5900,6 @@ export const OrderDetailFragmentDoc = gql`
 					id
 					slug
 				}
-				customFields {
-					customizableEntity
-				}
 			}
 			customFields {
 				customVariant {
@@ -6009,8 +5955,11 @@ export const DetailedProductFragmentDoc = gql`
 				preview
 			}
 			customFields {
-				customizableEntity
+				customBuildJson
 			}
+		}
+		customFields {
+			customizableEntityName
 		}
 	}
 `;

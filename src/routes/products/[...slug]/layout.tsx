@@ -1,12 +1,4 @@
-import {
-	component$,
-	createContextId,
-	Signal,
-	Slot,
-	useComputed$,
-	useContextProvider,
-	useSignal,
-} from '@qwik.dev/core';
+import { component$, Signal, Slot, useSignal } from '@qwik.dev/core';
 import { DocumentHead, routeLoader$ } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
@@ -31,25 +23,16 @@ export const useProductLoader = routeLoader$(async ({ params }) => {
 interface ProductVariantContextType {
 	id: Signal<string>;
 }
-export const PRODUCT_VARIANT_CONTEXT =
-	createContextId<ProductVariantContextType>('product-variant');
 
 export default component$(() => {
 	const productSignal = useProductLoader();
 	const currentImageSig = useSignal(productSignal.value.assets[0]);
-	const selectedVariantIdSignal = useSignal(productSignal.value.variants[0].id);
-	const selectedVariantSignal = useComputed$(() =>
-		productSignal.value.variants.find((v) => v.id === selectedVariantIdSignal.value)
-	);
-	useContextProvider(PRODUCT_VARIANT_CONTEXT, {
-		id: selectedVariantIdSignal,
-	});
 
 	return (
 		<div>
-			{selectedVariantSignal.value?.id && (
+			{/* {selectedVariantSignal.value?.id && (
 				<span class="hidden">{selectedVariantSignal.value?.id}</span>
-			)}
+			)} */}
 			<div class="max-w-6xl mx-auto px-4 py-10">
 				<div>
 					<h2 class="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
@@ -105,26 +88,7 @@ export default component$(() => {
 									dangerouslySetInnerHTML={productSignal.value.description}
 								/>
 							</div>
-							{1 < productSignal.value.variants.length && (
-								<div class="mt-4">
-									<label class="block text-sm font-medium text-gray-700">Select option</label>
-									<select
-										class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
-										value={selectedVariantIdSignal.value}
-										onChange$={(_, el) => (selectedVariantIdSignal.value = el.value)}
-									>
-										{productSignal.value.variants.map((variant) => (
-											<option
-												key={variant.id}
-												value={variant.id}
-												selected={selectedVariantIdSignal.value === variant.id}
-											>
-												{variant.name}
-											</option>
-										))}
-									</select>
-								</div>
-							)}
+
 							<>
 								<Slot />
 							</>

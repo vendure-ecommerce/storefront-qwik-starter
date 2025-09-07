@@ -418,10 +418,6 @@ input CreateAddressInput {
 }
 
 input CreateCustomNameTagInput {
-	"""
-	Optional asset associated with this customization option
-	"""
-	assetId: ID
 	filamentColorIdBase: ID!
 	filamentColorIdPrimary: ID!
 	fontMenuIdBottom: ID
@@ -4168,7 +4164,7 @@ type Product implements Node {
 	assets: [Asset!]!
 	collections: [Collection!]!
 	createdAt: DateTime!
-	customFields: JSON
+	customFields: ProductCustomFields
 	description: String!
 	enabled: Boolean!
 	facetValues: [FacetValue!]!
@@ -4192,10 +4188,15 @@ type Product implements Node {
 	variants: [ProductVariant!]!
 }
 
+type ProductCustomFields {
+	customizableEntityName: String
+}
+
 input ProductFilterParameter {
 	_and: [ProductFilterParameter!]
 	_or: [ProductFilterParameter!]
 	createdAt: DateOperators
+	customizableEntityName: StringOperators
 	description: StringOperators
 	enabled: BooleanOperators
 	id: IDOperators
@@ -4280,6 +4281,7 @@ type ProductOptionTranslation {
 
 input ProductSortParameter {
 	createdAt: SortOrder
+	customizableEntityName: SortOrder
 	description: SortOrder
 	id: SortOrder
 	name: SortOrder
@@ -4321,7 +4323,7 @@ type ProductVariant implements Node {
 }
 
 type ProductVariantCustomFields {
-	customizableEntity: String
+	customBuildJson: String
 }
 
 input ProductVariantFilterParameter {
@@ -4329,7 +4331,7 @@ input ProductVariantFilterParameter {
 	_or: [ProductVariantFilterParameter!]
 	createdAt: DateOperators
 	currencyCode: StringOperators
-	customizableEntity: StringOperators
+	customBuildJson: StringOperators
 	id: IDOperators
 	languageCode: StringOperators
 	name: StringOperators
@@ -4375,7 +4377,7 @@ input ProductVariantListOptions {
 
 input ProductVariantSortParameter {
 	createdAt: SortOrder
-	customizableEntity: SortOrder
+	customBuildJson: SortOrder
 	id: SortOrder
 	name: SortOrder
 	price: SortOrder

@@ -14,11 +14,11 @@ export default component$(() => {
 	const font_bottom_id = useSignal<string>(defaultOptionsForNameTag.fontId);
 	const primary_color_id = useSignal<string>(defaultOptionsForNameTag.primaryColorId);
 	const base_color_id = useSignal<string>(defaultOptionsForNameTag.baseColorId);
-	const is_top_additive = useSignal<boolean>(true);
 	const is_atc_allowed = useSignal<boolean>(true);
 	const atc_disabled_reason = useSignal<string>('None');
 
 	const custom_name_tag_id = useSignal<string | null>(null);
+	const is_top_additive = true;
 
 	return (
 		<>
@@ -52,7 +52,7 @@ export default component$(() => {
 							fontMenuIdBottom: font_bottom_id.value,
 							filamentColorIdPrimary: primary_color_id.value,
 							filamentColorIdBase: base_color_id.value,
-							isTopAdditive: is_top_additive.value,
+							isTopAdditive: is_top_additive,
 						};
 						try {
 							console.log('Creating or retrieving custom name tag with input:', input);

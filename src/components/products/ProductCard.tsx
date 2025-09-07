@@ -2,10 +2,17 @@ import { component$ } from '@qwik.dev/core';
 import { Image } from 'qwik-image';
 import Price from './Price';
 
+export function slugToroute(slug: string) {
+	if (slug === 'customizable-key-ring') {
+		return `/products/${slug}/customizable`;
+	}
+	return `/products/${slug}/default`;
+}
+
 export default component$(
 	({ productAsset, productName, slug, priceWithTax, currencyCode }: any) => {
 		return (
-			<a class="flex flex-col mx-auto" href={`/products/${slug}/default`}>
+			<a class="flex flex-col mx-auto" href={slugToroute(slug)}>
 				<Image
 					layout="fixed"
 					class="rounded-xl flex-grow object-cover aspect-[7/8]"

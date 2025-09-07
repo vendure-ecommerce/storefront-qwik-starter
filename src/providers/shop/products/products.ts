@@ -66,8 +66,11 @@ export const detailedProductFragment = gql`
 				preview
 			}
 			customFields {
-				customizableEntity
+				customBuildJson
 			}
+		}
+		customFields {
+			customizableEntityName
 		}
 	}
 `;
