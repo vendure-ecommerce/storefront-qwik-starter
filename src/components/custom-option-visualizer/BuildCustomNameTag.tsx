@@ -33,8 +33,8 @@ export default component$(
 		canvas_width_px = 250,
 		text_top,
 		text_bottom,
-		font_top_id,
-		font_bottom_id,
+		font_top_id: font_id_top,
+		font_bottom_id: font_id_bottom,
 		is_top_additive,
 		build_top_plate,
 		build_bottom_plate,
@@ -110,8 +110,8 @@ export default component$(
 								filament_color={FilamentColorSignal.value}
 								text_top={text_top}
 								text_bottom={text_bottom}
-								font_id_top={font_top_id}
-								font_id_bottom={font_bottom_id}
+								font_id_top={font_id_top}
+								font_id_bottom={font_id_bottom}
 								primary_color_id={primary_color_id}
 								base_color_id={base_color_id}
 								is_top_additive={is_top_additive}
@@ -122,21 +122,21 @@ export default component$(
 								show_estimated_board_width={show_estimated_board_width}
 							/>
 							<div class="flex flex-col justify-around p-2">
-								{build_top_plate.value && text_top && font_top_id && (
+								{build_top_plate.value && text_top && font_id_top && (
 									<TextWithFontInput
 										fieldTitle="Top Plate Text"
 										fontMenu={FontMenuSignal.value}
 										text={text_top}
-										fontId={font_top_id}
+										fontId={font_id_top}
 										isTextValid={is_top_text_valid}
 									/>
 								)}
-								{build_bottom_plate.value && text_bottom && font_bottom_id && (
+								{build_bottom_plate.value && text_bottom && font_id_bottom && (
 									<TextWithFontInput
 										fieldTitle="Bottom Plate Text"
 										fontMenu={FontMenuSignal.value}
 										text={text_bottom}
-										fontId={font_bottom_id}
+										fontId={font_id_bottom}
 										isTextValid={is_bottom_text_valid}
 									/>
 								)}

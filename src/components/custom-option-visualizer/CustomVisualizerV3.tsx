@@ -198,6 +198,9 @@ export const BuildPlateVisualizerV3 = component$((args: BuildOptions) => {
 	if (!args.build_top_plate.value && !args.build_bottom_plate.value) {
 		throw new Error('At least one plate must be built');
 	}
+	let top_canvas_id = args.output_top_canvas_element_id || 'canvas_top';
+	let bottom_canvas_id = args.output_bottom_canvas_element_id || 'canvas_bottom';
+	let build_canvas_width = args.build_canvas_width_px || 100;
 
 	useVisibleTask$(({ track }) => {
 		track(() => args.text_top?.value);
@@ -217,12 +220,10 @@ export const BuildPlateVisualizerV3 = component$((args: BuildOptions) => {
 		let bbox_top: BboxInfo | undefined;
 		let canvas_top: HTMLCanvasElement | undefined;
 		let ctx_t: CanvasRenderingContext2D | null | undefined;
-		let top_canvas_id = args.output_top_canvas_element_id || 'canvas_top';
 
 		let bbox_btm: BboxInfo | undefined;
 		let canvas_bottom: HTMLCanvasElement | undefined;
 		let ctx_b: CanvasRenderingContext2D | null | undefined;
-		let bottom_canvas_id = args.output_bottom_canvas_element_id || 'canvas_bottom';
 
 		if (args.build_top_plate.value) {
 			if (!args.text_top || !args.font_id_top || !args.is_top_additive) {
@@ -356,12 +357,6 @@ export const BuildPlateVisualizerV3 = component$((args: BuildOptions) => {
 			}
 		}
 	});
-
-	let build_canvas_width = args.build_canvas_width_px || 100;
-
-	let top_canvas_id = args.output_top_canvas_element_id || 'canvas_top';
-	let bottom_canvas_id = args.output_bottom_canvas_element_id || 'canvas_bottom';
-	// let output_canvas_element_id = buildOption.output_canvas_element_id || 'canvas_stacked';
 
 	return (
 		<div class="bg-transparent h-fit" style={{ width: `${build_canvas_width}px` }}>
