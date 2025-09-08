@@ -17,8 +17,8 @@ interface BuildCustomNameTagProps {
 	font_top_id?: Signal<string>; // Font ID for the top plate
 	font_bottom_id?: Signal<string>; // Font ID for the bottom plate
 	is_top_additive?: Signal<boolean>; // Whether the top plate is additive
-	build_top_plate?: boolean; // Whether to build the top plate
-	build_bottom_plate?: boolean; // Whether to build the bottom plate
+	build_top_plate: Signal<boolean>; // Whether to build the top plate
+	build_bottom_plate: Signal<boolean>; // Whether to build the bottom plate
 	show_estimated_board_width?: boolean; // Whether to show the estimated board width
 }
 
@@ -36,9 +36,9 @@ export default component$(
 		font_top_id,
 		font_bottom_id,
 		is_top_additive,
-		build_top_plate = true,
-		build_bottom_plate = true,
-		show_estimated_board_width = true,
+		build_top_plate,
+		build_bottom_plate,
+		show_estimated_board_width,
 	}: BuildCustomNameTagProps) => {
 		// const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
 		// const FontMenuSignal = useFontMenu(); // Load the Font_Menu from db

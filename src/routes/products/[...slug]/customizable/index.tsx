@@ -8,12 +8,19 @@ import Alert from '~/components/alert/Alert';
 import HeartIcon from '~/components/icons/HeartIcon';
 import Price from '~/components/products/Price';
 import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
-import { Order } from '~/generated/graphql';
+import { Order, ProductVariant } from '~/generated/graphql';
 import { addItemToOrderV2Mutation } from '~/providers/shop/orders/order';
 
 import { useComputed$ } from '@qwik.dev/core';
 import ProductVariantSelector from '~/components/products/ProductVariantSelector';
 import { APP_STATE } from '~/constants';
+
+function parseBuildJson(productVariant?: ProductVariant) {
+	if (productVariant?.customFields?.customBuildJson) {
+		return JSON.parse(productVariant.customFields.customBuildJson);
+	}
+	return null;
+}
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
@@ -25,7 +32,13 @@ export default component$(() => {
 		productSignal.value.variants.find((v) => v.id === selectedVariantIdSignal.value)
 	);
 
-	console.log('variant signal', selectedVariantSignal.value);
+	const build_top_plate = useComputed$(() => {
+		return parseBuildJson(selectedVariantSignal.value)?.build_top_plate ?? true;
+	});
+
+	const build_bottom_plate = useComputed$(() => {
+		return parseBuildJson(selectedVariantSignal.value)?.build_bottom_plate ?? true;
+	});
 
 	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
 	const FontMenuSignal = useFontMenu(); // Load the Font_Menu from db
@@ -122,8 +135,8 @@ export default component$(() => {
 				font_top_id={font_top_id}
 				font_bottom_id={font_bottom_id}
 				is_top_additive={is_top_additive}
-				build_top_plate={true}
-				build_bottom_plate={true}
+				build_top_plate={build_top_plate}
+				build_bottom_plate={build_bottom_plate}
 				show_estimated_board_width={true}
 			/>
 			<p>{is_atc_allowed.value ? 'Build is valid, ATC allowed' : atc_disabled_reason.value}</p>

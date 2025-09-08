@@ -1,7 +1,7 @@
 import { buildDimsPX, px2mm } from './constants';
 
 import { component$, Signal, useSignal, useVisibleTask$ } from '@qwik.dev/core';
-import { FILAMENT_COLOR } from './ColorSelector';
+import { FILAMENT_COLOR } from './ColorSelectorV2';
 import { FONT_MENU, getFontInfoFromID } from './FontSelector';
 import { CONSTRAINTS } from './constants';
 
@@ -20,8 +20,8 @@ export type BuildOptions = {
 	base_color_id: Signal<string>;
 	is_top_additive?: Signal<boolean>;
 	is_build_valid: Signal<boolean>;
-	build_top_plate: boolean;
-	build_bottom_plate: boolean;
+	build_top_plate: Signal<boolean>;
+	build_bottom_plate: Signal<boolean>;
 	build_canvas_width_px?: number; // Optional: if provided, will set the canvas width to this value
 	show_estimated_board_width?: boolean; // Optional: if true, will show the estimated board width
 	output_top_canvas_element_id?: string; // Optional: if provided, will set the output canvas element ID
@@ -195,7 +195,7 @@ function draw_text(
 export const BuildPlateVisualizerV3 = component$((args: BuildOptions) => {
 	const boardWidth_cm = useSignal<number>(0);
 
-	if (!args.build_top_plate && !args.build_bottom_plate) {
+	if (!args.build_top_plate.value && !args.build_bottom_plate.value) {
 		throw new Error('At least one plate must be built');
 	}
 
@@ -222,7 +222,7 @@ export const BuildPlateVisualizerV3 = component$((args: BuildOptions) => {
 		let ctx_b: CanvasRenderingContext2D | null | undefined;
 		let bottom_canvas_id = args.output_bottom_canvas_element_id || 'canvas_bottom';
 
-		if (args.build_top_plate) {
+		if (args.build_top_plate.value) {
 			if (!args.text_top || !args.font_id_top || !args.is_top_additive) {
 				throw new Error(
 					'text_top, font_id_top, and is_top_additive must be provided for the top plate.'
@@ -241,7 +241,7 @@ export const BuildPlateVisualizerV3 = component$((args: BuildOptions) => {
 			bbox_top = getTextBoundingBox(font_top, args.text_top.value, ctx_t, TEXT_START_X, START_Y);
 		}
 
-		if (args.build_bottom_plate) {
+		if (args.build_bottom_plate.value) {
 			if (!args.text_bottom || !args.font_id_bottom) {
 				throw new Error('text_bottom and font_id_bottom must be provided for the bottom plate.');
 			}
@@ -264,11 +264,11 @@ export const BuildPlateVisualizerV3 = component$((args: BuildOptions) => {
 		}
 
 		let text_width: number;
-		if (args.build_top_plate && args.build_bottom_plate) {
+		if (args.build_top_plate.value && args.build_bottom_plate.value) {
 			text_width = Math.max(bbox_top!.w, bbox_btm!.w);
-		} else if (args.build_top_plate) {
+		} else if (args.build_top_plate.value) {
 			text_width = bbox_top!.w;
-		} else if (args.build_bottom_plate) {
+		} else if (args.build_bottom_plate.value) {
 			text_width = bbox_btm!.w;
 		} else {
 			throw new Error('At least one plate must be built');
@@ -359,7 +359,7 @@ export const BuildPlateVisualizerV3 = component$((args: BuildOptions) => {
 			<div title="Plate Visualizer">
 				<canvas
 					id={top_canvas_id}
-					class={`${args.build_top_plate ? '' : 'hidden'}`}
+					class={`${args.build_top_plate.value ? '' : 'hidden'}`}
 					style={{
 						width: `${build_canvas_width}px`,
 						height: '100%',
@@ -367,7 +367,7 @@ export const BuildPlateVisualizerV3 = component$((args: BuildOptions) => {
 				/>
 				<canvas
 					id={bottom_canvas_id}
-					class={`${args.build_bottom_plate ? '' : 'hidden'}`}
+					class={`${args.build_bottom_plate.value ? '' : 'hidden'}`}
 					style={{
 						width: `${build_canvas_width}px`,
 						height: '100%',

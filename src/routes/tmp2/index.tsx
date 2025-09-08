@@ -14,11 +14,14 @@ export default component$(() => {
 	const font_bottom_id = useSignal<string>(defaultOptionsForNameTag.fontId);
 	const primary_color_id = useSignal<string>(defaultOptionsForNameTag.primaryColorId);
 	const base_color_id = useSignal<string>(defaultOptionsForNameTag.baseColorId);
+	const build_top_plate = useSignal<boolean>(true);
+	const build_bottom_plate = useSignal<boolean>(true);
+
 	const is_atc_allowed = useSignal<boolean>(true);
 	const atc_disabled_reason = useSignal<string>('None');
 
 	const custom_name_tag_id = useSignal<string | null>(null);
-	const is_top_additive = true;
+	const is_top_additive = useSignal<boolean>(true);
 
 	return (
 		<>
@@ -35,8 +38,8 @@ export default component$(() => {
 				font_top_id={font_top_id}
 				font_bottom_id={font_bottom_id}
 				is_top_additive={is_top_additive}
-				build_top_plate={true}
-				build_bottom_plate={true}
+				build_top_plate={build_top_plate}
+				build_bottom_plate={build_bottom_plate}
 				show_estimated_board_width={true}
 			/>
 			<p>{is_atc_allowed.value ? 'Build is valid, ATC allowed' : atc_disabled_reason.value}</p>
@@ -55,7 +58,7 @@ export default component$(() => {
 							isTopAdditive: is_top_additive,
 						};
 						try {
-							console.log('Creating or retrieving custom name tag with input:', input);
+							// console.log('Creating or retrieving custom name tag with input:', input);
 							// const addItemToOrder = await addItemToOrderV2Mutation(
 							// 	{
 							// 		productVariantId: 'cl0x3z1l80000qzrmn8v6ft6h', // Custom Name Tag Variant ID
