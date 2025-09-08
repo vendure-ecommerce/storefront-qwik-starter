@@ -50,21 +50,24 @@ export default component$(
 			return primary_color_id.value !== base_color_id.value;
 		});
 
-		is_atc_allowed.value =
-			is_top_text_valid.value &&
-			is_bottom_text_valid.value &&
-			is_build_valid.value &&
-			is_primary_and_base_color_different.value;
-
-		if (!is_primary_and_base_color_different.value) {
-			atc_disabled_reason.value = 'Primary color and base color cannot be the same.';
-		} else if (!is_top_text_valid.value || !is_bottom_text_valid.value) {
-			atc_disabled_reason.value = 'One or more text inputs are invalid.';
-		} else if (!is_build_valid.value) {
-			atc_disabled_reason.value = 'The current build is too long';
-		} else {
-			atc_disabled_reason.value = 'None';
-		}
+		// Determine if Add to Cart is allowed
+		const checkAtcAllowed = () => {
+			if (!is_primary_and_base_color_different.value) {
+				atc_disabled_reason.value = 'Primary color and base color cannot be the same.';
+				return false;
+			}
+			if (!build_top_plate.value) {
+				atc_disabled_reason.value = 'The build is invalid.';
+				return is_bottom_text_valid.value && is_build_valid.value;
+			}
+			if (!build_bottom_plate.value) {
+				atc_disabled_reason.value = 'The build is invalid.';
+				return is_top_text_valid.value && is_build_valid.value;
+			}
+			atc_disabled_reason.value = 'The build is invalid.';
+			return is_top_text_valid.value && is_bottom_text_valid.value && is_build_valid.value;
+		};
+		is_atc_allowed.value = checkAtcAllowed();
 
 		return (
 			<>
@@ -86,7 +89,7 @@ export default component$(
 								selectedValue={base_color_id}
 								isBackgroundColor={true}
 							/>
-							{build_top_plate && (
+							{build_top_plate.value && (
 								<button
 									title="Change Top Plate style"
 									class="mx-2 my-1 select-trigger-button"
@@ -119,7 +122,7 @@ export default component$(
 								show_estimated_board_width={show_estimated_board_width}
 							/>
 							<div class="flex flex-col justify-around p-2">
-								{build_top_plate && text_top && font_top_id && (
+								{build_top_plate.value && text_top && font_top_id && (
 									<TextWithFontInput
 										fieldTitle="Top Plate Text"
 										fontMenu={FontMenuSignal.value}
@@ -128,7 +131,7 @@ export default component$(
 										isTextValid={is_top_text_valid}
 									/>
 								)}
-								{build_bottom_plate && text_bottom && font_bottom_id && (
+								{build_bottom_plate.value && text_bottom && font_bottom_id && (
 									<TextWithFontInput
 										fieldTitle="Bottom Plate Text"
 										fontMenu={FontMenuSignal.value}

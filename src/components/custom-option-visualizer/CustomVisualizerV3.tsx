@@ -208,6 +208,8 @@ export const BuildPlateVisualizerV3 = component$((args: BuildOptions) => {
 		track(() => args.base_color_id.value);
 		track(() => args.is_top_additive?.value);
 		track(() => args.is_build_valid.value);
+		track(() => args.build_top_plate.value);
+		track(() => args.build_bottom_plate.value);
 
 		const primary_color_hex = color_id_2_hex(args.primary_color_id.value, args.filament_color);
 		const base_color_hex = color_id_2_hex(args.base_color_id.value, args.filament_color);
@@ -275,7 +277,14 @@ export const BuildPlateVisualizerV3 = component$((args: BuildOptions) => {
 		}
 
 		// top blank plate: it can be either additive or subtractive
-		if (canvas_top && ctx_t && bbox_top && args.text_top && args.is_top_additive) {
+		if (
+			args.build_top_plate.value &&
+			canvas_top &&
+			ctx_t &&
+			bbox_top &&
+			args.text_top &&
+			args.is_top_additive
+		) {
 			draw_a_blank_plate_v3(
 				canvas_top,
 				primary_color_hex,
@@ -296,7 +305,7 @@ export const BuildPlateVisualizerV3 = component$((args: BuildOptions) => {
 		}
 
 		// bottom blank plate: it is always subtractive
-		if (canvas_bottom && ctx_b && bbox_btm && args.text_bottom) {
+		if (args.build_bottom_plate.value && canvas_bottom && ctx_b && bbox_btm && args.text_bottom) {
 			draw_a_blank_plate_v3(
 				canvas_bottom,
 				primary_color_hex,

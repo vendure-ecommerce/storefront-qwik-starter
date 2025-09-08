@@ -70,14 +70,14 @@ export default component$(() => {
 							'max-w-xs flex-1 transition-colors border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full':
 								true,
 							'bg-primary-600 hover:bg-primary-700': is_atc_allowed.value,
-							'cursor-not-allowed opacity-50': !is_atc_allowed.value,
+							'cursor-not-allowed opacity-50 bg-primary-400': !is_atc_allowed.value,
 						}}
 						onClick$={async () => {
 							const input = {
-								textTop: text_top.value,
-								textBottom: text_bottom.value,
-								fontMenuIdTop: font_top_id.value,
-								fontMenuIdBottom: font_bottom_id.value,
+								textTop: build_top_plate.value ? text_top.value : null,
+								textBottom: build_bottom_plate.value ? text_bottom.value : null,
+								fontMenuIdTop: build_top_plate.value ? font_top_id.value : null,
+								fontMenuIdBottom: build_bottom_plate.value ? font_bottom_id.value : null,
 								filamentColorIdPrimary: primary_color_id.value,
 								filamentColorIdBase: base_color_id.value,
 								isTopAdditive: is_top_additive.value,
