@@ -3,7 +3,7 @@ import { component$, Signal, useVisibleTask$ } from '@builder.io/qwik';
 
 import { Select } from '@qwik-ui/headless';
 import { useComputed$, useSignal } from '@qwik.dev/core';
-import { FontMenuFindAllQuery } from '~/generated/graphql-shop';
+import { FONT_MENU } from '~/routes/constants';
 import FontIcon from '../icons/FontIcon';
 import GoPreviousIcon from '../icons/GoPreviousIcon';
 import PencilEditIcon from '../icons/PencilEditIcon';
@@ -18,7 +18,6 @@ import { CONSTRAINTS } from './constants';
 	subtractiveFontId: string // The font ID for subtractive printing, e.g. 'Comic_Neue__bold'
 	isDisabled: boolean
  */
-export type FONT_MENU = FontMenuFindAllQuery['fontMenuFindAll'][number];
 
 export function getFontInfoFromID(fontId: string): {
 	fontFamily: string;

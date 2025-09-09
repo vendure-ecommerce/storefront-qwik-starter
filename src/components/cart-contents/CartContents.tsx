@@ -1,14 +1,15 @@
 import { component$, useComputed$, useContext, useSignal, useTask$ } from '@qwik.dev/core';
 import { useLocation, useNavigate } from '@qwik.dev/router';
-import { Image } from 'qwik-image';
 import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
 import {
 	adjustOrderLineV2Mutation,
 	removeOrderLineV2Mutation,
 } from '~/providers/shop/orders/order';
-import { isCheckoutPage } from '~/utils';
+import { useFilamentColor, useFontMenu } from '~/routes/layout';
+import { isCheckoutPage, slugToRoute } from '~/utils';
 import Price from '../products/Price';
+import ItemPreview from './ItemPreview';
 
 export default component$<{
 	order?: Order;
@@ -20,6 +21,9 @@ export default component$<{
 	const rowsSignal = useComputed$(() => order?.lines || appState.activeOrder?.lines || []);
 	const isInEditableUrl = !isCheckoutPage(location.url.toString()) || !order;
 	const currencyCode = order?.currencyCode || appState.activeOrder?.currencyCode || 'USD';
+
+	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
+	const FontMenuSignal = useFontMenu();
 
 	useTask$(({ track, cleanup }) => {
 		track(() => currentOrderLineSignal.value);
@@ -47,13 +51,10 @@ export default component$<{
 					return (
 						<li key={line.id} class="py-6 flex">
 							<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
-								<Image
-									layout="fixed"
-									width="100"
-									height="100"
-									class="w-full h-full object-center object-cover"
-									src={line.featuredAsset?.preview + '?preset=thumb'}
-									alt={`Image of: ${line.productVariant.name}`}
+								<ItemPreview
+									filamentColorSignal={FilamentColorSignal}
+									fontMenuSignal={FontMenuSignal}
+									line={line}
 								/>
 							</div>
 
@@ -61,7 +62,7 @@ export default component$<{
 								<div>
 									<div class="flex justify-between text-base font-medium text-gray-900">
 										<h3>
-											<a href={`/products/${line.productVariant.product.slug}/`}>
+											<a href={slugToRoute(line.productVariant.product.slug)}>
 												{line.productVariant.name}
 											</a>
 										</h3>

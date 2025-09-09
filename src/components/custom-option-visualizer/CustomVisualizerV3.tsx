@@ -1,8 +1,8 @@
 import { buildDimsPX, px2mm } from './constants';
 
 import { component$, Signal, useSignal, useVisibleTask$ } from '@qwik.dev/core';
-import { FILAMENT_COLOR } from './ColorSelectorV2';
-import { FONT_MENU, getFontInfoFromID } from './FontSelector';
+import { FILAMENT_COLOR, FONT_MENU } from '~/routes/constants';
+import { getFontInfoFromID } from './FontSelector';
 import { CONSTRAINTS } from './constants';
 
 // drawing's top left position on the canvas for the margin

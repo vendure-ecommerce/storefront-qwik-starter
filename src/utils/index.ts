@@ -6,6 +6,13 @@ import {
 } from '~/constants';
 import { ENV_VARIABLES } from '~/env';
 import { SearchResponse } from '~/generated/graphql';
+import {
+	DEFAULT_BASE_COLOR_NAME,
+	DEFAULT_FONT_NAME,
+	DEFAULT_PRIMARY_COLOR_NAME,
+	FILAMENT_COLOR,
+	FONT_MENU,
+} from '~/routes/constants';
 import { ActiveCustomer, FacetWithValues, ShippingAddress } from '~/types';
 
 export const getRandomInt = (max: number) => Math.floor(Math.random() * max);
@@ -180,4 +187,60 @@ export const generateDocumentHead = (
 		},
 	];
 	return { title, meta: [...OG_METATAGS, ...TWITTER_METATAGS] };
+};
+
+export const slugToRoute = (slug: string) => {
+	const entityName = slugToCustomizableEntityName(slug);
+	switch (entityName) {
+		case CustomizableEntityName.CustomNameTag:
+			return `/products/${slug}/customizable`;
+		default:
+			return `/products/${slug}/default`;
+	}
+};
+
+export enum CustomizableEntityName {
+	Default = 'Default',
+	CustomNameTag = 'CustomNameTag',
+	DummyCustomProduct = 'DummyCustomProduct',
+}
+
+export const slugToCustomizableEntityName = (slug: string): CustomizableEntityName => {
+	switch (slug) {
+		case 'customizable-key-ring':
+			return CustomizableEntityName.CustomNameTag;
+		case 'dummy-custom-product':
+			return CustomizableEntityName.DummyCustomProduct;
+		default:
+			return CustomizableEntityName.Default;
+	}
+};
+
+export const getGoogleFontLink = (fontMenuItems: FONT_MENU[]): string => {
+	const fontFamilies = fontMenuItems
+		.map((font) => font.name.split(' (')[0].replace(/ /g, '+'))
+		.join('&family='); // join the font family with &family=
+	return `https://fonts.googleapis.com/css2?family=${fontFamilies}&display=swap`;
+};
+
+export const getDefaultCustomNameTagOptions = (
+	fontMenu: FONT_MENU[],
+	filamentColor: FILAMENT_COLOR[]
+): { primaryColorId: string; baseColorId: string; fontId: string } => {
+	const defaultPrimaryColorId = filamentColor.find(
+		(c) => c.name === DEFAULT_PRIMARY_COLOR_NAME
+	)?.id;
+	const defaultBaseColorId = filamentColor.find((c) => c.name === DEFAULT_BASE_COLOR_NAME)?.id;
+	if (!defaultPrimaryColorId || !defaultBaseColorId) {
+		throw new Error('Default colors not found in filamentColor!');
+	}
+	const defaultFontId = fontMenu.find((f) => f.name === DEFAULT_FONT_NAME)?.id;
+	if (!defaultFontId) {
+		throw new Error('Default fonts not found in fontMenuItems!');
+	}
+	return {
+		primaryColorId: defaultPrimaryColorId,
+		baseColorId: defaultBaseColorId,
+		fontId: defaultFontId,
+	};
 };

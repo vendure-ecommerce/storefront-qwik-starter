@@ -14,8 +14,8 @@ interface BuildCustomNameTagProps {
 	canvas_width_px?: number; // Width of the canvas in pixels
 	text_top?: Signal<string>; // Text for the top plate
 	text_bottom?: Signal<string>; // Text for the bottom plate
-	font_top_id?: Signal<string>; // Font ID for the top plate
-	font_bottom_id?: Signal<string>; // Font ID for the bottom plate
+	font_id_top?: Signal<string>; // Font ID for the top plate
+	font_id_bottom?: Signal<string>; // Font ID for the bottom plate
 	is_top_additive?: Signal<boolean>; // Whether the top plate is additive
 	build_top_plate: Signal<boolean>; // Whether to build the top plate
 	build_bottom_plate: Signal<boolean>; // Whether to build the bottom plate
@@ -33,8 +33,8 @@ export default component$(
 		canvas_width_px = 250,
 		text_top,
 		text_bottom,
-		font_top_id: font_id_top,
-		font_bottom_id: font_id_bottom,
+		font_id_top: font_id_top,
+		font_id_bottom: font_id_bottom,
 		is_top_additive,
 		build_top_plate,
 		build_bottom_plate,

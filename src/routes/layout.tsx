@@ -14,12 +14,18 @@ import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, IMAGE_RESOLUTIONS } from '~/constan
 import { Order } from '~/generated/graphql';
 import { getAvailableCountriesQuery } from '~/providers/shop/checkout/checkout';
 import { getCollections } from '~/providers/shop/collections/collections';
+import {
+	filamentColorFindSupported,
+	fontMenuFindAll,
+} from '~/providers/shop/orders/customizable-order';
 import { getActiveOrderQuery } from '~/providers/shop/orders/order';
 import { ActiveCustomer, AppState } from '~/types';
+import { getDefaultCustomNameTagOptions, getGoogleFontLink } from '~/utils';
 import { extractLang } from '~/utils/i18n';
 import Cart from '../components/cart/Cart';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
+import { DEFAULT_OPTIONS_FOR_NAME_TAG, DefaultOptionsForNameTag } from './constants';
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
 	cacheControl({ staleWhileRevalidate: 60 * 60 * 24 * 7, maxAge: 5 });
@@ -36,6 +42,13 @@ export const useAvailableCountriesLoader = routeLoader$(async () => {
 export const onRequest: RequestHandler = ({ request, locale }) => {
 	locale(extractLang(request.headers.get('accept-language'), request.url));
 };
+
+export const useFilamentColor = routeLoader$(async () => {
+	return await filamentColorFindSupported();
+});
+export const useFontMenu = routeLoader$(async () => {
+	return await fontMenuFindAll();
+});
 
 export default component$(() => {
 	const imageTransformer$ = $(({ src, width, height }: ImageTransformerProps): string => {
@@ -78,8 +91,27 @@ export default component$(() => {
 
 	useContextProvider(APP_STATE, state);
 
+	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
+
+	const FontMenuSignal = useFontMenu(); // Load the Font_Menu from db
+
+	const defaultOptionsForNameTag = useStore<DefaultOptionsForNameTag>(() => {
+		return getDefaultCustomNameTagOptions(FontMenuSignal.value, FilamentColorSignal.value);
+	});
+
+	useContextProvider(DEFAULT_OPTIONS_FOR_NAME_TAG, defaultOptionsForNameTag);
+
 	useVisibleTask$(async () => {
 		state.activeOrder = await getActiveOrderQuery();
+
+		const fontLink = getGoogleFontLink(FontMenuSignal.value);
+		const existingLink = document.querySelector(`link[href="${fontLink}"]`);
+		if (!existingLink) {
+			const linkElement = document.createElement('link');
+			linkElement.rel = 'stylesheet';
+			linkElement.href = fontLink;
+			document.head.appendChild(linkElement);
+		}
 	});
 
 	useVisibleTask$(({ track }) => {

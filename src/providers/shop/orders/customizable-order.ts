@@ -96,7 +96,7 @@ gql`
 `;
 
 export const getCustomBuildOption = async (customVariantId: string) => {
-	return shopSdk
+	return await shopSdk
 		.getCustomBuildOption({ customVariantId })
 		.then((res: GetCustomBuildOptionQuery) => res.getCustomBuildOption);
 };

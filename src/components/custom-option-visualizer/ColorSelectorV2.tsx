@@ -1,6 +1,6 @@
 import { component$, Signal } from '@builder.io/qwik';
 import { Select } from '@qwik-ui/headless';
-import { FilamentColorFindSupportedQuery } from '~/generated/graphql-shop';
+import { FILAMENT_COLOR } from '~/routes/constants';
 import BackgroundColorIcon from '../icons/BackgroundColorIcon';
 import TextColorIcon from '../icons/TextColorIcon';
 
@@ -12,7 +12,6 @@ import TextColorIcon from '../icons/TextColorIcon';
 	hexCode: string;
 	isOutOfStock: boolean;
  */
-export type FILAMENT_COLOR = FilamentColorFindSupportedQuery['filamentColorFindSupported'][number];
 
 interface ColorSelectorProps {
 	fieldTitle?: string; // The title of the field, e.g. "Filament Color"

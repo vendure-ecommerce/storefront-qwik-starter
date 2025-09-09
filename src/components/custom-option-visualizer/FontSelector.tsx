@@ -3,7 +3,7 @@ import { component$, Signal, useVisibleTask$ } from '@builder.io/qwik';
 
 import { Select } from '@qwik-ui/headless';
 import { useComputed$ } from '@qwik.dev/core';
-import { FontMenuFindAllQuery } from '~/generated/graphql-shop';
+import { FONT_MENU } from '~/routes/constants';
 
 // import { FONT_MENU, FontMenuItem } from './data';
 /**
@@ -15,7 +15,6 @@ import { FontMenuFindAllQuery } from '~/generated/graphql-shop';
 	subtractiveFontId: string // The font ID for subtractive printing, e.g. 'Comic_Neue__bold'
 	isDisabled: boolean
  */
-export type FONT_MENU = FontMenuFindAllQuery['fontMenuFindAll'][number];
 
 export const getGoogleFontLink = (fontMenuItems: FONT_MENU[]): string => {
 	const fontFamilies = fontMenuItems

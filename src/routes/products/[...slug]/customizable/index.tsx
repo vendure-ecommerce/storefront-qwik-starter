@@ -1,6 +1,5 @@
 import { component$, useContext, useSignal } from '@qwik.dev/core';
 import BuildCustomNameTag from '~/components/custom-option-visualizer/BuildCustomNameTag';
-import { DEFAULT_OPTIONS_FOR_NAME_TAG, useFilamentColor, useFontMenu } from './layout';
 
 import { useProductLoader } from '../layout';
 
@@ -14,6 +13,8 @@ import { addItemToOrderV2Mutation } from '~/providers/shop/orders/order';
 import { useComputed$ } from '@qwik.dev/core';
 import ProductVariantSelector from '~/components/products/ProductVariantSelector';
 import { APP_STATE } from '~/constants';
+import { DEFAULT_OPTIONS_FOR_NAME_TAG } from '~/routes/constants';
+import { useFilamentColor, useFontMenu } from '~/routes/layout';
 
 function parseBuildJson(productVariant?: ProductVariant) {
 	if (productVariant?.customFields?.customBuildJson) {
@@ -132,8 +133,8 @@ export default component$(() => {
 				canvas_width_px={250}
 				text_top={text_top}
 				text_bottom={text_bottom}
-				font_top_id={font_top_id}
-				font_bottom_id={font_bottom_id}
+				font_id_top={font_top_id}
+				font_id_bottom={font_bottom_id}
 				is_top_additive={is_top_additive}
 				build_top_plate={build_top_plate}
 				build_bottom_plate={build_bottom_plate}
