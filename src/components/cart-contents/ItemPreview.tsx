@@ -14,7 +14,6 @@ export default component$(({ filamentColorSignal, fontMenuSignal, line }: ItemPr
 	const slug = line.productVariant.product.slug;
 
 	const customizableEntityName = slugToCustomizableEntityName(slug);
-	console.log('line in ItemPreview:', line);
 	return (
 		<>
 			{/* <p> {line.customFields?.customVariant.id} </p> */}

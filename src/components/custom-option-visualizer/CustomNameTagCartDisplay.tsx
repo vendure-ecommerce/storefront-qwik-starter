@@ -40,7 +40,6 @@ export default component$(
 				build_top_plate.value = !!text_top.value;
 				build_bottom_plate.value = !!text_bottom.value;
 				errorMessage.value = is_build_valid.value ? '' : 'The build is invalid.';
-				console.log('CustomNameTag loaded:', customNameTag);
 			} else {
 				errorMessage.value = 'Failed to load custom name tag.';
 				is_build_valid.value = false;
@@ -65,7 +64,6 @@ export default component$(
 					build_bottom_plate={build_bottom_plate}
 					output_top_canvas_element_id={`top-name-tag-cart-display-${customVariantId}`}
 					output_bottom_canvas_element_id={`bottom-name-tag-cart-display-${customVariantId}`}
-					output_concatenated_canvas_element_id={`concatenated-name-tag-cart-display-${customVariantId}`}
 				/>
 				{errorMessage.value && (
 					<p class="mt-2 text-sm text-red-600" id="email-error">

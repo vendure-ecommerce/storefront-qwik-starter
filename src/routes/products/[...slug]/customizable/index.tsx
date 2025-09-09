@@ -26,6 +26,9 @@ function parseBuildJson(productVariant?: ProductVariant) {
 export default component$(() => {
 	const appState = useContext(APP_STATE);
 	const productSignal = useProductLoader();
+	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
+	const FontMenuSignal = useFontMenu(); // Load the Font_Menu from db
+
 	const addItemToOrderErrorSignal = useSignal('');
 
 	const selectedVariantIdSignal = useSignal(productSignal.value.variants[0].id);
@@ -41,15 +44,12 @@ export default component$(() => {
 		return parseBuildJson(selectedVariantSignal.value)?.build_bottom_plate ?? true;
 	});
 
-	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
-	const FontMenuSignal = useFontMenu(); // Load the Font_Menu from db
-
 	const defaultOptionsForNameTag = useContext(DEFAULT_OPTIONS_FOR_NAME_TAG);
 
 	const text_top = useSignal<string>('Happy');
 	const text_bottom = useSignal<string>('Day');
-	const font_top_id = useSignal<string>(defaultOptionsForNameTag.fontId);
-	const font_bottom_id = useSignal<string>(defaultOptionsForNameTag.fontId);
+	const font_id_top = useSignal<string>(defaultOptionsForNameTag.fontId);
+	const font_id_bottom = useSignal<string>(defaultOptionsForNameTag.fontId);
 	const primary_color_id = useSignal<string>(defaultOptionsForNameTag.primaryColorId);
 	const base_color_id = useSignal<string>(defaultOptionsForNameTag.baseColorId);
 	const is_atc_allowed = useSignal<boolean>(true);
@@ -77,8 +77,8 @@ export default component$(() => {
 							const input = {
 								textTop: build_top_plate.value ? text_top.value : null,
 								textBottom: build_bottom_plate.value ? text_bottom.value : null,
-								fontMenuIdTop: build_top_plate.value ? font_top_id.value : null,
-								fontMenuIdBottom: build_bottom_plate.value ? font_bottom_id.value : null,
+								fontMenuIdTop: build_top_plate.value ? font_id_top.value : null,
+								fontMenuIdBottom: build_bottom_plate.value ? font_id_bottom.value : null,
 								filamentColorIdPrimary: primary_color_id.value,
 								filamentColorIdBase: base_color_id.value,
 								isTopAdditive: is_top_additive.value,
@@ -133,8 +133,8 @@ export default component$(() => {
 				canvas_width_px={250}
 				text_top={text_top}
 				text_bottom={text_bottom}
-				font_id_top={font_top_id}
-				font_id_bottom={font_bottom_id}
+				font_id_top={font_id_top}
+				font_id_bottom={font_id_bottom}
 				is_top_additive={is_top_additive}
 				build_top_plate={build_top_plate}
 				build_bottom_plate={build_bottom_plate}

@@ -102,6 +102,7 @@ export default component$(
 			if (!raw_font_string) {
 				throw new Error(`Font with id "${fontId.value}" not found in fontMenu!`);
 			}
+			console.log('selectedFontInfo computed:', raw_font_string);
 			return getFontInfoFromID(raw_font_string);
 		});
 

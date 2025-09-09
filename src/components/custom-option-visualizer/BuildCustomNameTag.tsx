@@ -12,11 +12,11 @@ interface BuildCustomNameTagProps {
 	is_atc_allowed: Signal<boolean>; // Whether ATC (Add to Cart) is allowed
 	atc_disabled_reason: Signal<string>; // Reason why ATC is disabled
 	canvas_width_px?: number; // Width of the canvas in pixels
-	text_top?: Signal<string>; // Text for the top plate
-	text_bottom?: Signal<string>; // Text for the bottom plate
-	font_id_top?: Signal<string>; // Font ID for the top plate
-	font_id_bottom?: Signal<string>; // Font ID for the bottom plate
-	is_top_additive?: Signal<boolean>; // Whether the top plate is additive
+	text_top: Signal<string>; // Text for the top plate
+	text_bottom: Signal<string>; // Text for the bottom plate
+	font_id_top: Signal<string>; // Font ID for the top plate
+	font_id_bottom: Signal<string>; // Font ID for the bottom plate
+	is_top_additive: Signal<boolean>; // Whether the top plate is additive
 	build_top_plate: Signal<boolean>; // Whether to build the top plate
 	build_bottom_plate: Signal<boolean>; // Whether to build the bottom plate
 	show_estimated_board_width?: boolean; // Whether to show the estimated board width
@@ -40,9 +40,6 @@ export default component$(
 		build_bottom_plate,
 		show_estimated_board_width,
 	}: BuildCustomNameTagProps) => {
-		// const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
-		// const FontMenuSignal = useFontMenu(); // Load the Font_Menu from db
-
 		const is_top_text_valid = useSignal<boolean>(true);
 		const is_bottom_text_valid = useSignal<boolean>(true);
 		const is_build_valid = useSignal<boolean>(true);
@@ -122,7 +119,7 @@ export default component$(
 								show_estimated_board_width={show_estimated_board_width}
 							/>
 							<div class="flex flex-col justify-around p-2">
-								{build_top_plate.value && text_top && font_id_top && (
+								<div class={build_top_plate.value ? 'block' : 'hidden'}>
 									<TextWithFontInput
 										fieldTitle="Top Plate Text"
 										fontMenu={FontMenuSignal.value}
@@ -130,8 +127,8 @@ export default component$(
 										fontId={font_id_top}
 										isTextValid={is_top_text_valid}
 									/>
-								)}
-								{build_bottom_plate.value && text_bottom && font_id_bottom && (
+								</div>
+								<div class={build_bottom_plate.value ? 'block' : 'hidden'}>
 									<TextWithFontInput
 										fieldTitle="Bottom Plate Text"
 										fontMenu={FontMenuSignal.value}
@@ -139,7 +136,7 @@ export default component$(
 										fontId={font_id_bottom}
 										isTextValid={is_bottom_text_valid}
 									/>
-								)}
+								</div>
 							</div>
 						</div>
 					</div>
