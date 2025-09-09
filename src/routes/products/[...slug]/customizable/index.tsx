@@ -140,7 +140,6 @@ export default component$(() => {
 				build_bottom_plate={build_bottom_plate}
 				show_estimated_board_width={true}
 			/>
-			<p>{is_atc_allowed.value ? 'Build is valid, ATC allowed' : atc_disabled_reason.value}</p>
 		</>
 	);
 });

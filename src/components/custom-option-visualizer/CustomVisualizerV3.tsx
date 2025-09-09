@@ -363,7 +363,7 @@ export const BuildPlateVisualizerV3 = component$((args: BuildOptions) => {
 			<div title="Plate Visualizer">
 				<canvas
 					id={top_canvas_id}
-					class={`${args.build_top_plate.value ? '' : 'hidden'}`}
+					class={`${args.build_top_plate.value ? 'block' : 'hidden'}`}
 					style={{
 						width: `${build_canvas_width}px`,
 						height: '100%',
@@ -371,7 +371,7 @@ export const BuildPlateVisualizerV3 = component$((args: BuildOptions) => {
 				/>
 				<canvas
 					id={bottom_canvas_id}
-					class={`${args.build_bottom_plate.value ? '' : 'hidden'}`}
+					class={`${args.build_bottom_plate.value ? 'block' : 'hidden'}`}
 					style={{
 						width: `${build_canvas_width}px`,
 						height: '100%',
