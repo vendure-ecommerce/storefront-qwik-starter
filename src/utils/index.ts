@@ -190,29 +190,29 @@ export const generateDocumentHead = (
 };
 
 export const slugToRoute = (slug: string) => {
-	const entityName = slugToCustomizableEntityName(slug);
+	const entityName = slugToCustomizableClass(slug);
 	switch (entityName) {
-		case CustomizableEntityName.CustomNameTag:
+		case CustomizableClassName.CustomNameTag:
 			return `/products/${slug}/customizable`;
 		default:
 			return `/products/${slug}/default`;
 	}
 };
 
-export enum CustomizableEntityName {
+export enum CustomizableClassName {
 	Default = 'Default',
 	CustomNameTag = 'CustomNameTag',
 	DummyCustomProduct = 'DummyCustomProduct',
 }
 
-export const slugToCustomizableEntityName = (slug: string): CustomizableEntityName => {
+export const slugToCustomizableClass = (slug: string): CustomizableClassName => {
 	switch (slug) {
 		case 'customizable-key-ring':
-			return CustomizableEntityName.CustomNameTag;
+			return CustomizableClassName.CustomNameTag;
 		case 'dummy-custom-product':
-			return CustomizableEntityName.DummyCustomProduct;
+			return CustomizableClassName.DummyCustomProduct;
 		default:
-			return CustomizableEntityName.Default;
+			return CustomizableClassName.Default;
 	}
 };
 

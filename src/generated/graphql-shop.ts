@@ -36,21 +36,6 @@ export type AddItemInput = {
 	quantity: Scalars['Int']['input'];
 };
 
-export type AddItemToOrderV2Input = {
-	/** The customization option input for custom name tag. */
-	customNameTag?: InputMaybe<CreateCustomNameTagInput>;
-	/**
-	 * Optional asset associated with this orderLine item for this customization option
-	 * (only in effect when customizable input is provided).
-	 * This will be stored in the associated customVariant.asset field.
-	 */
-	customizableAssetId?: InputMaybe<Scalars['ID']['input']>;
-	/** Optional dummy field for future extension */
-	dummyField?: InputMaybe<CreateDummyInput>;
-	productVariantId: Scalars['ID']['input'];
-	quantity: Scalars['Int']['input'];
-};
-
 export type AddPaymentToOrderResult =
 	| IneligiblePaymentMethodError
 	| NoActiveOrderError
@@ -438,16 +423,6 @@ export type CreateAddressInput = {
 	streetLine2?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type CreateCustomNameTagInput = {
-	filamentColorIdBase: Scalars['ID']['input'];
-	filamentColorIdPrimary: Scalars['ID']['input'];
-	fontMenuIdBottom?: InputMaybe<Scalars['ID']['input']>;
-	fontMenuIdTop?: InputMaybe<Scalars['ID']['input']>;
-	isTopAdditive: Scalars['Boolean']['input'];
-	textBottom?: InputMaybe<Scalars['String']['input']>;
-	textTop?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type CreateCustomerInput = {
 	customFields?: InputMaybe<Scalars['JSON']['input']>;
 	emailAddress: Scalars['String']['input'];
@@ -455,11 +430,6 @@ export type CreateCustomerInput = {
 	lastName: Scalars['String']['input'];
 	phoneNumber?: InputMaybe<Scalars['String']['input']>;
 	title?: InputMaybe<Scalars['String']['input']>;
-};
-
-/** Dummy input for future extension */
-export type CreateDummyInput = {
-	dummyField: Scalars['String']['input'];
 };
 
 /**
@@ -828,42 +798,6 @@ export type CustomFieldConfig =
 	| StructCustomFieldConfig
 	| TextCustomFieldConfig;
 
-export type CustomNameTag = Node & {
-	__typename?: 'CustomNameTag';
-	baseColor?: Maybe<FilamentColor>;
-	createdAt?: Maybe<Scalars['DateTime']['output']>;
-	fontBottom?: Maybe<FontMenu>;
-	fontTop?: Maybe<FontMenu>;
-	id: Scalars['ID']['output'];
-	isTopAdditive?: Maybe<Scalars['Boolean']['output']>;
-	orderId?: Maybe<Scalars['ID']['output']>;
-	primaryColor?: Maybe<FilamentColor>;
-	textBottom?: Maybe<Scalars['String']['output']>;
-	textTop?: Maybe<Scalars['String']['output']>;
-	updatedAt?: Maybe<Scalars['DateTime']['output']>;
-};
-
-/**
- * This is the join table to link OrderLine with different customizable options.
- * Note that OrderLine.customFields.CustomVariantId is the foreign key that links to this entity.
- *
- * There is a ManyToOne relation from OrderLine to CustomVariant, the relation is setup in the plugin configuration.
- *
- * Plugin: Customizable-Order-Plugin
- */
-export type CustomVariant = Node & {
-	__typename?: 'CustomVariant';
-	/** 		Optional asset to represent this custom variant, e.g. a preview image		 */
-	asset?: Maybe<Asset>;
-	createdAt: Scalars['DateTime']['output'];
-	customizableEntity: CustomizableEntity;
-	/** 		This may link to different entities based on the customizableEntity		 */
-	customizableOptionId: Scalars['ID']['output'];
-	id: Scalars['ID']['output'];
-	orderId: Scalars['ID']['output'];
-	updatedAt: Scalars['DateTime']['output'];
-};
-
 export type Customer = Node & {
 	__typename?: 'Customer';
 	addresses?: Maybe<Array<Address>>;
@@ -941,16 +875,12 @@ export type CustomerSortParameter = {
 	updatedAt?: InputMaybe<SortOrder>;
 };
 
-/**
- * The pick list of customizable CustomizableEntity
- * The name will be the entity name of the associated entity, e.g. CustomNameTag
- */
-export type CustomizableEntity = Node & {
-	__typename?: 'CustomizableEntity';
+export type CustomizableClassDef = Node & {
+	__typename?: 'CustomizableClassDef';
 	createdAt: Scalars['DateTime']['output'];
-	description?: Maybe<Scalars['String']['output']>;
 	id: Scalars['ID']['output'];
 	name: Scalars['String']['output'];
+	optionDefinition: Scalars['String']['output'];
 	updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -1036,12 +966,6 @@ export type Discount = {
 	type: AdjustmentType;
 };
 
-/** This is a dummy build option for future extension */
-export type DummyBuildOption = {
-	__typename?: 'DummyBuildOption';
-	dummyField: Scalars['String']['output'];
-};
-
 /** Returned when attempting to create a Customer with an email address already registered to an existing User. */
 export type EmailAddressConflictError = ErrorResult & {
 	__typename?: 'EmailAddressConflictError';
@@ -1050,16 +974,11 @@ export type EmailAddressConflictError = ErrorResult & {
 };
 
 export const ErrorCode = {
-	AddCustomVariantToOrderFailed: 'ADD_CUSTOM_VARIANT_TO_ORDER_FAILED',
 	AlreadyLoggedInError: 'ALREADY_LOGGED_IN_ERROR',
 	CouponCodeExpiredError: 'COUPON_CODE_EXPIRED_ERROR',
 	CouponCodeInvalidError: 'COUPON_CODE_INVALID_ERROR',
 	CouponCodeLimitError: 'COUPON_CODE_LIMIT_ERROR',
-	DeleteCustomVariantFailed: 'DELETE_CUSTOM_VARIANT_FAILED',
 	EmailAddressConflictError: 'EMAIL_ADDRESS_CONFLICT_ERROR',
-	GetCustomBuildOptionError: 'GET_CUSTOM_BUILD_OPTION_ERROR',
-	GetCustomBuildOptionFailed: 'GET_CUSTOM_BUILD_OPTION_FAILED',
-	GetCustomNameTagFailed: 'GET_CUSTOM_NAME_TAG_FAILED',
 	GuestCheckoutError: 'GUEST_CHECKOUT_ERROR',
 	IdentifierChangeTokenExpiredError: 'IDENTIFIER_CHANGE_TOKEN_EXPIRED_ERROR',
 	IdentifierChangeTokenInvalidError: 'IDENTIFIER_CHANGE_TOKEN_INVALID_ERROR',
@@ -1326,17 +1245,6 @@ export type FulfillmentLine = {
 	orderLineId: Scalars['ID']['output'];
 	quantity: Scalars['Int']['output'];
 };
-
-export type GetCustomBuildOptionError = ErrorResult & {
-	__typename?: 'GetCustomBuildOptionError';
-	errorCode: ErrorCode;
-	message: Scalars['String']['output'];
-};
-
-export type GetCustomBuildOptionResult =
-	| CustomNameTag
-	| DummyBuildOption
-	| GetCustomBuildOptionError;
 
 export const GlobalFlag = {
 	False: 'FALSE',
@@ -1912,24 +1820,12 @@ export type Mutation = {
 	__typename?: 'Mutation';
 	/** Adds an item to the Order. If custom fields are defined on the OrderLine entity, a third argument 'customFields' will be available. */
 	addItemToOrder: UpdateOrderItemsResult;
-	/**
-	 * The replacement for addItemToOrder, in additional to the original functionality,
-	 * user can optionally provide customization input to create a customization entity entry and the associated CustomVariant entry.
-	 *
-	 * E.g. if the input is about a new CustomNameTag, a new CustomNameTag and a new CustomVariant will be created.
-	 */
-	addItemToOrderV2: UpdateOrderItemsResult;
 	/** Adds mutliple items to the Order. Returns a list of errors for each item that failed to add. It will still add successful items. */
 	addItemsToOrder: UpdateMultipleOrderItemsResult;
 	/** Add a Payment to the Order */
 	addPaymentToOrder: AddPaymentToOrderResult;
 	/** Adjusts an OrderLine. If custom fields are defined on the OrderLine entity, a third argument 'customFields' of type `OrderLineCustomFieldsInput` will be available. */
 	adjustOrderLine: UpdateOrderItemsResult;
-	/**
-	 * The replacement for adjustOrderLine,
-	 * if the quantity is set to 0, it also cleans up the associated CustomVariant and the associated customization entity entry.
-	 */
-	adjustOrderLineV2: UpdateOrderItemsResult;
 	/** Applies the given coupon code to the active Order */
 	applyCouponCode: ApplyCouponCodeResult;
 	/** Authenticates the user using a named authentication strategy */
@@ -1973,11 +1869,6 @@ export type Mutation = {
 	removeCouponCode?: Maybe<Order>;
 	/** Remove an OrderLine from the Order */
 	removeOrderLine: RemoveOrderItemsResult;
-	/**
-	 * The replacement for removeOrderLine,
-	 * which also cleans up the associated CustomVariant and the associated customization entity entry.
-	 */
-	removeOrderLineV2: RemoveOrderItemsResult;
 	/** Requests a password reset email to be sent */
 	requestPasswordReset?: Maybe<RequestPasswordResetResult>;
 	/**
@@ -2036,10 +1927,6 @@ export type MutationAddItemToOrderArgs = {
 	quantity: Scalars['Int']['input'];
 };
 
-export type MutationAddItemToOrderV2Args = {
-	input: AddItemToOrderV2Input;
-};
-
 export type MutationAddItemsToOrderArgs = {
 	inputs: Array<AddItemInput>;
 };
@@ -2050,11 +1937,6 @@ export type MutationAddPaymentToOrderArgs = {
 
 export type MutationAdjustOrderLineArgs = {
 	customFields?: InputMaybe<OrderLineCustomFieldsInput>;
-	orderLineId: Scalars['ID']['input'];
-	quantity: Scalars['Int']['input'];
-};
-
-export type MutationAdjustOrderLineV2Args = {
 	orderLineId: Scalars['ID']['input'];
 	quantity: Scalars['Int']['input'];
 };
@@ -2095,10 +1977,6 @@ export type MutationRemoveCouponCodeArgs = {
 };
 
 export type MutationRemoveOrderLineArgs = {
-	orderLineId: Scalars['ID']['input'];
-};
-
-export type MutationRemoveOrderLineV2Args = {
 	orderLineId: Scalars['ID']['input'];
 };
 
@@ -2412,11 +2290,11 @@ export type OrderLine = Node & {
 
 export type OrderLineCustomFields = {
 	__typename?: 'OrderLineCustomFields';
-	customVariant?: Maybe<CustomVariant>;
+	customizableOptionJson?: Maybe<Scalars['String']['output']>;
 };
 
 export type OrderLineCustomFieldsInput = {
-	customVariantId?: InputMaybe<Scalars['ID']['input']>;
+	customizableOptionJson?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type OrderList = PaginatedList & {
@@ -2878,14 +2756,14 @@ export type ProductVariantListArgs = {
 
 export type ProductCustomFields = {
 	__typename?: 'ProductCustomFields';
-	customizableEntityName?: Maybe<Scalars['String']['output']>;
+	customizableClass?: Maybe<Scalars['String']['output']>;
 };
 
 export type ProductFilterParameter = {
 	_and?: InputMaybe<Array<ProductFilterParameter>>;
 	_or?: InputMaybe<Array<ProductFilterParameter>>;
 	createdAt?: InputMaybe<DateOperators>;
-	customizableEntityName?: InputMaybe<StringOperators>;
+	customizableClass?: InputMaybe<StringOperators>;
 	description?: InputMaybe<StringOperators>;
 	enabled?: InputMaybe<BooleanOperators>;
 	id?: InputMaybe<IdOperators>;
@@ -2961,7 +2839,7 @@ export type ProductOptionTranslation = {
 
 export type ProductSortParameter = {
 	createdAt?: InputMaybe<SortOrder>;
-	customizableEntityName?: InputMaybe<SortOrder>;
+	customizableClass?: InputMaybe<SortOrder>;
 	description?: InputMaybe<SortOrder>;
 	id?: InputMaybe<SortOrder>;
 	name?: InputMaybe<SortOrder>;
@@ -3167,6 +3045,7 @@ export type Query = {
 	collection?: Maybe<Collection>;
 	/** A list of Collections available to the shop */
 	collections: CollectionList;
+	customizableClassDefFindAll: Array<CustomizableClassDef>;
 	/** Returns a list of payment methods and their eligibility based on the current active Order */
 	eligiblePaymentMethods: Array<PaymentMethodQuote>;
 	/** Returns a list of eligible shipping methods based on the current active Order */
@@ -3179,20 +3058,6 @@ export type Query = {
 	filamentColorFindSupported: Array<FilamentColor>;
 	fontMenuFindAll: Array<FontMenu>;
 	generateBraintreeClientToken: Scalars['String']['output'];
-	/**
-	 * Given a customVariantId (which is linked from OrderLine.customFields.customVariantId),
-	 * return the associated customization option entry.
-	 *
-	 * Note that the return type is a union of different possible customization option entities,
-	 * e.g. CustomNameTag, DummyBuildOption (for future extension), or an error type GetCustomBuildOptionError.
-	 *
-	 * E.g. if the customVariantId links to a CustomVariant which in turn links to a CustomNameTag entry,
-	 * then the returned type will be CustomNameTag.
-	 *
-	 * One can use '__typename' to determine the actual type of the returned entry.
-	 * E.g. if '__typename' is 'CustomNameTag', then the returned entry can be cast to 'CustomNameTag' type.
-	 */
-	getCustomBuildOption: GetCustomBuildOptionResult;
 	/** Returns information about the current authenticated User */
 	me?: Maybe<CurrentUser>;
 	/** Returns the possible next states that the activeOrder can transition to */
@@ -3237,10 +3102,6 @@ export type QueryFacetsArgs = {
 export type QueryGenerateBraintreeClientTokenArgs = {
 	includeCustomerId?: InputMaybe<Scalars['Boolean']['input']>;
 	orderId?: InputMaybe<Scalars['ID']['input']>;
-};
-
-export type QueryGetCustomBuildOptionArgs = {
-	customVariantId: Scalars['ID']['input'];
 };
 
 export type QueryOrderArgs = {
@@ -4072,15 +3933,19 @@ export type AddPaymentToOrderMutation = {
 						id: string;
 						name: string;
 						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
+						product: {
+							__typename?: 'Product';
+							id: string;
+							slug: string;
+							customFields?: {
+								__typename?: 'ProductCustomFields';
+								customizableClass?: string | null;
+							} | null;
+						};
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
-						customVariant?: {
-							__typename?: 'CustomVariant';
-							id: string;
-							customizableOptionId: string;
-						} | null;
+						customizableOptionJson?: string | null;
 					} | null;
 				}>;
 		  }
@@ -4159,15 +4024,19 @@ export type TransitionOrderToStateMutation = {
 						id: string;
 						name: string;
 						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
+						product: {
+							__typename?: 'Product';
+							id: string;
+							slug: string;
+							customFields?: {
+								__typename?: 'ProductCustomFields';
+								customizableClass?: string | null;
+							} | null;
+						};
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
-						customVariant?: {
-							__typename?: 'CustomVariant';
-							id: string;
-							customizableOptionId: string;
-						} | null;
+						customizableOptionJson?: string | null;
 					} | null;
 				}>;
 		  }
@@ -4457,26 +4326,15 @@ export type FilamentColorFindSupportedQuery = {
 	}>;
 };
 
-export type GetCustomBuildOptionQueryVariables = Exact<{
-	customVariantId: Scalars['ID']['input'];
-}>;
+export type CustomizableClassDefFindAllQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetCustomBuildOptionQuery = {
+export type CustomizableClassDefFindAllQuery = {
 	__typename?: 'Query';
-	getCustomBuildOption:
-		| {
-				__typename: 'CustomNameTag';
-				id: string;
-				isTopAdditive?: boolean | null;
-				textTop?: string | null;
-				textBottom?: string | null;
-				fontTop?: { __typename?: 'FontMenu'; id: string } | null;
-				fontBottom?: { __typename?: 'FontMenu'; id: string } | null;
-				primaryColor?: { __typename?: 'FilamentColor'; id: string } | null;
-				baseColor?: { __typename?: 'FilamentColor'; id: string } | null;
-		  }
-		| { __typename: 'DummyBuildOption'; dummyField: string }
-		| { __typename: 'GetCustomBuildOptionError'; errorCode: ErrorCode; message: string };
+	customizableClassDefFindAll: Array<{
+		__typename?: 'CustomizableClassDef';
+		name: string;
+		optionDefinition: string;
+	}>;
 };
 
 export type ApplyCouponCodeMutationVariables = Exact<{
@@ -4551,15 +4409,19 @@ export type ApplyCouponCodeMutation = {
 						id: string;
 						name: string;
 						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
+						product: {
+							__typename?: 'Product';
+							id: string;
+							slug: string;
+							customFields?: {
+								__typename?: 'ProductCustomFields';
+								customizableClass?: string | null;
+							} | null;
+						};
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
-						customVariant?: {
-							__typename?: 'CustomVariant';
-							id: string;
-							customizableOptionId: string;
-						} | null;
+						customizableOptionJson?: string | null;
 					} | null;
 				}>;
 		  };
@@ -4633,15 +4495,19 @@ export type RemoveCouponCodeMutation = {
 				id: string;
 				name: string;
 				price: any;
-				product: { __typename?: 'Product'; id: string; slug: string };
+				product: {
+					__typename?: 'Product';
+					id: string;
+					slug: string;
+					customFields?: {
+						__typename?: 'ProductCustomFields';
+						customizableClass?: string | null;
+					} | null;
+				};
 			};
 			customFields?: {
 				__typename?: 'OrderLineCustomFields';
-				customVariant?: {
-					__typename?: 'CustomVariant';
-					id: string;
-					customizableOptionId: string;
-				} | null;
+				customizableOptionJson?: string | null;
 			} | null;
 		}>;
 	} | null;
@@ -4717,15 +4583,19 @@ export type SetOrderShippingAddressMutation = {
 						id: string;
 						name: string;
 						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
+						product: {
+							__typename?: 'Product';
+							id: string;
+							slug: string;
+							customFields?: {
+								__typename?: 'ProductCustomFields';
+								customizableClass?: string | null;
+							} | null;
+						};
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
-						customVariant?: {
-							__typename?: 'CustomVariant';
-							id: string;
-							customizableOptionId: string;
-						} | null;
+						customizableOptionJson?: string | null;
 					} | null;
 				}>;
 		  };
@@ -4804,15 +4674,19 @@ export type SetCustomerForOrderMutation = {
 						id: string;
 						name: string;
 						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
+						product: {
+							__typename?: 'Product';
+							id: string;
+							slug: string;
+							customFields?: {
+								__typename?: 'ProductCustomFields';
+								customizableClass?: string | null;
+							} | null;
+						};
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
-						customVariant?: {
-							__typename?: 'CustomVariant';
-							id: string;
-							customizableOptionId: string;
-						} | null;
+						customizableOptionJson?: string | null;
 					} | null;
 				}>;
 		  };
@@ -4891,15 +4765,19 @@ export type AddItemToOrderMutation = {
 						id: string;
 						name: string;
 						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
+						product: {
+							__typename?: 'Product';
+							id: string;
+							slug: string;
+							customFields?: {
+								__typename?: 'ProductCustomFields';
+								customizableClass?: string | null;
+							} | null;
+						};
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
-						customVariant?: {
-							__typename?: 'CustomVariant';
-							id: string;
-							customizableOptionId: string;
-						} | null;
+						customizableOptionJson?: string | null;
 					} | null;
 				}>;
 		  }
@@ -4979,15 +4857,19 @@ export type SetOrderShippingMethodMutation = {
 						id: string;
 						name: string;
 						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
+						product: {
+							__typename?: 'Product';
+							id: string;
+							slug: string;
+							customFields?: {
+								__typename?: 'ProductCustomFields';
+								customizableClass?: string | null;
+							} | null;
+						};
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
-						customVariant?: {
-							__typename?: 'CustomVariant';
-							id: string;
-							customizableOptionId: string;
-						} | null;
+						customizableOptionJson?: string | null;
 					} | null;
 				}>;
 		  }
@@ -5056,15 +4938,19 @@ export type OrderDetailFragment = {
 			id: string;
 			name: string;
 			price: any;
-			product: { __typename?: 'Product'; id: string; slug: string };
+			product: {
+				__typename?: 'Product';
+				id: string;
+				slug: string;
+				customFields?: {
+					__typename?: 'ProductCustomFields';
+					customizableClass?: string | null;
+				} | null;
+			};
 		};
 		customFields?: {
 			__typename?: 'OrderLineCustomFields';
-			customVariant?: {
-				__typename?: 'CustomVariant';
-				id: string;
-				customizableOptionId: string;
-			} | null;
+			customizableOptionJson?: string | null;
 		} | null;
 	}>;
 };
@@ -5141,15 +5027,19 @@ export type AdjustOrderLineMutation = {
 						id: string;
 						name: string;
 						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
+						product: {
+							__typename?: 'Product';
+							id: string;
+							slug: string;
+							customFields?: {
+								__typename?: 'ProductCustomFields';
+								customizableClass?: string | null;
+							} | null;
+						};
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
-						customVariant?: {
-							__typename?: 'CustomVariant';
-							id: string;
-							customizableOptionId: string;
-						} | null;
+						customizableOptionJson?: string | null;
 					} | null;
 				}>;
 		  }
@@ -5227,15 +5117,19 @@ export type RemoveOrderLineMutation = {
 						id: string;
 						name: string;
 						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
+						product: {
+							__typename?: 'Product';
+							id: string;
+							slug: string;
+							customFields?: {
+								__typename?: 'ProductCustomFields';
+								customizableClass?: string | null;
+							} | null;
+						};
 					};
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
-						customVariant?: {
-							__typename?: 'CustomVariant';
-							id: string;
-							customizableOptionId: string;
-						} | null;
+						customizableOptionJson?: string | null;
 					} | null;
 				}>;
 		  }
@@ -5309,15 +5203,19 @@ export type ActiveOrderQuery = {
 				id: string;
 				name: string;
 				price: any;
-				product: { __typename?: 'Product'; id: string; slug: string };
+				product: {
+					__typename?: 'Product';
+					id: string;
+					slug: string;
+					customFields?: {
+						__typename?: 'ProductCustomFields';
+						customizableClass?: string | null;
+					} | null;
+				};
 			};
 			customFields?: {
 				__typename?: 'OrderLineCustomFields';
-				customVariant?: {
-					__typename?: 'CustomVariant';
-					id: string;
-					customizableOptionId: string;
-				} | null;
+				customizableOptionJson?: string | null;
 			} | null;
 		}>;
 	} | null;
@@ -5391,280 +5289,22 @@ export type OrderByCodeQuery = {
 				id: string;
 				name: string;
 				price: any;
-				product: { __typename?: 'Product'; id: string; slug: string };
+				product: {
+					__typename?: 'Product';
+					id: string;
+					slug: string;
+					customFields?: {
+						__typename?: 'ProductCustomFields';
+						customizableClass?: string | null;
+					} | null;
+				};
 			};
 			customFields?: {
 				__typename?: 'OrderLineCustomFields';
-				customVariant?: {
-					__typename?: 'CustomVariant';
-					id: string;
-					customizableOptionId: string;
-				} | null;
+				customizableOptionJson?: string | null;
 			} | null;
 		}>;
 	} | null;
-};
-
-export type AddItemToOrderV2MutationVariables = Exact<{
-	input: AddItemToOrderV2Input;
-}>;
-
-export type AddItemToOrderV2Mutation = {
-	__typename?: 'Mutation';
-	addItemToOrderV2:
-		| { __typename?: 'InsufficientStockError'; errorCode: ErrorCode; message: string }
-		| { __typename?: 'NegativeQuantityError'; errorCode: ErrorCode; message: string }
-		| {
-				__typename: 'Order';
-				id: string;
-				code: string;
-				active: boolean;
-				createdAt: any;
-				state: string;
-				currencyCode: CurrencyCode;
-				couponCodes: Array<string>;
-				totalQuantity: number;
-				subTotal: any;
-				subTotalWithTax: any;
-				shippingWithTax: any;
-				totalWithTax: any;
-				discounts: Array<{
-					__typename?: 'Discount';
-					type: AdjustmentType;
-					description: string;
-					amountWithTax: any;
-				}>;
-				taxSummary: Array<{
-					__typename?: 'OrderTaxSummary';
-					description: string;
-					taxRate: number;
-					taxTotal: any;
-				}>;
-				customer?: {
-					__typename?: 'Customer';
-					id: string;
-					firstName: string;
-					lastName: string;
-					emailAddress: string;
-				} | null;
-				shippingAddress?: {
-					__typename?: 'OrderAddress';
-					fullName?: string | null;
-					streetLine1?: string | null;
-					streetLine2?: string | null;
-					company?: string | null;
-					city?: string | null;
-					province?: string | null;
-					postalCode?: string | null;
-					countryCode?: string | null;
-					phoneNumber?: string | null;
-				} | null;
-				shippingLines: Array<{
-					__typename?: 'ShippingLine';
-					priceWithTax: any;
-					shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
-				}>;
-				lines: Array<{
-					__typename?: 'OrderLine';
-					id: string;
-					unitPriceWithTax: any;
-					linePriceWithTax: any;
-					quantity: number;
-					featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
-					productVariant: {
-						__typename?: 'ProductVariant';
-						id: string;
-						name: string;
-						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
-					};
-					customFields?: {
-						__typename?: 'OrderLineCustomFields';
-						customVariant?: {
-							__typename?: 'CustomVariant';
-							id: string;
-							customizableOptionId: string;
-						} | null;
-					} | null;
-				}>;
-		  }
-		| { __typename?: 'OrderInterceptorError'; errorCode: ErrorCode; message: string }
-		| { __typename?: 'OrderLimitError'; errorCode: ErrorCode; message: string }
-		| { __typename?: 'OrderModificationError'; errorCode: ErrorCode; message: string };
-};
-
-export type AdjustOrderLineV2MutationVariables = Exact<{
-	orderLineId: Scalars['ID']['input'];
-	quantity: Scalars['Int']['input'];
-}>;
-
-export type AdjustOrderLineV2Mutation = {
-	__typename?: 'Mutation';
-	adjustOrderLineV2:
-		| { __typename?: 'InsufficientStockError'; errorCode: ErrorCode; message: string }
-		| { __typename?: 'NegativeQuantityError'; errorCode: ErrorCode; message: string }
-		| {
-				__typename: 'Order';
-				id: string;
-				code: string;
-				active: boolean;
-				createdAt: any;
-				state: string;
-				currencyCode: CurrencyCode;
-				couponCodes: Array<string>;
-				totalQuantity: number;
-				subTotal: any;
-				subTotalWithTax: any;
-				shippingWithTax: any;
-				totalWithTax: any;
-				discounts: Array<{
-					__typename?: 'Discount';
-					type: AdjustmentType;
-					description: string;
-					amountWithTax: any;
-				}>;
-				taxSummary: Array<{
-					__typename?: 'OrderTaxSummary';
-					description: string;
-					taxRate: number;
-					taxTotal: any;
-				}>;
-				customer?: {
-					__typename?: 'Customer';
-					id: string;
-					firstName: string;
-					lastName: string;
-					emailAddress: string;
-				} | null;
-				shippingAddress?: {
-					__typename?: 'OrderAddress';
-					fullName?: string | null;
-					streetLine1?: string | null;
-					streetLine2?: string | null;
-					company?: string | null;
-					city?: string | null;
-					province?: string | null;
-					postalCode?: string | null;
-					countryCode?: string | null;
-					phoneNumber?: string | null;
-				} | null;
-				shippingLines: Array<{
-					__typename?: 'ShippingLine';
-					priceWithTax: any;
-					shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
-				}>;
-				lines: Array<{
-					__typename?: 'OrderLine';
-					id: string;
-					unitPriceWithTax: any;
-					linePriceWithTax: any;
-					quantity: number;
-					featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
-					productVariant: {
-						__typename?: 'ProductVariant';
-						id: string;
-						name: string;
-						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
-					};
-					customFields?: {
-						__typename?: 'OrderLineCustomFields';
-						customVariant?: {
-							__typename?: 'CustomVariant';
-							id: string;
-							customizableOptionId: string;
-						} | null;
-					} | null;
-				}>;
-		  }
-		| { __typename?: 'OrderInterceptorError'; errorCode: ErrorCode; message: string }
-		| { __typename?: 'OrderLimitError'; errorCode: ErrorCode; message: string }
-		| { __typename?: 'OrderModificationError'; errorCode: ErrorCode; message: string };
-};
-
-export type RemoveOrderLineV2MutationVariables = Exact<{
-	orderLineId: Scalars['ID']['input'];
-}>;
-
-export type RemoveOrderLineV2Mutation = {
-	__typename?: 'Mutation';
-	removeOrderLineV2:
-		| {
-				__typename: 'Order';
-				id: string;
-				code: string;
-				active: boolean;
-				createdAt: any;
-				state: string;
-				currencyCode: CurrencyCode;
-				couponCodes: Array<string>;
-				totalQuantity: number;
-				subTotal: any;
-				subTotalWithTax: any;
-				shippingWithTax: any;
-				totalWithTax: any;
-				discounts: Array<{
-					__typename?: 'Discount';
-					type: AdjustmentType;
-					description: string;
-					amountWithTax: any;
-				}>;
-				taxSummary: Array<{
-					__typename?: 'OrderTaxSummary';
-					description: string;
-					taxRate: number;
-					taxTotal: any;
-				}>;
-				customer?: {
-					__typename?: 'Customer';
-					id: string;
-					firstName: string;
-					lastName: string;
-					emailAddress: string;
-				} | null;
-				shippingAddress?: {
-					__typename?: 'OrderAddress';
-					fullName?: string | null;
-					streetLine1?: string | null;
-					streetLine2?: string | null;
-					company?: string | null;
-					city?: string | null;
-					province?: string | null;
-					postalCode?: string | null;
-					countryCode?: string | null;
-					phoneNumber?: string | null;
-				} | null;
-				shippingLines: Array<{
-					__typename?: 'ShippingLine';
-					priceWithTax: any;
-					shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
-				}>;
-				lines: Array<{
-					__typename?: 'OrderLine';
-					id: string;
-					unitPriceWithTax: any;
-					linePriceWithTax: any;
-					quantity: number;
-					featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
-					productVariant: {
-						__typename?: 'ProductVariant';
-						id: string;
-						name: string;
-						price: any;
-						product: { __typename?: 'Product'; id: string; slug: string };
-					};
-					customFields?: {
-						__typename?: 'OrderLineCustomFields';
-						customVariant?: {
-							__typename?: 'CustomVariant';
-							id: string;
-							customizableOptionId: string;
-						} | null;
-					} | null;
-				}>;
-		  }
-		| { __typename?: 'OrderInterceptorError'; errorCode: ErrorCode; message: string }
-		| { __typename?: 'OrderModificationError'; errorCode: ErrorCode; message: string };
 };
 
 export type DetailedProductFragment = {
@@ -5707,10 +5347,7 @@ export type DetailedProductFragment = {
 			customBuildJson?: string | null;
 		} | null;
 	}>;
-	customFields?: {
-		__typename?: 'ProductCustomFields';
-		customizableEntityName?: string | null;
-	} | null;
+	customFields?: { __typename?: 'ProductCustomFields'; customizableClass?: string | null } | null;
 };
 
 export type ProductQueryVariables = Exact<{
@@ -5760,10 +5397,7 @@ export type ProductQuery = {
 				customBuildJson?: string | null;
 			} | null;
 		}>;
-		customFields?: {
-			__typename?: 'ProductCustomFields';
-			customizableEntityName?: string | null;
-		} | null;
+		customFields?: { __typename?: 'ProductCustomFields'; customizableClass?: string | null } | null;
 	} | null;
 };
 
@@ -5899,13 +5533,13 @@ export const OrderDetailFragmentDoc = gql`
 				product {
 					id
 					slug
+					customFields {
+						customizableClass
+					}
 				}
 			}
 			customFields {
-				customVariant {
-					id
-					customizableOptionId
-				}
+				customizableOptionJson
 			}
 		}
 	}
@@ -5959,7 +5593,7 @@ export const DetailedProductFragmentDoc = gql`
 			}
 		}
 		customFields {
-			customizableEntityName
+			customizableClass
 		}
 	}
 `;
@@ -6346,37 +5980,11 @@ export const FilamentColorFindSupportedDocument = gql`
 		}
 	}
 `;
-export const GetCustomBuildOptionDocument = gql`
-	query getCustomBuildOption($customVariantId: ID!) {
-		getCustomBuildOption(customVariantId: $customVariantId) {
-			... on CustomNameTag {
-				__typename
-				id
-				isTopAdditive
-				textTop
-				textBottom
-				fontTop {
-					id
-				}
-				fontBottom {
-					id
-				}
-				primaryColor {
-					id
-				}
-				baseColor {
-					id
-				}
-			}
-			... on DummyBuildOption {
-				__typename
-				dummyField
-			}
-			... on GetCustomBuildOptionError {
-				__typename
-				errorCode
-				message
-			}
+export const CustomizableClassDefFindAllDocument = gql`
+	query customizableClassDefFindAll {
+		customizableClassDefFindAll {
+			name
+			optionDefinition
 		}
 	}
 `;
@@ -6492,42 +6100,6 @@ export const OrderByCodeDocument = gql`
 	query orderByCode($code: String!) {
 		orderByCode(code: $code) {
 			...OrderDetail
-		}
-	}
-	${OrderDetailFragmentDoc}
-`;
-export const AddItemToOrderV2Document = gql`
-	mutation addItemToOrderV2($input: AddItemToOrderV2Input!) {
-		addItemToOrderV2(input: $input) {
-			...OrderDetail
-			... on ErrorResult {
-				errorCode
-				message
-			}
-		}
-	}
-	${OrderDetailFragmentDoc}
-`;
-export const AdjustOrderLineV2Document = gql`
-	mutation adjustOrderLineV2($orderLineId: ID!, $quantity: Int!) {
-		adjustOrderLineV2(orderLineId: $orderLineId, quantity: $quantity) {
-			...OrderDetail
-			... on ErrorResult {
-				errorCode
-				message
-			}
-		}
-	}
-	${OrderDetailFragmentDoc}
-`;
-export const RemoveOrderLineV2Document = gql`
-	mutation removeOrderLineV2($orderLineId: ID!) {
-		removeOrderLineV2(orderLineId: $orderLineId) {
-			...OrderDetail
-			... on ErrorResult {
-				errorCode
-				message
-			}
 		}
 	}
 	${OrderDetailFragmentDoc}
@@ -6865,15 +6437,15 @@ export function getSdk<C>(requester: Requester<C>) {
 				options
 			) as Promise<FilamentColorFindSupportedQuery>;
 		},
-		getCustomBuildOption(
-			variables: GetCustomBuildOptionQueryVariables,
+		customizableClassDefFindAll(
+			variables?: CustomizableClassDefFindAllQueryVariables,
 			options?: C
-		): Promise<GetCustomBuildOptionQuery> {
-			return requester<GetCustomBuildOptionQuery, GetCustomBuildOptionQueryVariables>(
-				GetCustomBuildOptionDocument,
+		): Promise<CustomizableClassDefFindAllQuery> {
+			return requester<CustomizableClassDefFindAllQuery, CustomizableClassDefFindAllQueryVariables>(
+				CustomizableClassDefFindAllDocument,
 				variables,
 				options
-			) as Promise<GetCustomBuildOptionQuery>;
+			) as Promise<CustomizableClassDefFindAllQuery>;
 		},
 		applyCouponCode(
 			variables: ApplyCouponCodeMutationVariables,
@@ -6968,36 +6540,6 @@ export function getSdk<C>(requester: Requester<C>) {
 				variables,
 				options
 			) as Promise<OrderByCodeQuery>;
-		},
-		addItemToOrderV2(
-			variables: AddItemToOrderV2MutationVariables,
-			options?: C
-		): Promise<AddItemToOrderV2Mutation> {
-			return requester<AddItemToOrderV2Mutation, AddItemToOrderV2MutationVariables>(
-				AddItemToOrderV2Document,
-				variables,
-				options
-			) as Promise<AddItemToOrderV2Mutation>;
-		},
-		adjustOrderLineV2(
-			variables: AdjustOrderLineV2MutationVariables,
-			options?: C
-		): Promise<AdjustOrderLineV2Mutation> {
-			return requester<AdjustOrderLineV2Mutation, AdjustOrderLineV2MutationVariables>(
-				AdjustOrderLineV2Document,
-				variables,
-				options
-			) as Promise<AdjustOrderLineV2Mutation>;
-		},
-		removeOrderLineV2(
-			variables: RemoveOrderLineV2MutationVariables,
-			options?: C
-		): Promise<RemoveOrderLineV2Mutation> {
-			return requester<RemoveOrderLineV2Mutation, RemoveOrderLineV2MutationVariables>(
-				RemoveOrderLineV2Document,
-				variables,
-				options
-			) as Promise<RemoveOrderLineV2Mutation>;
 		},
 		product(variables?: ProductQueryVariables, options?: C): Promise<ProductQuery> {
 			return requester<ProductQuery, ProductQueryVariables>(

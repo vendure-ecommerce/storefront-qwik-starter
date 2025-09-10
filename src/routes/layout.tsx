@@ -15,17 +15,24 @@ import { Order } from '~/generated/graphql';
 import { getAvailableCountriesQuery } from '~/providers/shop/checkout/checkout';
 import { getCollections } from '~/providers/shop/collections/collections';
 import {
+	customizableClassDefFindAll,
 	filamentColorFindSupported,
 	fontMenuFindAll,
 } from '~/providers/shop/orders/customizable-order';
 import { getActiveOrderQuery } from '~/providers/shop/orders/order';
 import { ActiveCustomer, AppState } from '~/types';
 import { getDefaultCustomNameTagOptions, getGoogleFontLink } from '~/utils';
+import { parseCustomizableClassDef } from '~/utils/customizable-order';
 import { extractLang } from '~/utils/i18n';
 import Cart from '../components/cart/Cart';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
-import { DEFAULT_OPTIONS_FOR_NAME_TAG, DefaultOptionsForNameTag } from './constants';
+import {
+	CUSTOMIZABLE_CLASS_DEF_TAG,
+	CustomizableClassDefTag,
+	DEFAULT_OPTIONS_FOR_NAME_TAG,
+	DefaultOptionsForNameTag,
+} from './constants';
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
 	cacheControl({ staleWhileRevalidate: 60 * 60 * 24 * 7, maxAge: 5 });
@@ -48,6 +55,10 @@ export const useFilamentColor = routeLoader$(async () => {
 });
 export const useFontMenu = routeLoader$(async () => {
 	return await fontMenuFindAll();
+});
+
+export const useCustomizableClassDef = routeLoader$(async () => {
+	return await customizableClassDefFindAll();
 });
 
 export default component$(() => {
@@ -92,14 +103,20 @@ export default component$(() => {
 	useContextProvider(APP_STATE, state);
 
 	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
-
 	const FontMenuSignal = useFontMenu(); // Load the Font_Menu from db
+	const CustomizableClassDefSignal = useCustomizableClassDef(); // Load the Customizable_Class_Def from db
 
 	const defaultOptionsForNameTag = useStore<DefaultOptionsForNameTag>(() => {
 		return getDefaultCustomNameTagOptions(FontMenuSignal.value, FilamentColorSignal.value);
 	});
 
 	useContextProvider(DEFAULT_OPTIONS_FOR_NAME_TAG, defaultOptionsForNameTag);
+
+	const customizableClassDefTag = useStore<CustomizableClassDefTag[]>(() => {
+		return parseCustomizableClassDef(CustomizableClassDefSignal.value);
+	});
+
+	useContextProvider(CUSTOMIZABLE_CLASS_DEF_TAG, customizableClassDefTag);
 
 	useVisibleTask$(async () => {
 		state.activeOrder = await getActiveOrderQuery();

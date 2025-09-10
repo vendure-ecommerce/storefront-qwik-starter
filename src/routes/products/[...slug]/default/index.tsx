@@ -8,7 +8,7 @@ import HeartIcon from '~/components/icons/HeartIcon';
 import Price from '~/components/products/Price';
 import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import { Order } from '~/generated/graphql';
-import { addItemToOrderV2Mutation } from '~/providers/shop/orders/order';
+import { addItemToOrderMutation } from '~/providers/shop/orders/order';
 
 import { useComputed$, useSignal } from '@qwik.dev/core';
 import ProductVariantSelector from '~/components/products/ProductVariantSelector';
@@ -62,10 +62,10 @@ export default component$(() => {
 						}}
 						onClick$={async () => {
 							if (quantitySignal.value[selectedVariantIdSignal.value] <= 7) {
-								const addItemToOrder = await addItemToOrderV2Mutation({
-									productVariantId: selectedVariantIdSignal.value,
-									quantity: 1,
-								});
+								const addItemToOrder = await addItemToOrderMutation(
+									selectedVariantIdSignal.value,
+									1
+								);
 								if (addItemToOrder.__typename !== 'Order') {
 									addItemToOrderErrorSignal.value = addItemToOrder.errorCode;
 								} else {

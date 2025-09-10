@@ -1,17 +1,25 @@
-import { component$, ReadonlySignal, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
-import { getCustomBuildOption } from '~/providers/shop/orders/customizable-order';
+import { component$, ReadonlySignal, useContext, useSignal } from '@qwik.dev/core';
 import { DEFAULT_OPTIONS_FOR_NAME_TAG } from '~/routes/constants';
+import { genHash, getCustomizableOption } from '~/utils/customizable-order';
 import { BuildPlateVisualizerV3 } from './CustomVisualizerV3';
 
 interface CustomNameTagCartDisplayProps {
 	filamentColorSignal: ReadonlySignal<any>;
 	fontMenuSignal: ReadonlySignal<any>;
-	customVariantId: string;
+	customizableOptionJson: string;
+	classDef: { field: string; type: string }[];
 }
 
 export default component$(
-	({ filamentColorSignal, fontMenuSignal, customVariantId }: CustomNameTagCartDisplayProps) => {
+	({
+		filamentColorSignal,
+		fontMenuSignal,
+		customizableOptionJson,
+		classDef,
+	}: CustomNameTagCartDisplayProps) => {
 		const defaultOptionsForNameTag = useContext(DEFAULT_OPTIONS_FOR_NAME_TAG);
+		const uniqueId = genHash(customizableOptionJson);
+
 		const errorMessage = useSignal<string>('');
 
 		const text_top = useSignal<string>('GG'); // Changed from undefined to empty string
@@ -26,25 +34,18 @@ export default component$(
 
 		const is_build_valid = useSignal<boolean>(true);
 
-		useVisibleTask$(async () => {
-			const customNameTag = await getCustomBuildOption(customVariantId);
-			if (customNameTag?.__typename === 'CustomNameTag') {
-				text_top.value = customNameTag.textTop ?? '';
-				text_bottom.value = customNameTag.textBottom ?? '';
-				font_id_top.value = customNameTag.fontTop?.id ?? '';
-				font_id_bottom.value = customNameTag.fontBottom?.id ?? '';
-				primary_color_id.value =
-					customNameTag.primaryColor?.id ?? defaultOptionsForNameTag.primaryColorId;
-				base_color_id.value = customNameTag.baseColor?.id ?? defaultOptionsForNameTag.baseColorId;
-				is_top_additive.value = customNameTag.isTopAdditive ?? true;
-				build_top_plate.value = !!text_top.value;
-				build_bottom_plate.value = !!text_bottom.value;
-				errorMessage.value = is_build_valid.value ? '' : 'The build is invalid.';
-			} else {
-				errorMessage.value = 'Failed to load custom name tag.';
-				is_build_valid.value = false;
-			}
-		});
+		const customNameTag = getCustomizableOption(JSON.parse(customizableOptionJson), classDef);
+		text_top.value = customNameTag.textTop ?? '';
+		text_bottom.value = customNameTag.textBottom ?? '';
+		font_id_top.value = customNameTag.fontMenuIdTop ?? '';
+		font_id_bottom.value = customNameTag.fontMenuIdBottom ?? '';
+		primary_color_id.value =
+			customNameTag.filamentColorIdPrimary ?? defaultOptionsForNameTag.primaryColorId;
+		base_color_id.value = customNameTag.filamentColorIdBase ?? defaultOptionsForNameTag.baseColorId;
+		is_top_additive.value = customNameTag.isTopAdditive ?? true;
+		build_top_plate.value = !!text_top.value;
+		build_bottom_plate.value = !!text_bottom.value;
+		errorMessage.value = is_build_valid.value ? '' : 'The build is invalid.';
 
 		return (
 			<>
@@ -62,8 +63,8 @@ export default component$(
 					is_build_valid={is_build_valid}
 					build_top_plate={build_top_plate}
 					build_bottom_plate={build_bottom_plate}
-					output_top_canvas_element_id={`top-name-tag-cart-display-${customVariantId}`}
-					output_bottom_canvas_element_id={`bottom-name-tag-cart-display-${customVariantId}`}
+					output_top_canvas_element_id={`top-${uniqueId}`}
+					output_bottom_canvas_element_id={`btm-${uniqueId}`}
 				/>
 				{errorMessage.value && (
 					<p class="mt-2 text-sm text-red-600" id="email-error">

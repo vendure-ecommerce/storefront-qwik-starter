@@ -6,27 +6,6 @@ input AddItemInput {
 	quantity: Int!
 }
 
-input AddItemToOrderV2Input {
-	"""
-	The customization option input for custom name tag.
-	"""
-	customNameTag: CreateCustomNameTagInput
-
-	"""
-	Optional asset associated with this orderLine item for this customization option
-	(only in effect when customizable input is provided).
-	This will be stored in the associated customVariant.asset field.
-	"""
-	customizableAssetId: ID
-
-	"""
-	Optional dummy field for future extension
-	"""
-	dummyField: CreateDummyInput
-	productVariantId: ID!
-	quantity: Int!
-}
-
 union AddPaymentToOrderResult =
 	| IneligiblePaymentMethodError
 	| NoActiveOrderError
@@ -417,16 +396,6 @@ input CreateAddressInput {
 	streetLine2: String
 }
 
-input CreateCustomNameTagInput {
-	filamentColorIdBase: ID!
-	filamentColorIdPrimary: ID!
-	fontMenuIdBottom: ID
-	fontMenuIdTop: ID
-	isTopAdditive: Boolean!
-	textBottom: String
-	textTop: String
-}
-
 input CreateCustomerInput {
 	customFields: JSON
 	emailAddress: String!
@@ -434,13 +403,6 @@ input CreateCustomerInput {
 	lastName: String!
 	phoneNumber: String
 	title: String
-}
-
-"""
-Dummy input for future extension
-"""
-input CreateDummyInput {
-	dummyField: String!
 }
 
 """
@@ -1276,45 +1238,6 @@ union CustomFieldConfig =
 	| StructCustomFieldConfig
 	| TextCustomFieldConfig
 
-type CustomNameTag implements Node {
-	baseColor: FilamentColor
-	createdAt: DateTime
-	fontBottom: FontMenu
-	fontTop: FontMenu
-	id: ID!
-	isTopAdditive: Boolean
-	orderId: ID
-	primaryColor: FilamentColor
-	textBottom: String
-	textTop: String
-	updatedAt: DateTime
-}
-
-"""
-This is the join table to link OrderLine with different customizable options.
-Note that OrderLine.customFields.CustomVariantId is the foreign key that links to this entity.
-
-There is a ManyToOne relation from OrderLine to CustomVariant, the relation is setup in the plugin configuration.
-
-Plugin: Customizable-Order-Plugin
-"""
-type CustomVariant implements Node {
-	"""
-	Optional asset to represent this custom variant, e.g. a preview image
-	"""
-	asset: Asset
-	createdAt: DateTime!
-	customizableEntity: CustomizableEntity!
-
-	"""
-	This may link to different entities based on the customizableEntity
-	"""
-	customizableOptionId: ID!
-	id: ID!
-	orderId: ID!
-	updatedAt: DateTime!
-}
-
 type Customer implements Node {
 	addresses: [Address!]
 	createdAt: DateTime!
@@ -1395,15 +1318,11 @@ input CustomerSortParameter {
 	updatedAt: SortOrder
 }
 
-"""
-The pick list of customizable CustomizableEntity
-The name will be the entity name of the associated entity, e.g. CustomNameTag
-"""
-type CustomizableEntity implements Node {
+type CustomizableClassDef implements Node {
 	createdAt: DateTime!
-	description: String
 	id: ID!
 	name: String!
+	optionDefinition: String!
 	updatedAt: DateTime!
 }
 
@@ -1499,13 +1418,6 @@ type Discount {
 }
 
 """
-This is a dummy build option for future extension
-"""
-type DummyBuildOption {
-	dummyField: String!
-}
-
-"""
 Returned when attempting to create a Customer with an email address already registered to an existing User.
 """
 type EmailAddressConflictError implements ErrorResult {
@@ -1514,16 +1426,11 @@ type EmailAddressConflictError implements ErrorResult {
 }
 
 enum ErrorCode {
-	ADD_CUSTOM_VARIANT_TO_ORDER_FAILED
 	ALREADY_LOGGED_IN_ERROR
 	COUPON_CODE_EXPIRED_ERROR
 	COUPON_CODE_INVALID_ERROR
 	COUPON_CODE_LIMIT_ERROR
-	DELETE_CUSTOM_VARIANT_FAILED
 	EMAIL_ADDRESS_CONFLICT_ERROR
-	GET_CUSTOM_BUILD_OPTION_ERROR
-	GET_CUSTOM_BUILD_OPTION_FAILED
-	GET_CUSTOM_NAME_TAG_FAILED
 	GUEST_CHECKOUT_ERROR
 	IDENTIFIER_CHANGE_TOKEN_EXPIRED_ERROR
 	IDENTIFIER_CHANGE_TOKEN_INVALID_ERROR
@@ -1811,13 +1718,6 @@ type FulfillmentLine {
 	orderLineId: ID!
 	quantity: Int!
 }
-
-type GetCustomBuildOptionError implements ErrorResult {
-	errorCode: ErrorCode!
-	message: String!
-}
-
-union GetCustomBuildOptionResult = CustomNameTag | DummyBuildOption | GetCustomBuildOptionError
 
 enum GlobalFlag {
 	FALSE
@@ -2891,14 +2791,6 @@ type Mutation {
 	): UpdateOrderItemsResult!
 
 	"""
-	The replacement for addItemToOrder, in additional to the original functionality,
-	user can optionally provide customization input to create a customization entity entry and the associated CustomVariant entry.
-
-	E.g. if the input is about a new CustomNameTag, a new CustomNameTag and a new CustomVariant will be created.
-	"""
-	addItemToOrderV2(input: AddItemToOrderV2Input!): UpdateOrderItemsResult!
-
-	"""
 	Adds mutliple items to the Order. Returns a list of errors for each item that failed to add. It will still add successful items.
 	"""
 	addItemsToOrder(inputs: [AddItemInput!]!): UpdateMultipleOrderItemsResult!
@@ -2916,12 +2808,6 @@ type Mutation {
 		orderLineId: ID!
 		quantity: Int!
 	): UpdateOrderItemsResult!
-
-	"""
-	The replacement for adjustOrderLine,
-	if the quantity is set to 0, it also cleans up the associated CustomVariant and the associated customization entity entry.
-	"""
-	adjustOrderLineV2(orderLineId: ID!, quantity: Int!): UpdateOrderItemsResult!
 
 	"""
 	Applies the given coupon code to the active Order
@@ -2994,12 +2880,6 @@ type Mutation {
 	Remove an OrderLine from the Order
 	"""
 	removeOrderLine(orderLineId: ID!): RemoveOrderItemsResult!
-
-	"""
-	The replacement for removeOrderLine,
-	which also cleans up the associated CustomVariant and the associated customization entity entry.
-	"""
-	removeOrderLineV2(orderLineId: ID!): RemoveOrderItemsResult!
 
 	"""
 	Requests a password reset email to be sent
@@ -3417,11 +3297,11 @@ type OrderLine implements Node {
 }
 
 type OrderLineCustomFields {
-	customVariant: CustomVariant
+	customizableOptionJson: String
 }
 
 input OrderLineCustomFieldsInput {
-	customVariantId: ID
+	customizableOptionJson: String
 }
 
 type OrderList implements PaginatedList {
@@ -4189,14 +4069,14 @@ type Product implements Node {
 }
 
 type ProductCustomFields {
-	customizableEntityName: String
+	customizableClass: String
 }
 
 input ProductFilterParameter {
 	_and: [ProductFilterParameter!]
 	_or: [ProductFilterParameter!]
 	createdAt: DateOperators
-	customizableEntityName: StringOperators
+	customizableClass: StringOperators
 	description: StringOperators
 	enabled: BooleanOperators
 	id: IDOperators
@@ -4281,7 +4161,7 @@ type ProductOptionTranslation {
 
 input ProductSortParameter {
 	createdAt: SortOrder
-	customizableEntityName: SortOrder
+	customizableClass: SortOrder
 	description: SortOrder
 	id: SortOrder
 	name: SortOrder
@@ -4508,6 +4388,7 @@ type Query {
 	A list of Collections available to the shop
 	"""
 	collections(options: CollectionListOptions): CollectionList!
+	customizableClassDefFindAll: [CustomizableClassDef!]!
 
 	"""
 	Returns a list of payment methods and their eligibility based on the current active Order
@@ -4532,21 +4413,6 @@ type Query {
 	filamentColorFindSupported: [FilamentColor!]!
 	fontMenuFindAll: [FontMenu!]!
 	generateBraintreeClientToken(includeCustomerId: Boolean, orderId: ID): String!
-
-	"""
-	Given a customVariantId (which is linked from OrderLine.customFields.customVariantId),
-	return the associated customization option entry.
-
-	Note that the return type is a union of different possible customization option entities,
-	e.g. CustomNameTag, DummyBuildOption (for future extension), or an error type GetCustomBuildOptionError.
-
-	E.g. if the customVariantId links to a CustomVariant which in turn links to a CustomNameTag entry,
-	then the returned type will be CustomNameTag.
-
-	One can use '__typename' to determine the actual type of the returned entry.
-	E.g. if '__typename' is 'CustomNameTag', then the returned entry can be cast to 'CustomNameTag' type.
-	"""
-	getCustomBuildOption(customVariantId: ID!): GetCustomBuildOptionResult!
 
 	"""
 	Returns information about the current authenticated User

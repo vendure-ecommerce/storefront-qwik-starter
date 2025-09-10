@@ -70,7 +70,7 @@ export const detailedProductFragment = gql`
 			}
 		}
 		customFields {
-			customizableEntityName
+			customizableClass
 		}
 	}
 `;

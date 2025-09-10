@@ -18,3 +18,12 @@ export const DEFAULT_FONT_NAME = 'Comic Neue';
 export type FONT_MENU = FontMenuFindAllQuery['fontMenuFindAll'][number];
 
 export type FILAMENT_COLOR = FilamentColorFindSupportedQuery['filamentColorFindSupported'][number];
+
+export interface CustomizableClassDefTag {
+	name: string;
+	optionDefinition: { field: string; type: string }[];
+}
+
+export const CUSTOMIZABLE_CLASS_DEF_TAG = createContextId<CustomizableClassDefTag[]>(
+	'customizable_class_name_tag'
+);

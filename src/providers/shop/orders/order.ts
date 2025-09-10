@@ -13,13 +13,9 @@ import {
 	SetOrderShippingMethodMutation,
 } from '~/generated/graphql';
 import {
-	AddItemToOrderV2Input,
-	AddItemToOrderV2Mutation,
-	AdjustOrderLineV2Mutation,
 	ApplyCouponCodeMutation,
 	OrderLineCustomFieldsInput,
 	RemoveCouponCodeMutation,
-	RemoveOrderLineV2Mutation,
 } from '~/generated/graphql-shop';
 import { shopSdk } from '~/graphql-wrapper';
 
@@ -34,7 +30,7 @@ export const getOrderByCodeQuery = async (code: string) => {
 export const addItemToOrderMutation = async (
 	productVariantId: string,
 	quantity: number,
-	customFields: OrderLineCustomFieldsInput | undefined
+	customFields?: OrderLineCustomFieldsInput | undefined
 ) => {
 	return shopSdk
 		.addItemToOrder({
@@ -228,13 +224,13 @@ gql`
 				product {
 					id
 					slug
+					customFields {
+						customizableClass
+					}
 				}
 			}
 			customFields {
-				customVariant {
-					id
-					customizableOptionId
-				}
+				customizableOptionJson
 			}
 		}
 	}
@@ -279,57 +275,3 @@ gql`
 		}
 	}
 `;
-
-gql`
-	mutation addItemToOrderV2($input: AddItemToOrderV2Input!) {
-		addItemToOrderV2(input: $input) {
-			...OrderDetail
-			... on ErrorResult {
-				errorCode
-				message
-			}
-		}
-	}
-`;
-
-export const addItemToOrderV2Mutation = async (input: AddItemToOrderV2Input) => {
-	return shopSdk
-		.addItemToOrderV2({ input })
-		.then((res: AddItemToOrderV2Mutation) => res.addItemToOrderV2);
-};
-
-gql`
-	mutation adjustOrderLineV2($orderLineId: ID!, $quantity: Int!) {
-		adjustOrderLineV2(orderLineId: $orderLineId, quantity: $quantity) {
-			...OrderDetail
-			... on ErrorResult {
-				errorCode
-				message
-			}
-		}
-	}
-`;
-
-export const adjustOrderLineV2Mutation = async (orderLineId: string, quantity: number) => {
-	return shopSdk
-		.adjustOrderLineV2({ orderLineId, quantity })
-		.then((res: AdjustOrderLineV2Mutation) => res.adjustOrderLineV2 as Order);
-};
-
-gql`
-	mutation removeOrderLineV2($orderLineId: ID!) {
-		removeOrderLineV2(orderLineId: $orderLineId) {
-			...OrderDetail
-			... on ErrorResult {
-				errorCode
-				message
-			}
-		}
-	}
-`;
-
-export const removeOrderLineV2Mutation = async (orderLineId: string) => {
-	return shopSdk
-		.removeOrderLineV2({ orderLineId })
-		.then((res: RemoveOrderLineV2Mutation) => res.removeOrderLineV2 as Order);
-};

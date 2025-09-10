@@ -8,13 +8,14 @@ import HeartIcon from '~/components/icons/HeartIcon';
 import Price from '~/components/products/Price';
 import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import { Order, ProductVariant } from '~/generated/graphql';
-import { addItemToOrderV2Mutation } from '~/providers/shop/orders/order';
 
 import { useComputed$ } from '@qwik.dev/core';
 import ProductVariantSelector from '~/components/products/ProductVariantSelector';
 import { APP_STATE } from '~/constants';
-import { DEFAULT_OPTIONS_FOR_NAME_TAG } from '~/routes/constants';
+import { addItemToOrderMutation } from '~/providers/shop/orders/order';
+import { CUSTOMIZABLE_CLASS_DEF_TAG, DEFAULT_OPTIONS_FOR_NAME_TAG } from '~/routes/constants';
 import { useFilamentColor, useFontMenu } from '~/routes/layout';
+import { getCustomizableOptionArray } from '~/utils/customizable-order';
 
 function parseBuildJson(productVariant?: ProductVariant) {
 	if (productVariant?.customFields?.customBuildJson) {
@@ -56,6 +57,17 @@ export default component$(() => {
 	const atc_disabled_reason = useSignal<string>('None');
 	const is_top_additive = useSignal<boolean>(true);
 
+	const customizableClassDef = useContext(CUSTOMIZABLE_CLASS_DEF_TAG);
+	const currentClassDef = customizableClassDef.find(
+		(def) => def.name === productSignal.value.customFields?.customizableClass
+	);
+	// raise error if currentClassDef is not found
+	if (!currentClassDef) {
+		throw new Error(
+			`Customizable class definition not found for class name: ${productSignal.value.customFields?.customizableClass}`
+		);
+	}
+
 	return (
 		<>
 			<div class="mt-10 flex flex-col sm:flex-row sm:items-center">
@@ -83,11 +95,12 @@ export default component$(() => {
 								filamentColorIdBase: base_color_id.value,
 								isTopAdditive: is_top_additive.value,
 							};
-							const addItemToOrder = await addItemToOrderV2Mutation({
-								productVariantId: selectedVariantIdSignal.value,
-								quantity: 1,
-								customNameTag: input,
-							});
+							const inputArr = getCustomizableOptionArray(input, currentClassDef.optionDefinition);
+							const addItemToOrder = await addItemToOrderMutation(
+								selectedVariantIdSignal.value,
+								1,
+								{ customizableOptionJson: JSON.stringify(inputArr) }
+							);
 							if (addItemToOrder.__typename !== 'Order') {
 								addItemToOrderErrorSignal.value = addItemToOrder.errorCode;
 							} else {

@@ -1,7 +1,8 @@
-import { component$ } from '@qwik.dev/core';
+import { component$, useContext } from '@qwik.dev/core';
 import { Image } from 'qwik-image';
 import { OrderLine } from '~/generated/graphql';
-import { CustomizableEntityName, slugToCustomizableEntityName } from '~/utils';
+import { CUSTOMIZABLE_CLASS_DEF_TAG } from '~/routes/constants';
+import { CustomizableClassName, slugToCustomizableClass } from '~/utils';
 import CustomNameTagCartDisplay from '../custom-option-visualizer/CustomNameTagCartDisplay';
 
 interface ItemPreviewProps {
@@ -13,19 +14,26 @@ interface ItemPreviewProps {
 export default component$(({ filamentColorSignal, fontMenuSignal, line }: ItemPreviewProps) => {
 	const slug = line.productVariant.product.slug;
 
-	const customizableEntityName = slugToCustomizableEntityName(slug);
+	const customizableEntityName = slugToCustomizableClass(slug);
+	const customizableClassDef = useContext(CUSTOMIZABLE_CLASS_DEF_TAG);
+	const customizableClassName = line.productVariant.product.customFields?.customizableClass; // can be null
+
 	return (
 		<>
 			{/* <p> {line.customFields?.customVariant.id} </p> */}
-			{customizableEntityName === CustomizableEntityName.CustomNameTag && (
+			{customizableClassName === CustomizableClassName.CustomNameTag && (
 				<CustomNameTagCartDisplay
 					filamentColorSignal={filamentColorSignal}
 					fontMenuSignal={fontMenuSignal}
-					customVariantId={line.customFields?.customVariant.id}
+					customizableOptionJson={line.customFields?.customizableOptionJson ?? '[]'}
+					classDef={
+						customizableClassDef.find((def) => def.name === customizableClassName)
+							?.optionDefinition ?? []
+					}
 				/>
 			)}
 
-			{customizableEntityName === CustomizableEntityName.Default && (
+			{customizableEntityName === CustomizableClassName.Default && (
 				<Image
 					layout="fixed"
 					width="100"
