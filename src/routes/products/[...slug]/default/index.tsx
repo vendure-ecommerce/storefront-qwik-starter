@@ -69,6 +69,7 @@ export default component$(() => {
 								if (addItemToOrder.__typename !== 'Order') {
 									addItemToOrderErrorSignal.value = addItemToOrder.errorCode;
 								} else {
+									addItemToOrderErrorSignal.value = '';
 									appState.activeOrder = addItemToOrder as Order;
 								}
 							}
