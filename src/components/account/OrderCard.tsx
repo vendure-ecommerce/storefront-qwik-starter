@@ -14,11 +14,11 @@ export default component$<IProps>(({ order }) => {
 
 	return (
 		<div class="container mx-auto p-9 bg-white max-w-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-300 text-center">
-			<Image
-				layout="fixed"
+			<img
+				// layout="fixed"
 				width="200"
 				height="200"
-				aspectRatio={1}
+				// aspectRatio={1}
 				class="w-full h-full object-center object-cover m-auto"
 				src={order.lines[0]?.featuredAsset?.preview}
 				alt={order.lines[0]?.productVariant?.name}

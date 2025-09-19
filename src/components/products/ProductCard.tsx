@@ -6,8 +6,8 @@ export default component$(
 	({ productAsset, productName, slug, priceWithTax, currencyCode }: any) => {
 		return (
 			<a class="flex flex-col mx-auto" href={`/products/${slug}/`}>
-				<Image
-					layout="fixed"
+				<img
+					// layout="fixed"
 					class="rounded-xl flex-grow object-cover aspect-[7/8]"
 					width="200"
 					height="200"
