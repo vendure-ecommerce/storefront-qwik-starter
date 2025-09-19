@@ -10,16 +10,14 @@
  * - pnpm build
  *
  */
-import { renderToStream, RenderToStreamOptions } from '@qwik.dev/core/server';
 import { manifest } from '@qwik-client-manifest';
+import { renderToStream, RenderToStreamOptions } from '@qwik.dev/core/server';
 import Root from './root';
-import { extractBase } from './utils/i18n';
 
 export default function (opts: RenderToStreamOptions) {
 	return renderToStream(<Root />, {
 		manifest,
 		...opts,
-		base: extractBase,
 		// Use container attributes to set attributes on the html tag.
 		containerAttributes: {
 			lang: 'en-us',

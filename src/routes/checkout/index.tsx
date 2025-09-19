@@ -1,5 +1,6 @@
 import { $, component$, useContext, useStore, useVisibleTask$ } from '@qwik.dev/core';
 import { useNavigate } from '@qwik.dev/router';
+import { _ } from 'compiled-i18n';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
 import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
@@ -24,9 +25,9 @@ export default component$(() => {
 	const appState = useContext(APP_STATE);
 	const state = useStore<{ step: Step }>({ step: 'SHIPPING' });
 	const steps: { name: string; state: Step }[] = [
-		{ name: $localize`Shipping Checkout`, state: 'SHIPPING' },
-		{ name: $localize`Payment`, state: 'PAYMENT' },
-		{ name: $localize`Confirmation`, state: 'CONFIRMATION' },
+		{ name: _`Shipping Checkout`, state: 'SHIPPING' },
+		{ name: _`Payment`, state: 'PAYMENT' },
+		{ name: _`Confirmation`, state: 'CONFIRMATION' },
 	];
 
 	useVisibleTask$(async () => {
@@ -52,7 +53,7 @@ export default component$(() => {
 							state.step === 'CONFIRMATION' ? 'lg:max-w-3xl mx-auto' : 'lg:max-w-7xl'
 						} max-w-2xl mx-auto pt-8 mb-24 px-4 sm:px-6 lg:px-8 `}
 					>
-						<h2 class="sr-only">{$localize`Checkout`}</h2>
+						<h2 class="sr-only">{_`Checkout`}</h2>
 						<nav class="hidden sm:block pb-8 mb-8 border-b">
 							<ol class="flex space-x-4 justify-center">
 								{steps.map((step, index) => (
@@ -114,7 +115,7 @@ export default component$(() => {
 
 							{state.step !== 'CONFIRMATION' && (
 								<div class="mt-10 lg:mt-0">
-									<h2 class="text-lg font-medium text-gray-900 mb-4">{$localize`Order summary`}</h2>
+									<h2 class="text-lg font-medium text-gray-900 mb-4">{_`Order summary`}</h2>
 									<CartContents />
 									<CartTotals order={appState.activeOrder} />
 								</div>

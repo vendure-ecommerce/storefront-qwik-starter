@@ -1,3 +1,4 @@
+import { _ } from 'compiled-i18n';
 import { component$, useComputed$, useContext, useSignal, useTask$ } from '@qwik.dev/core';
 import { useLocation, useNavigate } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
@@ -73,7 +74,7 @@ export default component$<{
 									{isInEditableUrl ? (
 										<form>
 											<label html-for={`quantity-${line.id}`} class="mr-2">
-												{$localize`Quantity`}
+												{_`Quantity`}
 											</label>
 											<select
 												disabled={!isInEditableUrl}
@@ -94,7 +95,7 @@ export default component$<{
 										</form>
 									) : (
 										<div class="text-gray-800">
-											<span class="mr-1">{$localize`Quantity`}</span>
+											<span class="mr-1">{_`Quantity`}</span>
 											<span class="font-medium">{line.quantity}</span>
 										</div>
 									)}
@@ -115,7 +116,7 @@ export default component$<{
 													}
 												}}
 											>
-												{$localize`Remove`}
+												{_`Remove`}
 											</button>
 										)}
 									</div>

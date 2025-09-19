@@ -16,7 +16,6 @@ import { getAvailableCountriesQuery } from '~/providers/shop/checkout/checkout';
 import { getCollections } from '~/providers/shop/collections/collections';
 import { getActiveOrderQuery } from '~/providers/shop/orders/order';
 import { ActiveCustomer, AppState } from '~/types';
-import { extractLang } from '~/utils/i18n';
 import Cart from '../components/cart/Cart';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
@@ -34,7 +33,7 @@ export const useAvailableCountriesLoader = routeLoader$(async () => {
 });
 
 export const onRequest: RequestHandler = ({ request, locale }) => {
-	locale(extractLang(request.headers.get('accept-language'), request.url));
+	locale(request.headers.get('accept-language') || 'en');
 };
 
 export default component$(() => {

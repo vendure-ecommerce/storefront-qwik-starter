@@ -14,6 +14,7 @@ import { addItemToOrderMutation } from '~/providers/shop/orders/order';
 import { getProductBySlug } from '~/providers/shop/products/products';
 import { Variant } from '~/types';
 import { cleanUpParams, generateDocumentHead, isEnvVariableEnabled } from '~/utils';
+import { _ } from 'compiled-i18n';
 
 export const useProductLoader = routeLoader$(async ({ params }) => {
 	const { slug } = cleanUpParams(params);
@@ -168,10 +169,10 @@ export default component$(() => {
 										{quantitySignal.value[selectedVariantIdSignal.value] ? (
 											<span class="flex items-center">
 												<CheckIcon />
-												{$localize`${quantitySignal.value[selectedVariantIdSignal.value]} in cart`}
+												{_`${quantitySignal.value[selectedVariantIdSignal.value]} in cart`}
 											</span>
 										) : (
-											$localize`Add to cart`
+											_`Add to cart`
 										)}
 									</button>
 									<button
@@ -179,7 +180,7 @@ export default component$(() => {
 										class="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500"
 									>
 										<HeartIcon />
-										<span class="sr-only">{$localize`Add to favorites`}</span>
+										<span class="sr-only">{_`Add to favorites`}</span>
 									</button>
 								</div>
 							</div>
@@ -194,18 +195,17 @@ export default component$(() => {
 							)}
 
 							<section class="mt-12 pt-12 border-t text-xs">
-								<h3 class="text-gray-600 font-bold mb-2">{$localize`Shipping & Returns`}</h3>
+								<h3 class="text-gray-600 font-bold mb-2">{_`Shipping & Returns`}</h3>
 								<div class="text-gray-500 space-y-1">
 									<p>
-										{$localize`Standard shipping: 3 - 5 working days. Express shipping: 1 - 3 working days.`}
+										{_`Standard shipping: 3 - 5 working days. Express shipping: 1 - 3 working days.`}
 									</p>
 									<p>
-										{$localize`Shipping costs depend on delivery address and will be calculated during checkout.`}
+										{_`Shipping costs depend on delivery address and will be calculated during checkout.`}
 									</p>
 									<p>
-										{$localize`Returns are subject to terms. Please see the`}{' '}
-										<span class="underline">{$localize`returns page`}</span>{' '}
-										{$localize`for further information`}.
+										{_`Returns are subject to terms. Please see the`}{' '}
+										<span class="underline">{_`returns page`}</span> {_`for further information`}.
 									</p>
 								</div>
 							</section>
