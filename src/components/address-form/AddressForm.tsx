@@ -1,3 +1,4 @@
+import { _ } from 'compiled-i18n';
 import { component$, useContext } from '@qwik.dev/core';
 import { APP_STATE } from '~/constants';
 import { ShippingAddress } from '~/types';
@@ -14,7 +15,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 				<div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
 					<div>
 						<label html-for="fullName" class="block text-sm font-medium text-gray-700">
-							{$localize`Full name`}
+							{_`Full name`}
 						</label>
 						<div class="mt-1">
 							<input
@@ -36,7 +37,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 
 					<div class="sm:col-span-2">
 						<label html-for="company" class="block text-sm font-medium text-gray-700">
-							{$localize`Company`}
+							{_`Company`}
 						</label>
 						<div class="mt-1">
 							<input
@@ -57,7 +58,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 
 					<div class="sm:col-span-2">
 						<label html-for="streetLine1" class="block text-sm font-medium text-gray-700">
-							{$localize`Address`}
+							{_`Address`}
 						</label>
 						<div class="mt-1">
 							<input
@@ -79,7 +80,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 
 					<div class="sm:col-span-2">
 						<label html-for="streetLine2" class="block text-sm font-medium text-gray-700">
-							{$localize`Apartment, suite, etc.`}
+							{_`Apartment, suite, etc.`}
 						</label>
 						<div class="mt-1">
 							<input
@@ -100,7 +101,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 
 					<div>
 						<label html-for="city" class="block text-sm font-medium text-gray-700">
-							{$localize`City`}
+							{_`City`}
 						</label>
 						<div class="mt-1">
 							<input
@@ -119,7 +120,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 
 					<div>
 						<label html-for="countryCode" class="block text-sm font-medium text-gray-700">
-							{$localize`Country`}
+							{_`Country`}
 						</label>
 						<div class="mt-1">
 							{appState.availableCountries && (
@@ -151,7 +152,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 
 					<div>
 						<label html-for="province" class="block text-sm font-medium text-gray-700">
-							{$localize`State / Province`}
+							{_`State / Province`}
 						</label>
 						<div class="mt-1">
 							<input
@@ -173,7 +174,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 
 					<div>
 						<label html-for="postalCode" class="block text-sm font-medium text-gray-700">
-							{$localize`Postal code`}
+							{_`Postal code`}
 						</label>
 						<div class="mt-1">
 							<input
@@ -195,7 +196,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 
 					<div class="sm:col-span-2">
 						<label html-for="phoneNumber" class="block text-sm font-medium text-gray-700">
-							{$localize`Phone`}
+							{_`Phone`}
 						</label>
 						<div class="mt-1">
 							<input
@@ -219,7 +220,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 							html-for="defaultShippingAddress"
 							class="block text-sm font-medium text-gray-700"
 						>
-							{$localize`Default Shipping Address`}
+							{_`Default Shipping Address`}
 						</label>
 						<div class="mt-1">
 							<input
@@ -238,7 +239,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 					</div>
 					<div class="sm:col-span-1">
 						<label html-for="defaultBillingAddress" class="block text-sm font-medium text-gray-700">
-							{$localize`Default Billing Address`}
+							{_`Default Billing Address`}
 						</label>
 						<div class="mt-1">
 							<input

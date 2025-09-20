@@ -4,6 +4,7 @@ import { setOrderShippingMethodMutation } from '~/providers/shop/orders/order';
 import { AppState, EligibleShippingMethods } from '~/types';
 import { formatPrice } from '~/utils';
 import CheckCircleIcon from '../icons/CheckCircleIcon';
+import { _ } from 'compiled-i18n';
 
 type Props = {
 	appState: AppState;
@@ -30,7 +31,7 @@ export default component$<Props>(({ appState }) => {
 
 	return (
 		<div>
-			<label class="text-lg font-medium text-gray-900">{$localize`Delivery method`}</label>
+			<label class="text-lg font-medium text-gray-900">{_`Delivery method`}</label>
 			<div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
 				{state.methods.map((method, index) => (
 					<div

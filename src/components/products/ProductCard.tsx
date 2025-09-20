@@ -1,5 +1,5 @@
 import { component$ } from '@qwik.dev/core';
-import { Image } from 'qwik-image';
+import { Image } from '../image/image';
 import Price from './Price';
 
 export default component$(

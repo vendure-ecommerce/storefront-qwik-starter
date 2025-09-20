@@ -1,3 +1,4 @@
+import { _ } from 'compiled-i18n';
 import { $, component$, useContext, useSignal } from '@qwik.dev/core';
 import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
@@ -18,7 +19,7 @@ export default component$(() => {
 			const res = await applyCouponCodeMutation(couponCodeSignal.value);
 			if (res.__typename == 'Order') {
 				appState.activeOrder = res as Order;
-				successSignal.value = $localize`Coupon code successfully applied`;
+				successSignal.value = _`Coupon code successfully applied`;
 				couponCodeSignal.value = '';
 			} else {
 				errorSignal.value = res.message;
@@ -35,13 +36,13 @@ export default component$(() => {
 					<div class="flex gap-2">
 						<input
 							type="text"
-							placeholder={$localize`Enter a coupon code`}
+							placeholder={_`Enter a coupon code`}
 							value={couponCodeSignal.value}
 							onInput$={(_, el) => (couponCodeSignal.value = el.value)}
 							class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							required
 						/>
-						<button class="btn-primary max-w-24">{$localize`Apply`}</button>
+						<button class="btn-primary max-w-24">{_`Apply`}</button>
 					</div>
 				</form>
 			</div>

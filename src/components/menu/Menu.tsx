@@ -1,4 +1,5 @@
 import { component$, useContext } from '@qwik.dev/core';
+import { _ } from 'compiled-i18n';
 import { APP_STATE } from '~/constants';
 import CloseIcon from '../icons/CloseIcon';
 
@@ -19,7 +20,7 @@ export default component$(() => {
 								<div class="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
 									<div class="flex-1 py-6 overflow-y-auto px-4 sm:px-6">
 										<div class="flex items-start justify-between">
-											<h2 class="text-lg font-medium text-gray-900">{$localize`Menu`}</h2>
+											<h2 class="text-lg font-medium text-gray-900">{_`Menu`}</h2>
 											<div class="ml-3 h-7 flex items-center">
 												<button
 													type="button"

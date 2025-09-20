@@ -1,5 +1,6 @@
 import { QRL, component$, useStore, useVisibleTask$ } from '@qwik.dev/core';
 import { useLocation } from '@qwik.dev/router';
+import { _ } from 'compiled-i18n';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
 import CheckCircleIcon from '~/components/icons/CheckCircleIcon';
@@ -16,9 +17,9 @@ export default component$<{ onForward$: QRL<() => void> }>(() => {
 	const store = useStore<{ order?: Order }>({});
 
 	const steps: { name: string; state: Step }[] = [
-		{ name: $localize`Shipping Checkout`, state: 'SHIPPING' },
-		{ name: $localize`Payment`, state: 'PAYMENT' },
-		{ name: $localize`Confirmation`, state: 'CONFIRMATION' },
+		{ name: _`Shipping Checkout`, state: 'SHIPPING' },
+		{ name: _`Payment`, state: 'PAYMENT' },
+		{ name: _`Confirmation`, state: 'CONFIRMATION' },
 	];
 
 	useVisibleTask$(async () => {
@@ -30,7 +31,7 @@ export default component$<{ onForward$: QRL<() => void> }>(() => {
 			{store.order?.id && (
 				<div class="bg-gray-50 pb-48">
 					<div class="lg:max-w-3xl mx-auto max-w-2xl pt-8 px-4 sm:px-6 lg:px-8">
-						<h2 class="sr-only">{$localize`Checkout`}</h2>
+						<h2 class="sr-only">{_`Checkout`}</h2>
 						<nav class="hidden sm:block pb-8 mb-8 border-b">
 							<ol class="flex space-x-4 justify-center">
 								{steps.map((step, index) => (
@@ -48,11 +49,11 @@ export default component$<{ onForward$: QRL<() => void> }>(() => {
 								<div>
 									<h2 class="text-3xl flex items-center space-x-2 sm:text-5xl font-light tracking-tight text-gray-900 my-8">
 										<CheckCircleIcon forcedClass="text-green-600 w-8 h-8 sm:w-12 sm:h-12" />
-										<span>{$localize`Order summary`}</span>
+										<span>{_`Order summary`}</span>
 									</h2>
 									<p class="text-lg text-gray-700">
-										{$localize`Your order`} <span class="font-bold">{store.order?.code}</span>{' '}
-										{$localize`has been received!`}
+										{_`Your order`} <span class="font-bold">{store.order?.code}</span>{' '}
+										{_`has been received!`}
 									</p>
 									<div class="mt-12">
 										<div class="mb-6">

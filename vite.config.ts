@@ -1,6 +1,7 @@
-import { qwikRouter } from '@qwik.dev/router/vite';
 import { qwikVite } from '@qwik.dev/core/optimizer';
-import { defineConfig, loadEnv } from 'vite';
+import { qwikRouter } from '@qwik.dev/router/vite';
+import { i18nPlugin } from 'compiled-i18n/vite';
+import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig(async (config) => {
@@ -10,7 +11,14 @@ export default defineConfig(async (config) => {
 		build: {
 			sourcemap: config.mode === 'development',
 		},
-		plugins: [qwikRouter(), qwikVite(), tsconfigPaths()],
+		plugins: [
+			qwikRouter(),
+			qwikVite(),
+			tsconfigPaths(),
+			i18nPlugin({
+				locales: ['en', 'de', 'es'],
+			}),
+		],
 		preview: {
 			headers: {
 				'Cache-Control': 'public, max-age=600',

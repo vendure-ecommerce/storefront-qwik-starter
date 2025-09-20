@@ -1,10 +1,11 @@
 import { component$, useComputed$, useContext, useSignal } from '@qwik.dev/core';
 import { DocumentHead, routeLoader$ } from '@qwik.dev/router';
-import { Image } from 'qwik-image';
+import { _ } from 'compiled-i18n';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CheckIcon from '~/components/icons/CheckIcon';
 import HeartIcon from '~/components/icons/HeartIcon';
+import { Image } from '~/components/image/image';
 import Price from '~/components/products/Price';
 import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import TopReviews from '~/components/top-reviews/TopReviews';
@@ -141,8 +142,7 @@ export default component$(() => {
 								<div class="flex sm:flex-col1 align-baseline">
 									<button
 										class={{
-											'max-w-xs flex-1 transition-colors border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full':
-												true,
+											'max-w-xs flex-1 transition-colors border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full': true,
 											'bg-primary-600 hover:bg-primary-700':
 												quantitySignal.value[selectedVariantIdSignal.value] === 0,
 											'bg-green-600 active:bg-green-700 hover:bg-green-700':
@@ -168,10 +168,10 @@ export default component$(() => {
 										{quantitySignal.value[selectedVariantIdSignal.value] ? (
 											<span class="flex items-center">
 												<CheckIcon />
-												{$localize`${quantitySignal.value[selectedVariantIdSignal.value]} in cart`}
+												{_`${quantitySignal.value[selectedVariantIdSignal.value]} in cart`}
 											</span>
 										) : (
-											$localize`Add to cart`
+											_`Add to cart`
 										)}
 									</button>
 									<button
@@ -179,7 +179,7 @@ export default component$(() => {
 										class="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500"
 									>
 										<HeartIcon />
-										<span class="sr-only">{$localize`Add to favorites`}</span>
+										<span class="sr-only">{_`Add to favorites`}</span>
 									</button>
 								</div>
 							</div>
@@ -194,18 +194,17 @@ export default component$(() => {
 							)}
 
 							<section class="mt-12 pt-12 border-t text-xs">
-								<h3 class="text-gray-600 font-bold mb-2">{$localize`Shipping & Returns`}</h3>
+								<h3 class="text-gray-600 font-bold mb-2">{_`Shipping & Returns`}</h3>
 								<div class="text-gray-500 space-y-1">
 									<p>
-										{$localize`Standard shipping: 3 - 5 working days. Express shipping: 1 - 3 working days.`}
+										{_`Standard shipping: 3 - 5 working days. Express shipping: 1 - 3 working days.`}
 									</p>
 									<p>
-										{$localize`Shipping costs depend on delivery address and will be calculated during checkout.`}
+										{_`Shipping costs depend on delivery address and will be calculated during checkout.`}
 									</p>
 									<p>
-										{$localize`Returns are subject to terms. Please see the`}{' '}
-										<span class="underline">{$localize`returns page`}</span>{' '}
-										{$localize`for further information`}.
+										{_`Returns are subject to terms. Please see the`}{' '}
+										<span class="underline">{_`returns page`}</span> {_`for further information`}.
 									</p>
 								</div>
 							</section>

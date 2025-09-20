@@ -15,6 +15,7 @@ import { isActiveCustomerValid, isShippingAddressValid } from '~/utils';
 import AddressForm from '../address-form/AddressForm';
 import LockClosedIcon from '../icons/LockClosedIcon';
 import ShippingMethodSelector from '../shipping-method-selector/ShippingMethodSelector';
+import { _ } from 'compiled-i18n';
 
 type IProps = {
 	onForward$: QRL<
@@ -96,10 +97,10 @@ export default component$<IProps>(({ onForward$ }) => {
 	return (
 		<div>
 			<div>
-				<h2 class="text-lg font-medium text-gray-900">{$localize`Contact information`}</h2>
+				<h2 class="text-lg font-medium text-gray-900">{_`Contact information`}</h2>
 				<form>
 					<div class="mt-4">
-						<label class="block text-sm font-medium text-gray-700">{$localize`Email address`}</label>
+						<label class="block text-sm font-medium text-gray-700">{_`Email address`}</label>
 						<div class="mt-1">
 							<input
 								type="email"
@@ -114,7 +115,7 @@ export default component$<IProps>(({ onForward$ }) => {
 					</div>
 					<div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
 						<div>
-							<label class="block text-sm font-medium text-gray-700">{$localize`First name`}</label>
+							<label class="block text-sm font-medium text-gray-700">{_`First name`}</label>
 							<div class="mt-1">
 								<input
 									type="text"
@@ -129,7 +130,7 @@ export default component$<IProps>(({ onForward$ }) => {
 						</div>
 
 						<div>
-							<label class="block text-sm font-medium text-gray-700">{$localize`Last name`}</label>
+							<label class="block text-sm font-medium text-gray-700">{_`Last name`}</label>
 							<div class="mt-1">
 								<input
 									type="text"
@@ -148,7 +149,7 @@ export default component$<IProps>(({ onForward$ }) => {
 
 			<input type="hidden" name="action" value="setCheckoutShipping" />
 			<div class="mt-10 border-t border-gray-200 pt-10">
-				<h2 class="text-lg font-medium text-gray-900">{$localize`Shipping information`}</h2>
+				<h2 class="text-lg font-medium text-gray-900">{_`Shipping information`}</h2>
 			</div>
 
 			<AddressForm shippingAddress={appState.shippingAddress} />
@@ -201,7 +202,7 @@ export default component$<IProps>(({ onForward$ }) => {
 				disabled={!isFormValidSignal.value}
 			>
 				<LockClosedIcon />
-				<span>{$localize`Proceed to payment`}</span>
+				<span>{_`Proceed to payment`}</span>
 			</button>
 		</div>
 	);

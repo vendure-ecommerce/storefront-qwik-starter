@@ -8,6 +8,7 @@ import MenuIcon from '../icons/MenuIcon';
 import ShoppingBagIcon from '../icons/ShoppingBagIcon';
 import UserIcon from '../icons/UserIcon';
 import SearchBar from '../search-bar/SearchBar';
+import { _ } from 'compiled-i18n';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
@@ -52,13 +53,13 @@ export default component$(() => {
 						<div class="flex justify-between items-center w-full">
 							<div>
 								<p class="hidden sm:block">
-									{$localize`Exclusive: Get your own`}{' '}
+									{_`Exclusive: Get your own`}{' '}
 									<a
 										href="https://github.com/vendure-ecommerce/storefront-qwik-starter"
 										target="_blank"
 										class="underline"
 									>
-										{$localize`FREE storefront starter kit`}
+										{_`FREE storefront starter kit`}
 									</a>
 								</p>
 							</div>
@@ -69,15 +70,13 @@ export default component$(() => {
 								>
 									<UserIcon />
 									<span class="mt-1 text-gray-700">
-										{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID
-											? $localize`My Account`
-											: $localize`Sign In`}
+										{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? _`My Account` : _`Sign In`}
 									</span>
 								</a>
 								{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID && (
 									<button onClick$={logout} class="text-gray-700">
 										<div class="flex items-center cursor-pointer">
-											<span class="mr-2">{$localize`Logout`}</span>
+											<span class="mr-2">{_`Logout`}</span>
 											<LogoutIcon />
 										</div>
 									</button>
