@@ -22,9 +22,6 @@ importers:
       graphql-tag:
         specifier: ^2.12.6
         version: 2.12.6(graphql@16.10.0)
-      qwik-image:
-        specifier: 2.0.2
-        version: 2.0.2(@qwik.dev/core@2.0.0-beta.10(prettier@3.6.2)(vite@5.4.6(@types/node@20.11.17)))
       zod:
         specifier: ^3.22.4
         version: 3.24.1
@@ -6784,14 +6781,6 @@ packages:
         integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==,
       }
 
-  qwik-image@2.0.2:
-    resolution:
-      {
-        integrity: sha512-YRL7zDW1SJXJP3NR8TdKovnIq9jziwWh8/IZWhSSwN4D4EDQCq28uStLrl6/Z8QjRqlKLl6q6ItW7psVjParOA==,
-      }
-    peerDependencies:
-      '@qwik.dev/core': ^2.0.0
-
   read-cache@1.0.0:
     resolution:
       {
@@ -12859,10 +12848,6 @@ snapshots:
   punycode@2.3.1: {}
 
   queue-microtask@1.2.3: {}
-
-  qwik-image@2.0.2(@qwik.dev/core@2.0.0-beta.10(prettier@3.6.2)(vite@5.4.6(@types/node@20.11.17))):
-    dependencies:
-      '@qwik.dev/core': 2.0.0-beta.10(prettier@3.6.2)(vite@5.4.6(@types/node@20.11.17))
 
   read-cache@1.0.0:
     dependencies:

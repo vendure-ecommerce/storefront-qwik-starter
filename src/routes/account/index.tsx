@@ -1,6 +1,5 @@
 import { $, component$, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
 import { isBrowser } from '@qwik.dev/core/build';
-import { Image } from 'qwik-image';
 import { Button } from '~/components/buttons/Button';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
 import { ErrorMessage } from '~/components/error-message/ErrorMessage';
@@ -8,6 +7,7 @@ import CheckIcon from '~/components/icons/CheckIcon';
 import PencilSquareIcon from '~/components/icons/PencilSquareIcon';
 import ShieldCheckIcon from '~/components/icons/ShieldCheckIcon';
 import XMarkIcon from '~/components/icons/XMarkIcon';
+import { Image } from '~/components/image/image';
 import { Modal } from '~/components/modal/Modal';
 import { APP_STATE } from '~/constants';
 import {

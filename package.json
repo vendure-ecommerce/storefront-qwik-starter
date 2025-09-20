@@ -67,7 +67,6 @@
 		"braintree-web-drop-in": "^1.42.0",
 		"graphql": "^16.8.1",
 		"graphql-tag": "^2.12.6",
-		"qwik-image": "2.0.2",
 		"zod": "^3.22.4"
 	}
 }

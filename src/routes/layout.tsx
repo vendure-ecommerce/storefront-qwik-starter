@@ -9,7 +9,6 @@ import {
 } from '@qwik.dev/core';
 import { RequestHandler, routeLoader$ } from '@qwik.dev/router';
 import { setLocaleGetter } from 'compiled-i18n';
-import { ImageTransformerProps, useImageProvider } from 'qwik-image';
 import Menu from '~/components/menu/Menu';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, IMAGE_RESOLUTIONS } from '~/constants';
 import { Order } from '~/generated/graphql';
@@ -20,6 +19,7 @@ import { ActiveCustomer, AppState } from '~/types';
 import Cart from '../components/cart/Cart';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
+import { ImageTransformerProps, useImageProvider } from '~/components/image/image';
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
 	cacheControl({ staleWhileRevalidate: 60 * 60 * 24 * 7, maxAge: 5 });

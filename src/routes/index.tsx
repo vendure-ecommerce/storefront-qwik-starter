@@ -1,7 +1,7 @@
-import { _ } from 'compiled-i18n';
 import { component$, useContext } from '@qwik.dev/core';
-import { Image } from 'qwik-image';
+import { _ } from 'compiled-i18n';
 import CollectionCard from '~/components/collection-card/CollectionCard';
+import { Image } from '~/components/image/image';
 import { APP_STATE, HOMEPAGE_IMAGE } from '~/constants';
 
 export default component$(() => {

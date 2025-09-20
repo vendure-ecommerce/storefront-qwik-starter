@@ -7,7 +7,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig(async (config) => {
 	return {
 		// Enable to analyze via source-map-explorer
-		ssr: { target: 'webworker', noExternal: ['qwik-image'] },
+		ssr: { target: 'webworker' },
 		build: {
 			sourcemap: config.mode === 'development',
 		},

@@ -1,10 +1,11 @@
 import { component$, useComputed$, useContext, useSignal } from '@qwik.dev/core';
 import { DocumentHead, routeLoader$ } from '@qwik.dev/router';
-import { Image } from 'qwik-image';
+import { _ } from 'compiled-i18n';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CheckIcon from '~/components/icons/CheckIcon';
 import HeartIcon from '~/components/icons/HeartIcon';
+import { Image } from '~/components/image/image';
 import Price from '~/components/products/Price';
 import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import TopReviews from '~/components/top-reviews/TopReviews';
@@ -14,7 +15,6 @@ import { addItemToOrderMutation } from '~/providers/shop/orders/order';
 import { getProductBySlug } from '~/providers/shop/products/products';
 import { Variant } from '~/types';
 import { cleanUpParams, generateDocumentHead, isEnvVariableEnabled } from '~/utils';
-import { _ } from 'compiled-i18n';
 
 export const useProductLoader = routeLoader$(async ({ params }) => {
 	const { slug } = cleanUpParams(params);
@@ -142,8 +142,7 @@ export default component$(() => {
 								<div class="flex sm:flex-col1 align-baseline">
 									<button
 										class={{
-											'max-w-xs flex-1 transition-colors border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full':
-												true,
+											'max-w-xs flex-1 transition-colors border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full': true,
 											'bg-primary-600 hover:bg-primary-700':
 												quantitySignal.value[selectedVariantIdSignal.value] === 0,
 											'bg-green-600 active:bg-green-700 hover:bg-green-700':

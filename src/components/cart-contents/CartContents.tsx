@@ -1,11 +1,11 @@
-import { _ } from 'compiled-i18n';
 import { component$, useComputed$, useContext, useSignal, useTask$ } from '@qwik.dev/core';
 import { useLocation, useNavigate } from '@qwik.dev/router';
-import { Image } from 'qwik-image';
+import { _ } from 'compiled-i18n';
 import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
 import { adjustOrderLineMutation, removeOrderLineMutation } from '~/providers/shop/orders/order';
 import { isCheckoutPage } from '~/utils';
+import { Image } from '../image/image';
 import Price from '../products/Price';
 
 export default component$<{
