@@ -1,6 +1,6 @@
 import { component$, useComputed$, useContext, useSignal } from '@qwik.dev/core';
 import { DocumentHead, routeLoader$ } from '@qwik.dev/router';
-import { _ } from 'compiled-i18n';
+import { Image } from 'qwik-image';
 import Alert from '~/components/alert/Alert';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CheckIcon from '~/components/icons/CheckIcon';
@@ -14,6 +14,7 @@ import { addItemToOrderMutation } from '~/providers/shop/orders/order';
 import { getProductBySlug } from '~/providers/shop/products/products';
 import { Variant } from '~/types';
 import { cleanUpParams, generateDocumentHead, isEnvVariableEnabled } from '~/utils';
+import { _ } from 'compiled-i18n';
 
 export const useProductLoader = routeLoader$(async ({ params }) => {
 	const { slug } = cleanUpParams(params);
@@ -71,8 +72,8 @@ export default component$(() => {
 						<div class="w-full max-w-2xl mx-auto sm:block lg:max-w-none">
 							<span class="rounded-md overflow-hidden">
 								<div class="h-[400px] w-full md:w-[400px]">
-									<img
-										// layout="fixed"
+									<Image
+										layout="fixed"
 										class="object-center object-cover rounded-lg mx-auto"
 										width="400"
 										height="400"
@@ -83,9 +84,9 @@ export default component$(() => {
 								{productSignal.value.assets.length > 1 && (
 									<div class="w-full md:w-[400px] my-2 flex flex-wrap gap-3 justify-center">
 										{productSignal.value.assets.map((asset, key) => (
-											<img
+											<Image
 												key={key}
-												// layout="fixed"
+												layout="fixed"
 												class={{
 													'object-center object-cover rounded-lg': true,
 													'border-b-8 border-primary-600': currentImageSig.value.id === asset.id,

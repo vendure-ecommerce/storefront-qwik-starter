@@ -30,11 +30,11 @@ export default component$(() => {
 						return (
 							<li key={key} class="py-6 flex">
 								<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
-									<img
-										// layout="fixed"
+									<Image
+										layout="fixed"
 										width={100}
 										height={100}
-										// aspectRatio={1}
+										aspectRatio={1}
 										class="rounded object-cover max-w-max h-full"
 										src={line.featuredAsset?.preview}
 									/>

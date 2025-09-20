@@ -45,8 +45,8 @@ export default component$<{
 					return (
 						<li key={line.id} class="py-6 flex">
 							<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
-								<img
-									// layout="fixed"
+								<Image
+									layout="fixed"
 									width="100"
 									height="100"
 									class="w-full h-full object-center object-cover"

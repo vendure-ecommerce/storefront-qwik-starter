@@ -10,8 +10,8 @@ export default component$(() => {
 		<div>
 			<div class="relative h-[600px]">
 				<div class="absolute inset-0 overflow-hidden">
-					<img
-						// layout="fullWidth"
+					<Image
+						layout="fullWidth"
 						class="h-full md:w-full"
 						width="800"
 						height="600"
