@@ -52,7 +52,7 @@
 		"husky": "^9.0.10",
 		"node-fetch": "3.3.2",
 		"postcss": "8.4.35",
-		"prettier": "3.2.5",
+		"prettier": "3.6.2",
 		"pretty-quick": "^4.0.0",
 		"tailwindcss": "3.4.1",
 		"typescript": "5.3.3",
@@ -67,7 +67,7 @@
 		"braintree-web-drop-in": "^1.42.0",
 		"graphql": "^16.8.1",
 		"graphql-tag": "^2.12.6",
-		"qwik-image": "2.0.0",
+		"qwik-image": "2.0.1",
 		"zod": "^3.22.4"
 	}
 }

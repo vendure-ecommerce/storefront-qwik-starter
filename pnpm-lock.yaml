@@ -23,8 +23,8 @@ importers:
         specifier: ^2.12.6
         version: 2.12.6(graphql@16.10.0)
       qwik-image:
-        specifier: 2.0.0
-        version: 2.0.0(@qwik.dev/core@2.0.0-beta.10(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17)))
+        specifier: 2.0.1
+        version: 2.0.1(@qwik.dev/core@2.0.0-beta.10(prettier@3.6.2)(vite@5.4.6(@types/node@20.11.17)))
       zod:
         specifier: ^3.22.4
         version: 3.24.1
@@ -43,10 +43,10 @@ importers:
         version: 4.4.0(graphql@16.10.0)
       '@qwik.dev/core':
         specifier: 2.0.0-beta.10
-        version: 2.0.0-beta.10(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17))
+        version: 2.0.0-beta.10(prettier@3.6.2)(vite@5.4.6(@types/node@20.11.17))
       '@qwik.dev/router':
         specifier: 2.0.0-beta.10
-        version: 2.0.0-beta.10(@qwik.dev/core@2.0.0-beta.10(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17)))(acorn@8.14.0)(rollup@4.44.1)(vite@5.4.6(@types/node@20.11.17))
+        version: 2.0.0-beta.10(@qwik.dev/core@2.0.0-beta.10(prettier@3.6.2)(vite@5.4.6(@types/node@20.11.17)))(acorn@8.14.0)(rollup@4.44.1)(vite@5.4.6(@types/node@20.11.17))
       '@tailwindcss/forms':
         specifier: ^0.5.7
         version: 0.5.9(tailwindcss@3.4.1)
@@ -90,11 +90,11 @@ importers:
         specifier: 8.4.35
         version: 8.4.35
       prettier:
-        specifier: 3.2.5
-        version: 3.2.5
+        specifier: 3.6.2
+        version: 3.6.2
       pretty-quick:
         specifier: ^4.0.0
-        version: 4.0.0(prettier@3.2.5)
+        version: 4.0.0(prettier@3.6.2)
       tailwindcss:
         specifier: 3.4.1
         version: 3.4.1
@@ -6729,10 +6729,10 @@ packages:
       }
     engines: { node: '>= 0.8.0' }
 
-  prettier@3.2.5:
+  prettier@3.6.2:
     resolution:
       {
-        integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==,
+        integrity: sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ==,
       }
     engines: { node: '>=14' }
     hasBin: true
@@ -6784,10 +6784,10 @@ packages:
         integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==,
       }
 
-  qwik-image@2.0.0:
+  qwik-image@2.0.1:
     resolution:
       {
-        integrity: sha512-3Xy7wgy9jkY7n+CGLTuib7tZqQopGss5/eE6j5spO7saaaNVbKbbXdDh29ylkNSNO9Be/jSC6tIyPg1KMBBClA==,
+        integrity: sha512-KpkFD5Vp4UZlzkXrUm/8P5kOdROHzpbrbBR00gCRqBhkRqcuDc0R+92Iwlvo8yo+7tJF4Msh5X7p4srSl0vBRg==,
       }
     peerDependencies:
       '@qwik.dev/core': ^2.0.0
@@ -9802,21 +9802,21 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@qwik.dev/core@2.0.0-beta.10(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17))':
+  '@qwik.dev/core@2.0.0-beta.10(prettier@3.6.2)(vite@5.4.6(@types/node@20.11.17))':
     dependencies:
       csstype: 3.1.3
       launch-editor: 2.11.1
       rollup: 4.44.1
       vite: 5.4.6(@types/node@20.11.17)
     optionalDependencies:
-      prettier: 3.2.5
+      prettier: 3.6.2
 
-  '@qwik.dev/router@2.0.0-beta.10(@qwik.dev/core@2.0.0-beta.10(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17)))(acorn@8.14.0)(rollup@4.44.1)(vite@5.4.6(@types/node@20.11.17))':
+  '@qwik.dev/router@2.0.0-beta.10(@qwik.dev/core@2.0.0-beta.10(prettier@3.6.2)(vite@5.4.6(@types/node@20.11.17)))(acorn@8.14.0)(rollup@4.44.1)(vite@5.4.6(@types/node@20.11.17))':
     dependencies:
       '@azure/functions': 3.5.1
       '@mdx-js/mdx': 3.1.0(acorn@8.14.0)
       '@netlify/edge-functions': 2.18.0
-      '@qwik.dev/core': 2.0.0-beta.10(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17))
+      '@qwik.dev/core': 2.0.0-beta.10(prettier@3.6.2)(vite@5.4.6(@types/node@20.11.17))
       '@types/mdx': 2.0.13
       estree-util-value-to-estree: 3.4.0
       github-slugger: 2.0.0
@@ -12833,9 +12833,9 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier@3.2.5: {}
+  prettier@3.6.2: {}
 
-  pretty-quick@4.0.0(prettier@3.2.5):
+  pretty-quick@4.0.0(prettier@3.6.2):
     dependencies:
       execa: 5.1.1
       find-up: 5.0.0
@@ -12843,7 +12843,7 @@ snapshots:
       mri: 1.2.0
       picocolors: 1.1.1
       picomatch: 3.0.1
-      prettier: 3.2.5
+      prettier: 3.6.2
       tslib: 2.8.1
 
   printable-characters@1.0.42: {}
@@ -12860,9 +12860,9 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
-  qwik-image@2.0.0(@qwik.dev/core@2.0.0-beta.10(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17))):
+  qwik-image@2.0.1(@qwik.dev/core@2.0.0-beta.10(prettier@3.6.2)(vite@5.4.6(@types/node@20.11.17))):
     dependencies:
-      '@qwik.dev/core': 2.0.0-beta.10(prettier@3.2.5)(vite@5.4.6(@types/node@20.11.17))
+      '@qwik.dev/core': 2.0.0-beta.10(prettier@3.6.2)(vite@5.4.6(@types/node@20.11.17))
 
   read-cache@1.0.0:
     dependencies:
