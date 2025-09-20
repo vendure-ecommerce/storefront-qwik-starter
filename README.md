@@ -86,6 +86,10 @@ The production build will generate client and server modules by running both cli
 pnpm build # or `yarn build`
 ```
 
+### i18n
+
+The resulting language should match your browser language. You can also override the language by adding ?lang=es to the URL.
+
 ---
 
 ## Related
