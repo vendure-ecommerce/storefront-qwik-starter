@@ -53,9 +53,21 @@ export default component$(() => {
 	const font_id_bottom = useSignal<string>(defaultOptionsForNameTag.fontId);
 	const primary_color_id = useSignal<string>(defaultOptionsForNameTag.primaryColorId);
 	const base_color_id = useSignal<string>(defaultOptionsForNameTag.baseColorId);
-	const is_atc_allowed = useSignal<boolean>(true);
+	const is_build_valid = useSignal<boolean>(true);
 	const atc_disabled_reason = useSignal<string>('None');
 	const is_top_additive = useSignal<boolean>(true);
+
+	const is_atc_allowed = useComputed$(() => {
+		if (selectedVariantSignal.value?.stockLevel !== 'IN_STOCK') {
+			addItemToOrderErrorSignal.value = 'The selected variant is out of stock.';
+			return false;
+		}
+		if (!is_build_valid.value) {
+			return false;
+		}
+		addItemToOrderErrorSignal.value = '';
+		return true;
+	});
 
 	const customizableClassDef = useContext(CUSTOMIZABLE_CLASS_DEF_TAG);
 	const currentClassDef = customizableClassDef.find(
@@ -124,11 +136,6 @@ export default component$(() => {
 				<span class="text-gray-500">{selectedVariantSignal.value?.sku}</span>
 				<StockLevelLabel stockLevel={selectedVariantSignal.value?.stockLevel} />
 			</div>
-			{!!addItemToOrderErrorSignal.value && (
-				<div class="mt-4">
-					<Alert message={addItemToOrderErrorSignal.value} />
-				</div>
-			)}
 
 			{1 < productSignal.value.variants.length && (
 				<ProductVariantSelector
@@ -137,11 +144,17 @@ export default component$(() => {
 				></ProductVariantSelector>
 			)}
 
+			{!!addItemToOrderErrorSignal.value && (
+				<div class="mt-4">
+					<Alert message={addItemToOrderErrorSignal.value} />
+				</div>
+			)}
+
 			<BuildCustomNameTag
 				FilamentColorSignal={FilamentColorSignal}
 				FontMenuSignal={FontMenuSignal}
 				primary_color_id={primary_color_id}
-				is_atc_allowed={is_atc_allowed}
+				is_atc_allowed={is_build_valid}
 				atc_disabled_reason={atc_disabled_reason}
 				base_color_id={base_color_id}
 				canvas_width_px={250}

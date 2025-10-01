@@ -38,7 +38,14 @@ export default component$(() => {
 
 	const confirmPayment = $(async () => {
 		await transitionOrderToStateMutation();
-		const activeOrder = await addPaymentToOrderMutation();
+		const activeOrder = await addPaymentToOrderMutation({
+			method: 'dummy-payment-method',
+			metadata: {
+				shouldDecline: false,
+				shouldError: false,
+				shouldErrorOnSettle: false,
+			},
+		});
 		appState.activeOrder = activeOrder;
 		navigate(`/checkout/confirmation/${activeOrder.code}`);
 	});
