@@ -100,6 +100,9 @@ export default component$(() => {
 		addressBook: [],
 	});
 
+	// Note that this context APP_STATE holds the reference to state object (like a pointer),
+	// so any changes to state will be reflected in the context value, and it will be reflected
+	// for all consumers of this context (by `useContext(APP_STATE)` in other components)
 	useContextProvider(APP_STATE, state);
 
 	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db

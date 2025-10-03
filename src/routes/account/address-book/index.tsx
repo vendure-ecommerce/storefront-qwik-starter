@@ -5,10 +5,7 @@ import { HighlightedButton } from '~/components/buttons/HighlightedButton';
 import PlusIcon from '~/components/icons/PlusIcon';
 import { APP_STATE } from '~/constants';
 import { Address } from '~/generated/graphql';
-import {
-	deleteCustomerAddressMutation,
-	getActiveCustomerAddressesQuery,
-} from '~/providers/shop/customer/customer';
+import { getActiveCustomerAddressesQuery } from '~/providers/shop/customer/customer';
 import { ShippingAddress } from '~/types';
 
 export default component$(() => {
@@ -49,18 +46,7 @@ export default component$(() => {
 			<div class="flex flex-wrap gap-6 justify-evenly">
 				{[...appState.addressBook].map((address) => (
 					<div class="min-w-[20rem]" key={address.id}>
-						<AddressCard
-							address={address}
-							onDelete$={async (id) => {
-								try {
-									await deleteCustomerAddressMutation(id);
-									// Optimistically update state without full page reload
-									appState.addressBook = appState.addressBook.filter((a) => a.id !== id);
-								} catch (error) {
-									console.error('Failed to delete address:', error);
-								}
-							}}
-						/>
+						<AddressCard address={address} />
 					</div>
 				))}
 			</div>

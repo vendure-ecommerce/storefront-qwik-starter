@@ -8,9 +8,15 @@ import {
 	useVisibleTask$,
 } from '@qwik.dev/core';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
-import { Address, CreateAddressInput, CreateCustomerInput } from '~/generated/graphql';
+import {
+	Address,
+	CreateAddressInput,
+	CreateCustomerInput,
+	OrderAddress,
+} from '~/generated/graphql';
 import { getActiveCustomerAddressesQuery } from '~/providers/shop/customer/customer';
 import { getActiveOrderQuery } from '~/providers/shop/orders/order';
+import { ShippingAddress } from '~/types';
 import { isActiveCustomerValid, isShippingAddressValid } from '~/utils';
 import AddressForm from '../address-form/AddressForm';
 import LockClosedIcon from '../icons/LockClosedIcon';
@@ -22,12 +28,40 @@ type IProps = {
 	>;
 };
 
+// The idea is to replace all undefined or null values with empty strings
+const getNormalizedShippingAddress = (address: OrderAddress | Address): ShippingAddress => {
+	let country = '';
+	let countryCode = '';
+	const isCustomerAddress = (address as Address).country !== undefined;
+	if (isCustomerAddress) {
+		country = (address as Address).country?.code ?? '';
+		countryCode = (address as Address).country?.code ?? '';
+	} else {
+		country = (address as OrderAddress).country ?? '';
+		countryCode = (address as OrderAddress).countryCode ?? '';
+	}
+	return {
+		city: address.city ?? '',
+		company: address.company ?? '',
+		country: country,
+		countryCode: countryCode,
+		fullName: address.fullName ?? '',
+		phoneNumber: address.phoneNumber ?? '',
+		postalCode: address.postalCode ?? '',
+		province: address.province ?? '',
+		streetLine1: address.streetLine1 ?? '',
+		streetLine2: address.streetLine2 ?? '',
+	};
+};
+
 export default component$<IProps>(({ onForward$ }) => {
 	const appState = useContext(APP_STATE);
 	const isFormValidSignal = useSignal(false);
 
 	useVisibleTask$(async () => {
 		const activeOrder = await getActiveOrderQuery();
+		const activeCustomer = await getActiveCustomerAddressesQuery();
+
 		if (activeOrder?.customer) {
 			const customer = activeOrder.customer;
 			appState.customer = {
@@ -38,43 +72,21 @@ export default component$<IProps>(({ onForward$ }) => {
 				emailAddress: customer.emailAddress,
 				phoneNumber: customer.phoneNumber ?? '',
 			};
-			const shippingAddress = activeOrder?.shippingAddress;
-			if (shippingAddress) {
-				appState.shippingAddress = {
-					city: shippingAddress.city ?? '',
-					company: shippingAddress.company ?? '',
-					country: shippingAddress.country ?? '',
-					countryCode: shippingAddress.countryCode ?? '',
-					fullName: shippingAddress.fullName ?? '',
-					phoneNumber: shippingAddress.phoneNumber ?? '',
-					postalCode: shippingAddress.postalCode ?? '',
-					province: shippingAddress.province ?? '',
-					streetLine1: shippingAddress.streetLine1 ?? '',
-					streetLine2: shippingAddress.streetLine2 ?? '',
-				};
+		}
+		if (activeOrder?.shippingAddress) {
+			const orderShippingAddress = activeOrder.shippingAddress;
+			if (orderShippingAddress) {
+				appState.shippingAddress = getNormalizedShippingAddress(orderShippingAddress);
 			}
 		}
-		const activeCustomer = await getActiveCustomerAddressesQuery();
 		if (activeCustomer?.addresses) {
-			const [defaultShippingAddress] = activeCustomer.addresses.filter(
+			const [customerDefaultShippingAddress] = activeCustomer.addresses.filter(
 				(address: Address) => !!address.defaultShippingAddress
 			);
-			if (defaultShippingAddress) {
-				const appStateDefaultShippingAddress = {
-					city: defaultShippingAddress.city ?? '',
-					company: defaultShippingAddress.company ?? '',
-					country: defaultShippingAddress.country.code ?? '',
-					countryCode: defaultShippingAddress.country.code ?? '',
-					fullName: defaultShippingAddress.fullName ?? '',
-					phoneNumber: defaultShippingAddress.phoneNumber ?? '',
-					postalCode: defaultShippingAddress.postalCode ?? '',
-					province: defaultShippingAddress.province ?? '',
-					streetLine1: defaultShippingAddress.streetLine1 ?? '',
-					streetLine2: defaultShippingAddress.streetLine2 ?? '',
-				};
+			if (customerDefaultShippingAddress) {
 				appState.shippingAddress = {
 					...appState.shippingAddress,
-					...appStateDefaultShippingAddress,
+					...getNormalizedShippingAddress(customerDefaultShippingAddress),
 				};
 			}
 		}

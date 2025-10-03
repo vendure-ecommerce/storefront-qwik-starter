@@ -1,0 +1,231 @@
+import { component$, QRL, Signal, useContext } from '@qwik.dev/core';
+import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
+import { APP_STATE } from '~/constants';
+import { ShippingAddress } from '~/types';
+import { HighlightedButton } from '../buttons/HighlightedButton';
+import { Dialog } from '../dialog/Dialog';
+
+type IProps = {
+	open: Signal<boolean>;
+	onForward$: QRL<(data: ShippingAddress) => Promise<void>>;
+	prefilledAddress?: ShippingAddress;
+};
+
+export const useAddressEditAction = globalAction$(
+	async (data) => {
+		// Convert checkbox values to boolean
+		const parsedData = {
+			...data,
+			defaultShippingAddress: data.defaultShippingAddress === 'on',
+			defaultBillingAddress: data.defaultBillingAddress === 'on',
+		};
+		console.log(parsedData);
+		return { success: true, data: parsedData };
+	},
+	zod$({
+		fullName: z.string().min(1),
+		company: z.string().optional(),
+		streetLine1: z.string().min(1),
+		streetLine2: z.string().optional(),
+		city: z.string().min(1),
+		countryCode: z.string().min(1),
+		province: z.string().min(1),
+		postalCode: z.string().min(1),
+		phoneNumber: z.string().min(1),
+		defaultShippingAddress: z.string().optional(), // 'on' or undefined
+		defaultBillingAddress: z.string().optional(), // 'on' or undefined
+	})
+);
+
+export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddress }) => {
+	const appState = useContext(APP_STATE);
+	const action = useAddressEditAction();
+	let defaultAddress: ShippingAddress = {
+		fullName: '',
+		streetLine1: '',
+		streetLine2: '',
+		company: '',
+		city: '',
+		province: '',
+		postalCode: '',
+		countryCode:
+			appState.availableCountries && appState.availableCountries.length > 0
+				? appState.availableCountries[0].code
+				: '',
+		phoneNumber: '',
+		defaultShippingAddress: false,
+		defaultBillingAddress: false,
+	};
+	if (prefilledAddress) {
+		defaultAddress = { ...defaultAddress, ...prefilledAddress };
+	}
+
+	return (
+		<Dialog open={open} extraClass="max-w-2xl">
+			<Form
+				action={action}
+				onSubmitCompleted$={async ({ detail }) => {
+					console.log('Form submitted successfully with data:', detail);
+					if (detail.value.success && detail.value.data) {
+						console.log('Forwarding data:', detail.value.data);
+						await onForward$(detail.value.data as ShippingAddress);
+					}
+				}}
+			>
+				<div class="p-2 mt-4 grid grid-cols-1 gap-y-3 sm:grid-cols-2 sm:gap-x-4">
+					<AddressInputField
+						name="fullName"
+						label={$localize`Full name`}
+						formAction={action}
+						defaultAddress={defaultAddress}
+						autoComplete="given-name"
+					/>
+					<AddressInputField
+						className="sm:col-span-2"
+						name="company"
+						label={$localize`Company`}
+						formAction={action}
+						defaultAddress={defaultAddress}
+						autoComplete="organization"
+					/>
+					<AddressInputField
+						className="sm:col-span-2"
+						name="streetLine1"
+						label={$localize`Address`}
+						formAction={action}
+						defaultAddress={defaultAddress}
+						autoComplete="street-address"
+					/>
+					<AddressInputField
+						className="sm:col-span-2"
+						name="streetLine2"
+						label={$localize`Apartment, suite, etc.`}
+						formAction={action}
+						defaultAddress={defaultAddress}
+					/>
+					<AddressInputField
+						name="city"
+						label={$localize`City`}
+						formAction={action}
+						defaultAddress={defaultAddress}
+						autoComplete="address-level2"
+					/>
+					<div>
+						<label html-for="countryCode" class="block text-sm font-medium text-gray-700">
+							{$localize`Country`}
+						</label>
+						<div class="mt-1">
+							{appState.availableCountries && (
+								<select
+									id="countryCode"
+									name="countryCode"
+									value={defaultAddress.countryCode}
+									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+								>
+									{appState.availableCountries.map((item) => (
+										<option
+											key={item.id}
+											value={item.code}
+											selected={item.code === defaultAddress.countryCode}
+										>
+											{item.name}
+										</option>
+									))}
+								</select>
+							)}
+						</div>
+					</div>
+					<AddressInputField
+						name="province"
+						label={$localize`State / Province`}
+						formAction={action}
+						defaultAddress={defaultAddress}
+						autoComplete="address-level1"
+					/>
+					<AddressInputField
+						name="postalCode"
+						label={$localize`Postal code`}
+						formAction={action}
+						defaultAddress={defaultAddress}
+						autoComplete="postal-code"
+					/>
+					<AddressInputField
+						className="sm:col-span-2"
+						name="phoneNumber"
+						label={$localize`Phone`}
+						formAction={action}
+						defaultAddress={defaultAddress}
+						autoComplete="tel"
+					/>
+					<div class="sm:col-span-1">
+						<label
+							html-for="defaultShippingAddress"
+							class="block text-sm font-medium text-gray-700"
+						>
+							{$localize`Default Shipping Address`}
+						</label>
+						<div class="mt-1">
+							<input type="checkbox" name="defaultShippingAddress" id="defaultShippingAddress" />
+						</div>
+					</div>
+
+					<div class="sm:col-span-1">
+						<label html-for="defaultBillingAddress" class="block text-sm font-medium text-gray-700">
+							{$localize`Default Billing Address`}
+						</label>
+						<div class="mt-1">
+							<input type="checkbox" name="defaultBillingAddress" id="defaultBillingAddress" />
+						</div>
+					</div>
+				</div>
+				<div class="flex justify-end">
+					<HighlightedButton type="submit" extraClass="m-2">
+						Save Address
+					</HighlightedButton>
+				</div>
+			</Form>
+		</Dialog>
+	);
+});
+
+interface AddressInputFieldProps {
+	name: keyof ShippingAddress;
+	label: string;
+	formAction: ReturnType<typeof useAddressEditAction>;
+	autoComplete?: string;
+	defaultAddress?: ShippingAddress;
+	className?: string;
+}
+const AddressInputField = component$<AddressInputFieldProps>(
+	({ name, label, formAction, autoComplete, defaultAddress, className }) => {
+		const fieldErrors = formAction.value?.fieldErrors as
+			| Record<string, string | undefined>
+			| undefined;
+		const error = fieldErrors?.[name as string];
+
+		const defaultValue = defaultAddress ? defaultAddress[name] ?? '' : '';
+
+		return (
+			<div class={className || ''}>
+				<label for={name as string} class="block text-sm font-medium text-gray-700">
+					{label}
+				</label>
+				<div class="mt-1">
+					<input
+						type="text"
+						id={name as string}
+						name={name as string}
+						defaultValue={defaultValue as string}
+						autoComplete={autoComplete}
+						class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+					/>
+				</div>
+				{error && renderError(error)}
+			</div>
+		);
+	}
+);
+const renderError = (errorMessage: string | undefined) => {
+	if (!errorMessage) return null;
+	return <p class="error text-xs text-red-600 mt-1 ">{errorMessage}</p>;
+};
