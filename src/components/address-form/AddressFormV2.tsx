@@ -64,6 +64,7 @@ export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddr
 					if (detail.value.success && detail.value.data) {
 						const formData = detail.value.data;
 						await onForward$(formData as ShippingAddress);
+						open.value = false;
 					}
 				}}
 			>

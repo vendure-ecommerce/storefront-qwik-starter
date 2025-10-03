@@ -18,6 +18,7 @@ import { getActiveCustomerAddressesQuery } from '~/providers/shop/customer/custo
 import { getActiveOrderQuery } from '~/providers/shop/orders/order';
 import { ShippingAddress } from '~/types';
 import { isActiveCustomerValid, isShippingAddressValid } from '~/utils';
+import ShippingAddressCard from '../account/ShippingAddressCard';
 import AddressForm from '../address-form/AddressForm';
 import LockClosedIcon from '../icons/LockClosedIcon';
 import ShippingMethodSelector from '../shipping-method-selector/ShippingMethodSelector';
@@ -29,7 +30,7 @@ type IProps = {
 };
 
 // The idea is to replace all undefined or null values with empty strings
-const getNormalizedShippingAddress = (address: OrderAddress | Address): ShippingAddress => {
+const parseToShippingAddress = (address: OrderAddress | Address): ShippingAddress => {
 	let country = '';
 	let countryCode = '';
 	const isCustomerAddress = (address as Address).country !== undefined;
@@ -76,7 +77,7 @@ export default component$<IProps>(({ onForward$ }) => {
 		if (activeOrder?.shippingAddress) {
 			const orderShippingAddress = activeOrder.shippingAddress;
 			if (orderShippingAddress) {
-				appState.shippingAddress = getNormalizedShippingAddress(orderShippingAddress);
+				appState.shippingAddress = parseToShippingAddress(orderShippingAddress);
 			}
 		}
 		if (activeCustomer?.addresses) {
@@ -86,7 +87,7 @@ export default component$<IProps>(({ onForward$ }) => {
 			if (customerDefaultShippingAddress) {
 				appState.shippingAddress = {
 					...appState.shippingAddress,
-					...getNormalizedShippingAddress(customerDefaultShippingAddress),
+					...parseToShippingAddress(customerDefaultShippingAddress),
 				};
 			}
 		}
@@ -163,6 +164,7 @@ export default component$<IProps>(({ onForward$ }) => {
 				<h2 class="text-lg font-medium text-gray-900">{$localize`Shipping information`}</h2>
 			</div>
 
+			<ShippingAddressCard address={appState.shippingAddress} />
 			<AddressForm shippingAddress={appState.shippingAddress} />
 
 			<div class="mt-10 border-t border-gray-200 pt-10">
