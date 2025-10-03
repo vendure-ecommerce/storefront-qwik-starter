@@ -1,6 +1,6 @@
 import { $, component$, QRL, Signal, useContext } from '@qwik.dev/core';
 import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
-import { APP_STATE } from '~/constants';
+import { APP_STATE, AUTH_TOKEN } from '~/constants';
 import { CreateAddressInput, UpdateAddressInput } from '~/generated/graphql';
 import {
 	createCustomerAddressMutation,
@@ -19,22 +19,25 @@ type IProps = {
 export const useAddressEditAction = globalAction$(
 	// This submit handler will be executed right after the form is submitted, before the onSubmitCompleted$ event is triggered
 	// `data` contains the form field values
-	async (data) => {
+	async (data, { cookie }) => {
 		// Convert checkbox values to boolean
 		const parsedData = {
 			...data,
 			defaultShippingAddress: data.defaultShippingAddress === 'on',
 			defaultBillingAddress: data.defaultBillingAddress === 'on',
 		};
-		// const authToken = cookie.get(AUTH_TOKEN)?.value;
-		// const createdOrUpdatedAddressId = await createOrUpdateAddress$(parsedData as ShippingAddress, authToken);
-		// if (createdOrUpdatedAddressId) {
-		// 	parsedData.id = createdOrUpdatedAddressId;
-		// }
+		const authToken = cookie.get(AUTH_TOKEN)?.value;
+		const createdOrUpdatedAddressId = await createOrUpdateAddress$(
+			parsedData as ShippingAddress,
+			authToken
+		);
+		if (createdOrUpdatedAddressId) {
+			parsedData.id = createdOrUpdatedAddressId;
+		}
 		return { success: true, data: parsedData };
 	},
 	zod$({
-		// id: z.string().optional(),
+		id: z.string().optional(),
 		fullName: z.string().min(1),
 		company: z.string().optional(),
 		streetLine1: z.string().min(1),
@@ -76,15 +79,14 @@ export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddr
 						if (onForward$) {
 							await onForward$(formData as ShippingAddress);
 						}
-
 						open.value = false;
 					}
 				}}
 			>
 				<div class="p-2 mt-4 grid grid-cols-1 gap-y-3 sm:grid-cols-2 sm:gap-x-4">
-					{/* <div class="hidden">
+					<div class="hidden">
 						<input type="text" name="id" value={prefilledAddress?.id || undefined} readOnly />
-					</div> */}
+					</div>
 					<AddressInputField
 						name="fullName"
 						label={$localize`Full name`}
@@ -249,7 +251,8 @@ const renderError = (errorMessage: string | undefined) => {
 
 const createOrUpdateAddress$ = $(
 	async (address: ShippingAddress, authToken: string | undefined): Promise<string | undefined> => {
-		if (!address.id) {
+		if (!address.id || address.id === 'add' || address.id === '') {
+			delete address.id;
 			const result = await createCustomerAddressMutation(address as CreateAddressInput, authToken);
 			console.log('createCustomerAddressMutation result:', JSON.stringify(result, null, 2));
 			return result?.createCustomerAddress?.id;

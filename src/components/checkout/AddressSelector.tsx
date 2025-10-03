@@ -62,9 +62,12 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 						<ShippingAddressCard
 							address={address}
 							onEditSaved$={async (address) => {
-								console.log('Selected address:', address);
-								// await setTimeout(() => {
-								// }, 1000); // Let the DOM update before closing
+								// Update the address in the address book
+								appState.addressBook = appState.addressBook.map((a) =>
+									a.id === address.id ? address : a
+								);
+								await onSelectAddress$(address);
+								selectedAddressId.value = address.id || null;
 							}}
 						/>
 					</li>
@@ -89,8 +92,7 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 				open={editNewAddress}
 				onForward$={async (newAddress) => {
 					await onSelectAddress$(newAddress);
-					newAddress.id = 'added-new';
-					selectedAddressId.value = newAddress.id;
+					selectedAddressId.value = newAddress.id || null;
 					appState.addressBook = [newAddress, ...appState.addressBook];
 					newAddressEdited.value = true;
 				}}
