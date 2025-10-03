@@ -4,14 +4,16 @@ import CloseIcon from '../icons/CloseIcon';
 interface DialogProps {
 	open: Signal<boolean>;
 	extraClass?: string;
+	id?: string;
 }
 
-export const Dialog = component$(({ open, extraClass }: DialogProps) => {
+export const Dialog = component$(({ open, extraClass, id }: DialogProps) => {
 	if (!open.value) {
 		return null; // Don't render anything if the dialog is not open
 	}
 	return (
 		<div
+			id={id}
 			class={`fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 ${extraClass}`}
 		>
 			<div class="bg-white rounded-lg shadow-lg p-6 min-w-[300px] relative">

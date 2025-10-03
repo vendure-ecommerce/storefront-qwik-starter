@@ -1,7 +1,8 @@
-import { component$, useContext } from '@qwik.dev/core';
+import { component$, QRL, useContext, useSignal } from '@qwik.dev/core';
 import { useNavigate } from '@qwik.dev/router';
 import { APP_STATE } from '~/constants';
 import { ShippingAddress } from '~/types';
+import { AddressForm } from '../address-form/AddressFormV2';
 import BillingAddressIcon from '../icons/BillingAddressIcon';
 import LocationIcon from '../icons/LocationIcon';
 import PencilEditIcon from '../icons/PencilEditIcon';
@@ -10,11 +11,13 @@ import TelephoneIcon from '../icons/TelephoneIcon';
 
 type IProps = {
 	address: ShippingAddress;
+	onEditSaved$?: QRL<(address: ShippingAddress) => Promise<void>>;
 };
 
-export default component$<IProps>(({ address }) => {
+export default component$<IProps>(({ address, onEditSaved$ }) => {
 	const navigate = useNavigate();
 	const appState = useContext(APP_STATE);
+	const openEditForm = useSignal(false);
 
 	return (
 		<div class="max-w-xs bg-white shadow-lg rounded-lg overflow-hidden my-2">
@@ -37,7 +40,12 @@ export default component$<IProps>(({ address }) => {
 						<h1 class="px-2 text-xs">{address.phoneNumber || 'N/A'}</h1>
 					</>
 					<div class="flex-1" />
-					<button class="mr-1 rounded hover:bg-gray-20" onClick$={() => {}}>
+					<button
+						class="mr-1 rounded hover:bg-gray-20"
+						onClick$={() => {
+							openEditForm.value = true;
+						}}
+					>
 						<PencilEditIcon />
 					</button>
 				</div>
@@ -59,6 +67,21 @@ export default component$<IProps>(({ address }) => {
 					</div>
 				)}
 			</div>
+			<AddressForm
+				open={openEditForm}
+				prefilledAddress={address}
+				onForward$={onEditSaved$}
+				// onForward$={$(async (updatedAddress: ShippingAddress) => {
+				//   if (onEditSaved$) {
+				//     await onEditSaved$(updatedAddress);
+				//     //TODO: update customer's address
+				//   }
+				//   else {
+				//     await setTimeout(() => {
+				//     }, 10); // Let the DOM update before closing
+				//   }
+				// })}
+			/>
 		</div>
 	);
 });

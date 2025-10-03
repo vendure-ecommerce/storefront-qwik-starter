@@ -22,6 +22,7 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 		const addressBook =
 			activeCustomer?.addresses
 				?.slice()
+				.filter((address: Address) => !!address.id)
 				.sort((a: Address, b: Address) => {
 					// Sort by defaultShippingAddress
 					if (a.defaultShippingAddress && !b.defaultShippingAddress) return -1;
@@ -50,9 +51,22 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 							name="shippingAddress"
 							class="m-4"
 							checked={selectedAddressId.value === address.id}
-							onChange$={() => onSelectAddress$(address)}
+							onChange$={
+								// Note this will only run for the radio input that is being selected, not for the one being deselected.
+								() => {
+									selectedAddressId.value = address.id || null;
+									onSelectAddress$(address);
+								}
+							}
 						/>
-						<ShippingAddressCard address={address} />
+						<ShippingAddressCard
+							address={address}
+							onEditSaved$={async (address) => {
+								console.log('Selected address:', address);
+								// await setTimeout(() => {
+								// }, 1000); // Let the DOM update before closing
+							}}
+						/>
 					</li>
 				))}
 				{newAddressEdited.value === false && (
@@ -62,7 +76,10 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 							name="shippingAddress"
 							class="m-4"
 							checked={selectedAddressId.value === 'add-new'}
-							onChange$={() => (editNewAddress.value = true)}
+							onChange$={() => {
+								selectedAddressId.value = 'add-new';
+								editNewAddress.value = true;
+							}}
 						/>
 						<Button onClick$={() => (editNewAddress.value = true)}>Add New Address</Button>
 					</li>
@@ -92,6 +109,7 @@ const parseToShippingAddress = (address: Address): ShippingAddress => {
 	}
 
 	return {
+		id: address.id,
 		city: address.city ?? '',
 		company: address.company ?? '',
 		country: country,
