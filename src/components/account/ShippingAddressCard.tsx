@@ -3,10 +3,8 @@ import { useNavigate } from '@qwik.dev/router';
 import { APP_STATE } from '~/constants';
 import { ShippingAddress } from '~/types';
 import { AddressForm } from '../address-form/AddressFormV2';
-import BillingAddressIcon from '../icons/BillingAddressIcon';
 import LocationIcon from '../icons/LocationIcon';
 import PencilEditIcon from '../icons/PencilEditIcon';
-import ShippingAddressIcon from '../icons/ShippingAddressIcon';
 import TelephoneIcon from '../icons/TelephoneIcon';
 
 type IProps = {
@@ -50,7 +48,7 @@ export default component$<IProps>(({ address, onEditSaved$ }) => {
 					</button>
 				</div>
 
-				{(address.defaultShippingAddress || address.defaultBillingAddress) && (
+				{/* {(address.defaultShippingAddress || address.defaultBillingAddress) && (
 					<div class="flex text-xs justify-between mt-4">
 						{address.defaultShippingAddress && (
 							<div class="flex items-center">
@@ -65,7 +63,7 @@ export default component$<IProps>(({ address, onEditSaved$ }) => {
 							</div>
 						)}
 					</div>
-				)}
+				)} */}
 			</div>
 			<AddressForm
 				open={openEditForm}
