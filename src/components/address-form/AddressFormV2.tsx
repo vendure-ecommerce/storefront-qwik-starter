@@ -19,7 +19,6 @@ export const useAddressEditAction = globalAction$(
 			defaultShippingAddress: data.defaultShippingAddress === 'on',
 			defaultBillingAddress: data.defaultBillingAddress === 'on',
 		};
-		console.log(parsedData);
 		return { success: true, data: parsedData };
 	},
 	zod$({
@@ -32,43 +31,39 @@ export const useAddressEditAction = globalAction$(
 		province: z.string().min(1),
 		postalCode: z.string().min(1),
 		phoneNumber: z.string().min(1),
-		defaultShippingAddress: z.string().optional(), // 'on' or undefined
+		defaultShippingAddress: z.string().optional(), // 'on' or undefined (note that form checkbox returns 'on' when checked, it can't return boolean)
 		defaultBillingAddress: z.string().optional(), // 'on' or undefined
 	})
 );
 
+/**
+ * AddressForm component for adding or editing addresses.
+ *
+ * @prop open: Signal<boolean> to control the visibility of the dialog.
+ * @prop onForward$: QRL function to handle form submission and pass back the address data.
+ * 	Note that the onForward$ function has an argument of type ShippingAddress, which is the object returned from the form.
+ *  And it should be a QRL. E.g. onForward$={$(async (address) => { ... })}
+ * @prop prefilledAddress: Optional ShippingAddress to prefill the form fields when editing an existing address.
+ */
 export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddress }) => {
 	const appState = useContext(APP_STATE);
 	const action = useAddressEditAction();
-	let defaultAddress: ShippingAddress = {
-		fullName: '',
-		streetLine1: '',
-		streetLine2: '',
-		company: '',
-		city: '',
-		province: '',
-		postalCode: '',
-		countryCode:
-			appState.availableCountries && appState.availableCountries.length > 0
-				? appState.availableCountries[0].code
-				: '',
-		phoneNumber: '',
-		defaultShippingAddress: false,
-		defaultBillingAddress: false,
-	};
+
+	let defaultAddress: ShippingAddress = {};
 	if (prefilledAddress) {
 		defaultAddress = { ...defaultAddress, ...prefilledAddress };
 	}
+	defaultAddress.countryCode =
+		prefilledAddress?.countryCode || appState.availableCountries?.[0]?.code || '';
 
 	return (
 		<Dialog open={open} extraClass="max-w-2xl">
 			<Form
 				action={action}
 				onSubmitCompleted$={async ({ detail }) => {
-					console.log('Form submitted successfully with data:', detail);
 					if (detail.value.success && detail.value.data) {
-						console.log('Forwarding data:', detail.value.data);
-						await onForward$(detail.value.data as ShippingAddress);
+						const formData = detail.value.data;
+						await onForward$(formData as ShippingAddress);
 					}
 				}}
 			>
@@ -119,15 +114,10 @@ export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddr
 								<select
 									id="countryCode"
 									name="countryCode"
-									value={defaultAddress.countryCode}
 									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								>
 									{appState.availableCountries.map((item) => (
-										<option
-											key={item.id}
-											value={item.code}
-											selected={item.code === defaultAddress.countryCode}
-										>
+										<option key={item.code} value={item.code}>
 											{item.name}
 										</option>
 									))}
@@ -165,7 +155,12 @@ export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddr
 							{$localize`Default Shipping Address`}
 						</label>
 						<div class="mt-1">
-							<input type="checkbox" name="defaultShippingAddress" id="defaultShippingAddress" />
+							<input
+								type="checkbox"
+								name="defaultShippingAddress"
+								id="defaultShippingAddress"
+								defaultChecked={defaultAddress.defaultShippingAddress}
+							/>
 						</div>
 					</div>
 
@@ -174,7 +169,12 @@ export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddr
 							{$localize`Default Billing Address`}
 						</label>
 						<div class="mt-1">
-							<input type="checkbox" name="defaultBillingAddress" id="defaultBillingAddress" />
+							<input
+								type="checkbox"
+								name="defaultBillingAddress"
+								id="defaultBillingAddress"
+								defaultChecked={defaultAddress.defaultBillingAddress}
+							/>
 						</div>
 					</div>
 				</div>
