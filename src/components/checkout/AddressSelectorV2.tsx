@@ -6,7 +6,8 @@ import { ShippingAddress } from '~/types';
 import ShippingAddressCard from '../account/ShippingAddressCard';
 import { AddressForm } from '../address-form/AddressFormV2';
 import { Button } from '../buttons/Button';
-import DropDownIcon from '../icons/DropDownIcon';
+
+import { Select } from '@qwik-ui/headless';
 
 interface AddressSelectorProps {
 	onSelectAddress$: (address: ShippingAddress) => void;
@@ -14,10 +15,9 @@ interface AddressSelectorProps {
 
 export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 	const appState = useContext(APP_STATE);
-	const selectedAddressId = useSignal<string | null>(null);
+	const selectedAddressId = useSignal<string>('');
 	const editNewAddress = useSignal<boolean>(false);
 	const newAddressEdited = useSignal<boolean>(false);
-	const openSelector = useSignal<boolean>(false);
 
 	const selectedAddress = useComputed$(() => {
 		return appState.addressBook.find((address) => address.id === selectedAddressId.value);
@@ -42,16 +42,16 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 				.map((address: Address) => parseToShippingAddress(address)) || [];
 		appState.addressBook = addressBook;
 		if (addressBook.length > 0) {
-			selectedAddressId.value = addressBook[0].id || null;
+			selectedAddressId.value = addressBook[0].id || '';
 		}
 	});
 
 	return (
 		<div class="flex gap-4">
 			<div class="flex-1 flex flex-col items-center justify-start">
-				{selectedAddress.value && (
+				{selectedAddress && (
 					<ShippingAddressCard
-						address={selectedAddress.value}
+						address={selectedAddress}
 						showDefault={true}
 						onEditSaved$={async (address) => {
 							appState.addressBook = appState.addressBook.map((a) =>
@@ -59,38 +59,19 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 							);
 							updateDefaultAddressInBook(address, appState.addressBook);
 							await onSelectAddress$(address);
-							selectedAddressId.value = address.id || null;
+							selectedAddressId.value = address.id || '';
 						}}
 					/>
 				)}
 			</div>
 			<div class="flex-1">
-				<div>
-					<div class="flex items-center gap-2">
-						<p>Select addresses</p>
-						<button onClick$={() => (openSelector.value = !openSelector.value)}>
-							<DropDownIcon />
-						</button>
-					</div>
-				</div>
-				<div class={`overflow-y-auto ${openSelector.value ? 'block' : 'hidden'}`}>
-					<ul>
+				<Select.Root bind:value={selectedAddressId}>
+					<Select.Trigger class="w-full" aria-label="Address">
+						<span>{'Select an address'}</span>
+					</Select.Trigger>
+					<Select.Popover class="select-popover">
 						{appState.addressBook.map((address) => (
-							<li key={address.id} class="flex items-center mb-1">
-								<input
-									type="radio"
-									name="shippingAddress"
-									class="m-4"
-									checked={selectedAddressId.value === address.id}
-									onChange$={
-										// Note this will only run for the radio input that is being selected, not for the one being deselected.
-										() => {
-											selectedAddressId.value = address.id || null;
-											openSelector.value = false;
-											onSelectAddress$(address);
-										}
-									}
-								/>
+							<Select.Item key={address.id} value={address.id || ''} class="flex items-center mb-1">
 								<ShippingAddressCard
 									address={address}
 									showDefault={false}
@@ -101,40 +82,24 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 										);
 										updateDefaultAddressInBook(address, appState.addressBook);
 										await onSelectAddress$(address);
-										selectedAddressId.value = address.id || null;
-										openSelector.value = false;
 									}}
 								/>
-							</li>
+							</Select.Item>
 						))}
 						{newAddressEdited.value === false && (
-							<li key="add-new" class="flex items-center mb-1">
-								<input
-									type="radio"
-									name="shippingAddress"
-									class="m-4"
-									checked={selectedAddressId.value === 'add-new'}
-									onChange$={() => {
-										selectedAddressId.value = 'add-new';
-										editNewAddress.value = true;
-										openSelector.value = false;
-									}}
-								/>
+							<Select.Item key="add" value="add" class="flex items-center mb-1">
 								<Button onClick$={() => (editNewAddress.value = true)}> + New Address</Button>
-							</li>
+							</Select.Item>
 						)}
-					</ul>
-				</div>
+					</Select.Popover>
+				</Select.Root>
 				<AddressForm
 					open={editNewAddress}
 					onForward$={async (newAddress) => {
 						await onSelectAddress$(newAddress);
-						selectedAddressId.value = newAddress.id || null;
+						selectedAddressId.value = newAddress.id || '';
 						appState.addressBook = [newAddress, ...appState.addressBook];
 						newAddressEdited.value = true;
-						updateDefaultAddressInBook(newAddress, appState.addressBook);
-						editNewAddress.value = false;
-						openSelector.value = false;
 					}}
 				/>
 			</div>
