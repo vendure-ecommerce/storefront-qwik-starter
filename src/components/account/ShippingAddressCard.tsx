@@ -3,16 +3,19 @@ import { useNavigate } from '@qwik.dev/router';
 import { APP_STATE } from '~/constants';
 import { ShippingAddress } from '~/types';
 import { AddressForm } from '../address-form/AddressFormV2';
+import BillingAddressIcon from '../icons/BillingAddressIcon';
 import LocationIcon from '../icons/LocationIcon';
 import PencilEditIcon from '../icons/PencilEditIcon';
+import ShippingAddressIcon from '../icons/ShippingAddressIcon';
 import TelephoneIcon from '../icons/TelephoneIcon';
 
 type IProps = {
 	address: ShippingAddress;
 	onEditSaved$?: QRL<(address: ShippingAddress) => Promise<void>>;
+	showDefault?: boolean;
 };
 
-export default component$<IProps>(({ address, onEditSaved$ }) => {
+export default component$<IProps>(({ address, onEditSaved$, showDefault }) => {
 	const navigate = useNavigate();
 	const appState = useContext(APP_STATE);
 	const openEditForm = useSignal(false);
@@ -48,38 +51,24 @@ export default component$<IProps>(({ address, onEditSaved$ }) => {
 					</button>
 				</div>
 
-				{/* {(address.defaultShippingAddress || address.defaultBillingAddress) && (
+				{showDefault && (address.defaultShippingAddress || address.defaultBillingAddress) && (
 					<div class="flex text-xs justify-between mt-4">
 						{address.defaultShippingAddress && (
 							<div class="flex items-center">
 								<ShippingAddressIcon />
-								<span class="ml-2">Shipping Address</span>
+								<span class="ml-2">Default Shipping Address</span>
 							</div>
 						)}
 						{address.defaultBillingAddress && (
 							<div class="flex items-center">
 								<BillingAddressIcon />
-								<span class="ml-2">Billing Address</span>
+								<span class="ml-2">Default Billing Address</span>
 							</div>
 						)}
 					</div>
-				)} */}
+				)}
 			</div>
-			<AddressForm
-				open={openEditForm}
-				prefilledAddress={address}
-				onForward$={onEditSaved$}
-				// onForward$={$(async (updatedAddress: ShippingAddress) => {
-				//   if (onEditSaved$) {
-				//     await onEditSaved$(updatedAddress);
-				//     //TODO: update customer's address
-				//   }
-				//   else {
-				//     await setTimeout(() => {
-				//     }, 10); // Let the DOM update before closing
-				//   }
-				// })}
-			/>
+			<AddressForm open={openEditForm} prefilledAddress={address} onForward$={onEditSaved$} />
 		</div>
 	);
 });

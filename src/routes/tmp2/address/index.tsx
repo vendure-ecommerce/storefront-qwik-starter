@@ -6,7 +6,7 @@ export default component$(() => {
 		<>
 			<AddressSelector
 				onSelectAddress$={(address) => {
-					console.log('Selected address:', address);
+					console.log('Selected address:', JSON.stringify(address, null, 2));
 				}}
 			/>
 		</>

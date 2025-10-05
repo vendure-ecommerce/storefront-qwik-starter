@@ -178,7 +178,7 @@ export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddr
 								type="checkbox"
 								name="defaultShippingAddress"
 								id="defaultShippingAddress"
-								defaultChecked={prefilledAddress?.defaultShippingAddress}
+								checked={prefilledAddress?.defaultShippingAddress}
 							/>
 						</div>
 					</div>
@@ -192,7 +192,7 @@ export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddr
 								type="checkbox"
 								name="defaultBillingAddress"
 								id="defaultBillingAddress"
-								defaultChecked={prefilledAddress?.defaultBillingAddress}
+								checked={prefilledAddress?.defaultBillingAddress}
 							/>
 						</div>
 					</div>

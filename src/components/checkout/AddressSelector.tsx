@@ -1,4 +1,4 @@
-import { component$, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { component$, useComputed$, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
 import { APP_STATE } from '~/constants';
 import { Address } from '~/generated/graphql';
 import { getActiveCustomerAddressesQuery } from '~/providers/shop/customer/customer';
@@ -16,6 +16,10 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 	const selectedAddressId = useSignal<string | null>(null);
 	const editNewAddress = useSignal<boolean>(false);
 	const newAddressEdited = useSignal<boolean>(false);
+
+	const selectedAddress = useComputed$(() => {
+		return appState.addressBook.find((address) => address.id === selectedAddressId.value);
+	});
 
 	useVisibleTask$(async () => {
 		const activeCustomer = await getActiveCustomerAddressesQuery();
@@ -41,65 +45,111 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 	});
 
 	return (
-		<div>
-			<h2>Select Shipping Address</h2>
-			<ul>
-				{appState.addressBook.map((address) => (
-					<li key={address.id} class="flex items-center mb-1">
-						<input
-							type="radio"
-							name="shippingAddress"
-							class="m-4"
-							checked={selectedAddressId.value === address.id}
-							onChange$={
-								// Note this will only run for the radio input that is being selected, not for the one being deselected.
-								() => {
-									selectedAddressId.value = address.id || null;
-									onSelectAddress$(address);
-								}
-							}
-						/>
-						<ShippingAddressCard
-							address={address}
-							onEditSaved$={async (address) => {
-								// Update the address in the address book
-								appState.addressBook = appState.addressBook.map((a) =>
-									a.id === address.id ? address : a
-								);
-								await onSelectAddress$(address);
-								selectedAddressId.value = address.id || null;
-							}}
-						/>
-					</li>
-				))}
-				{newAddressEdited.value === false && (
-					<li key="add-new" class="flex items-center mb-1">
-						<input
-							type="radio"
-							name="shippingAddress"
-							class="m-4"
-							checked={selectedAddressId.value === 'add-new'}
-							onChange$={() => {
-								selectedAddressId.value = 'add-new';
-								editNewAddress.value = true;
-							}}
-						/>
-						<Button onClick$={() => (editNewAddress.value = true)}>Add New Address</Button>
-					</li>
+		<div class="flex gap-4">
+			<div class="flex-1 flex flex-col items-center justify-start">
+				{selectedAddress.value && (
+					<ShippingAddressCard
+						address={selectedAddress.value}
+						showDefault={true}
+						onEditSaved$={async (address) => {
+							appState.addressBook = appState.addressBook.map((a) =>
+								a.id === address.id ? address : a
+							);
+							updateDefaultAddressInBook(address, appState.addressBook);
+							await onSelectAddress$(address);
+							selectedAddressId.value = address.id || null;
+						}}
+					/>
 				)}
-			</ul>
-			<AddressForm
-				open={editNewAddress}
-				onForward$={async (newAddress) => {
-					await onSelectAddress$(newAddress);
-					selectedAddressId.value = newAddress.id || null;
-					appState.addressBook = [newAddress, ...appState.addressBook];
-					newAddressEdited.value = true;
-				}}
-			/>
+			</div>
+			<div class="flex-1">
+				<h2>Select Shipping Address</h2>
+				<ul>
+					{appState.addressBook.map((address) => (
+						<li key={address.id} class="flex items-center mb-1">
+							<input
+								type="radio"
+								name="shippingAddress"
+								class="m-4"
+								checked={selectedAddressId.value === address.id}
+								onChange$={
+									// Note this will only run for the radio input that is being selected, not for the one being deselected.
+									() => {
+										selectedAddressId.value = address.id || null;
+										onSelectAddress$(address);
+									}
+								}
+							/>
+							<ShippingAddressCard
+								address={address}
+								showDefault={false}
+								onEditSaved$={async (address) => {
+									// Update the address in the address book
+									appState.addressBook = appState.addressBook.map((a) =>
+										a.id === address.id ? address : a
+									);
+									updateDefaultAddressInBook(address, appState.addressBook);
+									await onSelectAddress$(address);
+									selectedAddressId.value = address.id || null;
+								}}
+							/>
+						</li>
+					))}
+					{newAddressEdited.value === false && (
+						<li key="add-new" class="flex items-center mb-1">
+							<input
+								type="radio"
+								name="shippingAddress"
+								class="m-4"
+								checked={selectedAddressId.value === 'add-new'}
+								onChange$={() => {
+									selectedAddressId.value = 'add-new';
+									editNewAddress.value = true;
+								}}
+							/>
+							<Button onClick$={() => (editNewAddress.value = true)}> + New Address</Button>
+						</li>
+					)}
+				</ul>
+				<AddressForm
+					open={editNewAddress}
+					onForward$={async (newAddress) => {
+						await onSelectAddress$(newAddress);
+						selectedAddressId.value = newAddress.id || null;
+						appState.addressBook = [newAddress, ...appState.addressBook];
+						newAddressEdited.value = true;
+					}}
+				/>
+			</div>
 		</div>
 	);
 });
+
+/**
+ * If the given address is set as defaultShippingAddress or defaultBillingAddress,
+ * ensure that no other address in the addressBook has the same flag set to true.
+ * @param address
+ * @param addressBook
+ */
+const updateDefaultAddressInBook = (
+	address: ShippingAddress,
+	addressBook: ShippingAddress[]
+): void => {
+	if (address.defaultShippingAddress) {
+		addressBook.forEach((a) => {
+			if (a.id !== address.id && a.defaultShippingAddress) {
+				a.defaultShippingAddress = false;
+			}
+		});
+	}
+	if (address.defaultBillingAddress) {
+		addressBook.forEach((a) => {
+			if (a.id !== address.id && a.defaultBillingAddress) {
+				a.defaultBillingAddress = false;
+			}
+		});
+	}
+};
 
 const parseToShippingAddress = (address: Address): ShippingAddress => {
 	let country = '';
@@ -122,5 +172,7 @@ const parseToShippingAddress = (address: Address): ShippingAddress => {
 		province: address.province ?? '',
 		streetLine1: address.streetLine1 ?? '',
 		streetLine2: address.streetLine2 ?? '',
+		defaultShippingAddress: address.defaultShippingAddress ?? false,
+		defaultBillingAddress: address.defaultBillingAddress ?? false,
 	};
 };
