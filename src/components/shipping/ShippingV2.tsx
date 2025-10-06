@@ -34,32 +34,6 @@ type IProps = {
 	onForward$: QRL<(customer: CreateCustomerInput) => Promise<void>>;
 };
 
-// The idea is to replace all undefined or null values with empty strings
-const parseToShippingAddress = (address: OrderAddress | Address): ShippingAddress => {
-	let country = '';
-	let countryCode = '';
-	const isCustomerAddress = (address as Address).country !== undefined;
-	if (isCustomerAddress) {
-		country = (address as Address).country?.code ?? '';
-		countryCode = (address as Address).country?.code ?? '';
-	} else {
-		country = (address as OrderAddress).country ?? '';
-		countryCode = (address as OrderAddress).countryCode ?? '';
-	}
-	return {
-		city: address.city ?? '',
-		company: address.company ?? '',
-		country: country,
-		countryCode: countryCode,
-		fullName: address.fullName ?? '',
-		phoneNumber: address.phoneNumber ?? '',
-		postalCode: address.postalCode ?? '',
-		province: address.province ?? '',
-		streetLine1: address.streetLine1 ?? '',
-		streetLine2: address.streetLine2 ?? '',
-	};
-};
-
 export default component$<IProps>(({ onForward$ }) => {
 	const appState = useContext(APP_STATE);
 	const isFormValidSignal = useSignal(false);
@@ -118,13 +92,6 @@ export default component$<IProps>(({ onForward$ }) => {
 				<SectionWithLabel label={$localize`Contact information`}>
 					<ContactCard />
 				</SectionWithLabel>
-
-				{/* <input type="hidden" name="action" value="setCheckoutShipping" />
-				<div class="mt-10 border-t border-gray-200 pt-10">
-					<h2 class="text-lg font-medium text-gray-900">
-						{$localize`Shipping information`}
-					</h2>
-				</div> */}
 
 				<SectionWithLabel label={$localize`Shipping information`} topBorder={true}>
 					<AddressSelector
@@ -199,5 +166,31 @@ const parseShippingAddressToCreateAddressInput = (address: ShippingAddress): Cre
 		countryCode: address.countryCode,
 		phoneNumber: address.phoneNumber,
 		company: address.company,
+	};
+};
+
+// The idea is to replace all undefined or null values with empty strings
+const parseToShippingAddress = (address: OrderAddress | Address): ShippingAddress => {
+	let country = '';
+	let countryCode = '';
+	const isCustomerAddress = (address as Address).country !== undefined;
+	if (isCustomerAddress) {
+		country = (address as Address).country?.code ?? '';
+		countryCode = (address as Address).country?.code ?? '';
+	} else {
+		country = (address as OrderAddress).country ?? '';
+		countryCode = (address as OrderAddress).countryCode ?? '';
+	}
+	return {
+		city: address.city ?? '',
+		company: address.company ?? '',
+		country: country,
+		countryCode: countryCode,
+		fullName: address.fullName ?? '',
+		phoneNumber: address.phoneNumber ?? '',
+		postalCode: address.postalCode ?? '',
+		province: address.province ?? '',
+		streetLine1: address.streetLine1 ?? '',
+		streetLine2: address.streetLine2 ?? '',
 	};
 };
