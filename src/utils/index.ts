@@ -249,3 +249,24 @@ export const getDefaultCustomNameTagOptions = (
 export const isGuestCustomer = (appState: AppState): boolean => {
 	return appState.customer.id === CUSTOMER_NOT_DEFINED_ID;
 };
+
+/**
+ * Async generic helper to normalize GraphQL/Vendure mutation results which
+ * may return either a success payload or an ErrorResult (with errorCode/message).
+ * Accepts either a value or a promise and returns the success value T on
+ * success, or null on error (after logging).
+ */
+export async function handleGqlResult<TSuccess = any>(
+	resultOrPromise: unknown
+): Promise<TSuccess | null> {
+	const result = await (resultOrPromise as Promise<unknown>);
+	if (result == null) return null;
+
+	if (typeof result === 'object' && result !== null && 'errorCode' in (result as any)) {
+		// eslint-disable-next-line no-console
+		console.error(`${(result as any).errorCode}: ${(result as any).message}`);
+		return null;
+	}
+
+	return result as TSuccess;
+}

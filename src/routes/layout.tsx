@@ -122,7 +122,8 @@ export default component$(() => {
 	useContextProvider(CUSTOMIZABLE_CLASS_DEF_TAG, customizableClassDefTag);
 
 	useVisibleTask$(async () => {
-		state.activeOrder = await getActiveOrderQuery();
+		const activeOrder = await getActiveOrderQuery();
+		if (activeOrder) state.activeOrder = activeOrder;
 
 		const fontLink = getGoogleFontLink(FontMenuSignal.value);
 		const existingLink = document.querySelector(`link[href="${fontLink}"]`);

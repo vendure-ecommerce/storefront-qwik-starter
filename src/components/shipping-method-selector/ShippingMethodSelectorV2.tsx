@@ -44,11 +44,14 @@ export default component$<IProps>(({ reCalculateShipping$ }) => {
 	useTask$(async (tracker) => {
 		const selected = tracker.track(() => state.selectedMethodId);
 		if (selected) {
-			appState.activeOrder = await setOrderShippingMethodMutation([selected]);
-			console.warn(
-				'shipping method set on order, priceWithTax:',
-				appState.activeOrder.shippingWithTax
-			);
+			const updated = await setOrderShippingMethodMutation([selected]);
+			if (updated) {
+				appState.activeOrder = updated;
+				console.warn(
+					'shipping method set on order, priceWithTax:',
+					appState.activeOrder.shippingWithTax
+				);
+			}
 		}
 	});
 

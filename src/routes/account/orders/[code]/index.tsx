@@ -12,7 +12,8 @@ export default component$(() => {
 	const store = useStore<{ order?: Order }>({});
 
 	useVisibleTask$(async () => {
-		store.order = await getOrderByCodeQuery(code);
+		const order = await getOrderByCodeQuery(code);
+		if (order) store.order = order;
 	});
 
 	return store.order ? (

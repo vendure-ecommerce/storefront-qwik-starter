@@ -49,9 +49,9 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 	return (
 		<div class="flex gap-4">
 			<div class="flex-1 flex flex-col items-center justify-start">
-				{selectedAddress && (
+				{selectedAddress.value && (
 					<ShippingAddressCard
-						address={selectedAddress}
+						address={selectedAddress.value}
 						showDefault={true}
 						onEditSaved$={async (address) => {
 							appState.addressBook = appState.addressBook.map((a) =>

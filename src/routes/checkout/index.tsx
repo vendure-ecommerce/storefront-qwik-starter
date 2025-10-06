@@ -41,8 +41,10 @@ export default component$(() => {
 				shouldErrorOnSettle: false,
 			},
 		});
-		appState.activeOrder = activeOrder;
-		navigate(`/checkout/confirmation/${activeOrder.code}`);
+		if (activeOrder) {
+			appState.activeOrder = activeOrder;
+			navigate(`/checkout/confirmation/${activeOrder.code}`);
+		}
 	});
 
 	return (
@@ -88,7 +90,10 @@ export default component$(() => {
 
 										if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
 											const setCustomerForOrder = await setCustomerForOrderMutation(customer);
-											if (setCustomerForOrder.__typename === 'Order') {
+											if (
+												setCustomerForOrder &&
+												(setCustomerForOrder as any).__typename === 'Order'
+											) {
 												goToPaymentStep();
 											}
 										} else {

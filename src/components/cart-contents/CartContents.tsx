@@ -34,10 +34,13 @@ export default component$<{
 	useVisibleTask$(async ({ track }) => {
 		track(() => currentOrderLineSignal.value);
 		if (currentOrderLineSignal.value) {
-			appState.activeOrder = await adjustOrderLineMutation(
+			const res = await adjustOrderLineMutation(
 				currentOrderLineSignal.value!.id,
 				currentOrderLineSignal.value!.value
 			);
+			if (res) {
+				appState.activeOrder = res;
+			}
 
 			if (onOrderLineChange$) {
 				await onOrderLineChange$();
@@ -111,7 +114,10 @@ export default component$<{
 												value={line.id}
 												class="font-medium text-primary-600 hover:text-primary-500"
 												onClick$={async () => {
-													appState.activeOrder = await removeOrderLineMutation(line.id);
+													const res = await removeOrderLineMutation(line.id);
+													if (res) {
+														appState.activeOrder = res;
+													}
 													if (
 														appState.activeOrder?.lines?.length === 0 &&
 														isCheckoutPage(location.url.toString())

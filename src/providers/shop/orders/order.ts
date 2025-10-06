@@ -2,7 +2,6 @@ import gql from 'graphql-tag';
 import {
 	ActiveOrderQuery,
 	AddItemToOrderMutation,
-	AdjustOrderLineMutation,
 	CreateAddressInput,
 	CreateCustomerInput,
 	Order,
@@ -18,13 +17,26 @@ import {
 	RemoveCouponCodeMutation,
 } from '~/generated/graphql-shop';
 import { shopSdk } from '~/graphql-wrapper';
+import { handleGqlResult } from '~/utils';
+
+/**
+ * Async generic helper to normalize GraphQL mutation results which may return
+ * either a success payload or an ErrorResult (with errorCode/message).
+ * Accepts either a value or a promise and returns the success value T on
+ * success, or null on error (after logging).
+ */
+// Removed local handleMutationResult function
 
 export const getActiveOrderQuery = async () => {
-	return shopSdk.activeOrder(undefined).then((res: ActiveOrderQuery) => res.activeOrder as Order);
+	return handleGqlResult<Order>(
+		shopSdk.activeOrder(undefined).then((res: ActiveOrderQuery) => res.activeOrder)
+	);
 };
 
 export const getOrderByCodeQuery = async (code: string) => {
-	return shopSdk.orderByCode({ code }).then((res: OrderByCodeQuery) => res.orderByCode as Order);
+	return handleGqlResult<Order>(
+		shopSdk.orderByCode({ code }).then((res: OrderByCodeQuery) => res.orderByCode)
+	);
 };
 
 export const addItemToOrderMutation = async (
@@ -42,33 +54,40 @@ export const addItemToOrderMutation = async (
 };
 
 export const removeOrderLineMutation = async (lineId: string) => {
-	return shopSdk
-		.removeOrderLine({ orderLineId: lineId })
-		.then((res: RemoveOrderLineMutation) => res.removeOrderLine as Order);
+	return handleGqlResult<Order>(
+		shopSdk
+			.removeOrderLine({ orderLineId: lineId })
+			.then((res: RemoveOrderLineMutation) => res.removeOrderLine)
+	);
 };
 
 export const adjustOrderLineMutation = async (lineId: string, quantity: number) => {
-	return shopSdk
-		.adjustOrderLine({ orderLineId: lineId, quantity })
-		.then((res: AdjustOrderLineMutation) => res.adjustOrderLine as Order);
+	const res = await shopSdk.adjustOrderLine({ orderLineId: lineId, quantity });
+	return handleGqlResult<Order>(res.adjustOrderLine); // Using imported handleMutationResult
 };
 
 export const setOrderShippingAddressMutation = async (input: CreateAddressInput) => {
-	return shopSdk
-		.setOrderShippingAddress({ input })
-		.then((res: SetOrderShippingAddressMutation) => res.setOrderShippingAddress);
+	return handleGqlResult<Order>(
+		shopSdk
+			.setOrderShippingAddress({ input })
+			.then((res: SetOrderShippingAddressMutation) => res.setOrderShippingAddress)
+	);
 };
 
 export const setOrderShippingMethodMutation = async (shippingMethodId: string[]) => {
-	return shopSdk
-		.setOrderShippingMethod({ shippingMethodId })
-		.then((res: SetOrderShippingMethodMutation) => res.setOrderShippingMethod as Order);
+	return handleGqlResult<Order>(
+		shopSdk
+			.setOrderShippingMethod({ shippingMethodId })
+			.then((res: SetOrderShippingMethodMutation) => res.setOrderShippingMethod)
+	);
 };
 
 export const setCustomerForOrderMutation = async (input: CreateCustomerInput) => {
-	return shopSdk
-		.setCustomerForOrder({ input })
-		.then((res: SetCustomerForOrderMutation) => res.setCustomerForOrder);
+	return handleGqlResult<Order>(
+		shopSdk
+			.setCustomerForOrder({ input })
+			.then((res: SetCustomerForOrderMutation) => res.setCustomerForOrder)
+	);
 };
 
 export const applyCouponCodeMutation = async (couponCode: string) => {
@@ -78,9 +97,11 @@ export const applyCouponCodeMutation = async (couponCode: string) => {
 };
 
 export const removeCouponCodeMutation = async (couponCode: string) => {
-	return shopSdk
-		.removeCouponCode({ couponCode })
-		.then((res: RemoveCouponCodeMutation) => res.removeCouponCode);
+	return handleGqlResult<Order>(
+		shopSdk
+			.removeCouponCode({ couponCode })
+			.then((res: RemoveCouponCodeMutation) => res.removeCouponCode)
+	);
 };
 
 gql`

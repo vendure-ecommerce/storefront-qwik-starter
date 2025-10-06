@@ -52,18 +52,20 @@ export const GoogleSignInButton = component$((props: { googleClientId: string })
 		$(() => {
 			// Check if the Google Identity Services library is already loaded
 			// Reference: https://developers.google.com/identity/gsi/web/reference/js-reference
-			if (!window.google?.accounts?.id) {
+			const g = (window as any).google;
+			if (!g?.accounts?.id) {
 				const script = document.createElement('script');
 				script.src = 'https://accounts.google.com/gsi/client';
 				script.async = true;
 				script.onload = () => {
 					// Initialize Google Identity Services after the script is loaded
-					google.accounts.id.initialize(googleSignInInitOptions);
+					const gg = (window as any).google;
+					gg.accounts.id.initialize(googleSignInInitOptions);
 
 					// Render the Google Sign-In button
 					const buttonContainer = document.getElementById('google-signin-button');
 					if (buttonContainer) {
-						google.accounts.id.renderButton(buttonContainer, {
+						gg.accounts.id.renderButton(buttonContainer, {
 							theme: 'outline',
 							size: 'large',
 							type: 'standard',
@@ -73,12 +75,12 @@ export const GoogleSignInButton = component$((props: { googleClientId: string })
 				document.head.appendChild(script);
 			} else {
 				// Initialize Google Identity Services if the library is already loaded
-				google.accounts.id.initialize(googleSignInInitOptions);
+				g.accounts.id.initialize(googleSignInInitOptions);
 
 				// Render the Google Sign-In button
 				const buttonContainer = document.getElementById('google-signin-button');
 				if (buttonContainer) {
-					google.accounts.id.renderButton(buttonContainer, {
+					g.accounts.id.renderButton(buttonContainer, {
 						theme: 'outline',
 						size: 'large',
 						type: 'standard',
@@ -96,7 +98,15 @@ export const GoogleSignInButton = component$((props: { googleClientId: string })
 				onClick$={() => {
 					if (!isLoading.value) {
 						isLoading.value = true;
-						google.accounts.id.prompt();
+						const gg = (window as any).google;
+						if (
+							gg &&
+							gg.accounts &&
+							gg.accounts.id &&
+							typeof gg.accounts.id.prompt === 'function'
+						) {
+							gg.accounts.id.prompt();
+						}
 					}
 				}}
 			></div>

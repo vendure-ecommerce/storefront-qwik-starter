@@ -22,7 +22,8 @@ export default component$<{ onForward$: QRL<() => void> }>(() => {
 	];
 
 	useVisibleTask$(async () => {
-		store.order = await getOrderByCodeQuery(code);
+		const order = await getOrderByCodeQuery(code);
+		if (order) store.order = order;
 	});
 
 	return (
