@@ -54,8 +54,6 @@ export default component$<IProps>(({ needCalculateShipping$ }) => {
 
 	return (
 		<div>
-			<label class="text-lg font-medium text-gray-900">{$localize`Delivery method`}</label>
-
 			{isCalculating.value && (
 				<div>
 					<AnimatedSpinnerIcon forcedClass="h-5 w-5 mt-4" />

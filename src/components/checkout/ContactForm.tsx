@@ -1,6 +1,6 @@
 import { $, component$, QRL, Signal } from '@qwik.dev/core';
 import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
-import FormInput from '~/utils/FormInput';
+import FormInput from '~/components/common/FormInput';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import { Dialog } from '../dialog/Dialog';
 

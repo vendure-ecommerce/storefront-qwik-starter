@@ -26,6 +26,7 @@ import CartContents from '../cart-contents/CartContents';
 import CartTotals from '../cart-totals/CartTotals';
 import AddressSelector from '../checkout/AddressSelector';
 import ContactCard from '../checkout/ContactCard';
+import SectionWithLabel from '../common/SectionWithLabel';
 import LockClosedIcon from '../icons/LockClosedIcon';
 import ShippingMethodSelectorV2 from '../shipping-method-selector/ShippingMethodSelectorV2';
 
@@ -62,9 +63,7 @@ const parseToShippingAddress = (address: OrderAddress | Address): ShippingAddres
 export default component$<IProps>(({ onForward$ }) => {
 	const appState = useContext(APP_STATE);
 	const isFormValidSignal = useSignal(false);
-	const addressAddedToOrder = useSignal(false);
 	const shippingNeedsToBeCalculated = useSignal(true);
-	const isShippingCalculating = useSignal(false);
 
 	useVisibleTask$(async () => {
 		const activeOrder = await getActiveOrderQuery();
@@ -116,43 +115,51 @@ export default component$<IProps>(({ onForward$ }) => {
 	return (
 		<div class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
 			<div>
-				{/* Contact Information */}
-				<label class="text-lg font-medium text-gray-900">{$localize`Contact information`}</label>
-				<ContactCard />
+				<SectionWithLabel label={$localize`Contact information`}>
+					<ContactCard />
+				</SectionWithLabel>
 
-				<input type="hidden" name="action" value="setCheckoutShipping" />
+				{/* <input type="hidden" name="action" value="setCheckoutShipping" />
 				<div class="mt-10 border-t border-gray-200 pt-10">
-					<h2 class="text-lg font-medium text-gray-900">{$localize`Shipping information`}</h2>
-				</div>
+					<h2 class="text-lg font-medium text-gray-900">
+						{$localize`Shipping information`}
+					</h2>
+				</div> */}
 
-				<AddressSelector
-					onSelectAddress$={async (address: ShippingAddress) => {
-						appState.shippingAddress = address;
-						shippingNeedsToBeCalculated.value = true;
-						const addressToOrder = parseShippingAddressToCreateAddressInput(
-							appState.shippingAddress
-						);
-						const setOrderAddressResult = await setOrderShippingAddressMutation(addressToOrder);
-					}}
-				/>
+				<SectionWithLabel label={$localize`Shipping information`} topBorder={true}>
+					<AddressSelector
+						onSelectAddress$={async (address: ShippingAddress) => {
+							appState.shippingAddress = address;
+							shippingNeedsToBeCalculated.value = true;
+							const addressToOrder = parseShippingAddressToCreateAddressInput(
+								appState.shippingAddress
+							);
+							await setOrderShippingAddressMutation(addressToOrder);
+						}}
+					/>
+				</SectionWithLabel>
 			</div>
 			<div class="mt-10 lg:mt-0">
-				{/* Order Summary */}
-
-				<h2 class="text-lg font-medium text-gray-900 mb-4">{$localize`Order summary`}</h2>
-				<CartContents
-					onOrderLineChange$={async () => {
-						shippingNeedsToBeCalculated.value = true;
-					}}
-				/>
+				<SectionWithLabel label={$localize`Order summary`}>
+					<CartContents
+						onOrderLineChange$={async () => {
+							shippingNeedsToBeCalculated.value = true;
+						}}
+					/>
+				</SectionWithLabel>
 
 				{/* Delivery Method */}
 
-				<div class="mt-10 border-t border-gray-200 pt-10">
+				<SectionWithLabel label={$localize`Delivery method`} topBorder={true}>
 					<ShippingMethodSelectorV2 needCalculateShipping$={shippingNeedsToBeCalculated} />
-				</div>
+				</SectionWithLabel>
 
-				{!shippingNeedsToBeCalculated.value && <CartTotals order={appState.activeOrder} />}
+				{!shippingNeedsToBeCalculated.value && (
+					<SectionWithLabel>
+						<CartTotals order={appState.activeOrder} />
+					</SectionWithLabel>
+				)}
+
 				<HighlightedButton
 					extraClass="mt-6 w-full"
 					onClick$={$(() => {

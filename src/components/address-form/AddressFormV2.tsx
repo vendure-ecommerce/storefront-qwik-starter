@@ -1,5 +1,6 @@
 import { $, component$, QRL, Signal, useContext } from '@qwik.dev/core';
 import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
+import FormInput from '~/components/common/FormInput';
 import { APP_STATE, AUTH_TOKEN } from '~/constants';
 import { CreateAddressInput, UpdateAddressInput } from '~/generated/graphql';
 import {
@@ -7,7 +8,6 @@ import {
 	updateCustomerAddressMutation,
 } from '~/providers/shop/customer/customer';
 import { ShippingAddress } from '~/types';
-import FormInput from '~/utils/FormInput';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import { Dialog } from '../dialog/Dialog';
 
