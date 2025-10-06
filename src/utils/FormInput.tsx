@@ -10,6 +10,46 @@ interface FormInputProps<T extends Action<any, any, any>> {
 	className?: string;
 }
 
+/**
+ * A reusable form input component that integrates with Qwik's form actions.
+ * @prop name: The name of the input field, which should match the corresponding field in the form action.
+ * @prop label: The label text for the input field. (This should be localized when used.). This is what user will see.
+ * @prop formAction: The form action object returned by a Qwik form action hook (e.g., useMyFormAction).
+ * @prop autoComplete: Optional autocomplete attribute for the input field.
+ * @prop defaults: Optional object containing default values for the form fields.
+ *  Note that defaults.[name] will be used as the default value for this input field.
+ * @prop className: Optional additional CSS classes to apply to the container div.
+ *
+ * @example
+ *
+ * import {  component$ } from '@qwik.dev/core';
+ * import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
+ * import FormInput from '~/utils/FormInput';
+ *
+ * export const useContactFormAction = globalAction$(
+ *   async (data) => {
+ *     return { success: true, data };
+ *   },
+ *   zod$({
+ *     emailAddress: z.string().min(1).email(),
+ *   })
+ * );
+ *
+ * export default component$(() => {
+ *   const action = useContactFormAction();
+ *   return (
+ *     <Form action={action}>
+ *       <FormInput
+ *         name="email"
+ *         label="Email"
+ *         formAction={action}
+ *       autoComplete="email"
+ *       defaults={{ email: 'user@example.com' }}
+ *     />
+ *     <button type="submit">Submit</button>
+ *    </Form>
+ *   );
+ */
 export default component$<FormInputProps<Action<any, any, any>>>(
 	({ name, label, formAction, autoComplete, defaults, className }) => {
 		const fieldErrors = formAction.value?.fieldErrors as
