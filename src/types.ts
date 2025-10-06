@@ -82,14 +82,14 @@ type TaxSummary = {
 
 export type ShippingAddress = {
 	id?: string;
-	fullName?: string;
-	streetLine1?: string;
+	fullName: string;
+	streetLine1: string;
 	streetLine2?: string;
 	company?: string;
-	city?: string;
-	province?: string;
-	postalCode?: string;
-	countryCode?: string;
+	city: string;
+	province: string;
+	postalCode: string;
+	countryCode: string;
 	phoneNumber?: string;
 	defaultShippingAddress?: boolean;
 	defaultBillingAddress?: boolean;

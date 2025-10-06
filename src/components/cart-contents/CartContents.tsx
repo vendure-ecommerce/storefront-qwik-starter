@@ -1,4 +1,4 @@
-import { component$, useComputed$, useContext, useSignal, useTask$ } from '@qwik.dev/core';
+import { component$, QRL, useComputed$, useContext, useSignal, useTask$ } from '@qwik.dev/core';
 import { useLocation, useNavigate } from '@qwik.dev/router';
 import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
@@ -11,7 +11,8 @@ import ItemPreview from './ItemPreview';
 
 export default component$<{
 	order?: Order;
-}>(({ order }) => {
+	onOrderLineChange$?: QRL<() => Promise<void>>;
+}>(({ order, onOrderLineChange$: onOrderLineChange$ }) => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
@@ -23,7 +24,7 @@ export default component$<{
 	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
 	const FontMenuSignal = useFontMenu();
 
-	useTask$(({ track, cleanup }) => {
+	useTask$(async ({ track, cleanup }) => {
 		track(() => currentOrderLineSignal.value);
 		let id: NodeJS.Timeout;
 		if (currentOrderLineSignal.value) {
@@ -33,6 +34,10 @@ export default component$<{
 					currentOrderLineSignal.value!.value
 				);
 			}, 300);
+
+			if (onOrderLineChange$) {
+				await onOrderLineChange$();
+			}
 		}
 		cleanup(() => {
 			if (id) {

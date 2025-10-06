@@ -1,20 +1,15 @@
 import { $, component$, useContext, useStore, useVisibleTask$ } from '@qwik.dev/core';
 import { useNavigate } from '@qwik.dev/router';
-import CartContents from '~/components/cart-contents/CartContents';
-import CartTotals from '~/components/cart-totals/CartTotals';
 import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
 import Payment from '~/components/payment/Payment';
-import Shipping from '~/components/shipping/Shipping';
+import Shipping from '~/components/shipping/ShippingV2';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
-import { CreateAddressInput, CreateCustomerInput } from '~/generated/graphql';
+import { CreateCustomerInput } from '~/generated/graphql';
 import {
 	addPaymentToOrderMutation,
 	transitionOrderToStateMutation,
 } from '~/providers/shop/checkout/checkout';
-import {
-	setCustomerForOrderMutation,
-	setOrderShippingAddressMutation,
-} from '~/providers/shop/orders/order';
+import { setCustomerForOrderMutation } from '~/providers/shop/orders/order';
 import { isEnvVariableEnabled } from '~/utils';
 
 type Step = 'SHIPPING' | 'PAYMENT' | 'CONFIRMATION';
@@ -77,56 +72,45 @@ export default component$(() => {
 								))}
 							</ol>
 						</nav>
-						<div class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
-							<div class={state.step === 'CONFIRMATION' ? 'lg:col-span-2' : ''}>
-								{state.step === 'SHIPPING' ? (
-									<Shipping
-										onForward$={async (
-											customer: CreateCustomerInput,
-											shippingAddress: CreateAddressInput
-										) => {
-											delete shippingAddress.defaultShippingAddress;
-											delete shippingAddress.defaultBillingAddress;
-
-											const setOrderShippingAddress = async () => {
-												const setOrderShippingAddress =
-													await setOrderShippingAddressMutation(shippingAddress);
-
-												if (setOrderShippingAddress.__typename === 'Order') {
-													if (isEnvVariableEnabled('VITE_SHOW_PAYMENT_STEP')) {
-														state.step = 'PAYMENT';
-														window && window.scrollTo(0, 0);
-													} else {
-														confirmPayment();
-													}
-												}
-											};
-
-											if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
-												const setCustomerForOrder = await setCustomerForOrderMutation(customer);
-												if (setCustomerForOrder.__typename === 'Order') {
-													setOrderShippingAddress();
-												}
+						{/* <div class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16"> */}
+						<div class={state.step === 'CONFIRMATION' ? 'lg:col-span-2' : ''}>
+							{state.step === 'SHIPPING' ? (
+								<Shipping
+									onForward$={async (customer: CreateCustomerInput) => {
+										const goToPaymentStep = async () => {
+											if (isEnvVariableEnabled('VITE_SHOW_PAYMENT_STEP')) {
+												state.step = 'PAYMENT';
+												window && window.scrollTo(0, 0);
 											} else {
-												setOrderShippingAddress();
+												confirmPayment();
 											}
-										}}
-									/>
-								) : state.step === 'PAYMENT' ? (
-									<Payment onForward$={confirmPayment} />
-								) : (
-									<div></div>
-								)}
-							</div>
+										};
 
-							{state.step !== 'CONFIRMATION' && (
+										if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
+											const setCustomerForOrder = await setCustomerForOrderMutation(customer);
+											if (setCustomerForOrder.__typename === 'Order') {
+												goToPaymentStep();
+											}
+										} else {
+											goToPaymentStep();
+										}
+									}}
+								/>
+							) : state.step === 'PAYMENT' ? (
+								<Payment onForward$={confirmPayment} />
+							) : (
+								<div></div>
+							)}
+						</div>
+
+						{/* {state.step !== 'CONFIRMATION' && (
 								<div class="mt-10 lg:mt-0">
 									<h2 class="text-lg font-medium text-gray-900 mb-4">{$localize`Order summary`}</h2>
 									<CartContents />
 									<CartTotals order={appState.activeOrder} />
 								</div>
 							)}
-						</div>
+						</div> */}
 					</div>
 				</div>
 			)}
