@@ -7,7 +7,7 @@ import {
 	useTask$,
 	useVisibleTask$,
 } from '@qwik.dev/core';
-import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
+import { APP_STATE } from '~/constants';
 import {
 	Address,
 	CreateAddressInput,
@@ -25,6 +25,7 @@ import { HighlightedButton } from '../buttons/HighlightedButton';
 import CartContents from '../cart-contents/CartContents';
 import CartTotals from '../cart-totals/CartTotals';
 import AddressSelector from '../checkout/AddressSelector';
+import ContactCard from '../checkout/ContactCard';
 import LockClosedIcon from '../icons/LockClosedIcon';
 import ShippingMethodSelectorV2 from '../shipping-method-selector/ShippingMethodSelectorV2';
 
@@ -115,56 +116,9 @@ export default component$<IProps>(({ onForward$ }) => {
 	return (
 		<div class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
 			<div>
-				<div>
-					<h2 class="text-lg font-medium text-gray-900">{$localize`Contact information`}</h2>
-					<form>
-						<div class="mt-4">
-							<label class="block text-sm font-medium text-gray-700">{$localize`Email address`}</label>
-							<div class="mt-1">
-								<input
-									type="email"
-									value={appState.customer?.emailAddress}
-									disabled={appState.customer?.id !== CUSTOMER_NOT_DEFINED_ID}
-									onChange$={(_, el) => {
-										appState.customer = { ...appState.customer, emailAddress: el.value };
-									}}
-									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-								/>
-							</div>
-						</div>
-						<div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-							<div>
-								<label class="block text-sm font-medium text-gray-700">{$localize`First name`}</label>
-								<div class="mt-1">
-									<input
-										type="text"
-										value={appState.customer?.firstName}
-										disabled={appState.customer?.id !== CUSTOMER_NOT_DEFINED_ID}
-										onChange$={(_, el) => {
-											appState.customer = { ...appState.customer, firstName: el.value };
-										}}
-										class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-									/>
-								</div>
-							</div>
-
-							<div>
-								<label class="block text-sm font-medium text-gray-700">{$localize`Last name`}</label>
-								<div class="mt-1">
-									<input
-										type="text"
-										value={appState.customer?.lastName}
-										disabled={appState.customer?.id !== CUSTOMER_NOT_DEFINED_ID}
-										onChange$={(_, el) => {
-											appState.customer = { ...appState.customer, lastName: el.value };
-										}}
-										class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-									/>
-								</div>
-							</div>
-						</div>
-					</form>
-				</div>
+				{/* Contact Information */}
+				<label class="text-lg font-medium text-gray-900">{$localize`Contact information`}</label>
+				<ContactCard />
 
 				<input type="hidden" name="action" value="setCheckoutShipping" />
 				<div class="mt-10 border-t border-gray-200 pt-10">

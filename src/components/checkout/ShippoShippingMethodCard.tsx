@@ -15,7 +15,7 @@ export default component$<Props>(({ shippingMethod, checked }) => {
 				<span class="flex flex-col">
 					<span class="block text-sm font-medium text-gray-900">{shippingMethod.name}</span>
 
-					<span class="mt-6 text-sm font-medium text-gray-900">
+					<span class="mt-1 text-sm font-medium text-gray-900">
 						{formatPrice(shippingMethod.priceWithTax, 'USD')}
 					</span>
 					<span class="block text-sm text-gray-500">

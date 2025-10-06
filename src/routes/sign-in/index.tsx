@@ -15,7 +15,7 @@ export default component$(() => {
 	const rememberMe = useSignal(true);
 	const error = useSignal('');
 
-	const login = $(async () => {
+	const onLogin$ = $(async () => {
 		const { login } = await loginMutation(email.value, password.value, rememberMe.value);
 		if (login.__typename === 'CurrentUser') {
 			navigate('/account');
@@ -113,7 +113,7 @@ export default component$(() => {
 									${!setPasswordValid.value || email.value === '' ? 'opacity-50 cursor-not-allowed' : ''}
 								`}
 								disabled={!setPasswordValid.value || email.value === ''}
-								onClick$={login}
+								onClick$={onLogin$}
 							>
 								Sign in
 							</button>
