@@ -63,6 +63,7 @@ export default component$<IProps>(({ onForward$ }) => {
 	const isFormValidSignal = useSignal(false);
 	const addressAddedToOrder = useSignal(false);
 	const shippingNeedsToBeCalculated = useSignal(true);
+	const isShippingCalculating = useSignal(false);
 
 	useVisibleTask$(async () => {
 		const activeOrder = await getActiveOrderQuery();
@@ -174,33 +175,32 @@ export default component$<IProps>(({ onForward$ }) => {
 					onSelectAddress$={async (address: ShippingAddress) => {
 						appState.shippingAddress = address;
 						shippingNeedsToBeCalculated.value = true;
+						const addressToOrder = parseShippingAddressToCreateAddressInput(
+							appState.shippingAddress
+						);
+						const setOrderAddressResult = await setOrderShippingAddressMutation(addressToOrder);
+					}}
+				/>
+			</div>
+			<div class="mt-10 lg:mt-0">
+				{/* Order Summary */}
+
+				<h2 class="text-lg font-medium text-gray-900 mb-4">{$localize`Order summary`}</h2>
+				<CartContents
+					onOrderLineChange$={async () => {
+						shippingNeedsToBeCalculated.value = true;
 					}}
 				/>
 
+				{/* Delivery Method */}
+
 				<div class="mt-10 border-t border-gray-200 pt-10">
-					<HighlightedButton
-						onClick$={async () => {
-							const addressToOrder = parseShippingAddressToCreateAddressInput(
-								appState.shippingAddress
-							);
-							const setOrderAddressResult = await setOrderShippingAddressMutation(addressToOrder);
-							if (setOrderAddressResult?.__typename === 'Order') {
-								addressAddedToOrder.value = true;
-								shippingNeedsToBeCalculated.value = false;
-							}
-						}}
-					>
-						Calculate Shipping
-					</HighlightedButton>
-					{!shippingNeedsToBeCalculated.value && addressAddedToOrder.value && (
-						<div>
-							<ShippingMethodSelectorV2 />
-						</div>
-					)}
+					<ShippingMethodSelectorV2 needCalculateShipping$={shippingNeedsToBeCalculated} />
 				</div>
 
-				<button
-					class="bg-primary-600 hover:bg-primary-700 flex w-full items-center justify-center space-x-2 mt-24 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:bg-slate-300"
+				{!shippingNeedsToBeCalculated.value && <CartTotals order={appState.activeOrder} />}
+				<HighlightedButton
+					extraClass="mt-6 w-full"
 					onClick$={$(() => {
 						if (isFormValidSignal.value) {
 							const { emailAddress, firstName, lastName, phoneNumber, title } = appState.customer;
@@ -215,25 +215,13 @@ export default component$<IProps>(({ onForward$ }) => {
 							onForward$(createCustomerInput);
 						}
 					})}
-					disabled={!isFormValidSignal.value}
+					disabled={!isFormValidSignal.value || shippingNeedsToBeCalculated.value}
 				>
-					<LockClosedIcon />
-					<span>{$localize`Proceed to payment`}</span>
-				</button>
-			</div>
-			<div class="mt-10 lg:mt-0">
-				<h2 class="text-lg font-medium text-gray-900 mb-4">{$localize`Order summary`}</h2>
-				<CartContents
-					onOrderLineChange$={async () => {
-						shippingNeedsToBeCalculated.value = true;
-					}}
-				/>
-				{shippingNeedsToBeCalculated.value && (
-					<div class="text-sm text-red-600 mt-2">
-						Please calculate shipping to see the final order total.
+					<div class="flex items-center space-x-4">
+						<LockClosedIcon />
+						<p>{$localize`Proceed to payment`}</p>
 					</div>
-				)}
-				{!shippingNeedsToBeCalculated.value && <CartTotals order={appState.activeOrder} />}
+				</HighlightedButton>
 			</div>
 		</div>
 	);

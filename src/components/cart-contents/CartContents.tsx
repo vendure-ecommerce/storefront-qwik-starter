@@ -1,4 +1,11 @@
-import { component$, QRL, useComputed$, useContext, useSignal, useTask$ } from '@qwik.dev/core';
+import {
+	component$,
+	QRL,
+	useComputed$,
+	useContext,
+	useSignal,
+	useVisibleTask$,
+} from '@qwik.dev/core';
 import { useLocation, useNavigate } from '@qwik.dev/router';
 import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
@@ -24,26 +31,18 @@ export default component$<{
 	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
 	const FontMenuSignal = useFontMenu();
 
-	useTask$(async ({ track, cleanup }) => {
+	useVisibleTask$(async ({ track }) => {
 		track(() => currentOrderLineSignal.value);
-		let id: NodeJS.Timeout;
 		if (currentOrderLineSignal.value) {
-			id = setTimeout(async () => {
-				appState.activeOrder = await adjustOrderLineMutation(
-					currentOrderLineSignal.value!.id,
-					currentOrderLineSignal.value!.value
-				);
-			}, 300);
+			appState.activeOrder = await adjustOrderLineMutation(
+				currentOrderLineSignal.value!.id,
+				currentOrderLineSignal.value!.value
+			);
 
 			if (onOrderLineChange$) {
 				await onOrderLineChange$();
 			}
 		}
-		cleanup(() => {
-			if (id) {
-				clearTimeout(id);
-			}
-		});
 	});
 
 	return (
