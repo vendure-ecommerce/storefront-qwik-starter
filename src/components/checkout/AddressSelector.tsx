@@ -104,6 +104,10 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 										selectedAddressId.value = address.id || null;
 										openSelector.value = false;
 									}}
+									allowDelete={address.id !== selectedAddressId.value}
+									onDelete$={async (addressId) => {
+										appState.addressBook = appState.addressBook.filter((a) => a.id !== addressId);
+									}}
 								/>
 							</li>
 						))}
