@@ -61,9 +61,16 @@ export const removeOrderLineMutation = async (lineId: string) => {
 	);
 };
 
+/**
+ * If there is error in the mutation, it will be returned as well. E.g. if out of stock
+ * it will return the ErrorResult. i.e. {errorCode, message}
+ * @param lineId
+ * @param quantity
+ * @returns
+ */
 export const adjustOrderLineMutation = async (lineId: string, quantity: number) => {
 	const res = await shopSdk.adjustOrderLine({ orderLineId: lineId, quantity });
-	return handleGqlResult<Order>(res.adjustOrderLine); // Using imported handleMutationResult
+	return res.adjustOrderLine;
 };
 
 export const setOrderShippingAddressMutation = async (input: CreateAddressInput) => {

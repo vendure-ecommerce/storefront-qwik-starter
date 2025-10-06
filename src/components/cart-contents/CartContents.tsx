@@ -1,9 +1,11 @@
 import {
 	component$,
 	QRL,
+	Signal,
 	useComputed$,
 	useContext,
 	useSignal,
+	useStore,
 	useVisibleTask$,
 } from '@qwik.dev/core';
 import { useLocation, useNavigate } from '@qwik.dev/router';
@@ -12,14 +14,14 @@ import { Order } from '~/generated/graphql';
 
 import { adjustOrderLineMutation, removeOrderLineMutation } from '~/providers/shop/orders/order';
 import { useFilamentColor, useFontMenu } from '~/routes/layout';
-import { isCheckoutPage, slugToRoute } from '~/utils';
-import Price from '../products/Price';
-import ItemPreview from './ItemPreview';
+import { isCheckoutPage } from '~/utils';
+import CartContentCard from './CartContentCard';
 
 export default component$<{
 	order?: Order;
 	onOrderLineChange$?: QRL<() => Promise<void>>;
-}>(({ order, onOrderLineChange$: onOrderLineChange$ }) => {
+	readyToProceedSignal: Signal<boolean>;
+}>(({ order, onOrderLineChange$: onOrderLineChange$, readyToProceedSignal }) => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
@@ -27,6 +29,10 @@ export default component$<{
 	const rowsSignal = useComputed$(() => order?.lines || appState.activeOrder?.lines || []);
 	const isInEditableUrl = !isCheckoutPage(location.url.toString()) || !order;
 	const currencyCode = order?.currencyCode || appState.activeOrder?.currencyCode || 'USD';
+	const adjustOrderLineFailedSignal = useStore<{ errorCode: string; message: string }>({
+		errorCode: '',
+		message: '',
+	});
 
 	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
 	const FontMenuSignal = useFontMenu();
@@ -38,8 +44,15 @@ export default component$<{
 				currentOrderLineSignal.value!.id,
 				currentOrderLineSignal.value!.value
 			);
-			if (res) {
-				appState.activeOrder = res;
+			if (res.__typename === 'Order') {
+				appState.activeOrder = res as Order;
+				adjustOrderLineFailedSignal.errorCode = '';
+				adjustOrderLineFailedSignal.message = '';
+			} else {
+				// Handle error case
+				readyToProceedSignal.value = false;
+				adjustOrderLineFailedSignal.errorCode = res.errorCode;
+				adjustOrderLineFailedSignal.message = res.message;
 			}
 
 			if (onOrderLineChange$) {
@@ -51,92 +64,48 @@ export default component$<{
 	return (
 		<div class="flow-root">
 			<ul class="-my-6 divide-y divide-gray-200">
-				{rowsSignal.value.map((line) => {
-					const { linePriceWithTax } = line;
-					return (
-						<li key={line.id} class="py-6 flex">
-							<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
-								<ItemPreview
-									filamentColorSignal={FilamentColorSignal}
-									fontMenuSignal={FontMenuSignal}
-									line={line}
-								/>
-							</div>
-
-							<div class="ml-4 flex-1 flex flex-col">
-								<div>
-									<div class="flex justify-between text-base font-medium text-gray-900">
-										<h3>
-											<a href={slugToRoute(line.productVariant.product.slug)}>
-												{line.productVariant.name}
-											</a>
-										</h3>
-										<Price
-											priceWithTax={linePriceWithTax}
-											currencyCode={currencyCode}
-											forcedClass="ml-4"
-										></Price>
-									</div>
-								</div>
-								<div class="flex-1 flex items-center text-sm">
-									{isInEditableUrl ? (
-										<form>
-											<label html-for={`quantity-${line.id}`} class="mr-2">
-												{$localize`Quantity`}
-											</label>
-											<select
-												disabled={!isInEditableUrl}
-												id={`quantity-${line.id}`}
-												name={`quantity-${line.id}`}
-												value={line.quantity}
-												onChange$={(_, el) => {
-													currentOrderLineSignal.value = { id: line.id, value: +el.value };
-												}}
-												class="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-											>
-												{[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
-													<option key={num} value={num} selected={line.quantity === num}>
-														{num.toString()}
-													</option>
-												))}
-											</select>
-										</form>
-									) : (
-										<div class="text-gray-800">
-											<span class="mr-1">{$localize`Quantity`}</span>
-											<span class="font-medium">{line.quantity}</span>
-										</div>
-									)}
-									<div class="flex-1"></div>
-									<div class="flex">
-										{isInEditableUrl && (
-											<button
-												value={line.id}
-												class="font-medium text-primary-600 hover:text-primary-500"
-												onClick$={async () => {
-													const res = await removeOrderLineMutation(line.id);
-													if (res) {
-														appState.activeOrder = res;
-													}
-													if (
-														appState.activeOrder?.lines?.length === 0 &&
-														isCheckoutPage(location.url.toString())
-													) {
-														appState.showCart = false;
-														navigate(`/`);
-													}
-												}}
-											>
-												{$localize`Remove`}
-											</button>
-										)}
-									</div>
-								</div>
-							</div>
-						</li>
-					);
-				})}
+				{rowsSignal.value.map((line) => (
+					<CartContentCard
+						key={line.id}
+						line={line}
+						currencyCode={currencyCode}
+						isInEditableUrl={isInEditableUrl}
+						filamentColorSignal={FilamentColorSignal}
+						fontMenuSignal={FontMenuSignal}
+						onQuantityChange$={async (id, value) => {
+							currentOrderLineSignal.value = { id, value };
+						}}
+						onRemove$={async (id) => {
+							const res = await removeOrderLineMutation(id);
+							if (res) {
+								appState.activeOrder = res;
+							}
+							if (
+								appState.activeOrder?.lines?.length === 0 &&
+								isCheckoutPage(location.url.toString())
+							) {
+								appState.showCart = false;
+								navigate(`/`);
+							}
+						}}
+					/>
+				))}
 			</ul>
+			{adjustOrderLineFailedSignal.errorCode && (
+				<div class="mt-4 p-4 bg-red-100 text-red-800 rounded">
+					<strong class="font-bold">Error: </strong>
+					<span>{adjustOrderLineFailedSignal.message}</span>
+					{/* refresh page button */}
+					<button
+						class="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+						onClick$={async () => {
+							navigate(0);
+						}}
+					>
+						Refresh the page to see the correct quantity
+					</button>
+				</div>
+			)}
 		</div>
 	);
 });

@@ -38,6 +38,7 @@ export default component$<IProps>(({ onForward$ }) => {
 	const appState = useContext(APP_STATE);
 	const isFormValidSignal = useSignal(false);
 	const reCalculateShipping = useSignal(true);
+	const orderLineReadyToProceed = useSignal(true);
 
 	useVisibleTask$(async () => {
 		const activeOrder = await getActiveOrderQuery();
@@ -118,6 +119,7 @@ export default component$<IProps>(({ onForward$ }) => {
 			<div class="mt-10 lg:mt-0">
 				<SectionWithLabel label={$localize`Order summary`}>
 					<CartContents
+						readyToProceedSignal={orderLineReadyToProceed}
 						onOrderLineChange$={async () => {
 							reCalculateShipping.value = true;
 						}}
@@ -152,7 +154,9 @@ export default component$<IProps>(({ onForward$ }) => {
 							onForward$(createCustomerInput);
 						}
 					})}
-					disabled={!isFormValidSignal.value || reCalculateShipping.value}
+					disabled={
+						!isFormValidSignal.value || reCalculateShipping.value || !orderLineReadyToProceed.value
+					}
 				>
 					<div class="flex items-center space-x-4">
 						<LockClosedIcon />
