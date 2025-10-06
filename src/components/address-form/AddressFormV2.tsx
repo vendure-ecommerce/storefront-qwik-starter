@@ -1,7 +1,12 @@
 import { $, component$, QRL, Signal, useContext } from '@qwik.dev/core';
 import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
 import FormInput from '~/components/common/FormInput';
-import { APP_STATE, AUTH_TOKEN } from '~/constants';
+import {
+	APP_STATE,
+	AUTH_TOKEN,
+	CUSTOMER_NOT_DEFINED_ID,
+	GUEST_ADDED_ADDRESS_ID,
+} from '~/constants';
 import { CreateAddressInput, UpdateAddressInput } from '~/generated/graphql';
 import {
 	createCustomerAddressMutation,
@@ -28,14 +33,8 @@ export const useAddressEditAction = globalAction$(
 			defaultBillingAddress: data.defaultBillingAddress === 'on',
 		};
 		const authToken = cookie.get(AUTH_TOKEN)?.value;
-		const createdOrUpdatedAddressId = await createOrUpdateAddress$(
-			parsedData as ShippingAddress,
-			authToken
-		);
-		if (createdOrUpdatedAddressId) {
-			parsedData.id = createdOrUpdatedAddressId;
-		}
-		return { success: true, data: parsedData };
+
+		return { success: true, data: parsedData, authToken: authToken };
 	},
 	zod$({
 		id: z.string().optional(),
@@ -55,6 +54,8 @@ export const useAddressEditAction = globalAction$(
 
 /**
  * AddressForm component for adding or editing addresses.
+ * If requester is a guest (not logged in), the submit will not create or update the address in the backend.
+ * If the requester is a logged-in customer, the submit will be created or updated in the backend.
  *
  * @prop open: Signal<boolean> to control the visibility of the dialog.
  * @prop onForward$: QRL function to handle form submission and pass back the address data.
@@ -65,6 +66,7 @@ export const useAddressEditAction = globalAction$(
 export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddress }) => {
 	const appState = useContext(APP_STATE);
 	const action = useAddressEditAction();
+	const isGuest = appState.customer.id === CUSTOMER_NOT_DEFINED_ID;
 
 	return (
 		<Dialog
@@ -77,6 +79,18 @@ export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddr
 				onSubmitCompleted$={async ({ detail }) => {
 					if (detail.value.success && detail.value.data) {
 						const formData = detail.value.data;
+						const authToken = detail.value.authToken;
+						if (!isGuest) {
+							const createdOrUpdatedAddressId = await createOrUpdateAddress$(
+								formData as ShippingAddress,
+								authToken
+							);
+							if (createdOrUpdatedAddressId) {
+								formData.id = createdOrUpdatedAddressId;
+							}
+						} else {
+							formData.id = GUEST_ADDED_ADDRESS_ID;
+						}
 						if (onForward$) {
 							await onForward$(formData as ShippingAddress);
 						}
@@ -116,7 +130,7 @@ export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddr
 						name="streetLine2"
 						label={$localize`Apartment, suite, etc.`}
 						formAction={action}
-						defaultAddress={prefilledAddress}
+						defaults={prefilledAddress}
 					/>
 					<FormInput
 						name="city"
@@ -167,36 +181,43 @@ export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddr
 						defaults={prefilledAddress}
 						autoComplete="tel"
 					/>
-					<div class="sm:col-span-1">
-						<label
-							html-for="defaultShippingAddress"
-							class="block text-sm font-medium text-gray-700"
-						>
-							{$localize`Default Shipping Address`}
-						</label>
-						<div class="mt-1">
-							<input
-								type="checkbox"
-								name="defaultShippingAddress"
-								id="defaultShippingAddress"
-								checked={prefilledAddress?.defaultShippingAddress}
-							/>
-						</div>
-					</div>
+					{!isGuest && ( // Guest doesn't need to set default address
+						<>
+							<div class="sm:col-span-1">
+								<label
+									html-for="defaultShippingAddress"
+									class="block text-sm font-medium text-gray-700"
+								>
+									{$localize`Default Shipping Address`}
+								</label>
+								<div class="mt-1">
+									<input
+										type="checkbox"
+										name="defaultShippingAddress"
+										id="defaultShippingAddress"
+										checked={prefilledAddress?.defaultShippingAddress}
+									/>
+								</div>
+							</div>
 
-					<div class="sm:col-span-1">
-						<label html-for="defaultBillingAddress" class="block text-sm font-medium text-gray-700">
-							{$localize`Default Billing Address`}
-						</label>
-						<div class="mt-1">
-							<input
-								type="checkbox"
-								name="defaultBillingAddress"
-								id="defaultBillingAddress"
-								checked={prefilledAddress?.defaultBillingAddress}
-							/>
-						</div>
-					</div>
+							<div class="sm:col-span-1">
+								<label
+									html-for="defaultBillingAddress"
+									class="block text-sm font-medium text-gray-700"
+								>
+									{$localize`Default Billing Address`}
+								</label>
+								<div class="mt-1">
+									<input
+										type="checkbox"
+										name="defaultBillingAddress"
+										id="defaultBillingAddress"
+										checked={prefilledAddress?.defaultBillingAddress}
+									/>
+								</div>
+							</div>
+						</>
+					)}
 				</div>
 				<div class="flex justify-end">
 					<HighlightedButton type="submit" extraClass="m-2">

@@ -2,7 +2,6 @@ import {
 	component$,
 	Signal,
 	useContext,
-	useSignal,
 	useStore,
 	useTask$,
 	useVisibleTask$,
@@ -16,12 +15,11 @@ import ShippoShippingMethodCard from '../checkout/ShippoShippingMethodCard';
 import AnimatedSpinnerIcon from '../icons/AnimatedSpinnerIcon';
 
 interface IProps {
-	needCalculateShipping$: Signal<boolean>;
+	reCalculateShipping$: Signal<boolean>;
 }
 
-export default component$<IProps>(({ needCalculateShipping$ }) => {
+export default component$<IProps>(({ reCalculateShipping$ }) => {
 	const appState = useContext(APP_STATE);
-	const isCalculating = useSignal(false);
 
 	const currencyCode = appState.activeOrder.currencyCode || 'USD';
 	const state = useStore<{ selectedMethodId: string; methods: ShippingMethodQuote[] }>({
@@ -30,37 +28,39 @@ export default component$<IProps>(({ needCalculateShipping$ }) => {
 	});
 
 	useVisibleTask$(async (task) => {
-		// This task will re-run whenever needCalculateShipping$.value changes
-		task.track(() => needCalculateShipping$.value);
-		isCalculating.value = true;
-		if (!needCalculateShipping$.value) {
+		// This task will re-run whenever reCalculateShipping$.value changes
+		task.track(() => reCalculateShipping$.value);
+		if (reCalculateShipping$.value) {
+			console.warn('reCalculateShipping$ is true, fetching shipping methods...');
 			state.methods = await getEligibleShippingMethodsQuery();
 			// remove dummy shipping methods if any
 			state.methods = state.methods.filter((method) => method.name !== 'dummy shipping');
 			// preselect the first method
 			state.selectedMethodId = state.methods[0]?.id;
-			isCalculating.value = false;
 		}
-
-		needCalculateShipping$.value = false;
+		reCalculateShipping$.value = false;
 	});
 
 	useTask$(async (tracker) => {
 		const selected = tracker.track(() => state.selectedMethodId);
 		if (selected) {
 			appState.activeOrder = await setOrderShippingMethodMutation([selected]);
+			console.warn(
+				'shipping method set on order, priceWithTax:',
+				appState.activeOrder.shippingWithTax
+			);
 		}
 	});
 
 	return (
 		<div>
-			{isCalculating.value && (
+			{reCalculateShipping$.value && (
 				<div>
 					<AnimatedSpinnerIcon forcedClass="h-5 w-5 mt-4" />
 				</div>
 			)}
 
-			{!isCalculating.value && !needCalculateShipping$.value && (
+			{!reCalculateShipping$.value && (
 				<div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
 					{state.methods.map((method, index) => (
 						<div

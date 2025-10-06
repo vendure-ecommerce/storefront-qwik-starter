@@ -1,4 +1,5 @@
 import {
+	CUSTOMER_NOT_DEFINED_ID,
 	DEFAULT_METADATA_DESCRIPTION,
 	DEFAULT_METADATA_IMAGE,
 	DEFAULT_METADATA_TITLE,
@@ -13,7 +14,7 @@ import {
 	FILAMENT_COLOR,
 	FONT_MENU,
 } from '~/routes/constants';
-import { ActiveCustomer, FacetWithValues, ShippingAddress } from '~/types';
+import { ActiveCustomer, AppState, FacetWithValues, ShippingAddress } from '~/types';
 
 export const getRandomInt = (max: number) => Math.floor(Math.random() * max);
 
@@ -243,4 +244,8 @@ export const getDefaultCustomNameTagOptions = (
 		baseColorId: defaultBaseColorId,
 		fontId: defaultFontId,
 	};
+};
+
+export const isGuestCustomer = (appState: AppState): boolean => {
+	return appState.customer.id === CUSTOMER_NOT_DEFINED_ID;
 };

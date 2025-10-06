@@ -22,16 +22,10 @@ interface Iprops {
 export default component$<Iprops>(({ onEditSave$ }) => {
 	const appState = useContext(APP_STATE);
 	const openContactForm = useSignal(false);
-	const isGuest = useSignal(false);
 
 	const { emailAddress, firstName, lastName } = appState.customer || {};
 
-	if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
-		// if customer is logged in, disable the edit option
-		isGuest.value = true;
-	} else {
-		isGuest.value = false;
-	}
+	const isGuest = appState.customer.id === CUSTOMER_NOT_DEFINED_ID;
 
 	return (
 		<>
@@ -44,7 +38,7 @@ export default component$<Iprops>(({ onEditSave$ }) => {
 							</h1>
 							<p class="py-1 text-sm text-gray-700 w-fit">{emailAddress}</p>
 						</div>
-						{isGuest.value && (
+						{isGuest && (
 							<button
 								class="text-sm text-primary-600 hover:text-primary-800"
 								onClick$={async () => {
@@ -73,9 +67,6 @@ export default component$<Iprops>(({ onEditSave$ }) => {
 				onSubmitCompleted$={async (emailAddress, firstName, lastName) => {
 					// update appState.customer with the new contact info after form submission
 					openContactForm.value = false;
-					appState.customer.emailAddress = emailAddress;
-					appState.customer.firstName = firstName;
-					appState.customer.lastName = lastName;
 					if (onEditSave$) {
 						await onEditSave$(emailAddress, firstName, lastName);
 					}

@@ -20,7 +20,7 @@ import {
 	setOrderShippingAddressMutation,
 } from '~/providers/shop/orders/order';
 import { ShippingAddress } from '~/types';
-import { isActiveCustomerValid, isShippingAddressValid } from '~/utils';
+import { isActiveCustomerValid, isGuestCustomer, isShippingAddressValid } from '~/utils';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import CartContents from '../cart-contents/CartContents';
 import CartTotals from '../cart-totals/CartTotals';
@@ -37,11 +37,13 @@ type IProps = {
 export default component$<IProps>(({ onForward$ }) => {
 	const appState = useContext(APP_STATE);
 	const isFormValidSignal = useSignal(false);
-	const shippingNeedsToBeCalculated = useSignal(true);
+	const reCalculateShipping = useSignal(true);
 
 	useVisibleTask$(async () => {
 		const activeOrder = await getActiveOrderQuery();
 		const activeCustomer = await getActiveCustomerAddressesQuery();
+
+		const isGuest = isGuestCustomer(appState);
 
 		if (activeOrder?.customer) {
 			const customer = activeOrder.customer;
@@ -90,18 +92,25 @@ export default component$<IProps>(({ onForward$ }) => {
 		<div class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
 			<div>
 				<SectionWithLabel label={$localize`Contact information`}>
-					<ContactCard />
+					<ContactCard
+						onEditSave$={async (emailAddress, firstName, lastName) => {
+							appState.customer.emailAddress = emailAddress;
+							appState.customer.firstName = firstName;
+							appState.customer.lastName = lastName;
+						}}
+					/>
 				</SectionWithLabel>
 
 				<SectionWithLabel label={$localize`Shipping information`} topBorder={true}>
 					<AddressSelector
 						onSelectAddress$={async (address: ShippingAddress) => {
 							appState.shippingAddress = address;
-							shippingNeedsToBeCalculated.value = true;
 							const addressToOrder = parseShippingAddressToCreateAddressInput(
 								appState.shippingAddress
 							);
 							await setOrderShippingAddressMutation(addressToOrder);
+							reCalculateShipping.value = true;
+							console.warn('address set on order, zip code:', addressToOrder.postalCode);
 						}}
 					/>
 				</SectionWithLabel>
@@ -110,7 +119,7 @@ export default component$<IProps>(({ onForward$ }) => {
 				<SectionWithLabel label={$localize`Order summary`}>
 					<CartContents
 						onOrderLineChange$={async () => {
-							shippingNeedsToBeCalculated.value = true;
+							reCalculateShipping.value = true;
 						}}
 					/>
 				</SectionWithLabel>
@@ -118,10 +127,10 @@ export default component$<IProps>(({ onForward$ }) => {
 				{/* Delivery Method */}
 
 				<SectionWithLabel label={$localize`Delivery method`} topBorder={true}>
-					<ShippingMethodSelectorV2 needCalculateShipping$={shippingNeedsToBeCalculated} />
+					<ShippingMethodSelectorV2 reCalculateShipping$={reCalculateShipping} />
 				</SectionWithLabel>
 
-				{!shippingNeedsToBeCalculated.value && (
+				{!reCalculateShipping.value && (
 					<SectionWithLabel>
 						<CartTotals order={appState.activeOrder} />
 					</SectionWithLabel>
@@ -143,7 +152,7 @@ export default component$<IProps>(({ onForward$ }) => {
 							onForward$(createCustomerInput);
 						}
 					})}
-					disabled={!isFormValidSignal.value || shippingNeedsToBeCalculated.value}
+					disabled={!isFormValidSignal.value || reCalculateShipping.value}
 				>
 					<div class="flex items-center space-x-4">
 						<LockClosedIcon />
@@ -155,6 +164,11 @@ export default component$<IProps>(({ onForward$ }) => {
 	);
 });
 
+/**
+ * remove `id` , `country`, `defaultShippingAddress` and `defaultBillingAddress` from Address
+ * @param address - ShippingAddress
+ * @returns
+ */
 const parseShippingAddressToCreateAddressInput = (address: ShippingAddress): CreateAddressInput => {
 	return {
 		fullName: address.fullName,
