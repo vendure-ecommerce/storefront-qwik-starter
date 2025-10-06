@@ -7,6 +7,7 @@ import {
 	updateCustomerAddressMutation,
 } from '~/providers/shop/customer/customer';
 import { ShippingAddress } from '~/types';
+import FormInput from '~/utils/FormInput';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import { Dialog } from '../dialog/Dialog';
 
@@ -87,41 +88,41 @@ export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddr
 					<div class="hidden">
 						<input type="text" name="id" value={prefilledAddress?.id || undefined} readOnly />
 					</div>
-					<AddressInputField
+					<FormInput
 						name="fullName"
 						label={$localize`Full name`}
 						formAction={action}
-						defaultAddress={prefilledAddress}
+						defaults={prefilledAddress}
 						autoComplete="given-name"
 					/>
-					<AddressInputField
+					<FormInput
 						className="sm:col-span-2"
 						name="company"
 						label={$localize`Company`}
 						formAction={action}
-						defaultAddress={prefilledAddress}
+						defaults={prefilledAddress}
 						autoComplete="organization"
 					/>
-					<AddressInputField
+					<FormInput
 						className="sm:col-span-2"
 						name="streetLine1"
 						label={$localize`Address`}
 						formAction={action}
-						defaultAddress={prefilledAddress}
+						defaults={prefilledAddress}
 						autoComplete="street-address"
 					/>
-					<AddressInputField
+					<FormInput
 						className="sm:col-span-2"
 						name="streetLine2"
 						label={$localize`Apartment, suite, etc.`}
 						formAction={action}
 						defaultAddress={prefilledAddress}
 					/>
-					<AddressInputField
+					<FormInput
 						name="city"
 						label={$localize`City`}
 						formAction={action}
-						defaultAddress={prefilledAddress}
+						defaults={prefilledAddress}
 						autoComplete="address-level2"
 					/>
 					<div>
@@ -144,26 +145,26 @@ export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddr
 							)}
 						</div>
 					</div>
-					<AddressInputField
+					<FormInput
 						name="province"
 						label={$localize`State / Province`}
 						formAction={action}
-						defaultAddress={prefilledAddress}
+						defaults={prefilledAddress}
 						autoComplete="address-level1"
 					/>
-					<AddressInputField
+					<FormInput
 						name="postalCode"
 						label={$localize`Postal code`}
 						formAction={action}
-						defaultAddress={prefilledAddress}
+						defaults={prefilledAddress}
 						autoComplete="postal-code"
 					/>
-					<AddressInputField
+					<FormInput
 						className="sm:col-span-2"
 						name="phoneNumber"
 						label={$localize`Phone`}
 						formAction={action}
-						defaultAddress={prefilledAddress}
+						defaults={prefilledAddress}
 						autoComplete="tel"
 					/>
 					<div class="sm:col-span-1">
@@ -206,48 +207,6 @@ export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddr
 		</Dialog>
 	);
 });
-
-interface AddressInputFieldProps {
-	name: keyof ShippingAddress;
-	label: string;
-	formAction: ReturnType<typeof useAddressEditAction>;
-	autoComplete?: string;
-	defaultAddress?: ShippingAddress;
-	className?: string;
-}
-const AddressInputField = component$<AddressInputFieldProps>(
-	({ name, label, formAction, autoComplete, defaultAddress, className }) => {
-		const fieldErrors = formAction.value?.fieldErrors as
-			| Record<string, string | undefined>
-			| undefined;
-		const error = fieldErrors?.[name as string];
-
-		const defaultValue = defaultAddress ? defaultAddress[name] ?? '' : '';
-
-		return (
-			<div class={className || ''}>
-				<label for={name as string} class="block text-sm font-medium text-gray-700">
-					{label}
-				</label>
-				<div class="mt-1">
-					<input
-						type="text"
-						id={name as string}
-						name={name as string}
-						value={defaultValue as string}
-						autoComplete={autoComplete}
-						class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-					/>
-				</div>
-				{error && renderError(error)}
-			</div>
-		);
-	}
-);
-const renderError = (errorMessage: string | undefined) => {
-	if (!errorMessage) return null;
-	return <p class="error text-xs text-red-600 mt-1 ">{errorMessage}</p>;
-};
 
 const createOrUpdateAddress$ = $(
 	async (address: ShippingAddress, authToken: string | undefined): Promise<string | undefined> => {
