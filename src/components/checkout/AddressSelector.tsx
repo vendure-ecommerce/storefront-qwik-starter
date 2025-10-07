@@ -66,7 +66,7 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 			<div class="flex-1 flex flex-col items-start px-4">
 				{isGuest && !newAddressEdited.value && !selectedAddress.value && (
 					<HighlightedButton onClick$={() => (editNewAddress.value = true)}>
-						+ New Address
+						{' + ' + $localize`New Address`}
 					</HighlightedButton>
 				)}
 				{selectedAddress.value && (
@@ -88,7 +88,7 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 				<div class="flex-1">
 					<div>
 						<div class="flex items-center gap-2">
-							<p>Select addresses</p>
+							<p>{$localize`Select addresses`}</p>
 							<button onClick$={() => (openSelector.value = !openSelector.value)}>
 								<DropDownIcon />
 							</button>
@@ -145,7 +145,9 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 											openSelector.value = false;
 										}}
 									/>
-									<Button onClick$={() => (editNewAddress.value = true)}>+ New Address</Button>
+									<Button onClick$={() => (editNewAddress.value = true)}>
+										{' + ' + $localize`New Address`}
+									</Button>
 								</li>
 							)}
 						</ul>
@@ -193,7 +195,6 @@ const updateDefaultAddressInBook = (
 		});
 	}
 };
-
 const parseToShippingAddress = (address: Address): ShippingAddress => {
 	let country = '';
 	let countryCode = '';

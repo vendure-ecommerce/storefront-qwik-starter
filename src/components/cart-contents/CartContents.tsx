@@ -102,7 +102,7 @@ export default component$<{
 							navigate(0);
 						}}
 					>
-						Refresh the page to see the correct quantity
+						{$localize`Refresh the page to see the correct quantity`}
 					</button>
 				</div>
 			)}

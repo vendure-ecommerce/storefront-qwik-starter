@@ -20,7 +20,7 @@ import {
 	setOrderShippingAddressMutation,
 } from '~/providers/shop/orders/order';
 import { ShippingAddress } from '~/types';
-import { isActiveCustomerValid, isGuestCustomer, isShippingAddressValid } from '~/utils';
+import { isActiveCustomerValid, isShippingAddressValid } from '~/utils';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import CartContents from '../cart-contents/CartContents';
 import CartTotals from '../cart-totals/CartTotals';
@@ -43,8 +43,6 @@ export default component$<IProps>(({ onForward$ }) => {
 	useVisibleTask$(async () => {
 		const activeOrder = await getActiveOrderQuery();
 		const activeCustomer = await getActiveCustomerAddressesQuery();
-
-		const isGuest = isGuestCustomer(appState);
 
 		if (activeOrder?.customer) {
 			const customer = activeOrder.customer;
@@ -111,7 +109,6 @@ export default component$<IProps>(({ onForward$ }) => {
 							);
 							await setOrderShippingAddressMutation(addressToOrder);
 							reCalculateShipping.value = true;
-							console.warn('address set on order, zip code:', addressToOrder.postalCode);
 						}}
 					/>
 				</SectionWithLabel>

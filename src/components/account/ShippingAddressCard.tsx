@@ -1,4 +1,5 @@
 import { component$, QRL, useSignal } from '@qwik.dev/core';
+import Tooltip from '~/components/tooltip/Tooltip';
 import { deleteCustomerAddressMutation } from '~/providers/shop/customer/customer';
 import { ShippingAddress } from '~/types';
 import { AddressForm } from '../address-form/AddressFormV2';
@@ -73,18 +74,16 @@ export default component$<IProps>(
 					</div>
 
 					{showDefault && (address.defaultShippingAddress || address.defaultBillingAddress) && (
-						<div class="flex text-xs justify-between mt-4">
+						<div class="flex text-xs mt-4">
 							{address.defaultShippingAddress && (
-								<div class="flex items-center">
-									<ShippingAddressIcon />
-									<span class="ml-2">Default Shipping Address</span>
-								</div>
+								<Tooltip text={$localize`Default shipping address`}>
+									<ShippingAddressIcon aria-hidden="true" />
+								</Tooltip>
 							)}
 							{address.defaultBillingAddress && (
-								<div class="flex items-center">
-									<BillingAddressIcon />
-									<span class="ml-2">Default Billing Address</span>
-								</div>
+								<Tooltip text={$localize`Default billing address`}>
+									<BillingAddressIcon aria-hidden="true" />
+								</Tooltip>
 							)}
 						</div>
 					)}

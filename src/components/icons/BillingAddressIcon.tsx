@@ -1,7 +1,8 @@
 import { component$ } from '@qwik.dev/core';
 
-export default component$(() => (
+export default component$<{ className?: string }>(({ className }) => (
 	<svg
+		class={className}
 		enable-background="new 0 0 48 48"
 		height="24px"
 		id="Layer_4"
