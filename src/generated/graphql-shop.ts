@@ -64,6 +64,13 @@ export type Address = Node & {
 	updatedAt: Scalars['DateTime']['output'];
 };
 
+export type AddressValidationResults = {
+	__typename?: 'AddressValidationResults';
+	isValid?: Maybe<Scalars['Boolean']['output']>;
+	/** An array of messages related to the address validation. */
+	messages?: Maybe<Array<Maybe<ShippoResponseMessage>>>;
+};
+
 export type Adjustment = {
 	__typename?: 'Adjustment';
 	adjustmentSource: Scalars['String']['output'];
@@ -125,7 +132,6 @@ export const AssetType = {
 
 export type AssetType = (typeof AssetType)[keyof typeof AssetType];
 export type AuthenticationInput = {
-	google?: InputMaybe<GoogleAuthInput>;
 	native?: InputMaybe<NativeAuthInput>;
 };
 
@@ -1002,7 +1008,11 @@ export const ErrorCode = {
 	PasswordValidationError: 'PASSWORD_VALIDATION_ERROR',
 	PaymentDeclinedError: 'PAYMENT_DECLINED_ERROR',
 	PaymentFailedError: 'PAYMENT_FAILED_ERROR',
+	SellerAddressNotSetOrInvalid: 'SELLER_ADDRESS_NOT_SET_OR_INVALID',
+	SellerShippoApiKeyNotSetOrInvalid: 'SELLER_SHIPPO_API_KEY_NOT_SET_OR_INVALID',
+	ShippoAddressValidationError: 'SHIPPO_ADDRESS_VALIDATION_ERROR',
 	UnknownError: 'UNKNOWN_ERROR',
+	ValidateAddressError: 'VALIDATE_ADDRESS_ERROR',
 	VerificationTokenExpiredError: 'VERIFICATION_TOKEN_EXPIRED_ERROR',
 	VerificationTokenInvalidError: 'VERIFICATION_TOKEN_INVALID_ERROR',
 } as const;
@@ -1226,7 +1236,7 @@ export type FontMenu = Node & {
 export type Fulfillment = Node & {
 	__typename?: 'Fulfillment';
 	createdAt: Scalars['DateTime']['output'];
-	customFields?: Maybe<Scalars['JSON']['output']>;
+	customFields?: Maybe<FulfillmentCustomFields>;
 	id: Scalars['ID']['output'];
 	lines: Array<FulfillmentLine>;
 	method: Scalars['String']['output'];
@@ -1235,6 +1245,11 @@ export type Fulfillment = Node & {
 	summary: Array<FulfillmentLine>;
 	trackingCode?: Maybe<Scalars['String']['output']>;
 	updatedAt: Scalars['DateTime']['output'];
+};
+
+export type FulfillmentCustomFields = {
+	__typename?: 'FulfillmentCustomFields';
+	trackingUrl?: Maybe<Scalars['String']['output']>;
 };
 
 export type FulfillmentLine = {
@@ -1253,10 +1268,6 @@ export const GlobalFlag = {
 } as const;
 
 export type GlobalFlag = (typeof GlobalFlag)[keyof typeof GlobalFlag];
-export type GoogleAuthInput = {
-	token: Scalars['String']['input'];
-};
-
 /** Returned when attempting to set the Customer on a guest checkout when the configured GuestCheckoutStrategy does not allow it. */
 export type GuestCheckoutError = ErrorResult & {
 	__typename?: 'GuestCheckoutError';
@@ -2885,6 +2896,10 @@ export type ProductVariant = Node & {
 export type ProductVariantCustomFields = {
 	__typename?: 'ProductVariantCustomFields';
 	customBuildJson?: Maybe<Scalars['String']['output']>;
+	lengthUnit?: Maybe<Scalars['String']['output']>;
+	physicalAttributes?: Maybe<ProductVariantPhysicalAttributesStruct>;
+	prepDays?: Maybe<Scalars['Int']['output']>;
+	weightUnit?: Maybe<Scalars['String']['output']>;
 };
 
 export type ProductVariantFilterParameter = {
@@ -2895,13 +2910,16 @@ export type ProductVariantFilterParameter = {
 	customBuildJson?: InputMaybe<StringOperators>;
 	id?: InputMaybe<IdOperators>;
 	languageCode?: InputMaybe<StringOperators>;
+	lengthUnit?: InputMaybe<StringOperators>;
 	name?: InputMaybe<StringOperators>;
+	prepDays?: InputMaybe<NumberOperators>;
 	price?: InputMaybe<NumberOperators>;
 	priceWithTax?: InputMaybe<NumberOperators>;
 	productId?: InputMaybe<IdOperators>;
 	sku?: InputMaybe<StringOperators>;
 	stockLevel?: InputMaybe<StringOperators>;
 	updatedAt?: InputMaybe<DateOperators>;
+	weightUnit?: InputMaybe<StringOperators>;
 };
 
 export type ProductVariantList = PaginatedList & {
@@ -2923,17 +2941,28 @@ export type ProductVariantListOptions = {
 	take?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type ProductVariantPhysicalAttributesStruct = {
+	__typename?: 'ProductVariantPhysicalAttributesStruct';
+	height?: Maybe<Scalars['Float']['output']>;
+	length?: Maybe<Scalars['Float']['output']>;
+	weight?: Maybe<Scalars['Float']['output']>;
+	width?: Maybe<Scalars['Float']['output']>;
+};
+
 export type ProductVariantSortParameter = {
 	createdAt?: InputMaybe<SortOrder>;
 	customBuildJson?: InputMaybe<SortOrder>;
 	id?: InputMaybe<SortOrder>;
+	lengthUnit?: InputMaybe<SortOrder>;
 	name?: InputMaybe<SortOrder>;
+	prepDays?: InputMaybe<SortOrder>;
 	price?: InputMaybe<SortOrder>;
 	priceWithTax?: InputMaybe<SortOrder>;
 	productId?: InputMaybe<SortOrder>;
 	sku?: InputMaybe<SortOrder>;
 	stockLevel?: InputMaybe<SortOrder>;
 	updatedAt?: InputMaybe<SortOrder>;
+	weightUnit?: InputMaybe<SortOrder>;
 };
 
 export type ProductVariantTranslation = {
@@ -3057,7 +3086,7 @@ export type Query = {
 	filamentColorFindAll: Array<FilamentColor>;
 	filamentColorFindSupported: Array<FilamentColor>;
 	fontMenuFindAll: Array<FontMenu>;
-	generateBraintreeClientToken: Scalars['String']['output'];
+	generateBraintreeClientToken?: Maybe<Scalars['String']['output']>;
 	/** Returns information about the current authenticated User */
 	me?: Maybe<CurrentUser>;
 	/** Returns the possible next states that the activeOrder can transition to */
@@ -3080,6 +3109,47 @@ export type Query = {
 	products: ProductList;
 	/** Search Products based on the criteria set by the `SearchInput` */
 	search: SearchResponse;
+	/**
+	 * Example of verify an address in the API:
+	 *   query {
+	 *     validateAddressByShippo(
+	 *       address: {
+	 *         fullName: "Mr. Hippo",
+	 *         streetLine1: "215 Clayton St.",
+	 *         city: "San Francisco",
+	 *         province: "CA",
+	 *         postalCode: "94117",
+	 *         country: "US",
+	 *         phoneNumber: "+1 555 341 9393"}
+	 *     ) {
+	 *       ... on ShippoAddressValidationResult {
+	 *         fullName
+	 *         city
+	 *         company
+	 *         country
+	 *         countryCode
+	 *         phoneNumber
+	 *         postalCode
+	 *         province
+	 *         streetLine1
+	 *         streetLine2
+	 *         validationResults {
+	 *           isValid
+	 *             messages {
+	 *               code
+	 *               source
+	 *               text
+	 *             }
+	 *         }
+	 *       }
+	 *       ... on ValidateAddressError {
+	 *         errorCode
+	 *         message
+	 *       }
+	 *     }
+	 *   }
+	 */
+	validateAddressByShippo: ValidateAddressResult;
 };
 
 export type QueryCollectionArgs = {
@@ -3123,6 +3193,10 @@ export type QueryProductsArgs = {
 
 export type QuerySearchArgs = {
 	input: SearchInput;
+};
+
+export type QueryValidateAddressByShippoArgs = {
+	address: VendureAddressInput;
 };
 
 export type RefreshCustomerVerificationResult = NativeAuthStrategyError | Success;
@@ -3251,7 +3325,6 @@ export type SearchInput = {
 	collectionSlug?: InputMaybe<Scalars['String']['input']>;
 	facetValueFilters?: InputMaybe<Array<FacetValueFilterInput>>;
 	groupByProduct?: InputMaybe<Scalars['Boolean']['input']>;
-	inStock?: InputMaybe<Scalars['Boolean']['input']>;
 	skip?: InputMaybe<Scalars['Int']['input']>;
 	sort?: InputMaybe<SearchResultSortParameter>;
 	take?: InputMaybe<Scalars['Int']['input']>;
@@ -3279,7 +3352,6 @@ export type SearchResult = {
 	description: Scalars['String']['output'];
 	facetIds: Array<Scalars['ID']['output']>;
 	facetValueIds: Array<Scalars['ID']['output']>;
-	inStock: Scalars['Boolean']['output'];
 	price: SearchResultPrice;
 	priceWithTax: SearchResultPrice;
 	productAsset?: Maybe<SearchResultAsset>;
@@ -3331,6 +3403,14 @@ export type SetOrderShippingMethodResult =
 	| Order
 	| OrderModificationError;
 
+export const ShipmentStatus = {
+	Error: 'ERROR',
+	Queued: 'QUEUED',
+	Success: 'SUCCESS',
+	Waiting: 'WAITING',
+} as const;
+
+export type ShipmentStatus = (typeof ShipmentStatus)[keyof typeof ShipmentStatus];
 export type ShippingLine = {
 	__typename?: 'ShippingLine';
 	customFields?: Maybe<Scalars['JSON']['output']>;
@@ -3388,6 +3468,321 @@ export type ShippingMethodTranslation = {
 	updatedAt: Scalars['DateTime']['output'];
 };
 
+/** Represents an address as retrieved from the database */
+export type ShippoAddress = {
+	__typename?: 'ShippoAddress';
+	/** Name of the city. Optional but yields more accurate rates when provided. */
+	city?: Maybe<Scalars['String']['output']>;
+	/** Company name associated with the address. */
+	company?: Maybe<Scalars['String']['output']>;
+	/** ISO 3166-1 alpha-2 country code (e.g., "US", "DE"). Required. */
+	country: Scalars['String']['output'];
+	/** Email address of the contact person, RFC3696/5321-compliant. */
+	email?: Maybe<Scalars['String']['output']>;
+	/** Indicates whether the address contains all required values. */
+	isComplete?: Maybe<Scalars['Boolean']['output']>;
+	/** Indicates whether the address is residential. */
+	isResidential?: Maybe<Scalars['Boolean']['output']>;
+	/** Latitude of the address. */
+	latitude?: Maybe<Scalars['Float']['output']>;
+	/** Longitude of the address. */
+	longitude?: Maybe<Scalars['Float']['output']>;
+	/** Additional metadata (up to 100 characters) attached to the address. */
+	metadata?: Maybe<Scalars['String']['output']>;
+	/** First and last name of the addressee. */
+	name?: Maybe<Scalars['String']['output']>;
+	/** Date and time of address creation. */
+	objectCreated?: Maybe<Scalars['DateTime']['output']>;
+	/** Unique identifier of the address object. Required to create a shipment. */
+	objectId?: Maybe<Scalars['String']['output']>;
+	/** Username of the user who created the address object. */
+	objectOwner?: Maybe<Scalars['String']['output']>;
+	/** Date and time of the last address update. */
+	objectUpdated?: Maybe<Scalars['DateTime']['output']>;
+	/** Phone number associated with the address. */
+	phone?: Maybe<Scalars['String']['output']>;
+	/** State or province. Required for certain countries (e.g., US, AU, CA). */
+	state?: Maybe<Scalars['String']['output']>;
+	/** First street line (e.g., street number and name). */
+	street1?: Maybe<Scalars['String']['output']>;
+	/** Second street line. */
+	street2?: Maybe<Scalars['String']['output']>;
+	/** Third street line. Only accepted for certain carriers. */
+	street3?: Maybe<Scalars['String']['output']>;
+	/** Street number of the addressed building. */
+	streetNo?: Maybe<Scalars['String']['output']>;
+	/** Validation results for the address, including messages and validity status. */
+	validationResults?: Maybe<AddressValidationResults>;
+	/** Postal code of the address. Optional but yields more accurate rates when provided. */
+	zip?: Maybe<Scalars['String']['output']>;
+};
+
+export type ShippoAddressValidationResult = {
+	__typename?: 'ShippoAddressValidationResult';
+	city?: Maybe<Scalars['String']['output']>;
+	company?: Maybe<Scalars['String']['output']>;
+	country?: Maybe<Scalars['String']['output']>;
+	countryCode?: Maybe<Scalars['String']['output']>;
+	fullName?: Maybe<Scalars['String']['output']>;
+	phoneNumber?: Maybe<Scalars['String']['output']>;
+	postalCode?: Maybe<Scalars['String']['output']>;
+	province?: Maybe<Scalars['String']['output']>;
+	streetLine1?: Maybe<Scalars['String']['output']>;
+	streetLine2?: Maybe<Scalars['String']['output']>;
+	validationResults?: Maybe<AddressValidationResults>;
+};
+
+export type ShippoCreatedBy = {
+	__typename?: 'ShippoCreatedBy';
+	firstName?: Maybe<Scalars['String']['output']>;
+	lastName?: Maybe<Scalars['String']['output']>;
+	username?: Maybe<Scalars['String']['output']>;
+};
+
+export const ShippoDistanceUnit = {
+	Cm: 'cm',
+	Ft: 'ft',
+	In: 'in',
+	M: 'm',
+	Mm: 'mm',
+	Yd: 'yd',
+} as const;
+
+export type ShippoDistanceUnit = (typeof ShippoDistanceUnit)[keyof typeof ShippoDistanceUnit];
+/** Enum representing the state of a Shippo object. */
+export const ShippoObjectState = {
+	Invalid: 'INVALID',
+	Valid: 'VALID',
+} as const;
+
+export type ShippoObjectState = (typeof ShippoObjectState)[keyof typeof ShippoObjectState];
+/** Parcel object for Shippo shipments */
+export type ShippoParcel = {
+	__typename?: 'ShippoParcel';
+	/** The measure unit used for length, width, and height. */
+	distanceUnit: ShippoDistanceUnit;
+	/** Height of the parcel. Up to six digits in front and four digits after the decimal separator are accepted. */
+	height: Scalars['String']['output'];
+	/** Length of the parcel. Up to six digits in front and four digits after the decimal separator are accepted. */
+	length: Scalars['String']['output'];
+	/** The unit used for weight. */
+	massUnit: ShippoWeightUnit;
+	/** Date and time of Parcel creation. */
+	objectCreated?: Maybe<Scalars['DateTime']['output']>;
+	/** Unique identifier of the given Parcel object. This ID is required to create a Shipment object. */
+	objectId?: Maybe<Scalars['String']['output']>;
+	/** Username of the user who created the Parcel object. */
+	objectOwner?: Maybe<Scalars['String']['output']>;
+	/** Weight of the parcel. Up to six digits in front and four digits after the decimal separator are accepted. */
+	weight: Scalars['String']['output'];
+	/** Width of the parcel. Up to six digits in front and four digits after the decimal separator are accepted. */
+	width: Scalars['String']['output'];
+};
+
+export type ShippoParcelInput = {
+	distanceUnit: ShippoDistanceUnit;
+	height: Scalars['String']['input'];
+	length: Scalars['String']['input'];
+	massUnit: ShippoWeightUnit;
+	weight: Scalars['String']['input'];
+	width: Scalars['String']['input'];
+};
+
+/** Rate object for Shippo shipments */
+export type ShippoRate = {
+	__typename?: 'ShippoRate';
+	/** Final Rate price, expressed in the currency used in the sender's country. */
+	amount: Scalars['String']['output'];
+	/** Final Rate price, expressed in the currency used in the recipient's country. */
+	amountLocal: Scalars['String']['output'];
+	/** Predicted time the carrier will deliver the package in the destination's local time zone. */
+	arrivesBy?: Maybe<Scalars['String']['output']>;
+	/** An array containing specific attributes of this Rate in context of the entire shipment. */
+	attributes: Array<ShippoRateAttribute>;
+	/** Object ID of the carrier account that has been used to retrieve the rate. */
+	carrierAccount: Scalars['String']['output'];
+	/** Currency used in the sender's country, refers to 'amount'. */
+	currency: Scalars['String']['output'];
+	/** Currency used in the recipient's country, refers to 'amountLocal'. */
+	currencyLocal: Scalars['String']['output'];
+	/** Further clarification of the transit times. */
+	durationTerms?: Maybe<Scalars['String']['output']>;
+	/** Estimated transit time (duration) in days of the Parcel at the given service level. */
+	estimatedDays?: Maybe<Scalars['Int']['output']>;
+	/** Cost to the user to insure the Rate for the requested amount of coverage, if insurance coverage was requested. */
+	includedInsurancePrice?: Maybe<Scalars['String']['output']>;
+	/** Rate's creation date and time. */
+	objectCreated: Scalars['DateTime']['output'];
+	/** Unique identifier of the given Rate object. */
+	objectId: Scalars['ID']['output'];
+	/** Username of the user who created the rate object. */
+	objectOwner: Scalars['String']['output'];
+	/** Carrier offering the rate, e.g., 'FedEx' or 'Deutsche Post DHL'. */
+	provider: Scalars['String']['output'];
+	/** URL to the provider logo with max. dimensions of 75x75px. */
+	providerImage75?: Maybe<Scalars['String']['output']>;
+	/** URL to the provider logo with max. dimensions of 200x200px. */
+	providerImage200?: Maybe<Scalars['String']['output']>;
+	/** Service level details for the rate. */
+	servicelevel: ShippoServiceLevel;
+	/** Shipment ID associated with the rate. */
+	shipment: Scalars['String']['output'];
+	/** Indicates whether the object has been created in test mode. */
+	test?: Maybe<Scalars['Boolean']['output']>;
+	/** The parcel's transit zone token. */
+	zone?: Maybe<Scalars['String']['output']>;
+};
+
+/** Attributes that can be assigned to a rate in the context of the entire shipment. */
+export const ShippoRateAttribute = {
+	Bestvalue: 'BESTVALUE',
+	Cheapest: 'CHEAPEST',
+	Fastest: 'FASTEST',
+} as const;
+
+export type ShippoRateAttribute = (typeof ShippoRateAttribute)[keyof typeof ShippoRateAttribute];
+export type ShippoResponseMessage = {
+	__typename?: 'ShippoResponseMessage';
+	code?: Maybe<Scalars['String']['output']>;
+	source?: Maybe<Scalars['String']['output']>;
+	text?: Maybe<Scalars['String']['output']>;
+};
+
+export type ShippoServiceLevel = {
+	__typename?: 'ShippoServiceLevel';
+	extendedToken?: Maybe<Scalars['String']['output']>;
+	/**
+	 * Name of the Rate's servicelevel, e.g. 'International Priority' or 'Standard Post'.
+	 * @remarks
+	 * A servicelevel commonly defines the transit time of a Shipment (e.g., Express vs. Standard), along with other properties.
+	 * These names vary depending on the provider.
+	 */
+	name?: Maybe<Scalars['String']['output']>;
+	terms?: Maybe<Scalars['String']['output']>;
+	/** Token used to identify the service level. e.g. 'usps_priority' or 'fedex_ground'. */
+	token?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * // Shipment represents the parcel as retrieved from the Shippo database
+ * //
+ */
+export type ShippoShipment = {
+	__typename?: 'ShippoShipment';
+	/** Address object of the sender / seller. */
+	addressFrom: ShippoAddress;
+	/**
+	 * Address object where the shipment will be sent back to if it is not delivered.
+	 * Only available for UPS, USPS, and Fedex shipments.
+	 */
+	addressReturn?: Maybe<ShippoAddress>;
+	/** Address object of the recipient / buyer. */
+	addressTo: ShippoAddress;
+	/** An array of object_ids of the carrier account objects to be used for getting shipping rates. */
+	carrierAccounts: Array<Scalars['String']['output']>;
+	objectCreated: Scalars['DateTime']['output'];
+	/** This is the unique object ID of the original Shippo Shipment object. */
+	objectId: Scalars['ID']['output'];
+	/** Username of the user who created the Shipment object. */
+	objectOwner: Scalars['String']['output'];
+	objectUpdated: Scalars['DateTime']['output'];
+	/** List of Parcel objects to be shipped. */
+	parcels: Array<ShippoParcel>;
+	/** An array with all available rates. */
+	rates: Array<ShippoRate>;
+	/**
+	 * Date the shipment will be tendered to the carrier. Must be in the format '2014-01-18T00: 35: 03.463Z'.
+	 * Defaults to current date and time if no value is provided.
+	 */
+	shipmentDate?: Maybe<Scalars['String']['output']>;
+	/**
+	 * 'Waiting' shipments have been successfully submitted but not yet been processed.
+	 *
+	 * @remarks
+	 * 'Queued' shipments are currently being processed.
+	 * 'Success' shipments have been processed successfully, meaning that rate generation has concluded.
+	 * 'Error' does not occur currently and is reserved for future use.
+	 */
+	status: ShipmentStatus;
+};
+
+/** Enum representing the tracking status of a shipment. */
+export const ShippoTrackingStatus = {
+	Delivered: 'DELIVERED',
+	Failure: 'FAILURE',
+	PreTransit: 'PRE_TRANSIT',
+	Returned: 'RETURNED',
+	Transit: 'TRANSIT',
+	Unknown: 'UNKNOWN',
+} as const;
+
+export type ShippoTrackingStatus = (typeof ShippoTrackingStatus)[keyof typeof ShippoTrackingStatus];
+/** Transaction object for Shippo shipments */
+export type ShippoTransaction = {
+	__typename?: 'ShippoTransaction';
+	/** A URL pointing to the commercial invoice as a PDF file. */
+	commercialInvoiceUrl?: Maybe<Scalars['String']['output']>;
+	/** Details about the user who created the transaction. */
+	createdBy?: Maybe<ShippoCreatedBy>;
+	/** The estimated time of arrival according to the carrier. */
+	eta?: Maybe<Scalars['String']['output']>;
+	/** The format of the shipping label. */
+	labelFileType?: Maybe<Scalars['String']['output']>;
+	/** A URL pointing directly to the shipping label. */
+	labelUrl?: Maybe<Scalars['String']['output']>;
+	/** Additional messages or notes related to the transaction. */
+	messages?: Maybe<Array<ShippoResponseMessage>>;
+	/** Metadata for the transaction. */
+	metadata?: Maybe<Scalars['String']['output']>;
+	/** The date and time when the transaction was created. */
+	objectCreated?: Maybe<Scalars['DateTime']['output']>;
+	/** Unique identifier for the transaction object. */
+	objectId?: Maybe<Scalars['String']['output']>;
+	/** The owner of the transaction object. */
+	objectOwner?: Maybe<Scalars['String']['output']>;
+	/** The state of the transaction object. */
+	objectState?: Maybe<ShippoObjectState>;
+	/** The date and time when the transaction was last updated. */
+	objectUpdated?: Maybe<Scalars['DateTime']['output']>;
+	/** The ID of the parcel associated with the transaction. */
+	parcel?: Maybe<Scalars['String']['output']>;
+	/** A URL pointing to the QR code for the transaction. */
+	qrCodeUrl?: Maybe<Scalars['String']['output']>;
+	/** The rate associated with the transaction. */
+	rate?: Maybe<Scalars['String']['output']>;
+	/** The status of the transaction. */
+	status?: Maybe<ShippoTransactionStatus>;
+	/** Indicates whether the transaction was created in test mode. */
+	test?: Maybe<Scalars['Boolean']['output']>;
+	/** The tracking number for the shipment. */
+	trackingNumber?: Maybe<Scalars['String']['output']>;
+	/** The tracking status of the shipment. */
+	trackingStatus?: Maybe<ShippoTrackingStatus>;
+	/** A URL to track the shipment on the carrier's website. */
+	trackingUrlProvider?: Maybe<Scalars['String']['output']>;
+};
+
+/** Enum representing the status of a Shippo transaction. */
+export const ShippoTransactionStatus = {
+	Error: 'ERROR',
+	Queued: 'QUEUED',
+	Refunded: 'REFUNDED',
+	Refundpending: 'REFUNDPENDING',
+	Refundrejected: 'REFUNDREJECTED',
+	Success: 'SUCCESS',
+	Waiting: 'WAITING',
+} as const;
+
+export type ShippoTransactionStatus =
+	(typeof ShippoTransactionStatus)[keyof typeof ShippoTransactionStatus];
+export const ShippoWeightUnit = {
+	G: 'g',
+	Kg: 'kg',
+	Lb: 'lb',
+	Oz: 'oz',
+} as const;
+
+export type ShippoWeightUnit = (typeof ShippoWeightUnit)[keyof typeof ShippoWeightUnit];
 /** The price value where the result has a single price */
 export type SinglePrice = {
 	__typename?: 'SinglePrice';
@@ -3672,6 +4067,27 @@ export type User = Node & {
 	verified: Scalars['Boolean']['output'];
 };
 
+export type ValidateAddressError = ErrorResult & {
+	__typename?: 'ValidateAddressError';
+	errorCode: ErrorCode;
+	message: Scalars['String']['output'];
+};
+
+export type ValidateAddressResult = ShippoAddressValidationResult | ValidateAddressError;
+
+export type VendureAddressInput = {
+	city?: InputMaybe<Scalars['String']['input']>;
+	company?: InputMaybe<Scalars['String']['input']>;
+	country: Scalars['String']['input'];
+	countryCode?: InputMaybe<Scalars['String']['input']>;
+	fullName?: InputMaybe<Scalars['String']['input']>;
+	phoneNumber?: InputMaybe<Scalars['String']['input']>;
+	postalCode: Scalars['String']['input'];
+	province?: InputMaybe<Scalars['String']['input']>;
+	streetLine1?: InputMaybe<Scalars['String']['input']>;
+	streetLine2?: InputMaybe<Scalars['String']['input']>;
+};
+
 /**
  * Returned if the verification token (used to verify a Customer's email address) is valid, but has
  * expired according to the `verificationTokenDuration` setting in the AuthOptions.
@@ -3838,6 +4254,39 @@ export type RequestPasswordResetMutation = {
 		| { __typename: 'NativeAuthStrategyError'; errorCode: ErrorCode; message: string }
 		| { __typename: 'Success'; success: boolean }
 		| null;
+};
+
+export type ValidateAddressByShippoQueryVariables = Exact<{
+	address: VendureAddressInput;
+}>;
+
+export type ValidateAddressByShippoQuery = {
+	__typename?: 'Query';
+	validateAddressByShippo:
+		| {
+				__typename: 'ShippoAddressValidationResult';
+				fullName?: string | null;
+				city?: string | null;
+				company?: string | null;
+				country?: string | null;
+				countryCode?: string | null;
+				phoneNumber?: string | null;
+				postalCode?: string | null;
+				province?: string | null;
+				streetLine1?: string | null;
+				streetLine2?: string | null;
+				validationResults?: {
+					__typename?: 'AddressValidationResults';
+					isValid?: boolean | null;
+					messages?: Array<{
+						__typename?: 'ShippoResponseMessage';
+						code?: string | null;
+						source?: string | null;
+						text?: string | null;
+					} | null> | null;
+				} | null;
+		  }
+		| { __typename: 'ValidateAddressError'; errorCode: ErrorCode; message: string };
 };
 
 export type AvailableCountriesQueryVariables = Exact<{ [key: string]: never }>;
@@ -4073,7 +4522,7 @@ export type GenerateBraintreeClientTokenQueryVariables = Exact<{
 
 export type GenerateBraintreeClientTokenQuery = {
 	__typename?: 'Query';
-	generateBraintreeClientToken: string;
+	generateBraintreeClientToken?: string | null;
 };
 
 export type CollectionsQueryVariables = Exact<{ [key: string]: never }>;
@@ -5742,6 +6191,37 @@ export const RequestPasswordResetDocument = gql`
 		}
 	}
 `;
+export const ValidateAddressByShippoDocument = gql`
+	query validateAddressByShippo($address: VendureAddressInput!) {
+		validateAddressByShippo(address: $address) {
+			__typename
+			... on ShippoAddressValidationResult {
+				fullName
+				city
+				company
+				country
+				countryCode
+				phoneNumber
+				postalCode
+				province
+				streetLine1
+				streetLine2
+				validationResults {
+					isValid
+					messages {
+						code
+						source
+						text
+					}
+				}
+			}
+			... on ValidateAddressError {
+				errorCode
+				message
+			}
+		}
+	}
+`;
 export const AvailableCountriesDocument = gql`
 	query availableCountries {
 		availableCountries {
@@ -6240,6 +6720,16 @@ export function getSdk<C>(requester: Requester<C>) {
 				variables,
 				options
 			) as Promise<RequestPasswordResetMutation>;
+		},
+		validateAddressByShippo(
+			variables: ValidateAddressByShippoQueryVariables,
+			options?: C
+		): Promise<ValidateAddressByShippoQuery> {
+			return requester<ValidateAddressByShippoQuery, ValidateAddressByShippoQueryVariables>(
+				ValidateAddressByShippoDocument,
+				variables,
+				options
+			) as Promise<ValidateAddressByShippoQuery>;
 		},
 		availableCountries(
 			variables?: AvailableCountriesQueryVariables,

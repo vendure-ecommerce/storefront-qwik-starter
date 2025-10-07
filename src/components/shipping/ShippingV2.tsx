@@ -26,6 +26,7 @@ import CartContents from '../cart-contents/CartContents';
 import CartTotals from '../cart-totals/CartTotals';
 import AddressSelector from '../checkout/AddressSelector';
 import ContactCard from '../checkout/ContactCard';
+import Info from '../common/Info';
 import SectionWithLabel from '../common/SectionWithLabel';
 import LockClosedIcon from '../icons/LockClosedIcon';
 import ShippingMethodSelectorV2 from '../shipping-method-selector/ShippingMethodSelectorV2';
@@ -135,31 +136,52 @@ export default component$<IProps>(({ onForward$ }) => {
 					</SectionWithLabel>
 				)}
 
-				<HighlightedButton
-					extraClass="mt-6 w-full"
-					onClick$={$(() => {
-						if (isFormValidSignal.value) {
-							const { emailAddress, firstName, lastName, phoneNumber, title } = appState.customer;
+				<div class="relative">
+					<HighlightedButton
+						extraClass="mt-6 w-full"
+						onClick$={$(() => {
+							if (isFormValidSignal.value) {
+								const { emailAddress, firstName, lastName, phoneNumber, title } = appState.customer;
 
-							const createCustomerInput: CreateCustomerInput = {
-								emailAddress: emailAddress ?? '',
-								firstName,
-								lastName,
-								phoneNumber,
-								title,
-							};
-							onForward$(createCustomerInput);
+								const createCustomerInput: CreateCustomerInput = {
+									emailAddress: emailAddress ?? '',
+									firstName,
+									lastName,
+									phoneNumber,
+									title,
+								};
+								onForward$(createCustomerInput);
+							}
+						})}
+						disabled={
+							!isFormValidSignal.value ||
+							reCalculateShipping.value ||
+							!orderLineReadyToProceed.value
 						}
-					})}
-					disabled={
-						!isFormValidSignal.value || reCalculateShipping.value || !orderLineReadyToProceed.value
-					}
-				>
-					<div class="flex items-center space-x-4">
-						<LockClosedIcon />
-						<p>{$localize`Proceed to payment`}</p>
-					</div>
-				</HighlightedButton>
+					>
+						<div class="flex items-center space-x-4">
+							<LockClosedIcon />
+							<p>{$localize`Proceed to payment`}</p>
+						</div>
+					</HighlightedButton>
+					{!isFormValidSignal.value ||
+					reCalculateShipping.value ||
+					!orderLineReadyToProceed.value ? (
+						<div class="absolute -top-4 -left-2">
+							<Info
+								text={
+									!isFormValidSignal.value
+										? $localize`Please complete the Contact and Shipping information`
+										: reCalculateShipping.value
+											? $localize`Please wait until shipping method is ready`
+											: !orderLineReadyToProceed.value
+												? $localize`Please update your cart before proceeding to payment`
+												: ''
+								}
+							/>
+						</div>
+					) : null}
+				</div>
 			</div>
 		</div>
 	);

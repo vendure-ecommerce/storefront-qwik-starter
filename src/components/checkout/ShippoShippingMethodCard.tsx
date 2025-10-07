@@ -21,6 +21,9 @@ export default component$<Props>(({ shippingMethod, checked }) => {
 					<span class="block text-sm text-gray-500">
 						Get it by <span class="font-medium">{shippingMethod.metadata?.maxWaitDays}</span> Days
 					</span>
+					<span class="block text-xs text-gray-500">
+						{$localize`Shipping to Postal Code: `} {shippingMethod.metadata.shipToPostalCode}
+					</span>
 				</span>
 			</span>
 			{checked && <CheckCircleIcon />}

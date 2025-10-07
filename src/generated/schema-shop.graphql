@@ -33,6 +33,15 @@ type Address implements Node {
 	updatedAt: DateTime!
 }
 
+type AddressValidationResults {
+	isValid: Boolean
+
+	"""
+	An array of messages related to the address validation.
+	"""
+	messages: [ShippoResponseMessage]
+}
+
 type Adjustment {
 	adjustmentSource: String!
 	amount: Money!
@@ -90,7 +99,6 @@ enum AssetType {
 }
 
 input AuthenticationInput {
-	google: GoogleAuthInput
 	native: NativeAuthInput
 }
 
@@ -1454,7 +1462,11 @@ enum ErrorCode {
 	PASSWORD_VALIDATION_ERROR
 	PAYMENT_DECLINED_ERROR
 	PAYMENT_FAILED_ERROR
+	SELLER_ADDRESS_NOT_SET_OR_INVALID
+	SELLER_SHIPPO_API_KEY_NOT_SET_OR_INVALID
+	SHIPPO_ADDRESS_VALIDATION_ERROR
 	UNKNOWN_ERROR
+	VALIDATE_ADDRESS_ERROR
 	VERIFICATION_TOKEN_EXPIRED_ERROR
 	VERIFICATION_TOKEN_INVALID_ERROR
 }
@@ -1701,7 +1713,7 @@ type FontMenu implements Node {
 
 type Fulfillment implements Node {
 	createdAt: DateTime!
-	customFields: JSON
+	customFields: FulfillmentCustomFields
 	id: ID!
 	lines: [FulfillmentLine!]!
 	method: String!
@@ -1709,6 +1721,10 @@ type Fulfillment implements Node {
 	summary: [FulfillmentLine!]! @deprecated(reason: "Use the `lines` field instead")
 	trackingCode: String
 	updatedAt: DateTime!
+}
+
+type FulfillmentCustomFields {
+	trackingUrl: String
 }
 
 type FulfillmentLine {
@@ -1723,10 +1739,6 @@ enum GlobalFlag {
 	FALSE
 	INHERIT
 	TRUE
-}
-
-input GoogleAuthInput {
-	token: String!
 }
 
 """
@@ -4204,6 +4216,10 @@ type ProductVariant implements Node {
 
 type ProductVariantCustomFields {
 	customBuildJson: String
+	lengthUnit: String
+	physicalAttributes: ProductVariantPhysicalAttributesStruct
+	prepDays: Int
+	weightUnit: String
 }
 
 input ProductVariantFilterParameter {
@@ -4214,13 +4230,16 @@ input ProductVariantFilterParameter {
 	customBuildJson: StringOperators
 	id: IDOperators
 	languageCode: StringOperators
+	lengthUnit: StringOperators
 	name: StringOperators
+	prepDays: NumberOperators
 	price: NumberOperators
 	priceWithTax: NumberOperators
 	productId: IDOperators
 	sku: StringOperators
 	stockLevel: StringOperators
 	updatedAt: DateOperators
+	weightUnit: StringOperators
 }
 
 type ProductVariantList implements PaginatedList {
@@ -4255,17 +4274,27 @@ input ProductVariantListOptions {
 	take: Int
 }
 
+type ProductVariantPhysicalAttributesStruct {
+	height: Float
+	length: Float
+	weight: Float
+	width: Float
+}
+
 input ProductVariantSortParameter {
 	createdAt: SortOrder
 	customBuildJson: SortOrder
 	id: SortOrder
+	lengthUnit: SortOrder
 	name: SortOrder
+	prepDays: SortOrder
 	price: SortOrder
 	priceWithTax: SortOrder
 	productId: SortOrder
 	sku: SortOrder
 	stockLevel: SortOrder
 	updatedAt: SortOrder
+	weightUnit: SortOrder
 }
 
 type ProductVariantTranslation {
@@ -4412,7 +4441,7 @@ type Query {
 	filamentColorFindAll: [FilamentColor!]!
 	filamentColorFindSupported: [FilamentColor!]!
 	fontMenuFindAll: [FontMenu!]!
-	generateBraintreeClientToken(includeCustomerId: Boolean, orderId: ID): String!
+	generateBraintreeClientToken(includeCustomerId: Boolean, orderId: ID): String
 
 	"""
 	Returns information about the current authenticated User
@@ -4452,6 +4481,48 @@ type Query {
 	Search Products based on the criteria set by the `SearchInput`
 	"""
 	search(input: SearchInput!): SearchResponse!
+
+	"""
+	Example of verify an address in the API:
+	  query {
+	    validateAddressByShippo(
+	      address: {
+	        fullName: "Mr. Hippo",
+	        streetLine1: "215 Clayton St.",
+	        city: "San Francisco",
+	        province: "CA",
+	        postalCode: "94117",
+	        country: "US",
+	        phoneNumber: "+1 555 341 9393"}
+	    ) {
+	      ... on ShippoAddressValidationResult {
+	        fullName
+	        city
+	        company
+	        country
+	        countryCode
+	        phoneNumber
+	        postalCode
+	        province
+	        streetLine1
+	        streetLine2
+	        validationResults {
+	          isValid
+	            messages {
+	              code
+	              source
+	              text
+	            }
+	        }
+	      }
+	      ... on ValidateAddressError {
+	        errorCode
+	        message
+	      }
+	    }
+	  }
+	"""
+	validateAddressByShippo(address: VendureAddressInput!): ValidateAddressResult!
 }
 
 union RefreshCustomerVerificationResult = NativeAuthStrategyError | Success
@@ -4574,7 +4645,6 @@ input SearchInput {
 	collectionSlug: String
 	facetValueFilters: [FacetValueFilterInput!]
 	groupByProduct: Boolean
-	inStock: Boolean
 	skip: Int
 	sort: SearchResultSortParameter
 	take: Int
@@ -4601,7 +4671,6 @@ type SearchResult {
 	description: String!
 	facetIds: [ID!]!
 	facetValueIds: [ID!]!
-	inStock: Boolean!
 	price: SearchResultPrice!
 	priceWithTax: SearchResultPrice!
 	productAsset: SearchResultAsset
@@ -4656,6 +4725,13 @@ union SetOrderShippingMethodResult =
 	| Order
 	| OrderModificationError
 
+enum ShipmentStatus {
+	ERROR
+	QUEUED
+	SUCCESS
+	WAITING
+}
+
 type ShippingLine {
 	customFields: JSON
 	discountedPrice: Money!
@@ -4709,6 +4785,557 @@ type ShippingMethodTranslation {
 	languageCode: LanguageCode!
 	name: String!
 	updatedAt: DateTime!
+}
+
+"""
+Represents an address as retrieved from the database
+"""
+type ShippoAddress {
+	"""
+	Name of the city. Optional but yields more accurate rates when provided.
+	"""
+	city: String
+
+	"""
+	Company name associated with the address.
+	"""
+	company: String
+
+	"""
+	ISO 3166-1 alpha-2 country code (e.g., "US", "DE"). Required.
+	"""
+	country: String!
+
+	"""
+	Email address of the contact person, RFC3696/5321-compliant.
+	"""
+	email: String
+
+	"""
+	Indicates whether the address contains all required values.
+	"""
+	isComplete: Boolean
+
+	"""
+	Indicates whether the address is residential.
+	"""
+	isResidential: Boolean
+
+	"""
+	Latitude of the address.
+	"""
+	latitude: Float
+
+	"""
+	Longitude of the address.
+	"""
+	longitude: Float
+
+	"""
+	Additional metadata (up to 100 characters) attached to the address.
+	"""
+	metadata: String
+
+	"""
+	First and last name of the addressee.
+	"""
+	name: String
+
+	"""
+	Date and time of address creation.
+	"""
+	objectCreated: DateTime
+
+	"""
+	Unique identifier of the address object. Required to create a shipment.
+	"""
+	objectId: String
+
+	"""
+	Username of the user who created the address object.
+	"""
+	objectOwner: String
+
+	"""
+	Date and time of the last address update.
+	"""
+	objectUpdated: DateTime
+
+	"""
+	Phone number associated with the address.
+	"""
+	phone: String
+
+	"""
+	State or province. Required for certain countries (e.g., US, AU, CA).
+	"""
+	state: String
+
+	"""
+	First street line (e.g., street number and name).
+	"""
+	street1: String
+
+	"""
+	Second street line.
+	"""
+	street2: String
+
+	"""
+	Third street line. Only accepted for certain carriers.
+	"""
+	street3: String
+
+	"""
+	Street number of the addressed building.
+	"""
+	streetNo: String
+
+	"""
+	Validation results for the address, including messages and validity status.
+	"""
+	validationResults: AddressValidationResults
+
+	"""
+	Postal code of the address. Optional but yields more accurate rates when provided.
+	"""
+	zip: String
+}
+
+type ShippoAddressValidationResult {
+	city: String
+	company: String
+	country: String
+	countryCode: String
+	fullName: String
+	phoneNumber: String
+	postalCode: String
+	province: String
+	streetLine1: String
+	streetLine2: String
+	validationResults: AddressValidationResults
+}
+
+type ShippoCreatedBy {
+	firstName: String
+	lastName: String
+	username: String
+}
+
+enum ShippoDistanceUnit {
+	cm
+	ft
+	in
+	m
+	mm
+	yd
+}
+
+"""
+Enum representing the state of a Shippo object.
+"""
+enum ShippoObjectState {
+	INVALID
+	VALID
+}
+
+"""
+Parcel object for Shippo shipments
+"""
+type ShippoParcel {
+	"""
+	The measure unit used for length, width, and height.
+	"""
+	distanceUnit: ShippoDistanceUnit!
+
+	"""
+	Height of the parcel. Up to six digits in front and four digits after the decimal separator are accepted.
+	"""
+	height: String!
+
+	"""
+	Length of the parcel. Up to six digits in front and four digits after the decimal separator are accepted.
+	"""
+	length: String!
+
+	"""
+	The unit used for weight.
+	"""
+	massUnit: ShippoWeightUnit!
+
+	"""
+	Date and time of Parcel creation.
+	"""
+	objectCreated: DateTime
+
+	"""
+	Unique identifier of the given Parcel object. This ID is required to create a Shipment object.
+	"""
+	objectId: String
+
+	"""
+	Username of the user who created the Parcel object.
+	"""
+	objectOwner: String
+
+	"""
+	Weight of the parcel. Up to six digits in front and four digits after the decimal separator are accepted.
+	"""
+	weight: String!
+
+	"""
+	Width of the parcel. Up to six digits in front and four digits after the decimal separator are accepted.
+	"""
+	width: String!
+}
+
+input ShippoParcelInput {
+	distanceUnit: ShippoDistanceUnit!
+	height: String!
+	length: String!
+	massUnit: ShippoWeightUnit!
+	weight: String!
+	width: String!
+}
+
+"""
+Rate object for Shippo shipments
+"""
+type ShippoRate {
+	"""
+	Final Rate price, expressed in the currency used in the sender's country.
+	"""
+	amount: String!
+
+	"""
+	Final Rate price, expressed in the currency used in the recipient's country.
+	"""
+	amountLocal: String!
+
+	"""
+	Predicted time the carrier will deliver the package in the destination's local time zone.
+	"""
+	arrivesBy: String
+
+	"""
+	An array containing specific attributes of this Rate in context of the entire shipment.
+	"""
+	attributes: [ShippoRateAttribute!]!
+
+	"""
+	Object ID of the carrier account that has been used to retrieve the rate.
+	"""
+	carrierAccount: String!
+
+	"""
+	Currency used in the sender's country, refers to 'amount'.
+	"""
+	currency: String!
+
+	"""
+	Currency used in the recipient's country, refers to 'amountLocal'.
+	"""
+	currencyLocal: String!
+
+	"""
+	Further clarification of the transit times.
+	"""
+	durationTerms: String
+
+	"""
+	Estimated transit time (duration) in days of the Parcel at the given service level.
+	"""
+	estimatedDays: Int
+
+	"""
+	Cost to the user to insure the Rate for the requested amount of coverage, if insurance coverage was requested.
+	"""
+	includedInsurancePrice: String
+
+	"""
+	Rate's creation date and time.
+	"""
+	objectCreated: DateTime!
+
+	"""
+	Unique identifier of the given Rate object.
+	"""
+	objectId: ID!
+
+	"""
+	Username of the user who created the rate object.
+	"""
+	objectOwner: String!
+
+	"""
+	Carrier offering the rate, e.g., 'FedEx' or 'Deutsche Post DHL'.
+	"""
+	provider: String!
+
+	"""
+	URL to the provider logo with max. dimensions of 75x75px.
+	"""
+	providerImage75: String
+
+	"""
+	URL to the provider logo with max. dimensions of 200x200px.
+	"""
+	providerImage200: String
+
+	"""
+	Service level details for the rate.
+	"""
+	servicelevel: ShippoServiceLevel!
+
+	"""
+	Shipment ID associated with the rate.
+	"""
+	shipment: String!
+
+	"""
+	Indicates whether the object has been created in test mode.
+	"""
+	test: Boolean
+
+	"""
+	The parcel's transit zone token.
+	"""
+	zone: String
+}
+
+"""
+Attributes that can be assigned to a rate in the context of the entire shipment.
+"""
+enum ShippoRateAttribute {
+	BESTVALUE
+	CHEAPEST
+	FASTEST
+}
+
+type ShippoResponseMessage {
+	code: String
+	source: String
+	text: String
+}
+
+type ShippoServiceLevel {
+	extendedToken: String
+
+	"""
+	Name of the Rate's servicelevel, e.g. 'International Priority' or 'Standard Post'.
+	@remarks
+	A servicelevel commonly defines the transit time of a Shipment (e.g., Express vs. Standard), along with other properties.
+	These names vary depending on the provider.
+	"""
+	name: String
+	terms: String
+
+	"""
+	Token used to identify the service level. e.g. 'usps_priority' or 'fedex_ground'.
+	"""
+	token: String
+}
+
+"""
+// Shipment represents the parcel as retrieved from the Shippo database
+//
+"""
+type ShippoShipment {
+	"""
+	Address object of the sender / seller.
+	"""
+	addressFrom: ShippoAddress!
+
+	"""
+	Address object where the shipment will be sent back to if it is not delivered.
+	Only available for UPS, USPS, and Fedex shipments.
+	"""
+	addressReturn: ShippoAddress
+
+	"""
+	Address object of the recipient / buyer.
+	"""
+	addressTo: ShippoAddress!
+
+	"""
+	An array of object_ids of the carrier account objects to be used for getting shipping rates.
+	"""
+	carrierAccounts: [String!]!
+	objectCreated: DateTime!
+
+	"""
+	This is the unique object ID of the original Shippo Shipment object.
+	"""
+	objectId: ID!
+
+	"""
+	Username of the user who created the Shipment object.
+	"""
+	objectOwner: String!
+	objectUpdated: DateTime!
+
+	"""
+	List of Parcel objects to be shipped.
+	"""
+	parcels: [ShippoParcel!]!
+
+	"""
+	An array with all available rates.
+	"""
+	rates: [ShippoRate!]!
+
+	"""
+	Date the shipment will be tendered to the carrier. Must be in the format '2014-01-18T00: 35: 03.463Z'.
+	Defaults to current date and time if no value is provided.
+	"""
+	shipmentDate: String
+
+	"""
+	'Waiting' shipments have been successfully submitted but not yet been processed.
+
+	@remarks
+	'Queued' shipments are currently being processed.
+	'Success' shipments have been processed successfully, meaning that rate generation has concluded.
+	'Error' does not occur currently and is reserved for future use.
+	"""
+	status: ShipmentStatus!
+}
+
+"""
+Enum representing the tracking status of a shipment.
+"""
+enum ShippoTrackingStatus {
+	DELIVERED
+	FAILURE
+	PRE_TRANSIT
+	RETURNED
+	TRANSIT
+	UNKNOWN
+}
+
+"""
+Transaction object for Shippo shipments
+"""
+type ShippoTransaction {
+	"""
+	A URL pointing to the commercial invoice as a PDF file.
+	"""
+	commercialInvoiceUrl: String
+
+	"""
+	Details about the user who created the transaction.
+	"""
+	createdBy: ShippoCreatedBy
+
+	"""
+	The estimated time of arrival according to the carrier.
+	"""
+	eta: String
+
+	"""
+	The format of the shipping label.
+	"""
+	labelFileType: String
+
+	"""
+	A URL pointing directly to the shipping label.
+	"""
+	labelUrl: String
+
+	"""
+	Additional messages or notes related to the transaction.
+	"""
+	messages: [ShippoResponseMessage!]
+
+	"""
+	Metadata for the transaction.
+	"""
+	metadata: String
+
+	"""
+	The date and time when the transaction was created.
+	"""
+	objectCreated: DateTime
+
+	"""
+	Unique identifier for the transaction object.
+	"""
+	objectId: String
+
+	"""
+	The owner of the transaction object.
+	"""
+	objectOwner: String
+
+	"""
+	The state of the transaction object.
+	"""
+	objectState: ShippoObjectState
+
+	"""
+	The date and time when the transaction was last updated.
+	"""
+	objectUpdated: DateTime
+
+	"""
+	The ID of the parcel associated with the transaction.
+	"""
+	parcel: String
+
+	"""
+	A URL pointing to the QR code for the transaction.
+	"""
+	qrCodeUrl: String
+
+	"""
+	The rate associated with the transaction.
+	"""
+	rate: String
+
+	"""
+	The status of the transaction.
+	"""
+	status: ShippoTransactionStatus
+
+	"""
+	Indicates whether the transaction was created in test mode.
+	"""
+	test: Boolean
+
+	"""
+	The tracking number for the shipment.
+	"""
+	trackingNumber: String
+
+	"""
+	The tracking status of the shipment.
+	"""
+	trackingStatus: ShippoTrackingStatus
+
+	"""
+	A URL to track the shipment on the carrier's website.
+	"""
+	trackingUrlProvider: String
+}
+
+"""
+Enum representing the status of a Shippo transaction.
+"""
+enum ShippoTransactionStatus {
+	ERROR
+	QUEUED
+	REFUNDED
+	REFUNDPENDING
+	REFUNDREJECTED
+	SUCCESS
+	WAITING
+}
+
+enum ShippoWeightUnit {
+	g
+	kg
+	lb
+	oz
 }
 
 """
@@ -4990,6 +5617,26 @@ type User implements Node {
 	roles: [Role!]!
 	updatedAt: DateTime!
 	verified: Boolean!
+}
+
+type ValidateAddressError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+union ValidateAddressResult = ShippoAddressValidationResult | ValidateAddressError
+
+input VendureAddressInput {
+	city: String
+	company: String
+	country: String!
+	countryCode: String
+	fullName: String
+	phoneNumber: String
+	postalCode: String!
+	province: String
+	streetLine1: String
+	streetLine2: String
 }
 
 """

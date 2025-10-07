@@ -125,8 +125,7 @@ export const isShippingAddressValid = (orderAddress: ShippingAddress): boolean =
 		orderAddress.city &&
 		orderAddress.province &&
 		orderAddress.postalCode &&
-		orderAddress.countryCode &&
-		orderAddress.phoneNumber
+		orderAddress.countryCode
 	);
 
 export const isActiveCustomerValid = (activeCustomer: ActiveCustomer): boolean =>

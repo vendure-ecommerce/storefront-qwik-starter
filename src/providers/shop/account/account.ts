@@ -11,6 +11,7 @@ import {
 	Success,
 	UpdateCustomerEmailAddressMutation,
 	UpdateCustomerInput,
+	VendureAddressInput,
 	VerifyCustomerAccountMutation,
 } from '~/generated/graphql-shop';
 import { shopSdk } from '~/graphql-wrapper';
@@ -73,6 +74,10 @@ export const authenticateMutation = async (input: AuthenticationInput, rememberM
 	return shopSdk
 		.authenticate({ input, rememberMe })
 		.then((res: AuthenticateMutation) => res.authenticate);
+};
+
+export const validateAddressByShippoQuery = async (address: VendureAddressInput) => {
+	return shopSdk.validateAddressByShippo({ address }).then((res) => res.validateAddressByShippo);
 };
 
 // I add the authenticate mutation here for codegen. I want to use it for google login.
@@ -204,6 +209,38 @@ gql`
 				success
 			}
 			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+`;
+
+gql`
+	query validateAddressByShippo($address: VendureAddressInput!) {
+		validateAddressByShippo(address: $address) {
+			__typename
+			... on ShippoAddressValidationResult {
+				fullName
+				city
+				company
+				country
+				countryCode
+				phoneNumber
+				postalCode
+				province
+				streetLine1
+				streetLine2
+				validationResults {
+					isValid
+					messages {
+						code
+						source
+						text
+					}
+				}
+			}
+			... on ValidateAddressError {
 				errorCode
 				message
 			}
