@@ -19,7 +19,7 @@ import { isActiveCustomerValid, isShippingAddressValid } from '~/utils';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import CartContents from '../cart-contents/CartContents';
 import CartTotals from '../cart-totals/CartTotals';
-import AddressSelector from '../checkout/AddressSelector';
+import AddressSelector from '../checkout/AddressSelectorDeprecated';
 import ContactCard from '../checkout/ContactCard';
 import { parseToShippingAddress } from '../common/address';
 import Info from '../common/Info';

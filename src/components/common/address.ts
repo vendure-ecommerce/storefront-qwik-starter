@@ -1,5 +1,10 @@
+// plain async helper (not a QRL) to avoid capture/serialization issues
 import { GUEST_ADDED_ADDRESS_ID } from '~/constants';
-import { Address, OrderAddress } from '~/generated/graphql';
+import { Address, CreateAddressInput, OrderAddress, UpdateAddressInput } from '~/generated/graphql';
+import {
+	createCustomerAddressMutation,
+	updateCustomerAddressMutation,
+} from '~/providers/shop/customer/customer';
 import { ShippingAddress } from '~/types';
 
 /**
@@ -61,7 +66,23 @@ export const parseToShippingAddress = (
 	};
 };
 
+export async function createOrUpdateAddress(
+	address: ShippingAddress,
+	authToken: string | undefined
+): Promise<string | undefined> {
+	if (!address.id || address.id === 'add' || address.id === '') {
+		// remove id so backend treats as new
+		const payload = { ...(address as any) } as CreateAddressInput;
+		delete (payload as any).id;
+		const result = await createCustomerAddressMutation(payload, authToken);
+		return result?.createCustomerAddress?.id;
+	}
+	const result = await updateCustomerAddressMutation(address as UpdateAddressInput, authToken);
+	return result?.updateCustomerAddress?.id;
+}
+
 export default {
 	updateDefaultAddressInBook,
 	parseToShippingAddress,
+	createOrUpdateAddress,
 };

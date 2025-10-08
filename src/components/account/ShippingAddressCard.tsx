@@ -1,6 +1,5 @@
 import { component$, QRL, useSignal } from '@qwik.dev/core';
 import Tooltip from '~/components/tooltip/Tooltip';
-import { deleteCustomerAddressMutation } from '~/providers/shop/customer/customer';
 import { ShippingAddress } from '~/types';
 import { AddressForm } from '../address-form/AddressFormV2';
 import BillingAddressIcon from '../icons/BillingAddressIcon';
@@ -12,18 +11,19 @@ import TrashCanIcon from '../icons/TrashCanIcon';
 
 type IProps = {
 	address: ShippingAddress;
-	onEditSaved$?: QRL<(address: ShippingAddress) => Promise<void>>;
+	onEditSaved$?: QRL<(address: ShippingAddress, authToken: string | undefined) => Promise<void>>;
 	showDefault?: boolean;
 	allowDelete?: boolean;
 	onDelete$?: QRL<(addressId: string) => Promise<void>>;
+	className?: string;
 };
 
 export default component$<IProps>(
-	({ address, onEditSaved$, showDefault, allowDelete, onDelete$ }) => {
+	({ address, onEditSaved$, showDefault, allowDelete, onDelete$, className }) => {
 		const openEditForm = useSignal(false);
 
 		return (
-			<div class="max-w-xs bg-white shadow-lg rounded-lg overflow-hidden my-2">
+			<div class={`max-w-xs bg-white shadow-lg rounded-lg overflow-hidden my-2 ${className}`}>
 				<div class="py-2 px-4">
 					<div class="flex items-center justify-between">
 						<h1 class="text-sm font-semibold text-gray-800">
@@ -32,7 +32,7 @@ export default component$<IProps>(
 								<span class="py-2 text-sm text-gray-700"> - {address.company}</span>
 							)}
 						</h1>
-						{allowDelete && onDelete$ && address.id && (
+						{allowDelete && address.id && (
 							<button
 								class="text-gray-400 hover:text-red-600 rounded ml-2"
 								title="Delete address"
@@ -40,8 +40,9 @@ export default component$<IProps>(
 								type="button"
 								onClick$={() => {
 									if (onDelete$ && address.id) {
-										deleteCustomerAddressMutation(address.id);
-										onDelete$(address.id);
+										if (onDelete$) {
+											onDelete$(address.id);
+										}
 									}
 								}}
 							>

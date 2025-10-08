@@ -1,24 +1,30 @@
-import { component$, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { component$, useSignal, useVisibleTask$ } from '@qwik.dev/core';
 import ShippingAddressCard from '~/components/account/ShippingAddressCard';
 import { AddressForm } from '~/components/address-form/AddressFormV2';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
-import { parseToShippingAddress, updateDefaultAddressInBook } from '~/components/common/address';
+import {
+	createOrUpdateAddress,
+	parseToShippingAddress,
+	updateDefaultAddressInBook,
+} from '~/components/common/address';
 import PlusIcon from '~/components/icons/PlusIcon';
-import { APP_STATE } from '~/constants';
 import { Address } from '~/generated/graphql';
-import { getActiveCustomerAddressesQuery } from '~/providers/shop/customer/customer';
+import {
+	deleteCustomerAddressMutation,
+	getActiveCustomerAddressesQuery,
+} from '~/providers/shop/customer/customer';
 import { ShippingAddress } from '~/types';
 
 export default component$(() => {
-	const appState = useContext(APP_STATE);
 	const activeCustomerAddresses = useSignal<{ addresses: ShippingAddress[] }>();
+	const addressBook = useSignal<ShippingAddress[]>([]);
 	const editNewAddress = useSignal<boolean>(false);
 
 	useVisibleTask$(async () => {
 		const activeCustomer = await getActiveCustomerAddressesQuery();
-		const { id, addresses } = activeCustomer;
+		const { addresses } = activeCustomer;
 		console.log('activeCustomer fetched:', JSON.stringify(activeCustomer, null, 2));
-		const addressBook =
+		const fetchedAddresses =
 			addresses
 				?.slice()
 				.filter((address: Address) => !!address.id)
@@ -34,16 +40,8 @@ export default component$(() => {
 				})
 				.map((address: Address) => parseToShippingAddress(address)) || [];
 
-		activeCustomerAddresses.value = { addresses: addressBook };
-		console.log(
-			'appState.addressBook before update:',
-			JSON.stringify(appState.addressBook, null, 2)
-		);
-
-		if (addresses) {
-			appState.addressBook.splice(0, appState.addressBook.length);
-			appState.addressBook.push(...addressBook);
-		}
+		addressBook.value = fetchedAddresses;
+		activeCustomerAddresses.value = { addresses: fetchedAddresses };
 	});
 
 	return (
@@ -51,20 +49,30 @@ export default component$(() => {
 			{activeCustomerAddresses.value ? (
 				<div class="max-w-6xl m-auto rounded-lg p-4 space-y-4">
 					<div class="flex flex-wrap gap-6 justify-evenly">
-						{[...appState.addressBook].map((address) => (
+						{[...addressBook.value].map((address) => (
 							<div class="min-w-[20rem]" key={address.id}>
 								<ShippingAddressCard
 									allowDelete={true}
 									onDelete$={async (addressId) => {
-										appState.addressBook = appState.addressBook.filter((a) => a.id !== addressId);
+										deleteCustomerAddressMutation(addressId);
+
+										addressBook.value = addressBook.value.filter((a) => a.id !== addressId);
 									}}
 									address={address}
 									showDefault={true}
-									onEditSaved$={async (updated) => {
-										appState.addressBook = appState.addressBook.map((a) =>
-											a.id === updated.id ? updated : a
+									onEditSaved$={async (
+										updatedAddress: ShippingAddress,
+										authToken: string | undefined
+									) => {
+										await createOrUpdateAddress(
+											// note that here we only do the update as the address book is from customer, so they must have id
+											updatedAddress,
+											authToken
 										);
-										updateDefaultAddressInBook(updated, appState.addressBook);
+										addressBook.value = addressBook.value.map((a) =>
+											a.id === updatedAddress.id ? updatedAddress : a
+										);
+										updateDefaultAddressInBook(updatedAddress, addressBook.value);
 									}}
 								/>
 							</div>
@@ -85,9 +93,14 @@ export default component$(() => {
 			</div>
 			<AddressForm
 				open={editNewAddress}
-				onForward$={async (address: ShippingAddress) => {
-					appState.addressBook = [address, ...appState.addressBook];
-					updateDefaultAddressInBook(address, appState.addressBook);
+				onForward$={async (address: ShippingAddress, authToken: string | undefined) => {
+					await createOrUpdateAddress(
+						// note that here we only do the update as the address book is from customer, so they must have id
+						address,
+						authToken
+					);
+					addressBook.value = [address, ...addressBook.value];
+					updateDefaultAddressInBook(address, addressBook.value);
 				}}
 			/>
 		</>
