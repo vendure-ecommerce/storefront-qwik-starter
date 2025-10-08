@@ -5,19 +5,29 @@ import { isGuestCustomer } from '~/utils';
 import ShippingAddressCard from '../account/ShippingAddressCard';
 import { AddressForm } from '../address-form/AddressFormV2';
 import { HighlightedButton } from '../buttons/HighlightedButton';
+import PencilEditIcon from '../icons/PencilEditIcon';
 import PlusIcon from '../icons/PlusIcon';
 import AddressSelector from './AddressSelector';
 
+interface AddressInformationProps {
+	mode?: 'SHIPPING' | 'BILLING';
+}
+
 /**
  * This in charge of changing the appState.shippingAddress
+ * There is two distinct behaviors for guest and logged in customers
+ * - Guest:
+ *     - can only add/edit a single shipping address, stored in appState.shippingAddress
+ *     - Adding new address or editing existing address with a button
+ * - Logged in customer: can select from address book or add a new one.
+ *     - Selected address is stored in appState.shippingAddress and also should be in appState.addressBook
+ *     - Adding new address or update existing one is done in the AddressSelector component
  */
-export default component$(() => {
+export default component$<AddressInformationProps>(({ mode = 'SHIPPING' }) => {
 	const appState = useContext(APP_STATE);
 	const isGuest = useSignal<boolean>(false);
 	const openNewAddress = useSignal<boolean>(false);
-	const currentShipping = useComputed$(
-		() => appState.shippingAddress as ShippingAddress | undefined
-	);
+	const currentShipping = useComputed$(() => appState.shippingAddress as ShippingAddress);
 
 	isGuest.value = isGuestCustomer(appState);
 
@@ -29,21 +39,23 @@ export default component$(() => {
 				{/* Left panel: current shipping address or button to add */}
 
 				<div class="bg-white rounded p-4">
-					{currentShipping.value && currentShipping.value.streetLine1 ? (
-						<ShippingAddressCard
-							address={currentShipping.value}
-							showDefault={false}
-							onEditSaved$={async (address) => {
-								appState.shippingAddress = address;
-							}}
-							allowDelete={false}
-						/>
+					{currentShipping.value.streetLine1 ? (
+						<>
+							<ShippingAddressCard
+								address={currentShipping.value}
+								showDefault={!isGuest.value}
+								allowEdit={false}
+								allowDelete={false}
+							/>
+						</>
 					) : (
+						<p class="mb-4 text-sm text-gray-700">{$localize`No shipping address selected`}</p>
+					)}
+					{isGuest.value && (
 						<div class="flex flex-col items-center justify-center p-6">
-							<p class="mb-4 text-sm text-gray-700">{$localize`No shipping address selected`}</p>
 							<HighlightedButton onClick$={() => (openNewAddress.value = true)}>
-								<PlusIcon />
-								{$localize`New shipping address`}
+								{currentShipping.value.streetLine1 ? <PencilEditIcon /> : <PlusIcon />}{' '}
+								{$localize`Shipping Address`}
 							</HighlightedButton>
 						</div>
 					)}
@@ -66,10 +78,10 @@ export default component$(() => {
 
 			<AddressForm
 				open={openNewAddress}
+				prefilledAddress={currentShipping.value}
+				allowEditDefault={!isGuest.value}
 				onForward$={async (address) => {
-					// Add to appState and set as shipping address
 					appState.shippingAddress = address;
-					openNewAddress.value = false;
 				}}
 			/>
 		</div>

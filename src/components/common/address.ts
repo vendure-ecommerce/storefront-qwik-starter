@@ -1,5 +1,5 @@
 // plain async helper (not a QRL) to avoid capture/serialization issues
-import { GUEST_ADDED_ADDRESS_ID } from '~/constants';
+import { CUSTOMER_NEW_ADDRESS_ID, GUEST_ADDED_ADDRESS_ID } from '~/constants';
 import { Address, CreateAddressInput, OrderAddress, UpdateAddressInput } from '~/generated/graphql';
 import {
 	createCustomerAddressMutation,
@@ -70,7 +70,7 @@ export async function createOrUpdateAddress(
 	address: ShippingAddress,
 	authToken: string | undefined
 ): Promise<string | undefined> {
-	if (!address.id || address.id === 'add' || address.id === '') {
+	if (!address.id || address.id === CUSTOMER_NEW_ADDRESS_ID || address.id === '') {
 		// remove id so backend treats as new
 		const payload = { ...(address as any) } as CreateAddressInput;
 		delete (payload as any).id;

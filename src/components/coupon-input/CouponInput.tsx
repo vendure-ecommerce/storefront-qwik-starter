@@ -3,6 +3,7 @@ import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
 import { applyCouponCodeMutation } from '~/providers/shop/orders/order';
 import Alert from '../alert/Alert';
+import { HighlightedButton } from '../buttons/HighlightedButton';
 import Success from '../success/Success';
 
 export default component$(() => {
@@ -41,7 +42,7 @@ export default component$(() => {
 							class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							required
 						/>
-						<button class="btn-primary max-w-24">{$localize`Apply`}</button>
+						<HighlightedButton>{$localize`Apply`}</HighlightedButton>
 					</div>
 				</form>
 			</div>

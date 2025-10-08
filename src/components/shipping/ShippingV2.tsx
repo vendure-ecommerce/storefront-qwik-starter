@@ -18,8 +18,8 @@ import { isActiveCustomerValid, isShippingAddressValid } from '~/utils';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import CartContents from '../cart-contents/CartContents';
 import CartTotals from '../cart-totals/CartTotals';
+import AddressInformation from '../checkout/AddressInformation';
 import ContactCard from '../checkout/ContactCard';
-import ShippingInformation from '../checkout/ShippingInformation';
 import { parseToShippingAddress } from '../common/address';
 import Info from '../common/Info';
 import SectionWithLabel from '../common/SectionWithLabel';
@@ -97,7 +97,7 @@ export default component$<IProps>(({ onForward$ }) => {
 				</SectionWithLabel>
 
 				<SectionWithLabel label={$localize`Shipping information`} topBorder={true}>
-					<ShippingInformation />
+					<AddressInformation />
 				</SectionWithLabel>
 			</div>
 			<div class="mt-10 lg:mt-0">

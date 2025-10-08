@@ -16,10 +16,11 @@ type IProps = {
 	allowDelete?: boolean;
 	onDelete$?: QRL<(addressId: string) => Promise<void>>;
 	className?: string;
+	allowEdit?: boolean;
 };
 
 export default component$<IProps>(
-	({ address, onEditSaved$, showDefault, allowDelete, onDelete$, className }) => {
+	({ address, onEditSaved$, showDefault, allowDelete, onDelete$, className, allowEdit = true }) => {
 		const openEditForm = useSignal(false);
 
 		return (
@@ -64,14 +65,16 @@ export default component$<IProps>(
 							<h1 class="px-2 text-xs">{address.phoneNumber || 'N/A'}</h1>
 						</>
 						<div class="flex-1" />
-						<button
-							class="mr-1 rounded hover:bg-gray-20"
-							onClick$={() => {
-								openEditForm.value = true;
-							}}
-						>
-							<PencilEditIcon />
-						</button>
+						{allowEdit && (
+							<button
+								class="mr-1 rounded hover:bg-gray-20"
+								onClick$={() => {
+									openEditForm.value = true;
+								}}
+							>
+								<PencilEditIcon />
+							</button>
+						)}
 					</div>
 
 					{showDefault && (address.defaultShippingAddress || address.defaultBillingAddress) && (

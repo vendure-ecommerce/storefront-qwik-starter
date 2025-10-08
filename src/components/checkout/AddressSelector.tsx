@@ -6,12 +6,14 @@ import {
 } from '~/providers/shop/customer/customer';
 import { ShippingAddress } from '~/types';
 import ShippingAddressCard from '../account/ShippingAddressCard';
+import { AddressForm } from '../address-form/AddressFormV2';
 import {
 	createOrUpdateAddress,
 	parseToShippingAddress,
 	updateDefaultAddressInBook,
 } from '../common/address';
 import DropDownIcon from '../icons/DropDownIcon';
+import PlusIcon from '../icons/PlusIcon';
 
 interface AddressSelectorProps {
 	onSelectAddress$: (address: ShippingAddress) => void;
@@ -21,6 +23,7 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 	const addressBook = useSignal<ShippingAddress[]>([]);
 	const selectedId = useSignal<string>('');
 	const open = useSignal<boolean>(false);
+	const editNewAddress = useSignal<boolean>(false);
 
 	useVisibleTask$(async () => {
 		const activeCustomer = await getActiveCustomerAddressesQuery();
@@ -111,10 +114,38 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 									</div>
 								</li>
 							))}
+							{/* A button to add a new address */}
+							<li>
+								<button
+									type="button"
+									class="flex items-center p-2 text-blue-500"
+									onClick$={() => (editNewAddress.value = true)}
+								>
+									<PlusIcon />
+									{$localize`Add New Address`}
+								</button>
+							</li>
 						</ul>
 					</div>
 				</div>
 			</div>
+			<AddressForm
+				open={editNewAddress}
+				onForward$={async (newAddress, authToken) => {
+					await onSelectAddress$(newAddress);
+					updateDefaultAddressInBook(newAddress, addressBook.value);
+					const newAddressId = await createOrUpdateAddress(
+						// note that here we only do the update as the address book is from customer, so they must have id
+						newAddress,
+						authToken
+					);
+					selectedId.value = newAddressId || '';
+					addressBook.value = [newAddress, ...addressBook.value];
+					editNewAddress.value = false;
+					open.value = false;
+					await onSelectAddress$(newAddress);
+				}}
+			/>
 		</div>
 	);
 });
