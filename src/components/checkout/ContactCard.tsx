@@ -2,6 +2,7 @@ import { component$, QRL, useContext, useSignal } from '@qwik.dev/core';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import PencilEditIcon from '../icons/PencilEditIcon';
+import PlusIcon from '../icons/PlusIcon';
 import ContactForm from './ContactForm';
 
 interface Iprops {
@@ -58,7 +59,7 @@ export default component$<Iprops>(({ onEditSave$ }) => {
 					}}
 					extraClass="m-2"
 				>
-					+ {$localize`Contact information`}
+					<PlusIcon /> {$localize`Contact information`}
 				</HighlightedButton>
 			)}
 			<ContactForm

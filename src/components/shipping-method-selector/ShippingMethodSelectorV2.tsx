@@ -41,8 +41,8 @@ export default component$<IProps>(({ reCalculateShipping$ }) => {
 		reCalculateShipping$.value = false;
 	});
 
-	useTask$(async (tracker) => {
-		const selected = tracker.track(() => state.selectedMethodId);
+	useTask$(async (task) => {
+		const selected = task.track(() => state.selectedMethodId);
 		if (selected) {
 			const updated = await setOrderShippingMethodMutation([selected]);
 			if (updated) {

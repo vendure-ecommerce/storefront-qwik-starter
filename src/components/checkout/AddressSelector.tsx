@@ -1,5 +1,4 @@
-import { component$, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
-import { APP_STATE } from '~/constants';
+import { component$, useSignal, useVisibleTask$ } from '@qwik.dev/core';
 import { Address } from '~/generated/graphql';
 import {
 	deleteCustomerAddressMutation,
@@ -19,9 +18,8 @@ interface AddressSelectorProps {
 }
 
 export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
-	const appState = useContext(APP_STATE);
 	const addressBook = useSignal<ShippingAddress[]>([]);
-	const selectedId = useSignal<string>(appState.shippingAddress?.id || '');
+	const selectedId = useSignal<string>('');
 	const open = useSignal<boolean>(false);
 
 	useVisibleTask$(async () => {
@@ -38,6 +36,10 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 					return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
 				})
 				.map((address: Address) => parseToShippingAddress(address)) || [];
+		if (addressBook.value.length > 0) {
+			selectedId.value = addressBook.value[0].id || '';
+			await onSelectAddress$(addressBook.value[0]);
+		}
 	});
 
 	return (

@@ -9,7 +9,6 @@ import {
 } from '@qwik.dev/core';
 import { APP_STATE } from '~/constants';
 import { CreateAddressInput, CreateCustomerInput } from '~/generated/graphql';
-import { getActiveCustomerAddressesQuery } from '~/providers/shop/customer/customer';
 import {
 	getActiveOrderQuery,
 	setOrderShippingAddressMutation,
@@ -19,8 +18,8 @@ import { isActiveCustomerValid, isShippingAddressValid } from '~/utils';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import CartContents from '../cart-contents/CartContents';
 import CartTotals from '../cart-totals/CartTotals';
-import AddressSelector from '../checkout/AddressSelectorDeprecated';
 import ContactCard from '../checkout/ContactCard';
+import ShippingInformation from '../checkout/ShippingInformation';
 import { parseToShippingAddress } from '../common/address';
 import Info from '../common/Info';
 import SectionWithLabel from '../common/SectionWithLabel';
@@ -39,25 +38,6 @@ export default component$<IProps>(({ onForward$ }) => {
 
 	useVisibleTask$(async () => {
 		const activeOrder = await getActiveOrderQuery();
-		const activeCustomer = await getActiveCustomerAddressesQuery();
-
-		//empty the appState.shippingAddress and addressBook to avoid showing stale data
-		appState.shippingAddress = {
-			id: '',
-			fullName: '',
-			company: '',
-			streetLine1: '',
-			streetLine2: '',
-			city: '',
-			province: '',
-			postalCode: '',
-			country: '',
-			countryCode: '',
-			phoneNumber: '',
-			defaultBillingAddress: false,
-			defaultShippingAddress: false,
-		};
-		appState.addressBook = [];
 
 		if (activeOrder?.customer) {
 			const customer = activeOrder.customer;
@@ -80,6 +60,14 @@ export default component$<IProps>(({ onForward$ }) => {
 				JSON.stringify(appState.shippingAddress, null, 2)
 			);
 		}
+	});
+
+	useVisibleTask$(async ({ track }) => {
+		// Track changes to shipping address and trigger recalculation
+		track(() => appState.shippingAddress);
+		const addressToOrder = parseShippingAddressToCreateAddressInput(appState.shippingAddress);
+		await setOrderShippingAddressMutation(addressToOrder);
+		reCalculateShipping.value = true;
 	});
 
 	useTask$(({ track }) => {
@@ -109,16 +97,7 @@ export default component$<IProps>(({ onForward$ }) => {
 				</SectionWithLabel>
 
 				<SectionWithLabel label={$localize`Shipping information`} topBorder={true}>
-					<AddressSelector
-						onSelectAddress$={async (address: ShippingAddress) => {
-							appState.shippingAddress = address;
-							const addressToOrder = parseShippingAddressToCreateAddressInput(
-								appState.shippingAddress
-							);
-							await setOrderShippingAddressMutation(addressToOrder);
-							reCalculateShipping.value = true;
-						}}
-					/>
+					<ShippingInformation />
 				</SectionWithLabel>
 			</div>
 			<div class="mt-10 lg:mt-0">
