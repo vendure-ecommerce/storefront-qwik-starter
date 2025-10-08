@@ -1,11 +1,10 @@
-import { component$, useComputed$, useContext, useSignal } from '@qwik.dev/core';
+import { component$, useComputed$, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
 import { APP_STATE } from '~/constants';
 import { ShippingAddress } from '~/types';
 import { isGuestCustomer } from '~/utils';
 import ShippingAddressCard from '../account/ShippingAddressCard';
 import { AddressForm } from '../address-form/AddressFormV2';
 import { HighlightedButton } from '../buttons/HighlightedButton';
-import PencilEditIcon from '../icons/PencilEditIcon';
 import PlusIcon from '../icons/PlusIcon';
 import AddressSelector from './AddressSelector';
 
@@ -27,11 +26,15 @@ export default component$<AddressInformationProps>(({ mode = 'SHIPPING' }) => {
 	const appState = useContext(APP_STATE);
 	const isGuest = useSignal<boolean>(false);
 	const openNewAddress = useSignal<boolean>(false);
+	const guestHasAddedAddress = useSignal<boolean>(false);
 	const currentShipping = useComputed$(() => appState.shippingAddress as ShippingAddress);
 
-	isGuest.value = isGuestCustomer(appState);
-
-	// computed current shipping address
+	useVisibleTask$(() => {
+		isGuest.value = isGuestCustomer(appState);
+		if (isGuest.value && currentShipping.value.streetLine1) {
+			guestHasAddedAddress.value = true;
+		}
+	});
 
 	return (
 		<div class="max-w-6xl m-auto p-4">
@@ -44,18 +47,27 @@ export default component$<AddressInformationProps>(({ mode = 'SHIPPING' }) => {
 							<ShippingAddressCard
 								address={currentShipping.value}
 								showDefault={!isGuest.value}
-								allowEdit={false}
+								allowEdit={isGuest.value}
 								allowDelete={false}
+								onEditSaved$={async (address) => {
+									appState.shippingAddress = address;
+								}}
 							/>
 						</>
 					) : (
 						<p class="mb-4 text-sm text-gray-700">{$localize`No shipping address selected`}</p>
 					)}
 					{isGuest.value && (
-						<div class="flex flex-col items-center justify-center p-6">
-							<HighlightedButton onClick$={() => (openNewAddress.value = true)}>
-								{currentShipping.value.streetLine1 ? <PencilEditIcon /> : <PlusIcon />}{' '}
-								{$localize`Shipping Address`}
+						<div
+							class={`flex flex-col items-center justify-center p-6 ${guestHasAddedAddress.value ? 'hidden' : 'block'}`}
+						>
+							<HighlightedButton
+								onClick$={() => {
+									openNewAddress.value = true;
+									guestHasAddedAddress.value = true;
+								}}
+							>
+								<PlusIcon /> {$localize`Shipping Address`}
 							</HighlightedButton>
 						</div>
 					)}

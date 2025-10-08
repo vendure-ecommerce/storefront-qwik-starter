@@ -67,10 +67,10 @@ export default component$<Iprops>(({ onEditSave$ }) => {
 				prefilledInfo={{ emailAddress, firstName, lastName }}
 				onSubmitCompleted$={async (emailAddress, firstName, lastName) => {
 					// update appState.customer with the new contact info after form submission
-					openContactForm.value = false;
 					if (onEditSave$) {
 						await onEditSave$(emailAddress, firstName, lastName);
 					}
+					openContactForm.value = false;
 				}}
 			/>
 		</>
