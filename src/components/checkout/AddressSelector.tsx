@@ -8,6 +8,7 @@ import ShippingAddressCard from '../account/ShippingAddressCard';
 import { AddressForm } from '../address-form/AddressFormV2';
 import { Button } from '../buttons/Button';
 import { HighlightedButton } from '../buttons/HighlightedButton';
+import { parseToShippingAddress, updateDefaultAddressInBook } from '../common/address';
 import DropDownIcon from '../icons/DropDownIcon';
 
 interface AddressSelectorProps {
@@ -20,11 +21,12 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 	const editNewAddress = useSignal<boolean>(false);
 	const newAddressEdited = useSignal<boolean>(false);
 	const openSelector = useSignal<boolean>(false);
+	const isGuest = useSignal<boolean>(false);
 
 	const selectedAddress = useComputed$(() => {
 		return appState.addressBook.find((address) => address.id === selectedAddressId.value);
 	});
-	const isGuest = isGuestCustomer(appState);
+	isGuest.value = isGuestCustomer(appState);
 
 	useVisibleTask$(async () => {
 		const activeCustomer = await getActiveCustomerAddressesQuery();
@@ -44,10 +46,12 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 				})
 				.map((address: Address) => parseToShippingAddress(address)) || [];
 		appState.addressBook = addressBook;
+
 		if (addressBook.length > 0) {
 			selectedAddressId.value = addressBook[0].id || null;
 		} else {
-			if (isGuest) {
+			if (isGuest.value) {
+				console.log('Guest user with no address in address book.');
 				if (appState.shippingAddress) {
 					appState.addressBook.push({
 						...appState.shippingAddress,
@@ -64,7 +68,7 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 	return (
 		<div class="flex gap-4">
 			<div class="flex-1 flex flex-col items-start px-4">
-				{isGuest && !newAddressEdited.value && !selectedAddress.value && (
+				{isGuest.value && !newAddressEdited.value && !selectedAddress.value && (
 					<HighlightedButton onClick$={() => (editNewAddress.value = true)}>
 						{' + ' + $localize`New Address`}
 					</HighlightedButton>
@@ -84,7 +88,7 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 					/>
 				)}
 			</div>
-			{!isGuest && ( // Selecting Address is not for guest users
+			{!isGuest.value && ( // Selecting Address is not for guest users
 				<div class="flex-1">
 					<div>
 						<div class="flex items-center gap-2">
@@ -169,54 +173,3 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 		</div>
 	);
 });
-
-/**
- * If the given address is set as defaultShippingAddress or defaultBillingAddress,
- * ensure that no other address in the addressBook has the same flag set to true.
- * @param address
- * @param addressBook
- */
-const updateDefaultAddressInBook = (
-	address: ShippingAddress,
-	addressBook: ShippingAddress[]
-): void => {
-	if (address.defaultShippingAddress) {
-		addressBook.forEach((a) => {
-			if (a.id !== address.id && a.defaultShippingAddress) {
-				a.defaultShippingAddress = false;
-			}
-		});
-	}
-	if (address.defaultBillingAddress) {
-		addressBook.forEach((a) => {
-			if (a.id !== address.id && a.defaultBillingAddress) {
-				a.defaultBillingAddress = false;
-			}
-		});
-	}
-};
-const parseToShippingAddress = (address: Address): ShippingAddress => {
-	let country = '';
-	let countryCode = '';
-
-	if (address.country !== undefined) {
-		country = address.country?.code ?? '';
-		countryCode = address.country?.code ?? '';
-	}
-
-	return {
-		id: address.id,
-		city: address.city ?? '',
-		company: address.company ?? '',
-		country: country,
-		countryCode: countryCode,
-		fullName: address.fullName ?? '',
-		phoneNumber: address.phoneNumber ?? '',
-		postalCode: address.postalCode ?? '',
-		province: address.province ?? '',
-		streetLine1: address.streetLine1 ?? '',
-		streetLine2: address.streetLine2 ?? '',
-		defaultShippingAddress: address.defaultShippingAddress ?? false,
-		defaultBillingAddress: address.defaultBillingAddress ?? false,
-	};
-};

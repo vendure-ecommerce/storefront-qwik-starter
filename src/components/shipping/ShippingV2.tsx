@@ -8,12 +8,7 @@ import {
 	useVisibleTask$,
 } from '@qwik.dev/core';
 import { APP_STATE } from '~/constants';
-import {
-	Address,
-	CreateAddressInput,
-	CreateCustomerInput,
-	OrderAddress,
-} from '~/generated/graphql';
+import { CreateAddressInput, CreateCustomerInput } from '~/generated/graphql';
 import { getActiveCustomerAddressesQuery } from '~/providers/shop/customer/customer';
 import {
 	getActiveOrderQuery,
@@ -26,6 +21,7 @@ import CartContents from '../cart-contents/CartContents';
 import CartTotals from '../cart-totals/CartTotals';
 import AddressSelector from '../checkout/AddressSelector';
 import ContactCard from '../checkout/ContactCard';
+import { parseToShippingAddress } from '../common/address';
 import Info from '../common/Info';
 import SectionWithLabel from '../common/SectionWithLabel';
 import LockClosedIcon from '../icons/LockClosedIcon';
@@ -45,6 +41,24 @@ export default component$<IProps>(({ onForward$ }) => {
 		const activeOrder = await getActiveOrderQuery();
 		const activeCustomer = await getActiveCustomerAddressesQuery();
 
+		//empty the appState.shippingAddress and addressBook to avoid showing stale data
+		appState.shippingAddress = {
+			id: '',
+			fullName: '',
+			company: '',
+			streetLine1: '',
+			streetLine2: '',
+			city: '',
+			province: '',
+			postalCode: '',
+			country: '',
+			countryCode: '',
+			phoneNumber: '',
+			defaultBillingAddress: false,
+			defaultShippingAddress: false,
+		};
+		appState.addressBook = [];
+
 		if (activeOrder?.customer) {
 			const customer = activeOrder.customer;
 			appState.customer = {
@@ -61,17 +75,10 @@ export default component$<IProps>(({ onForward$ }) => {
 			if (orderShippingAddress) {
 				appState.shippingAddress = parseToShippingAddress(orderShippingAddress);
 			}
-		}
-		if (activeCustomer?.addresses) {
-			const [customerDefaultShippingAddress] = activeCustomer.addresses.filter(
-				(address: Address) => !!address.defaultShippingAddress
+			console.warn(
+				'Getting shipping address from active order',
+				JSON.stringify(appState.shippingAddress, null, 2)
 			);
-			if (customerDefaultShippingAddress) {
-				appState.shippingAddress = {
-					...appState.shippingAddress,
-					...parseToShippingAddress(customerDefaultShippingAddress),
-				};
-			}
 		}
 	});
 
@@ -203,31 +210,5 @@ const parseShippingAddressToCreateAddressInput = (address: ShippingAddress): Cre
 		countryCode: address.countryCode,
 		phoneNumber: address.phoneNumber,
 		company: address.company,
-	};
-};
-
-// The idea is to replace all undefined or null values with empty strings
-const parseToShippingAddress = (address: OrderAddress | Address): ShippingAddress => {
-	let country = '';
-	let countryCode = '';
-	const isCustomerAddress = (address as Address).country !== undefined;
-	if (isCustomerAddress) {
-		country = (address as Address).country?.code ?? '';
-		countryCode = (address as Address).country?.code ?? '';
-	} else {
-		country = (address as OrderAddress).country ?? '';
-		countryCode = (address as OrderAddress).countryCode ?? '';
-	}
-	return {
-		city: address.city ?? '',
-		company: address.company ?? '',
-		country: country,
-		countryCode: countryCode,
-		fullName: address.fullName ?? '',
-		phoneNumber: address.phoneNumber ?? '',
-		postalCode: address.postalCode ?? '',
-		province: address.province ?? '',
-		streetLine1: address.streetLine1 ?? '',
-		streetLine2: address.streetLine2 ?? '',
 	};
 };

@@ -49,6 +49,9 @@ export function fieldsNotIdentical(
 		if (field === 'postalCode' && formData.countryCode === 'US') {
 			if (current.slice(0, 5) !== suggested.slice(0, 5)) {
 				suggestedChanges.push({ field, suggested: suggested.slice(0, 5) });
+			} else if (current.length > 5 && current !== suggested) {
+				// if the user has already typed a ZIP+4, and it's different from suggested, offer the change
+				suggestedChanges.push({ field, suggested });
 			}
 		} else {
 			if (textClean(suggested) !== textClean(current)) {

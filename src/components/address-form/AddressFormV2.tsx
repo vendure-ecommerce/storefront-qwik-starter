@@ -1,12 +1,7 @@
-import { $, component$, QRL, Signal, useContext } from '@qwik.dev/core';
+import { $, component$, QRL, Signal, useContext, useSignal } from '@qwik.dev/core';
 import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
 import FormInput from '~/components/common/FormInput';
-import {
-	APP_STATE,
-	AUTH_TOKEN,
-	CUSTOMER_NOT_DEFINED_ID,
-	GUEST_ADDED_ADDRESS_ID,
-} from '~/constants';
+import { APP_STATE, AUTH_TOKEN, GUEST_ADDED_ADDRESS_ID } from '~/constants';
 import { CreateAddressInput, UpdateAddressInput } from '~/generated/graphql';
 import { validateAddressByShippoQuery } from '~/providers/shop/account/account';
 import {
@@ -14,6 +9,7 @@ import {
 	updateCustomerAddressMutation,
 } from '~/providers/shop/customer/customer';
 import { ShippingAddress } from '~/types';
+import { isGuestCustomer } from '~/utils';
 import {
 	fieldsNotIdentical,
 	mapShippoMessagesToIssues,
@@ -157,7 +153,9 @@ export const useAddressEditAction = globalAction$(
 export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddress }) => {
 	const appState = useContext(APP_STATE);
 	const action = useAddressEditAction();
-	const isGuest = appState.customer.id === CUSTOMER_NOT_DEFINED_ID;
+	const isGuest = useSignal<boolean>(true);
+
+	isGuest.value = isGuestCustomer(appState);
 
 	return (
 		<Dialog
@@ -171,7 +169,7 @@ export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddr
 					if (detail.value.success && detail.value.data) {
 						const formData = detail.value.data;
 						const authToken = detail.value.authToken;
-						if (!isGuest) {
+						if (!isGuest.value) {
 							const createdOrUpdatedAddressId = await createOrUpdateAddress$(
 								formData as ShippingAddress,
 								authToken
@@ -272,7 +270,7 @@ export const AddressForm = component$<IProps>(({ open, onForward$, prefilledAddr
 						defaults={prefilledAddress}
 						autoComplete="tel"
 					/>
-					{!isGuest && ( // Guest doesn't need to set default address
+					{!isGuest.value && ( // Guest doesn't need to set default address
 						<>
 							<div class="sm:col-span-1">
 								<label
