@@ -14,7 +14,11 @@ import {
 	updateCustomerAddressMutation,
 } from '~/providers/shop/customer/customer';
 import { ShippingAddress } from '~/types';
-import { fieldsNotIdentical, shippoMessagesToStrings } from '~/utils/shippo';
+import {
+	fieldsNotIdentical,
+	mapShippoMessagesToIssues,
+	shippoMessagesToStrings,
+} from '~/utils/shippo';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import { Dialog } from '../dialog/Dialog';
 
@@ -56,6 +60,16 @@ export const useAddressEditAction = globalAction$(
 			})
 			.superRefine(async (data, ctx) => {
 				try {
+					// Basic early-exit: if essential fields are missing/blank, skip external validation.
+					// This avoids calling Shippo when the form is already missing required data.
+					const essentialFields = ['streetLine1', 'city', 'countryCode', 'postalCode'];
+					for (const f of essentialFields) {
+						if (!data || !String((data as any)[f] ?? '').trim()) {
+							// Let the field-level validators (z.string().min(1)) report the missing field.
+							return;
+						}
+					}
+
 					// Local quick format check: for US addresses require two uppercase letters (e.g., CA, NY)
 					if (data && String(data.countryCode).toUpperCase() === 'US') {
 						if (!/^[A-Z]{2}$/.test(String(data.province || ''))) {
@@ -77,7 +91,6 @@ export const useAddressEditAction = globalAction$(
 						streetLine1: data.streetLine1,
 						streetLine2: data.streetLine2,
 					});
-					console.log('shippoValidateResult:', shippoValidateResult);
 
 					if (shippoValidateResult?.__typename === 'ShippoAddressValidationResult') {
 						const { validationResults } = shippoValidateResult;
@@ -91,41 +104,11 @@ export const useAddressEditAction = globalAction$(
 							const messages = shippoMessagesToStrings(shippoValidateResult as any);
 
 							if (messages.length > 0) {
-								// Attach each message to a best-guess field, or to the form if unspecified
-								messages.forEach((m) => {
-									const lower = String(m).toLowerCase();
-									const matchedPaths: Array<(string | number)[]> = [];
-									if (lower.includes('postal') || lower.includes('zip'))
-										matchedPaths.push(['postalCode']);
-									if (lower.includes('state') || lower.includes('province'))
-										matchedPaths.push(['province']);
-									if (lower.includes('street') || lower.includes('address'))
-										matchedPaths.push(['streetLine1']);
-									if (lower.includes('city')) matchedPaths.push(['city']);
-
-									// If multiple distinct fields are implicated, attach the issue to each field
-									// so the UI can show the message next to relevant inputs. If exactly one,
-									// attach to that field. If none matched, attach to a sensible fallback
-									// (streetLine1) to ensure the message is visible in the form UI.
-									if (matchedPaths.length > 1) {
-										matchedPaths.forEach((p) =>
-											ctx.addIssue({ code: z.ZodIssueCode.custom, path: p, message: m })
-										);
-									} else if (matchedPaths.length === 1) {
-										ctx.addIssue({
-											code: z.ZodIssueCode.custom,
-											path: matchedPaths[0],
-											message: m,
-										});
-									} else {
-										// No heuristic match — attach to a fallback visible field
-										ctx.addIssue({
-											code: z.ZodIssueCode.custom,
-											path: ['streetLine1'],
-											message: m,
-										});
-									}
-								});
+								// Map messages to issues (path + message) using shared helper
+								const issues = mapShippoMessagesToIssues(messages);
+								issues.forEach(({ path, message }) =>
+									ctx.addIssue({ code: z.ZodIssueCode.custom, path, message })
+								);
 							} else {
 								// No messages returned, attach a generic form-level error
 								ctx.addIssue({
@@ -134,20 +117,19 @@ export const useAddressEditAction = globalAction$(
 									message: $localize`Address validation failed. Please check the address details.`,
 								});
 							}
-						} else {
-							const suggestedChanges = fieldsNotIdentical(
-								data as ShippingAddress,
-								shippoValidateResult
-							);
-							if (suggestedChanges.length > 0) {
-								suggestedChanges.forEach((change) => {
-									ctx.addIssue({
-										code: z.ZodIssueCode.custom,
-										path: [change.field],
-										message: $localize`Suggested correction: ${change.suggested}`,
-									});
+						}
+						const suggestedChanges = fieldsNotIdentical(
+							data as ShippingAddress,
+							shippoValidateResult
+						);
+						if (suggestedChanges.length > 0) {
+							suggestedChanges.forEach((change) => {
+								ctx.addIssue({
+									code: z.ZodIssueCode.custom,
+									path: [change.field],
+									message: $localize`Suggested correction: ${change.suggested}`,
 								});
-							}
+							});
 						}
 					}
 				} catch (err) {
@@ -343,11 +325,9 @@ const createOrUpdateAddress$ = $(
 		if (!address.id || address.id === 'add' || address.id === '') {
 			delete address.id;
 			const result = await createCustomerAddressMutation(address as CreateAddressInput, authToken);
-			console.log('createCustomerAddressMutation result:', JSON.stringify(result, null, 2));
 			return result?.createCustomerAddress?.id;
 		}
 		const result = await updateCustomerAddressMutation(address as UpdateAddressInput, authToken);
-		console.log('updateCustomerAddressMutation result:', JSON.stringify(result, null, 2));
 		return result?.updateCustomerAddress?.id;
 	}
 );

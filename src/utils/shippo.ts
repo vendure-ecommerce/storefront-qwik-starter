@@ -40,17 +40,15 @@ export function fieldsNotIdentical(
 	validationResult: ShippoAddressValidationResult
 ): Array<{ field: FieldToCheck; suggested: string }> {
 	const textClean = (s: string) => s.trim().toLowerCase().replace(/\./g, '');
-	// for postalCode, only check the first 5 characters
-	const postalCodeClean = (s: string) => s.trim().toLowerCase().replace(/\./g, '').slice(0, 5);
 
 	let suggestedChanges: Array<{ field: FieldToCheck; suggested: string }> = [];
 
 	FIELDS_TO_CHECK_EQUAL.forEach((field) => {
 		const suggested = validationResult?.[field] || '';
 		const current = formData[field] || '';
-		if (field === 'postalCode') {
-			if (postalCodeClean(suggested) !== postalCodeClean(current)) {
-				suggestedChanges.push({ field, suggested });
+		if (field === 'postalCode' && formData.countryCode === 'US') {
+			if (current.slice(0, 5) !== suggested.slice(0, 5)) {
+				suggestedChanges.push({ field, suggested: suggested.slice(0, 5) });
 			}
 		} else {
 			if (textClean(suggested) !== textClean(current)) {
@@ -60,3 +58,35 @@ export function fieldsNotIdentical(
 	});
 	return suggestedChanges;
 }
+
+/**
+ * Map free-text Shippo messages to form field paths so the UI can attach issues.
+ * Returns an array of { path, message } entries. If a message implicates multiple
+ * fields, one entry per field is returned. If none matched, a fallback path is used.
+ */
+export function mapShippoMessagesToIssues(messages: string[] | undefined) {
+	if (!messages || messages.length === 0) return [];
+	const issues: Array<{ path: (string | number)[]; message: string }> = [];
+
+	messages.forEach((m) => {
+		const lower = String(m).toLowerCase();
+		const matchedPaths: Array<(string | number)[]> = [];
+		if (lower.includes('postal') || lower.includes('zip')) matchedPaths.push(['postalCode']);
+		if (lower.includes('state') || lower.includes('province')) matchedPaths.push(['province']);
+		if (lower.includes('street') || lower.includes('address')) matchedPaths.push(['streetLine1']);
+		if (lower.includes('city')) matchedPaths.push(['city']);
+
+		if (matchedPaths.length > 1) {
+			matchedPaths.forEach((p) => issues.push({ path: p, message: m }));
+		} else if (matchedPaths.length === 1) {
+			issues.push({ path: matchedPaths[0], message: m });
+		} else {
+			// fallback to a visible field so the message surfaces in the UI
+			issues.push({ path: ['streetLine1'], message: m });
+		}
+	});
+
+	return issues;
+}
+
+export default shippoMessagesToStrings;
