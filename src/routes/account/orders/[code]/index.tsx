@@ -25,22 +25,9 @@ export default component$(() => {
 		}
 	});
 	return store.order ? (
-		<div class="lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-x-12 xl:gap-x-16 ">
-			<div class="mt-3 lg:mt-5 ">
-				<div class="max-w-sm mx-auto lg:ml-auto">
-					<SectionWithLabel label={$localize`Order summary`}>
-						{store.order && (
-							<>
-								<CartContents order={store.order} />
-								<CartTotals order={store.order} readonly />
-							</>
-						)}
-					</SectionWithLabel>
-				</div>
-			</div>
-
-			<div class="mt-3 lg:mt-5 ">
-				<div class="text-sm max-w-sm mx-auto lg:ml-auto">
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20 mt-5">
+			<div class="flex justify-center md:justify-end">
+				<div class="text-sm max-w-sm">
 					<SectionWithLabel label={$localize`Order details`}>
 						<>
 							<h2>
@@ -63,6 +50,19 @@ export default component$(() => {
 							/>
 						</SectionWithLabel>
 					)}
+				</div>
+			</div>
+
+			<div class="flex justify-center md:justify-start">
+				<div class=" min-w-60 max-w-96">
+					<SectionWithLabel label={$localize`Order summary`}>
+						{store.order && (
+							<>
+								<CartContents order={store.order} />
+								<CartTotals order={store.order} readonly />
+							</>
+						)}
+					</SectionWithLabel>
 				</div>
 			</div>
 		</div>
