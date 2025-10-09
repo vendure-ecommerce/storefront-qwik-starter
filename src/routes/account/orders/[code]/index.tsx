@@ -25,36 +25,45 @@ export default component$(() => {
 		}
 	});
 	return store.order ? (
-		<div class="lg:grid md:grid-col-2 lg:grid-cols-3 lg:gap-x-12 xl:gap-x-16 ">
+		<div class="lg:grid lg:grid-cols-2 xl:grid-cols-3 lg:gap-x-12 xl:gap-x-16 ">
 			<div class="mt-3 lg:mt-5 ">
-				<SectionWithLabel label={$localize`Order details`}>
-					<div class="text-sm">
-						<h2>
-							Order <span class="font-semibold">{store.order?.code}</span>
-						</h2>
-						<p>
-							Placed on <span class="font-semibold">{formatDateTime(store.order?.createdAt)}</span>
-						</p>
-					</div>
-				</SectionWithLabel>
-
-				{shippingAddress.value && (
-					<SectionWithLabel label={$localize`Shipping information`} topBorder={true}>
-						<ShippingAddressCard
-							address={shippingAddress.value}
-							allowDelete={false}
-							allowEdit={false}
-							showDefault={false}
-						/>
+				<div class="max-w-sm mx-auto lg:ml-auto">
+					<SectionWithLabel label={$localize`Order summary`}>
+						{store.order && (
+							<>
+								<CartContents order={store.order} />
+								<CartTotals order={store.order} readonly />
+							</>
+						)}
 					</SectionWithLabel>
-				)}
+				</div>
 			</div>
 
 			<div class="mt-3 lg:mt-5 ">
-				<SectionWithLabel label={$localize`Order summary`}>
-					{store.order && <CartContents order={store.order} />}
-					{store.order && <CartTotals order={store.order} readonly />}
-				</SectionWithLabel>
+				<div class="text-sm max-w-sm mx-auto lg:ml-auto">
+					<SectionWithLabel label={$localize`Order details`}>
+						<>
+							<h2>
+								Order <span class="font-semibold">{store.order?.code}</span>
+							</h2>
+							<p>
+								Placed on{' '}
+								<span class="font-semibold">{formatDateTime(store.order?.createdAt)}</span>
+							</p>
+						</>
+					</SectionWithLabel>
+
+					{shippingAddress.value && (
+						<SectionWithLabel label={$localize`Shipping information`} topBorder={true}>
+							<ShippingAddressCard
+								address={shippingAddress.value}
+								allowDelete={false}
+								allowEdit={false}
+								showDefault={false}
+							/>
+						</SectionWithLabel>
+					)}
+				</div>
 			</div>
 		</div>
 	) : (
