@@ -1,5 +1,6 @@
 import { component$, useSignal, useStore, useVisibleTask$ } from '@qwik.dev/core';
 import { useLocation } from '@qwik.dev/router';
+import OrderBriefCard from '~/components/account/OrderBriefCard';
 import ShippingAddressCard from '~/components/account/ShippingAddressCard';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
@@ -8,7 +9,6 @@ import SectionWithLabel from '~/components/common/SectionWithLabel';
 import { Order } from '~/generated/graphql';
 import { getOrderByCodeQuery } from '~/providers/shop/orders/order';
 import { ShippingAddress } from '~/types';
-import { formatDateTime } from '~/utils';
 
 export default component$(() => {
 	const {
@@ -28,20 +28,16 @@ export default component$(() => {
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20 mt-5">
 			<div class="flex justify-center md:justify-end">
 				<div class="text-sm max-w-sm">
-					<SectionWithLabel label={$localize`Order details`}>
-						<>
-							<h2>
-								Order <span class="font-semibold">{store.order?.code}</span>
-							</h2>
-							<p>
-								Placed on{' '}
-								<span class="font-semibold">{formatDateTime(store.order?.createdAt)}</span>
-							</p>
-						</>
+					<SectionWithLabel label={$localize`Order Brief`} labelClass="m-6">
+						<OrderBriefCard order={store.order} />
 					</SectionWithLabel>
 
 					{shippingAddress.value && (
-						<SectionWithLabel label={$localize`Shipping information`} topBorder={true}>
+						<SectionWithLabel
+							label={$localize`Shipping information`}
+							topBorder={true}
+							labelClass="m-6"
+						>
 							<ShippingAddressCard
 								address={shippingAddress.value}
 								allowDelete={false}
@@ -55,7 +51,7 @@ export default component$(() => {
 
 			<div class="flex justify-center md:justify-start">
 				<div class=" min-w-60 max-w-96">
-					<SectionWithLabel label={$localize`Order summary`}>
+					<SectionWithLabel label={$localize`Order summary`} labelClass="m-6">
 						{store.order && (
 							<>
 								<CartContents order={store.order} />

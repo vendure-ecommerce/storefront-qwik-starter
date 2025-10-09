@@ -51,16 +51,11 @@ export default component$(() => {
 					<div class="max-w-6xl mx-2 h-5 min-h-full md:mx-auto flex items-center justify-between my-1">
 						<div class="flex justify-between items-center w-full">
 							<div>
+								{/* Add your promotion message here, e.g. free shipping over $50 
 								<p class="hidden sm:block">
-									{$localize`Exclusive: Get your own`}{' '}
-									<a
-										href="https://github.com/vendure-ecommerce/storefront-qwik-starter"
-										target="_blank"
-										class="underline"
-									>
-										{$localize`FREE storefront starter kit`}
-									</a>
-								</p>
+
+								</p> 
+								*/}
 							</div>
 							<div class="flex mr-[60px] 2xl:mr-0">
 								{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? (
