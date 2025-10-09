@@ -1,110 +1,60 @@
-import { component$, useStore, useVisibleTask$ } from '@qwik.dev/core';
+import { component$, useSignal, useStore, useVisibleTask$ } from '@qwik.dev/core';
 import { useLocation } from '@qwik.dev/router';
-import { Image } from 'qwik-image';
+import ShippingAddressCard from '~/components/account/ShippingAddressCard';
+import CartContents from '~/components/cart-contents/CartContents';
+import CartTotals from '~/components/cart-totals/CartTotals';
+import { parseToShippingAddress } from '~/components/common/address';
+import SectionWithLabel from '~/components/common/SectionWithLabel';
 import { Order } from '~/generated/graphql';
 import { getOrderByCodeQuery } from '~/providers/shop/orders/order';
-import { formatDateTime, formatPrice } from '~/utils';
+import { ShippingAddress } from '~/types';
+import { formatDateTime } from '~/utils';
 
 export default component$(() => {
 	const {
 		params: { code },
 	} = useLocation();
 	const store = useStore<{ order?: Order }>({});
+	const shippingAddress = useSignal<ShippingAddress | null>(null);
 
 	useVisibleTask$(async () => {
 		const order = await getOrderByCodeQuery(code);
-		if (order) store.order = order;
+		if (order) {
+			store.order = order;
+			shippingAddress.value = parseToShippingAddress(order.shippingAddress!);
+		}
 	});
-
 	return store.order ? (
-		<div class="max-w-6xl m-auto rounded-lg p-4 space-y-4 text-gray-900">
-			<div>
-				<h2 class="mb-2">
-					Order <span class="text-xl font-semibold">{store.order?.code}</span>
-				</h2>
-				<p class="mb-4">
-					Placed on{' '}
-					<span class="text-xl font-semibold">{formatDateTime(store.order?.createdAt)}</span>
-				</p>
-				<ul class="divide-y divide-gray-200">
-					{store.order?.lines.map((line, key) => {
-						return (
-							<li key={key} class="py-6 flex">
-								<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
-									<Image
-										layout="fixed"
-										width={100}
-										height={100}
-										aspectRatio={1}
-										class="rounded object-cover max-w-max h-full"
-										src={line.featuredAsset?.preview}
-									/>
-								</div>
-								<div class="ml-4 flex-1 flex flex-col">
-									<div>
-										<div class="flex justify-between text-base font-medium">
-											<h3>{line.productVariant.name}</h3>
-											<p class="ml-4">
-												{formatPrice(line.productVariant.price, store.order?.currencyCode || 'USD')}
-											</p>
-										</div>
-									</div>
-									<div class="flex-1 flex items-center justify-between text-sm text-gray-600">
-										<div class="flex space-x-4">
-											<div class="qty">1</div>
-										</div>
-										<div class="total">
-											<div>
-												{formatPrice(
-													line.productVariant.price * line.quantity,
-													store.order?.currencyCode || 'USD'
-												)}
-											</div>
-										</div>
-									</div>
-								</div>
-							</li>
-						);
-					})}
-				</ul>
+		<div class="lg:grid md:grid-col-2 lg:grid-cols-3 lg:gap-x-12 xl:gap-x-16 ">
+			<div class="mt-3 lg:mt-5 ">
+				<SectionWithLabel label={$localize`Order details`}>
+					<div class="text-sm">
+						<h2>
+							Order <span class="font-semibold">{store.order?.code}</span>
+						</h2>
+						<p>
+							Placed on <span class="font-semibold">{formatDateTime(store.order?.createdAt)}</span>
+						</p>
+					</div>
+				</SectionWithLabel>
+
+				{shippingAddress.value && (
+					<SectionWithLabel label={$localize`Shipping information`} topBorder={true}>
+						<ShippingAddressCard
+							address={shippingAddress.value}
+							allowDelete={false}
+							allowEdit={false}
+							showDefault={false}
+						/>
+					</SectionWithLabel>
+				)}
 			</div>
-			<dl class="border-t mt-6 border-gray-200 py-6 space-y-6">
-				<div class="flex items-center justify-between">
-					<dt class="text-sm">Subtotal</dt>
-					<dd class="text-sm font-medium">
-						{formatPrice(store.order?.subTotal, store.order?.currencyCode || 'USD')}
-					</dd>
-				</div>
-				<div class="flex items-center justify-between">
-					<dt class="text-sm">
-						Shipping{' '}
-						<span class="text-gray-600">
-							(<span>Standard Shipping</span>)
-						</span>
-					</dt>
-					<dd class="text-sm font-medium">
-						{formatPrice(store.order?.shippingWithTax, store.order?.currencyCode || 'USD')}
-					</dd>
-				</div>
-				<div class="flex items-center justify-between">
-					<dt class="text-sm">Tax</dt>
-					<dd class="text-sm font-medium">
-						{formatPrice(store.order?.taxSummary[0].taxTotal, store.order?.currencyCode || 'USD')}
-					</dd>
-				</div>
-				<div class="flex items-center justify-between border-t border-gray-200 pt-6">
-					<dt class="text-base font-medium">Total</dt>
-					<dd class="text-base font-medium">
-						{formatPrice(store.order?.totalWithTax, store.order?.currencyCode || 'USD')}
-					</dd>
-				</div>
-			</dl>
-			<div class="w-full bg-gray-100 p-8">
-				<p class="mb-4 text-gray-600">Shipping Address</p>
-				<p class="text-base font-medium">{store.order?.shippingAddress?.fullName}</p>
-				<p class="text-base font-medium">{store.order?.shippingAddress?.streetLine1}</p>
-				<p class="text-base font-medium">{store.order?.shippingAddress?.city}</p>
-				<p class="text-base font-medium">{store.order?.shippingAddress?.province}</p>
+
+			<div class="mt-3 lg:mt-5 ">
+				<SectionWithLabel label={$localize`Order summary`}>
+					{store.order && <CartContents order={store.order} />}
+					{store.order && <CartTotals order={store.order} readonly />}
+				</SectionWithLabel>
 			</div>
 		</div>
 	) : (

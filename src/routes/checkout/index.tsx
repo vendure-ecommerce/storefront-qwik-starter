@@ -3,13 +3,11 @@ import { useNavigate } from '@qwik.dev/router';
 import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
 import Payment from '~/components/payment/Payment';
 import Shipping from '~/components/shipping/ShippingV2';
-import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
-import { CreateCustomerInput } from '~/generated/graphql';
+import { APP_STATE } from '~/constants';
 import {
 	addPaymentToOrderMutation,
 	transitionOrderToStateMutation,
 } from '~/providers/shop/checkout/checkout';
-import { setCustomerForOrderMutation } from '~/providers/shop/orders/order';
 import { isEnvVariableEnabled } from '~/utils';
 
 type Step = 'SHIPPING' | 'PAYMENT' | 'CONFIRMATION';
@@ -47,6 +45,15 @@ export default component$(() => {
 		}
 	});
 
+	const goToPaymentStep = $(async () => {
+		if (isEnvVariableEnabled('VITE_SHOW_PAYMENT_STEP')) {
+			state.step = 'PAYMENT';
+			window && window.scrollTo(0, 0);
+		} else {
+			confirmPayment();
+		}
+	});
+
 	return (
 		<div>
 			{appState.activeOrder?.id && (
@@ -78,27 +85,8 @@ export default component$(() => {
 						<div class={state.step === 'CONFIRMATION' ? 'lg:col-span-2' : ''}>
 							{state.step === 'SHIPPING' ? (
 								<Shipping
-									onForward$={async (customer: CreateCustomerInput) => {
-										const goToPaymentStep = async () => {
-											if (isEnvVariableEnabled('VITE_SHOW_PAYMENT_STEP')) {
-												state.step = 'PAYMENT';
-												window && window.scrollTo(0, 0);
-											} else {
-												confirmPayment();
-											}
-										};
-
-										if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
-											const setCustomerForOrder = await setCustomerForOrderMutation(customer);
-											if (
-												setCustomerForOrder &&
-												(setCustomerForOrder as any).__typename === 'Order'
-											) {
-												goToPaymentStep();
-											}
-										} else {
-											goToPaymentStep();
-										}
+									onForward$={async () => {
+										goToPaymentStep();
 									}}
 								/>
 							) : state.step === 'PAYMENT' ? (

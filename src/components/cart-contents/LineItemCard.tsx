@@ -13,7 +13,7 @@ type Signals = {
 interface Props extends Signals {
 	line: OrderLine;
 	currencyCode: string;
-	isInEditableUrl: boolean;
+	canEdit: boolean;
 	onQuantityChange$?: QRL<(id: string, value: number) => void>;
 	onRemove$?: QRL<(id: string) => void>;
 }
@@ -22,7 +22,7 @@ export default component$<Props>(
 	({
 		line,
 		currencyCode,
-		isInEditableUrl,
+		canEdit,
 		onQuantityChange$,
 		onRemove$,
 		filamentColorSignal,
@@ -56,13 +56,13 @@ export default component$<Props>(
 						</div>
 					</div>
 					<div class="flex-1 flex items-center text-sm">
-						{isInEditableUrl ? (
+						{canEdit ? (
 							<form>
 								<label html-for={`quantity-${line.id}`} class="mr-2">
 									{$localize`Quantity`}
 								</label>
 								<select
-									disabled={!isInEditableUrl}
+									disabled={!canEdit}
 									id={`quantity-${line.id}`}
 									name={`quantity-${line.id}`}
 									value={line.quantity}
@@ -86,7 +86,7 @@ export default component$<Props>(
 						)}
 						<div class="flex-1"></div>
 						<div class="flex">
-							{isInEditableUrl && (
+							{canEdit && (
 								<button
 									value={line.id}
 									class="font-medium text-primary-600 hover:text-primary-500"

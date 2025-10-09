@@ -11,9 +11,10 @@ import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { CreateAddressInput, CreateCustomerInput } from '~/generated/graphql';
 import {
 	getActiveOrderQuery,
+	setCustomerForOrderMutation,
 	setOrderShippingAddressMutation,
 } from '~/providers/shop/orders/order';
-import { ShippingAddress } from '~/types';
+import { ActiveCustomer, ShippingAddress } from '~/types';
 import { isActiveCustomerValid, isGuestCustomer, isShippingAddressValid } from '~/utils';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import CartContents from '../cart-contents/CartContents';
@@ -27,7 +28,7 @@ import LockClosedIcon from '../icons/LockClosedIcon';
 import ShippingMethodSelectorV2 from '../shipping-method-selector/ShippingMethodSelectorV2';
 
 type IProps = {
-	onForward$: QRL<(customer: CreateCustomerInput) => Promise<void>>;
+	onForward$: QRL<() => Promise<void>>;
 };
 
 export default component$<IProps>(({ onForward$ }) => {
@@ -36,6 +37,7 @@ export default component$<IProps>(({ onForward$ }) => {
 	const reCalculateShipping = useSignal(true);
 	const orderLineReadyToProceed = useSignal(true);
 	const isGuest = useSignal(false);
+	const errorMessage = useSignal<string | null>(null);
 
 	useVisibleTask$(async () => {
 		isGuest.value = isGuestCustomer(appState);
@@ -46,6 +48,10 @@ export default component$<IProps>(({ onForward$ }) => {
 			appState.customer = {
 				title: customer.title ?? '',
 				firstName: customer.firstName,
+				// Note that if a Guest customer had submit the order but abandon the checkout halfway (didn't pay),
+				// he will have a customer.id in the activeOrder. We need to override it to CUSTOMER_NOT_DEFINED_ID
+				// to avoid confusion of our system. As this page uses this id to determine if the customer is a guest
+				// or not.
 				id: isGuest.value ? CUSTOMER_NOT_DEFINED_ID : customer.id,
 				lastName: customer.lastName,
 				emailAddress: customer.emailAddress,
@@ -100,7 +106,10 @@ export default component$<IProps>(({ onForward$ }) => {
 					<AddressInformation />
 				</SectionWithLabel>
 			</div>
+
 			<div class="mt-10 lg:mt-0">
+				{/* Cart Content */}
+
 				<SectionWithLabel label={$localize`Order summary`}>
 					<CartContents
 						readyToProceedSignal={orderLineReadyToProceed}
@@ -125,18 +134,24 @@ export default component$<IProps>(({ onForward$ }) => {
 				<div class="relative">
 					<HighlightedButton
 						extraClass="mt-6 w-full"
-						onClick$={$(() => {
+						onClick$={$(async () => {
 							if (isFormValidSignal.value) {
-								const { emailAddress, firstName, lastName, phoneNumber, title } = appState.customer;
-
-								const createCustomerInput: CreateCustomerInput = {
-									emailAddress: emailAddress ?? '',
-									firstName,
-									lastName,
-									phoneNumber,
-									title,
-								};
-								onForward$(createCustomerInput);
+								const createCustomerInput = parseCustomerToCreateCustomerInput(appState.customer);
+								if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
+									// Note that the following will create a new customer in Customer entity and update then Order entry.
+									// That is why I put it here, to avoid creating multiple customers if user goes back and forth in checkout steps.
+									// This is a trade-off between UX and data integrity. This will be a little inconvenient for Guest users only.
+									// If a guest user abandons the checkout halfway, the guest will have to input their info again next time.
+									const setCustomerForOrder =
+										await setCustomerForOrderMutation(createCustomerInput);
+									if (setCustomerForOrder && (setCustomerForOrder as any).__typename === 'Order') {
+										onForward$();
+									} else {
+										errorMessage.value = $localize`Failed to create customer. Guest checkout may not be enabled. Please contact support or sign up for an account.`;
+									}
+								} else {
+									onForward$();
+								}
 							}
 						})}
 						disabled={
@@ -167,6 +182,11 @@ export default component$<IProps>(({ onForward$ }) => {
 							/>
 						</div>
 					) : null}
+					{errorMessage.value && (
+						<div class="mt-4">
+							<span class="text-red-600">{errorMessage.value}</span>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>
@@ -189,5 +209,15 @@ const parseShippingAddressToCreateAddressInput = (address: ShippingAddress): Cre
 		countryCode: address.countryCode,
 		phoneNumber: address.phoneNumber,
 		company: address.company,
+	};
+};
+
+const parseCustomerToCreateCustomerInput = (customer: ActiveCustomer): CreateCustomerInput => {
+	return {
+		emailAddress: customer.emailAddress ?? '',
+		firstName: customer.firstName,
+		lastName: customer.lastName,
+		phoneNumber: customer.phoneNumber,
+		title: customer.title,
 	};
 };
