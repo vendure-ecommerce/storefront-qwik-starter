@@ -63,24 +63,33 @@ export default component$(() => {
 								</p>
 							</div>
 							<div class="flex mr-[60px] 2xl:mr-0">
-								<a
-									href={appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? '/account' : '/sign-in'}
-									class="flex items-center space-x-1 pb-1 pr-2"
-								>
-									<UserIcon />
-									<span class="mt-1 text-gray-700">
-										{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID
-											? $localize`My Account`
-											: $localize`Sign In`}
-									</span>
-								</a>
-								{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID && (
-									<button onClick$={logout} class="text-gray-700">
-										<div class="flex items-center cursor-pointer">
-											<span class="mr-2">{$localize`Logout`}</span>
-											<LogoutIcon />
-										</div>
-									</button>
+								{appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? (
+									<>
+										<a href="/account" class="flex items-center space-x-1 pb-1 pr-2 mr-5">
+											<UserIcon />
+											<span class="mt-1 text-gray-700">
+												{appState.customer.firstName || appState.customer.lastName
+													? appState.customer.firstName + ' ' + appState.customer.lastName
+													: $localize`Account`}
+											</span>
+										</a>
+										<button onClick$={logout} class="text-gray-700">
+											<div class="flex items-center cursor-pointer">
+												<span class="mr-2">{$localize`Logout`}</span>
+												<LogoutIcon />
+											</div>
+										</button>
+									</>
+								) : (
+									<a
+										href={
+											appState.customer.id !== CUSTOMER_NOT_DEFINED_ID ? '/account' : '/sign-in'
+										}
+										class="flex items-center space-x-1 pb-1 pr-2"
+									>
+										<UserIcon />
+										<span class="mt-1 text-gray-700">{$localize`Sign In`}</span>
+									</a>
 								)}
 							</div>
 						</div>
