@@ -1,12 +1,14 @@
-import { component$, QRL, useContext, useSignal } from '@qwik.dev/core';
-import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
+import { component$, QRL, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { APP_STATE } from '~/constants';
+import { ActiveCustomer } from '~/types';
+import { isGuestCustomer } from '~/utils';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import PencilEditIcon from '../icons/PencilEditIcon';
 import PlusIcon from '../icons/PlusIcon';
 import ContactForm from './ContactForm';
 
 interface Iprops {
-	onEditSave$?: QRL<(emailAddress: string, firstName: string, lastName: string) => void>;
+	onEditSave$?: QRL<(customer: ActiveCustomer) => void>;
 }
 
 /**
@@ -23,10 +25,13 @@ interface Iprops {
 export default component$<Iprops>(({ onEditSave$ }) => {
 	const appState = useContext(APP_STATE);
 	const openContactForm = useSignal(false);
+	const isGuest = useSignal<boolean>(false);
 
-	const { emailAddress, firstName, lastName } = appState.customer || {};
+	const { title, emailAddress, firstName, lastName, phoneNumber } = appState.customer || {};
 
-	const isGuest = appState.customer.id === CUSTOMER_NOT_DEFINED_ID;
+	useVisibleTask$(() => {
+		isGuest.value = isGuestCustomer(appState);
+	});
 
 	return (
 		<>
@@ -35,11 +40,12 @@ export default component$<Iprops>(({ onEditSave$ }) => {
 					<div class="flex items-center py-2 px-4 gap-2">
 						<div class="flex flex-col w-fit">
 							<h1 class="text-sm font-semibold text-gray-800 w-fit">
-								{firstName} {lastName}
+								{title || ''} {firstName} {lastName}
 							</h1>
 							<p class="py-1 text-sm text-gray-700 w-fit">{emailAddress}</p>
+							{phoneNumber && <p class="py-1 text-sm text-gray-700 w-fit">{phoneNumber}</p>}
 						</div>
-						{isGuest && (
+						{isGuest.value && (
 							<button
 								class="text-sm text-primary-600 hover:text-primary-800"
 								onClick$={async () => {
@@ -64,11 +70,11 @@ export default component$<Iprops>(({ onEditSave$ }) => {
 			)}
 			<ContactForm
 				open={openContactForm}
-				prefilledInfo={{ emailAddress, firstName, lastName }}
-				onSubmitCompleted$={async (emailAddress, firstName, lastName) => {
+				prefilledInfo={appState.customer}
+				onSubmitCompleted$={async (customer) => {
 					// update appState.customer with the new contact info after form submission
 					if (onEditSave$) {
-						await onEditSave$(emailAddress, firstName, lastName);
+						await onEditSave$(customer);
 					}
 					openContactForm.value = false;
 				}}

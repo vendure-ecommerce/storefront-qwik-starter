@@ -7,14 +7,14 @@ import {
 	useTask$,
 	useVisibleTask$,
 } from '@qwik.dev/core';
-import { APP_STATE } from '~/constants';
+import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { CreateAddressInput, CreateCustomerInput } from '~/generated/graphql';
 import {
 	getActiveOrderQuery,
 	setOrderShippingAddressMutation,
 } from '~/providers/shop/orders/order';
 import { ShippingAddress } from '~/types';
-import { isActiveCustomerValid, isShippingAddressValid } from '~/utils';
+import { isActiveCustomerValid, isGuestCustomer, isShippingAddressValid } from '~/utils';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import CartContents from '../cart-contents/CartContents';
 import CartTotals from '../cart-totals/CartTotals';
@@ -35,8 +35,10 @@ export default component$<IProps>(({ onForward$ }) => {
 	const isFormValidSignal = useSignal(false);
 	const reCalculateShipping = useSignal(true);
 	const orderLineReadyToProceed = useSignal(true);
+	const isGuest = useSignal(false);
 
 	useVisibleTask$(async () => {
+		isGuest.value = isGuestCustomer(appState);
 		const activeOrder = await getActiveOrderQuery();
 
 		if (activeOrder?.customer) {
@@ -44,7 +46,7 @@ export default component$<IProps>(({ onForward$ }) => {
 			appState.customer = {
 				title: customer.title ?? '',
 				firstName: customer.firstName,
-				id: customer.id,
+				id: isGuest.value ? CUSTOMER_NOT_DEFINED_ID : customer.id,
 				lastName: customer.lastName,
 				emailAddress: customer.emailAddress,
 				phoneNumber: customer.phoneNumber ?? '',
@@ -55,10 +57,6 @@ export default component$<IProps>(({ onForward$ }) => {
 			if (orderShippingAddress) {
 				appState.shippingAddress = parseToShippingAddress(orderShippingAddress);
 			}
-			console.warn(
-				'Getting shipping address from active order',
-				JSON.stringify(appState.shippingAddress, null, 2)
-			);
 		}
 	});
 
@@ -86,15 +84,17 @@ export default component$<IProps>(({ onForward$ }) => {
 	return (
 		<div class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
 			<div>
+				{/* Contact Information */}
+
 				<SectionWithLabel label={$localize`Contact information`}>
 					<ContactCard
-						onEditSave$={async (emailAddress, firstName, lastName) => {
-							appState.customer.emailAddress = emailAddress;
-							appState.customer.firstName = firstName;
-							appState.customer.lastName = lastName;
+						onEditSave$={async (customer) => {
+							appState.customer = customer;
 						}}
 					/>
 				</SectionWithLabel>
+
+				{/* Shipping Information */}
 
 				<SectionWithLabel label={$localize`Shipping information`} topBorder={true}>
 					<AddressInformation />

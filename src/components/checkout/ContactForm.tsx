@@ -1,17 +1,15 @@
 import { $, component$, QRL, Signal } from '@qwik.dev/core';
 import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
 import FormInput from '~/components/common/FormInput';
+import { CUSTOMER_NOT_DEFINED_ID } from '~/constants';
+import { ActiveCustomer } from '~/types';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import { Dialog } from '../dialog/Dialog';
 
 interface Iprops {
 	open: Signal<boolean>;
-	onSubmitCompleted$: QRL<(emailAddress: string, firstName: string, lastName: string) => void>;
-	prefilledInfo?: {
-		emailAddress?: string;
-		firstName?: string;
-		lastName?: string;
-	};
+	onSubmitCompleted$: QRL<(customer: ActiveCustomer) => void>;
+	prefilledInfo?: ActiveCustomer;
 }
 
 export const useContactFormAction = globalAction$(
@@ -21,9 +19,12 @@ export const useContactFormAction = globalAction$(
 		return { success: true, data };
 	},
 	zod$({
+		id: z.string().optional(),
 		emailAddress: z.string().min(1).email(),
 		firstName: z.string().min(1),
 		lastName: z.string().min(1),
+		title: z.string().optional(),
+		phoneNumber: z.string().optional(),
 	})
 );
 
@@ -36,7 +37,7 @@ export const useContactFormAction = globalAction$(
  * @prop prefilledInfo?: Optional object containing prefilled values for email, firstName, and lastName.
  * If provided, these values will be used to prefill the form fields.
  
-  */
+	*/
 export default component$<Iprops>(({ open, onSubmitCompleted$, prefilledInfo }) => {
 	const action = useContactFormAction();
 
@@ -46,13 +47,16 @@ export default component$<Iprops>(({ open, onSubmitCompleted$, prefilledInfo }) 
 				action={action}
 				onSubmitCompleted$={$(async ({ detail }) => {
 					if (detail.value.success) {
-						const { emailAddress, firstName, lastName } = detail.value.data;
-						await onSubmitCompleted$(emailAddress, firstName, lastName);
+						await onSubmitCompleted$(detail.value.data);
 						open.value = false;
 					}
 				})}
 			>
 				<div class="p-2 mt-4 grid grid-cols-1 gap-y-3 sm:grid-cols-2 sm:gap-x-4">
+					<div class="hidden">
+						<input type="text" name="id" value={CUSTOMER_NOT_DEFINED_ID} />
+					</div>
+
 					<FormInput
 						className="sm:col-span-2"
 						name="emailAddress"
@@ -61,6 +65,14 @@ export default component$<Iprops>(({ open, onSubmitCompleted$, prefilledInfo }) 
 						autoComplete="email"
 						defaults={{ emailAddress: prefilledInfo?.emailAddress || '' }}
 					/>
+					<FormInput
+						name="title"
+						label="Title"
+						formAction={action}
+						autoComplete="honorific-prefix"
+						defaults={{ title: prefilledInfo?.title || '' }}
+					/>
+					<div> </div>
 					<FormInput
 						name="firstName"
 						label="First Name"
@@ -74,6 +86,15 @@ export default component$<Iprops>(({ open, onSubmitCompleted$, prefilledInfo }) 
 						formAction={action}
 						autoComplete="family-name"
 						defaults={{ lastName: prefilledInfo?.lastName || '' }}
+					/>
+
+					<FormInput
+						className="sm:col-span-2"
+						name="phoneNumber"
+						label="Phone Number"
+						formAction={action}
+						autoComplete="tel"
+						defaults={{ phoneNumber: prefilledInfo?.phoneNumber || '' }}
 					/>
 				</div>
 				<div class="flex justify-end">
