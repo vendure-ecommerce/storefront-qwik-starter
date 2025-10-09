@@ -10,7 +10,7 @@ export default component$<Props>(({ order }) => {
 	return (
 		<>
 			<>
-				<div class="flex flex-col gap-y-1">
+				<div class="flex flex-col gap-y-2">
 					<div class="flex items-center gap-x-2">
 						{$localize`Order number:`}
 						<span class="font-semibold">{order?.code}</span>

@@ -144,12 +144,20 @@ export const fullNameWithTitle = ({
 	return [title, firstName, lastName].filter((x) => !!x).join(' ');
 };
 
-export const formatDateTime = (dateToConvert: Date) => {
-	const result = new Date(dateToConvert).toISOString();
-	const [date, time] = result.split('T');
-	const [hour, minutes] = time.split(':');
-	const orderedDate = date.split('-').reverse().join('-');
-	return `${orderedDate} ${hour}:${minutes}`;
+export const formatDateTime = (dateToConvert?: string | Date | null) => {
+	if (!dateToConvert) return '';
+	const d = new Date(dateToConvert as any);
+	if (isNaN(d.getTime())) return '';
+	// Example output: "Jan 15, 2015, 2:30 PM GMT+2"
+	return new Intl.DateTimeFormat('en-US', {
+		month: 'short',
+		day: 'numeric',
+		year: 'numeric',
+		hour: 'numeric',
+		minute: '2-digit',
+		hour12: true,
+		timeZoneName: 'short',
+	}).format(d);
 };
 
 export const isCheckoutPage = (url: string) => url.indexOf('/checkout/') >= 0;
