@@ -1,6 +1,7 @@
 import {
 	component$,
 	Signal,
+	useComputed$,
 	useContext,
 	useStore,
 	useTask$,
@@ -9,7 +10,10 @@ import {
 import { APP_STATE } from '~/constants';
 import { CreateAddressInput, ShippingMethodQuote } from '~/generated/graphql';
 import { getEligibleShippingMethodsQuery } from '~/providers/shop/checkout/checkout';
-import { setOrderShippingMethodMutation } from '~/providers/shop/orders/order';
+import {
+	setOrderCustomFieldsMutation,
+	setOrderShippingMethodMutation,
+} from '~/providers/shop/orders/order';
 import { ShippingAddress } from '~/types';
 import ShippoShippingMethodCard from '../checkout/ShippoShippingMethodCard';
 import AnimatedSpinnerIcon from '../icons/AnimatedSpinnerIcon';
@@ -18,14 +22,27 @@ interface IProps {
 	reCalculateShipping$: Signal<boolean>;
 }
 
+/**
+ * I've hunted down the activeOrder.shippingWithTax's change.
+ * It is not changed by executing getEligibleShippingMethodsQuery here (I tried to not run this function, but the shippingWithTax still changes)
+ * it looks like it changes whenever order's shippingAddress or line items changes.
+ * This is because when execute addItemToOrder or setShippingAddress, orderService will:
+ * 1. call orderService.applyPriceAdjustments(ctx, order, order.lines)
+ * 2. that will call order-calculator and update the shippingWithTax
+ * with the cheapest shipping method eligible. (see https://github.com/vendure-ecommerce/vendure/blob/1bb9cf8ca1584bce026ccc82f33f866b766ef47d/packages/core/src/service/helpers/order-calculator/order-calculator.ts#L332)
+ */
 export default component$<IProps>(({ reCalculateShipping$ }) => {
 	const appState = useContext(APP_STATE);
 
-	const currencyCode = appState.activeOrder.currencyCode || 'USD';
 	const state = useStore<{ selectedMethodId: string; methods: ShippingMethodQuote[] }>({
 		selectedMethodId: '',
 		methods: [],
 	});
+	const maxWaitDays = useComputed$(
+		() =>
+			state.methods.find((method) => method.id === state.selectedMethodId)?.metadata?.maxWaitDays ||
+			null
+	);
 
 	useVisibleTask$(async (task) => {
 		// This task will re-run whenever reCalculateShipping$.value changes
@@ -33,8 +50,6 @@ export default component$<IProps>(({ reCalculateShipping$ }) => {
 		if (reCalculateShipping$.value) {
 			console.warn('reCalculateShipping$ is true, fetching shipping methods...');
 			state.methods = await getEligibleShippingMethodsQuery();
-			// remove dummy shipping methods if any
-			state.methods = state.methods.filter((method) => method.name !== 'dummy shipping');
 			// preselect the first method
 			state.selectedMethodId = state.methods[0]?.id;
 		}
@@ -42,16 +57,25 @@ export default component$<IProps>(({ reCalculateShipping$ }) => {
 	});
 
 	useTask$(async (task) => {
+		// This track which shipping method is selected, if there is only one, this one will only be called once.
 		const selected = task.track(() => state.selectedMethodId);
 		if (selected) {
 			const updated = await setOrderShippingMethodMutation([selected]);
 			if (updated) {
 				appState.activeOrder = updated;
-				console.warn(
-					'shipping method set on order, priceWithTax:',
-					appState.activeOrder.shippingWithTax
-				);
 			}
+		}
+	});
+
+	useTask$(async (task) => {
+		// track the promisedArrivalDays changes
+		const promiseArrivalDays = task.track(() => maxWaitDays.value);
+		if (promiseArrivalDays) {
+			await setOrderCustomFieldsMutation({
+				customFields: {
+					promisedArrivalDays: promiseArrivalDays,
+				},
+			});
 		}
 	});
 

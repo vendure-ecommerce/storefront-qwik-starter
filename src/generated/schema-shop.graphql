@@ -3082,7 +3082,7 @@ type Order implements Node {
 	couponCodes: [String!]!
 	createdAt: DateTime!
 	currencyCode: CurrencyCode!
-	customFields: JSON
+	customFields: OrderCustomFields
 	customer: Customer
 	discounts: [Discount!]!
 	fulfillments: [Fulfillment!]
@@ -3161,6 +3161,10 @@ type OrderAddress {
 	streetLine2: String
 }
 
+type OrderCustomFields {
+	promisedArrivalDays: Int
+}
+
 input OrderFilterParameter {
 	_and: [OrderFilterParameter!]
 	_or: [OrderFilterParameter!]
@@ -3170,6 +3174,7 @@ input OrderFilterParameter {
 	currencyCode: StringOperators
 	id: IDOperators
 	orderPlacedAt: DateOperators
+	promisedArrivalDays: NumberOperators
 	shipping: NumberOperators
 	shippingWithTax: NumberOperators
 	state: StringOperators
@@ -3369,6 +3374,7 @@ input OrderSortParameter {
 	createdAt: SortOrder
 	id: SortOrder
 	orderPlacedAt: SortOrder
+	promisedArrivalDays: SortOrder
 	shipping: SortOrder
 	shippingWithTax: SortOrder
 	state: SortOrder
@@ -5580,8 +5586,12 @@ type UpdateMultipleOrderItemsResult {
 	order: Order!
 }
 
+input UpdateOrderCustomFieldsInput {
+	promisedArrivalDays: Int
+}
+
 input UpdateOrderInput {
-	customFields: JSON
+	customFields: UpdateOrderCustomFieldsInput
 }
 
 """

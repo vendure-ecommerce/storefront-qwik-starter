@@ -2132,7 +2132,7 @@ export type Order = Node & {
 	couponCodes: Array<Scalars['String']['output']>;
 	createdAt: Scalars['DateTime']['output'];
 	currencyCode: CurrencyCode;
-	customFields?: Maybe<Scalars['JSON']['output']>;
+	customFields?: Maybe<OrderCustomFields>;
 	customer?: Maybe<Customer>;
 	discounts: Array<Discount>;
 	fulfillments?: Maybe<Array<Fulfillment>>;
@@ -2198,6 +2198,11 @@ export type OrderAddress = {
 	streetLine2?: Maybe<Scalars['String']['output']>;
 };
 
+export type OrderCustomFields = {
+	__typename?: 'OrderCustomFields';
+	promisedArrivalDays?: Maybe<Scalars['Int']['output']>;
+};
+
 export type OrderFilterParameter = {
 	_and?: InputMaybe<Array<OrderFilterParameter>>;
 	_or?: InputMaybe<Array<OrderFilterParameter>>;
@@ -2207,6 +2212,7 @@ export type OrderFilterParameter = {
 	currencyCode?: InputMaybe<StringOperators>;
 	id?: InputMaybe<IdOperators>;
 	orderPlacedAt?: InputMaybe<DateOperators>;
+	promisedArrivalDays?: InputMaybe<NumberOperators>;
 	shipping?: InputMaybe<NumberOperators>;
 	shippingWithTax?: InputMaybe<NumberOperators>;
 	state?: InputMaybe<StringOperators>;
@@ -2346,6 +2352,7 @@ export type OrderSortParameter = {
 	createdAt?: InputMaybe<SortOrder>;
 	id?: InputMaybe<SortOrder>;
 	orderPlacedAt?: InputMaybe<SortOrder>;
+	promisedArrivalDays?: InputMaybe<SortOrder>;
 	shipping?: InputMaybe<SortOrder>;
 	shippingWithTax?: InputMaybe<SortOrder>;
 	state?: InputMaybe<SortOrder>;
@@ -4034,8 +4041,12 @@ export type UpdateMultipleOrderItemsResult = {
 	order: Order;
 };
 
+export type UpdateOrderCustomFieldsInput = {
+	promisedArrivalDays?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type UpdateOrderInput = {
-	customFields?: InputMaybe<Scalars['JSON']['input']>;
+	customFields?: InputMaybe<UpdateOrderCustomFieldsInput>;
 };
 
 /** Union type of all possible errors that can occur when adding or removing items from an Order. */
@@ -4397,6 +4408,10 @@ export type AddPaymentToOrderMutation = {
 						customizableOptionJson?: string | null;
 					} | null;
 				}>;
+				customFields?: {
+					__typename?: 'OrderCustomFields';
+					promisedArrivalDays?: number | null;
+				} | null;
 		  }
 		| { __typename?: 'OrderPaymentStateError'; errorCode: ErrorCode; message: string }
 		| { __typename?: 'OrderStateTransitionError'; errorCode: ErrorCode; message: string }
@@ -4488,6 +4503,10 @@ export type TransitionOrderToStateMutation = {
 						customizableOptionJson?: string | null;
 					} | null;
 				}>;
+				customFields?: {
+					__typename?: 'OrderCustomFields';
+					promisedArrivalDays?: number | null;
+				} | null;
 		  }
 		| { __typename?: 'OrderStateTransitionError'; errorCode: ErrorCode; message: string }
 		| null;
@@ -4786,6 +4805,98 @@ export type CustomizableClassDefFindAllQuery = {
 	}>;
 };
 
+export type SetOrderCustomFieldsMutationVariables = Exact<{
+	input: UpdateOrderInput;
+}>;
+
+export type SetOrderCustomFieldsMutation = {
+	__typename?: 'Mutation';
+	setOrderCustomFields:
+		| { __typename?: 'NoActiveOrderError'; errorCode: ErrorCode; message: string }
+		| {
+				__typename: 'Order';
+				id: string;
+				code: string;
+				active: boolean;
+				createdAt: any;
+				state: string;
+				currencyCode: CurrencyCode;
+				couponCodes: Array<string>;
+				totalQuantity: number;
+				subTotal: any;
+				subTotalWithTax: any;
+				shippingWithTax: any;
+				totalWithTax: any;
+				discounts: Array<{
+					__typename?: 'Discount';
+					type: AdjustmentType;
+					description: string;
+					amountWithTax: any;
+				}>;
+				taxSummary: Array<{
+					__typename?: 'OrderTaxSummary';
+					description: string;
+					taxRate: number;
+					taxTotal: any;
+				}>;
+				customer?: {
+					__typename?: 'Customer';
+					id: string;
+					firstName: string;
+					lastName: string;
+					emailAddress: string;
+				} | null;
+				shippingAddress?: {
+					__typename?: 'OrderAddress';
+					fullName?: string | null;
+					streetLine1?: string | null;
+					streetLine2?: string | null;
+					company?: string | null;
+					city?: string | null;
+					province?: string | null;
+					postalCode?: string | null;
+					countryCode?: string | null;
+					phoneNumber?: string | null;
+				} | null;
+				shippingLines: Array<{
+					__typename?: 'ShippingLine';
+					priceWithTax: any;
+					shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
+				}>;
+				lines: Array<{
+					__typename?: 'OrderLine';
+					id: string;
+					unitPriceWithTax: any;
+					linePriceWithTax: any;
+					quantity: number;
+					featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
+					productVariant: {
+						__typename?: 'ProductVariant';
+						id: string;
+						name: string;
+						price: any;
+						product: {
+							__typename?: 'Product';
+							id: string;
+							slug: string;
+							customFields?: {
+								__typename?: 'ProductCustomFields';
+								customizableClass?: string | null;
+							} | null;
+						};
+					};
+					customFields?: {
+						__typename?: 'OrderLineCustomFields';
+						customizableOptionJson?: string | null;
+					} | null;
+				}>;
+				customFields?: {
+					__typename?: 'OrderCustomFields';
+					promisedArrivalDays?: number | null;
+				} | null;
+		  };
+};
+
 export type ApplyCouponCodeMutationVariables = Exact<{
 	couponCode: Scalars['String']['input'];
 }>;
@@ -4873,6 +4984,10 @@ export type ApplyCouponCodeMutation = {
 						customizableOptionJson?: string | null;
 					} | null;
 				}>;
+				customFields?: {
+					__typename?: 'OrderCustomFields';
+					promisedArrivalDays?: number | null;
+				} | null;
 		  };
 };
 
@@ -4959,6 +5074,7 @@ export type RemoveCouponCodeMutation = {
 				customizableOptionJson?: string | null;
 			} | null;
 		}>;
+		customFields?: { __typename?: 'OrderCustomFields'; promisedArrivalDays?: number | null } | null;
 	} | null;
 };
 
@@ -5047,6 +5163,10 @@ export type SetOrderShippingAddressMutation = {
 						customizableOptionJson?: string | null;
 					} | null;
 				}>;
+				customFields?: {
+					__typename?: 'OrderCustomFields';
+					promisedArrivalDays?: number | null;
+				} | null;
 		  };
 };
 
@@ -5138,6 +5258,10 @@ export type SetCustomerForOrderMutation = {
 						customizableOptionJson?: string | null;
 					} | null;
 				}>;
+				customFields?: {
+					__typename?: 'OrderCustomFields';
+					promisedArrivalDays?: number | null;
+				} | null;
 		  };
 };
 
@@ -5229,6 +5353,10 @@ export type AddItemToOrderMutation = {
 						customizableOptionJson?: string | null;
 					} | null;
 				}>;
+				customFields?: {
+					__typename?: 'OrderCustomFields';
+					promisedArrivalDays?: number | null;
+				} | null;
 		  }
 		| { __typename?: 'OrderInterceptorError'; errorCode: ErrorCode; message: string }
 		| { __typename?: 'OrderLimitError'; errorCode: ErrorCode; message: string }
@@ -5321,6 +5449,10 @@ export type SetOrderShippingMethodMutation = {
 						customizableOptionJson?: string | null;
 					} | null;
 				}>;
+				customFields?: {
+					__typename?: 'OrderCustomFields';
+					promisedArrivalDays?: number | null;
+				} | null;
 		  }
 		| { __typename?: 'OrderModificationError'; errorCode: ErrorCode; message: string };
 };
@@ -5402,6 +5534,7 @@ export type OrderDetailFragment = {
 			customizableOptionJson?: string | null;
 		} | null;
 	}>;
+	customFields?: { __typename?: 'OrderCustomFields'; promisedArrivalDays?: number | null } | null;
 };
 
 export type AdjustOrderLineMutationVariables = Exact<{
@@ -5491,6 +5624,10 @@ export type AdjustOrderLineMutation = {
 						customizableOptionJson?: string | null;
 					} | null;
 				}>;
+				customFields?: {
+					__typename?: 'OrderCustomFields';
+					promisedArrivalDays?: number | null;
+				} | null;
 		  }
 		| { __typename?: 'OrderInterceptorError'; errorCode: ErrorCode; message: string }
 		| { __typename?: 'OrderLimitError'; errorCode: ErrorCode; message: string }
@@ -5581,6 +5718,10 @@ export type RemoveOrderLineMutation = {
 						customizableOptionJson?: string | null;
 					} | null;
 				}>;
+				customFields?: {
+					__typename?: 'OrderCustomFields';
+					promisedArrivalDays?: number | null;
+				} | null;
 		  }
 		| { __typename?: 'OrderInterceptorError'; errorCode: ErrorCode; message: string }
 		| { __typename?: 'OrderModificationError'; errorCode: ErrorCode; message: string };
@@ -5667,6 +5808,7 @@ export type ActiveOrderQuery = {
 				customizableOptionJson?: string | null;
 			} | null;
 		}>;
+		customFields?: { __typename?: 'OrderCustomFields'; promisedArrivalDays?: number | null } | null;
 	} | null;
 };
 
@@ -5753,6 +5895,7 @@ export type OrderByCodeQuery = {
 				customizableOptionJson?: string | null;
 			} | null;
 		}>;
+		customFields?: { __typename?: 'OrderCustomFields'; promisedArrivalDays?: number | null } | null;
 	} | null;
 };
 
@@ -5990,6 +6133,9 @@ export const OrderDetailFragmentDoc = gql`
 			customFields {
 				customizableOptionJson
 			}
+		}
+		customFields {
+			promisedArrivalDays
 		}
 	}
 `;
@@ -6468,6 +6614,18 @@ export const CustomizableClassDefFindAllDocument = gql`
 		}
 	}
 `;
+export const SetOrderCustomFieldsDocument = gql`
+	mutation setOrderCustomFields($input: UpdateOrderInput!) {
+		setOrderCustomFields(input: $input) {
+			...OrderDetail
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+	${OrderDetailFragmentDoc}
+`;
 export const ApplyCouponCodeDocument = gql`
 	mutation applyCouponCode($couponCode: String!) {
 		applyCouponCode(couponCode: $couponCode) {
@@ -6936,6 +7094,16 @@ export function getSdk<C>(requester: Requester<C>) {
 				variables,
 				options
 			) as Promise<CustomizableClassDefFindAllQuery>;
+		},
+		setOrderCustomFields(
+			variables: SetOrderCustomFieldsMutationVariables,
+			options?: C
+		): Promise<SetOrderCustomFieldsMutation> {
+			return requester<SetOrderCustomFieldsMutation, SetOrderCustomFieldsMutationVariables>(
+				SetOrderCustomFieldsDocument,
+				variables,
+				options
+			) as Promise<SetOrderCustomFieldsMutation>;
 		},
 		applyCouponCode(
 			variables: ApplyCouponCodeMutationVariables,

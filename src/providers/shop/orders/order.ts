@@ -10,11 +10,13 @@ import {
 	SetCustomerForOrderMutation,
 	SetOrderShippingAddressMutation,
 	SetOrderShippingMethodMutation,
+	UpdateOrderInput,
 } from '~/generated/graphql';
 import {
 	ApplyCouponCodeMutation,
 	OrderLineCustomFieldsInput,
 	RemoveCouponCodeMutation,
+	SetOrderCustomFieldsMutation,
 } from '~/generated/graphql-shop';
 import { shopSdk } from '~/graphql-wrapper';
 import { handleGqlResult } from '~/utils';
@@ -110,6 +112,26 @@ export const removeCouponCodeMutation = async (couponCode: string) => {
 			.then((res: RemoveCouponCodeMutation) => res.removeCouponCode)
 	);
 };
+
+export const setOrderCustomFieldsMutation = async (input: UpdateOrderInput) => {
+	return handleGqlResult<Order>(
+		shopSdk
+			.setOrderCustomFields({ input })
+			.then((res: SetOrderCustomFieldsMutation) => res.setOrderCustomFields)
+	);
+};
+
+gql`
+	mutation setOrderCustomFields($input: UpdateOrderInput!) {
+		setOrderCustomFields(input: $input) {
+			...OrderDetail
+			... on ErrorResult {
+				errorCode
+				message
+			}
+		}
+	}
+`;
 
 gql`
 	mutation applyCouponCode($couponCode: String!) {
@@ -260,6 +282,9 @@ gql`
 			customFields {
 				customizableOptionJson
 			}
+		}
+		customFields {
+			promisedArrivalDays
 		}
 	}
 `;
