@@ -9,7 +9,6 @@ export default component$(() => {
 
 	useVisibleTask$(async () => {
 		const activeCustomer = await getActiveCustomerQuery();
-		console.log('activeCustomer', JSON.stringify(activeCustomer, null, 2));
 		if (activeCustomer) {
 			appState.customer = {
 				title: activeCustomer.title ?? '',

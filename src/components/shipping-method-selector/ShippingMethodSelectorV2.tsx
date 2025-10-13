@@ -3,8 +3,8 @@ import {
 	Signal,
 	useComputed$,
 	useContext,
+	useSignal,
 	useStore,
-	useTask$,
 	useVisibleTask$,
 } from '@qwik.dev/core';
 import { APP_STATE } from '~/constants';
@@ -33,6 +33,7 @@ interface IProps {
  */
 export default component$<IProps>(({ reCalculateShipping$ }) => {
 	const appState = useContext(APP_STATE);
+	const selecting = useSignal(false);
 
 	const state = useStore<{ selectedMethodId: string; methods: ShippingMethodQuote[] }>({
 		selectedMethodId: '',
@@ -56,27 +57,31 @@ export default component$<IProps>(({ reCalculateShipping$ }) => {
 		reCalculateShipping$.value = false;
 	});
 
-	useTask$(async (task) => {
+	useVisibleTask$(async (task) => {
 		// This track which shipping method is selected, if there is only one, this one will only be called once.
 		const selected = task.track(() => state.selectedMethodId);
 		if (selected) {
+			selecting.value = true;
 			const updated = await setOrderShippingMethodMutation([selected]);
 			if (updated) {
 				appState.activeOrder = updated;
 			}
 		}
+		selecting.value = false;
 	});
 
-	useTask$(async (task) => {
+	useVisibleTask$(async (task) => {
 		// track the promisedArrivalDays changes
 		const promiseArrivalDays = task.track(() => maxWaitDays.value);
 		if (promiseArrivalDays) {
+			selecting.value = true;
 			await setOrderCustomFieldsMutation({
 				customFields: {
 					promisedArrivalDays: promiseArrivalDays,
 				},
 			});
 		}
+		selecting.value = false;
 	});
 
 	return (
@@ -92,8 +97,11 @@ export default component$<IProps>(({ reCalculateShipping$ }) => {
 					{state.methods.map((method, index) => (
 						<div
 							key={method.id}
-							class={`relative bg-white border rounded-lg shadow-sm p-4 flex cursor-pointer focus:outline-none`}
-							onClick$={() => (state.selectedMethodId = state.methods[index].id)}
+							class={`relative bg-white border rounded-lg shadow-sm p-4 flex cursor-pointer focus:outline-none${selecting.value ? ' opacity-50 pointer-events-none' : ''}`}
+							onClick$={() => {
+								if (selecting.value) return;
+								state.selectedMethodId = state.methods[index].id;
+							}}
 						>
 							<ShippoShippingMethodCard
 								shippingMethod={method}

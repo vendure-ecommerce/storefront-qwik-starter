@@ -113,6 +113,14 @@ export const removeCouponCodeMutation = async (couponCode: string) => {
 	);
 };
 
+export const batchUpdateShippoFulfillmentStateMutation = async () => {
+	return handleGqlResult<any>(
+		shopSdk
+			.batchUpdateShippoFulfillmentState()
+			.then((res: any) => res.batchUpdateShippoFulfillmentState)
+	);
+};
+
 export const setOrderCustomFieldsMutation = async (input: UpdateOrderInput) => {
 	return handleGqlResult<Order>(
 		shopSdk
@@ -325,6 +333,22 @@ gql`
 	query orderByCode($code: String!) {
 		orderByCode(code: $code) {
 			...OrderDetail
+		}
+	}
+`;
+
+gql`
+	mutation batchUpdateShippoFulfillmentState {
+		batchUpdateShippoFulfillmentState {
+			... on UpdateFulfillmentStateError {
+				errorCode
+				message
+			}
+			... on UpdateFulfillmentStateSuccess {
+				success
+				message
+				numFulfillmentsUpdated
+			}
 		}
 	}
 `;

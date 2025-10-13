@@ -1464,8 +1464,11 @@ enum ErrorCode {
 	PAYMENT_FAILED_ERROR
 	SELLER_ADDRESS_NOT_SET_OR_INVALID
 	SELLER_SHIPPO_API_KEY_NOT_SET_OR_INVALID
+	SETTINGS_STORE_SHIPPO_API_KEY_NOT_SET_OR_INVALID
 	SHIPPO_ADDRESS_VALIDATION_ERROR
+	SHIPPO_UPDATE_FULFILLMENT_STATE_ERROR
 	UNKNOWN_ERROR
+	UPDATE_FULFILLMENT_STATE_ERROR
 	VALIDATE_ADDRESS_ERROR
 	VERIFICATION_TOKEN_EXPIRED_ERROR
 	VERIFICATION_TOKEN_INVALID_ERROR
@@ -2830,6 +2833,13 @@ type Mutation {
 	Authenticates the user using a named authentication strategy
 	"""
 	authenticate(input: AuthenticationInput!, rememberMe: Boolean): AuthenticationResult!
+
+	"""
+	Batch update fulfillment state from Shippo. This
+	updates all fulfillments with method 'Shippo' and state 'Pending' or 'Shipped'.
+	(i.e. fulfillments created by Shippo and not yet delivered)
+	"""
+	batchUpdateShippoFulfillmentState: UpdateFulfillmentStateResult!
 
 	"""
 	Create a new Customer Address
@@ -5576,6 +5586,19 @@ union UpdateCustomerPasswordResult =
 	| NativeAuthStrategyError
 	| PasswordValidationError
 	| Success
+
+type UpdateFulfillmentStateError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+union UpdateFulfillmentStateResult = UpdateFulfillmentStateError | UpdateFulfillmentStateSuccess
+
+type UpdateFulfillmentStateSuccess {
+	message: String!
+	numFulfillmentsUpdated: Int!
+	success: Boolean!
+}
 
 """
 Returned when multiple items are added to an Order.

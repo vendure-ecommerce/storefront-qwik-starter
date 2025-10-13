@@ -1010,8 +1010,11 @@ export const ErrorCode = {
 	PaymentFailedError: 'PAYMENT_FAILED_ERROR',
 	SellerAddressNotSetOrInvalid: 'SELLER_ADDRESS_NOT_SET_OR_INVALID',
 	SellerShippoApiKeyNotSetOrInvalid: 'SELLER_SHIPPO_API_KEY_NOT_SET_OR_INVALID',
+	SettingsStoreShippoApiKeyNotSetOrInvalid: 'SETTINGS_STORE_SHIPPO_API_KEY_NOT_SET_OR_INVALID',
 	ShippoAddressValidationError: 'SHIPPO_ADDRESS_VALIDATION_ERROR',
+	ShippoUpdateFulfillmentStateError: 'SHIPPO_UPDATE_FULFILLMENT_STATE_ERROR',
 	UnknownError: 'UNKNOWN_ERROR',
+	UpdateFulfillmentStateError: 'UPDATE_FULFILLMENT_STATE_ERROR',
 	ValidateAddressError: 'VALIDATE_ADDRESS_ERROR',
 	VerificationTokenExpiredError: 'VERIFICATION_TOKEN_EXPIRED_ERROR',
 	VerificationTokenInvalidError: 'VERIFICATION_TOKEN_INVALID_ERROR',
@@ -1841,6 +1844,12 @@ export type Mutation = {
 	applyCouponCode: ApplyCouponCodeResult;
 	/** Authenticates the user using a named authentication strategy */
 	authenticate: AuthenticationResult;
+	/**
+	 * Batch update fulfillment state from Shippo. This
+	 * updates all fulfillments with method 'Shippo' and state 'Pending' or 'Shipped'.
+	 * (i.e. fulfillments created by Shippo and not yet delivered)
+	 */
+	batchUpdateShippoFulfillmentState: UpdateFulfillmentStateResult;
 	/** Create a new Customer Address */
 	createCustomerAddress: Address;
 	createStripePaymentIntent?: Maybe<Scalars['String']['output']>;
@@ -4031,6 +4040,23 @@ export type UpdateCustomerPasswordResult =
 	| PasswordValidationError
 	| Success;
 
+export type UpdateFulfillmentStateError = ErrorResult & {
+	__typename?: 'UpdateFulfillmentStateError';
+	errorCode: ErrorCode;
+	message: Scalars['String']['output'];
+};
+
+export type UpdateFulfillmentStateResult =
+	| UpdateFulfillmentStateError
+	| UpdateFulfillmentStateSuccess;
+
+export type UpdateFulfillmentStateSuccess = {
+	__typename?: 'UpdateFulfillmentStateSuccess';
+	message: Scalars['String']['output'];
+	numFulfillmentsUpdated: Scalars['Int']['output'];
+	success: Scalars['Boolean']['output'];
+};
+
 /**
  * Returned when multiple items are added to an Order.
  * The errorResults array contains the errors that occurred for each item, if any.
@@ -5899,6 +5925,20 @@ export type OrderByCodeQuery = {
 	} | null;
 };
 
+export type BatchUpdateShippoFulfillmentStateMutationVariables = Exact<{ [key: string]: never }>;
+
+export type BatchUpdateShippoFulfillmentStateMutation = {
+	__typename?: 'Mutation';
+	batchUpdateShippoFulfillmentState:
+		| { __typename?: 'UpdateFulfillmentStateError'; errorCode: ErrorCode; message: string }
+		| {
+				__typename?: 'UpdateFulfillmentStateSuccess';
+				success: boolean;
+				message: string;
+				numFulfillmentsUpdated: number;
+		  };
+};
+
 export type DetailedProductFragment = {
 	__typename?: 'Product';
 	id: string;
@@ -6742,6 +6782,21 @@ export const OrderByCodeDocument = gql`
 	}
 	${OrderDetailFragmentDoc}
 `;
+export const BatchUpdateShippoFulfillmentStateDocument = gql`
+	mutation batchUpdateShippoFulfillmentState {
+		batchUpdateShippoFulfillmentState {
+			... on UpdateFulfillmentStateError {
+				errorCode
+				message
+			}
+			... on UpdateFulfillmentStateSuccess {
+				success
+				message
+				numFulfillmentsUpdated
+			}
+		}
+	}
+`;
 export const ProductDocument = gql`
 	query product($slug: String, $id: ID) {
 		product(slug: $slug, id: $id) {
@@ -7198,6 +7253,19 @@ export function getSdk<C>(requester: Requester<C>) {
 				variables,
 				options
 			) as Promise<OrderByCodeQuery>;
+		},
+		batchUpdateShippoFulfillmentState(
+			variables?: BatchUpdateShippoFulfillmentStateMutationVariables,
+			options?: C
+		): Promise<BatchUpdateShippoFulfillmentStateMutation> {
+			return requester<
+				BatchUpdateShippoFulfillmentStateMutation,
+				BatchUpdateShippoFulfillmentStateMutationVariables
+			>(
+				BatchUpdateShippoFulfillmentStateDocument,
+				variables,
+				options
+			) as Promise<BatchUpdateShippoFulfillmentStateMutation>;
 		},
 		product(variables?: ProductQueryVariables, options?: C): Promise<ProductQuery> {
 			return requester<ProductQuery, ProductQueryVariables>(
