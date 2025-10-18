@@ -20,6 +20,7 @@ interface BuildCustomNameTagProps {
 	build_top_plate: Signal<boolean>; // Whether to build the top plate
 	build_bottom_plate: Signal<boolean>; // Whether to build the bottom plate
 	show_estimated_board_width?: boolean; // Whether to show the estimated board width
+	output_concatenated_canvas_element_id?: string; // ID for the concatenated canvas element
 }
 
 export default component$(
@@ -39,6 +40,7 @@ export default component$(
 		build_top_plate,
 		build_bottom_plate,
 		show_estimated_board_width,
+		output_concatenated_canvas_element_id,
 	}: BuildCustomNameTagProps) => {
 		const is_top_text_valid = useSignal<boolean>(true);
 		const is_bottom_text_valid = useSignal<boolean>(true);
@@ -117,6 +119,7 @@ export default component$(
 								build_bottom_plate={build_bottom_plate}
 								build_canvas_width_px={canvas_width_px}
 								show_estimated_board_width={show_estimated_board_width}
+								output_concatenated_canvas_element_id={output_concatenated_canvas_element_id}
 							/>
 							<div class="flex flex-col justify-around p-2">
 								<div class={build_top_plate.value ? 'block' : 'hidden'}>

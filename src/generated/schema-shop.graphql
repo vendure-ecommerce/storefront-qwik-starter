@@ -404,6 +404,10 @@ input CreateAddressInput {
 	streetLine2: String
 }
 
+type CreateAssetSuccess {
+	assetId: ID!
+}
+
 input CreateCustomerInput {
 	customFields: JSON
 	emailAddress: String!
@@ -411,6 +415,11 @@ input CreateCustomerInput {
 	lastName: String!
 	phoneNumber: String
 	title: String
+}
+
+type CreateCustomizedImageAssetError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
 }
 
 """
@@ -1438,6 +1447,8 @@ enum ErrorCode {
 	COUPON_CODE_EXPIRED_ERROR
 	COUPON_CODE_INVALID_ERROR
 	COUPON_CODE_LIMIT_ERROR
+	CREATE_CUSTOMIZED_IMAGE_ASSET_ERROR
+	CUSTOMIZED_IMAGE_AUTHORIZATION_ERROR
 	EMAIL_ADDRESS_CONFLICT_ERROR
 	GUEST_CHECKOUT_ERROR
 	IDENTIFIER_CHANGE_TOKEN_EXPIRED_ERROR
@@ -1446,6 +1457,7 @@ enum ErrorCode {
 	INELIGIBLE_SHIPPING_METHOD_ERROR
 	INSUFFICIENT_STOCK_ERROR
 	INVALID_CREDENTIALS_ERROR
+	MIMETYPE_NOT_ALLOWED_ERROR
 	MISSING_PASSWORD_ERROR
 	NATIVE_AUTH_STRATEGY_ERROR
 	NEGATIVE_QUANTITY_ERROR
@@ -2845,6 +2857,7 @@ type Mutation {
 	Create a new Customer Address
 	"""
 	createCustomerAddress(input: CreateAddressInput!): Address!
+	createCustomizedImageAsset(file: Upload!): createCustomizedImageAssetResult!
 	createStripePaymentIntent: String
 
 	"""
@@ -3325,10 +3338,12 @@ type OrderLine implements Node {
 
 type OrderLineCustomFields {
 	customizableOptionJson: String
+	customizedImageAsset: Asset
 }
 
 input OrderLineCustomFieldsInput {
 	customizableOptionJson: String
+	customizedImageAssetId: ID
 }
 
 type OrderList implements PaginatedList {
@@ -5707,3 +5722,5 @@ type Zone implements Node {
 	name: String!
 	updatedAt: DateTime!
 }
+
+union createCustomizedImageAssetResult = CreateAssetSuccess | CreateCustomizedImageAssetError

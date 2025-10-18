@@ -1,4 +1,4 @@
-import { component$, useContext, useSignal } from '@qwik.dev/core';
+import { $, component$, useContext, useSignal } from '@qwik.dev/core';
 import BuildCustomNameTag from '~/components/custom-option-visualizer/BuildCustomNameTag';
 
 import { useProductLoader } from '../layout';
@@ -23,6 +23,94 @@ function parseBuildJson(productVariant?: ProductVariant) {
 	}
 	return null;
 }
+
+export async function uploadCanvasImage(
+	canvasElementId: string,
+	filename: string
+): Promise<string | null> {
+	const canvas = document.getElementById(canvasElementId) as HTMLCanvasElement;
+	if (!canvas) {
+		throw new Error(`Canvas with id ${canvasElementId} not found`);
+	}
+
+	return new Promise((resolve, reject) => {
+		canvas.toBlob(
+			async (blob) => {
+				if (!blob) {
+					reject(new Error('Failed to create blob from canvas'));
+					return;
+				}
+				try {
+					// Use direct fetch with FormData for GraphQL multipart upload
+					const formData = new FormData();
+
+					// GraphQL multipart request format
+					const operations = JSON.stringify({
+						query: `
+							mutation createCustomizedImageAsset($file: Upload!) {
+									createCustomizedImageAsset(file: $file) {
+											... on CreateAssetSuccess {
+												  __typename
+													assetId
+											}
+											... on CreateCustomizedImageAssetError {
+													__typename
+													errorCode
+													message
+											}
+									}
+							}
+					`,
+						variables: { file: null },
+					});
+
+					const map = JSON.stringify({ '0': ['variables.file'] });
+
+					formData.append('operations', operations);
+					formData.append('map', map);
+					formData.append('0', blob, filename);
+
+					console.log('Uploading with FormData...');
+
+					const response = await fetch('http://localhost:3000/shop-api', {
+						method: 'POST',
+						body: formData,
+						credentials: 'include',
+					});
+
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+
+					const result = await response.json();
+					console.log('Upload response:', result);
+
+					if (result.errors) {
+						throw new Error(result.errors[0].message);
+					}
+
+					const assetResult = result.data?.createCustomizedImageAsset;
+
+					if (assetResult?.__typename === 'CreateAssetSuccess') {
+						console.log('Upload successful, asset ID:', assetResult.assetId);
+						resolve(assetResult.assetId);
+					} else if (assetResult?.__typename === 'CreateCustomizedImageAssetError') {
+						throw new Error(assetResult.message);
+					} else {
+						throw new Error('Unknown response format');
+					}
+				} catch (error) {
+					console.error('Upload error:', error);
+					reject(error);
+				}
+			},
+			'image/jpeg',
+			0.6
+		);
+	});
+}
+
+const CONCATENATE_CANVAS_ELEMENT_ID = 'custom-name-tag-preview-canvas';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
@@ -69,6 +157,8 @@ export default component$(() => {
 		return true;
 	});
 
+	const customizedImageFilename = `custom-name-tag-${Date.now()}.jpg`;
+
 	const customizableClassDef = useContext(CUSTOMIZABLE_CLASS_DEF_TAG);
 	const currentClassDef = customizableClassDef.find(
 		(def) => def.name === productSignal.value.customFields?.customizableClass
@@ -79,6 +169,37 @@ export default component$(() => {
 			`Customizable class definition not found for class name: ${productSignal.value.customFields?.customizableClass}`
 		);
 	}
+
+	const handleAddToCart = $(
+		async (
+			canvasElementId: string,
+			filename: string,
+			inputArr: any,
+			selectedVariantId: string,
+			addItemToOrderErrorSignal: any
+		) => {
+			try {
+				// Upload canvas image first
+				const canvasAssetId = await uploadCanvasImage(canvasElementId, filename);
+
+				// Add item to order
+				const addItemToOrder = await addItemToOrderMutation(selectedVariantId, 1, {
+					customizableOptionJson: JSON.stringify(inputArr),
+					// customizedImageAssetId: canvasAssetId || undefined,
+				});
+
+				if (addItemToOrder.__typename !== 'Order') {
+					addItemToOrderErrorSignal.value = addItemToOrder.errorCode;
+				} else {
+					addItemToOrderErrorSignal.value = '';
+					appState.activeOrder = addItemToOrder as Order;
+				}
+			} catch (error) {
+				console.error('Error adding to cart:', error);
+				addItemToOrderErrorSignal.value = 'Failed to add item to cart';
+			}
+		}
+	);
 
 	return (
 		<>
@@ -97,7 +218,7 @@ export default component$(() => {
 							'bg-primary-600 hover:bg-primary-700': is_atc_allowed.value,
 							'cursor-not-allowed opacity-50 bg-primary-400': !is_atc_allowed.value,
 						}}
-						onClick$={async () => {
+						onClick$={() => {
 							const input = {
 								textTop: build_top_plate.value ? text_top.value : null,
 								textBottom: build_bottom_plate.value ? text_bottom.value : null,
@@ -108,17 +229,15 @@ export default component$(() => {
 								isTopAdditive: is_top_additive.value,
 							};
 							const inputArr = getCustomizableOptionArray(input, currentClassDef.optionDefinition);
-							const addItemToOrder = await addItemToOrderMutation(
+
+							// Call the extracted async function
+							handleAddToCart(
+								CONCATENATE_CANVAS_ELEMENT_ID,
+								customizedImageFilename,
+								inputArr,
 								selectedVariantIdSignal.value,
-								1,
-								{ customizableOptionJson: JSON.stringify(inputArr) }
+								addItemToOrderErrorSignal
 							);
-							if (addItemToOrder.__typename !== 'Order') {
-								addItemToOrderErrorSignal.value = addItemToOrder.errorCode;
-							} else {
-								addItemToOrderErrorSignal.value = '';
-								appState.activeOrder = addItemToOrder as Order;
-							}
 						}}
 					>
 						{$localize`Add to cart`}
@@ -166,6 +285,7 @@ export default component$(() => {
 				build_top_plate={build_top_plate}
 				build_bottom_plate={build_bottom_plate}
 				show_estimated_board_width={true}
+				output_concatenated_canvas_element_id={CONCATENATE_CANVAS_ELEMENT_ID}
 			/>
 		</>
 	);

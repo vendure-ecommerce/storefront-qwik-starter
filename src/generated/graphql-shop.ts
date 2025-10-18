@@ -429,6 +429,11 @@ export type CreateAddressInput = {
 	streetLine2?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type CreateAssetSuccess = {
+	__typename?: 'CreateAssetSuccess';
+	assetId: Scalars['ID']['output'];
+};
+
 export type CreateCustomerInput = {
 	customFields?: InputMaybe<Scalars['JSON']['input']>;
 	emailAddress: Scalars['String']['input'];
@@ -436,6 +441,12 @@ export type CreateCustomerInput = {
 	lastName: Scalars['String']['input'];
 	phoneNumber?: InputMaybe<Scalars['String']['input']>;
 	title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateCustomizedImageAssetError = ErrorResult & {
+	__typename?: 'CreateCustomizedImageAssetError';
+	errorCode: ErrorCode;
+	message: Scalars['String']['output'];
 };
 
 /**
@@ -984,6 +995,8 @@ export const ErrorCode = {
 	CouponCodeExpiredError: 'COUPON_CODE_EXPIRED_ERROR',
 	CouponCodeInvalidError: 'COUPON_CODE_INVALID_ERROR',
 	CouponCodeLimitError: 'COUPON_CODE_LIMIT_ERROR',
+	CreateCustomizedImageAssetError: 'CREATE_CUSTOMIZED_IMAGE_ASSET_ERROR',
+	CustomizedImageAuthorizationError: 'CUSTOMIZED_IMAGE_AUTHORIZATION_ERROR',
 	EmailAddressConflictError: 'EMAIL_ADDRESS_CONFLICT_ERROR',
 	GuestCheckoutError: 'GUEST_CHECKOUT_ERROR',
 	IdentifierChangeTokenExpiredError: 'IDENTIFIER_CHANGE_TOKEN_EXPIRED_ERROR',
@@ -992,6 +1005,7 @@ export const ErrorCode = {
 	IneligibleShippingMethodError: 'INELIGIBLE_SHIPPING_METHOD_ERROR',
 	InsufficientStockError: 'INSUFFICIENT_STOCK_ERROR',
 	InvalidCredentialsError: 'INVALID_CREDENTIALS_ERROR',
+	MimetypeNotAllowedError: 'MIMETYPE_NOT_ALLOWED_ERROR',
 	MissingPasswordError: 'MISSING_PASSWORD_ERROR',
 	NativeAuthStrategyError: 'NATIVE_AUTH_STRATEGY_ERROR',
 	NegativeQuantityError: 'NEGATIVE_QUANTITY_ERROR',
@@ -1852,6 +1866,7 @@ export type Mutation = {
 	batchUpdateShippoFulfillmentState: UpdateFulfillmentStateResult;
 	/** Create a new Customer Address */
 	createCustomerAddress: Address;
+	createCustomizedImageAsset: CreateCustomizedImageAssetResult;
 	createStripePaymentIntent?: Maybe<Scalars['String']['output']>;
 	/** Delete an existing Address */
 	deleteCustomerAddress: Success;
@@ -1972,6 +1987,10 @@ export type MutationAuthenticateArgs = {
 
 export type MutationCreateCustomerAddressArgs = {
 	input: CreateAddressInput;
+};
+
+export type MutationCreateCustomizedImageAssetArgs = {
+	file: Scalars['Upload']['input'];
 };
 
 export type MutationDeleteCustomerAddressArgs = {
@@ -2317,10 +2336,12 @@ export type OrderLine = Node & {
 export type OrderLineCustomFields = {
 	__typename?: 'OrderLineCustomFields';
 	customizableOptionJson?: Maybe<Scalars['String']['output']>;
+	customizedImageAsset?: Maybe<Asset>;
 };
 
 export type OrderLineCustomFieldsInput = {
 	customizableOptionJson?: InputMaybe<Scalars['String']['input']>;
+	customizedImageAssetId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type OrderList = PaginatedList & {
@@ -4164,6 +4185,8 @@ export type Zone = Node & {
 	updatedAt: Scalars['DateTime']['output'];
 };
 
+export type CreateCustomizedImageAssetResult = CreateAssetSuccess | CreateCustomizedImageAssetError;
+
 export type AuthenticateMutationVariables = Exact<{
 	input: AuthenticationInput;
 	rememberMe?: InputMaybe<Scalars['Boolean']['input']>;
@@ -4829,6 +4852,17 @@ export type CustomizableClassDefFindAllQuery = {
 		name: string;
 		optionDefinition: string;
 	}>;
+};
+
+export type CreateCustomizedImageAssetMutationVariables = Exact<{
+	file: Scalars['Upload']['input'];
+}>;
+
+export type CreateCustomizedImageAssetMutation = {
+	__typename?: 'Mutation';
+	createCustomizedImageAsset:
+		| { __typename?: 'CreateAssetSuccess'; assetId: string }
+		| { __typename?: 'CreateCustomizedImageAssetError'; errorCode: ErrorCode; message: string };
 };
 
 export type SetOrderCustomFieldsMutationVariables = Exact<{
@@ -6654,6 +6688,19 @@ export const CustomizableClassDefFindAllDocument = gql`
 		}
 	}
 `;
+export const CreateCustomizedImageAssetDocument = gql`
+	mutation createCustomizedImageAsset($file: Upload!) {
+		createCustomizedImageAsset(file: $file) {
+			... on CreateAssetSuccess {
+				assetId
+			}
+			... on CreateCustomizedImageAssetError {
+				errorCode
+				message
+			}
+		}
+	}
+`;
 export const SetOrderCustomFieldsDocument = gql`
 	mutation setOrderCustomFields($input: UpdateOrderInput!) {
 		setOrderCustomFields(input: $input) {
@@ -7149,6 +7196,19 @@ export function getSdk<C>(requester: Requester<C>) {
 				variables,
 				options
 			) as Promise<CustomizableClassDefFindAllQuery>;
+		},
+		createCustomizedImageAsset(
+			variables: CreateCustomizedImageAssetMutationVariables,
+			options?: C
+		): Promise<CreateCustomizedImageAssetMutation> {
+			return requester<
+				CreateCustomizedImageAssetMutation,
+				CreateCustomizedImageAssetMutationVariables
+			>(
+				CreateCustomizedImageAssetDocument,
+				variables,
+				options
+			) as Promise<CreateCustomizedImageAssetMutation>;
 		},
 		setOrderCustomFields(
 			variables: SetOrderCustomFieldsMutationVariables,
