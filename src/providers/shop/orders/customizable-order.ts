@@ -5,7 +5,6 @@ import {
 	FontMenuFindAllQuery,
 } from '~/generated/graphql-shop';
 import { shopSdk } from '~/graphql-wrapper';
-import { handleGqlResult } from '~/utils';
 
 export const fontMenuFindAll = async () => {
 	return shopSdk.fontMenuFindAll().then((res: FontMenuFindAllQuery) => res.fontMenuFindAll);
@@ -25,10 +24,10 @@ export const customizableClassDefFindAll = async (): Promise<
 		.then((res: CustomizableClassDefFindAllQuery) => res.customizableClassDefFindAll);
 };
 
-export const createCustomizedImageAssetMutation = async (file: any) => {
-	return handleGqlResult<{ assetId: string }>(
-		shopSdk.createCustomizedImageAsset({ file }).then((res) => res.createCustomizedImageAsset)
-	);
+export const createCustomizedImageAssetMutation = async (file: File) => {
+	return await shopSdk
+		.createCustomizedImageAsset({ file })
+		.then((res) => res.createCustomizedImageAsset);
 };
 
 gql`

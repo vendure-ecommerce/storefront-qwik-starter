@@ -1,21 +1,23 @@
 {
 	"compilerOptions": {
 		"allowJs": true,
-		"target": "ES2017",
-		"module": "ES2020",
-		"lib": ["es2020", "DOM", "WebWorker", "DOM.Iterable"],
+		"target": "ES2022",
+		"module": "ES2022",
+		"moduleResolution": "bundler",
+		"allowSyntheticDefaultImports": true,
+		"lib": ["es2022", "DOM", "WebWorker", "DOM.Iterable"],
 		"jsx": "react-jsx",
 		"jsxImportSource": "@qwik.dev/core",
 		"strict": true,
 		"forceConsistentCasingInFileNames": true,
 		"resolveJsonModule": true,
-		"moduleResolution": "node",
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"incremental": true,
 		"isolatedModules": true,
 		"outDir": "tmp",
 		"noEmit": true,
+		"maxNodeModuleJsDepth": 10,
 		"types": ["node", "vite/client"],
 		"paths": {
 			"~/*": ["./src/*"]
