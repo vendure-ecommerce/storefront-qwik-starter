@@ -115,7 +115,6 @@ function containsFileUploads(variables: any): boolean {
 
 	return Object.values(variables).some((value) => {
 		if (value instanceof File) return true;
-		if (value instanceof FileList) return true;
 		if (Array.isArray(value)) return value.some((item) => item instanceof File);
 		if (value && typeof value === 'object') return containsFileUploads(value);
 		return false;

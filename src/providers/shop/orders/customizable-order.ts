@@ -30,6 +30,15 @@ export const createCustomizedImageAssetMutation = async (file: File) => {
 		.then((res) => res.createCustomizedImageAsset);
 };
 
+export const batchAddCustomizedImagesToOrderMutation = async (
+	files: File[],
+	orderLineIds: string[]
+) => {
+	return await shopSdk
+		.batchAddCustomizedImagesToOrder({ files, orderLineIds })
+		.then((res) => res.batchAddCustomizedImagesToOrder);
+};
+
 gql`
 	query fontMenuFindAll {
 		fontMenuFindAll {
@@ -68,6 +77,22 @@ gql`
 		createCustomizedImageAsset(file: $file) {
 			... on CreateAssetSuccess {
 				assetId
+			}
+			... on CreateCustomizedImageAssetError {
+				errorCode
+				message
+			}
+		}
+	}
+`;
+
+gql`
+	mutation batchAddCustomizedImagesToOrder($files: [Upload!]!, $orderLineIds: [ID!]!) {
+		batchAddCustomizedImagesToOrder(files: $files, orderLineIds: $orderLineIds) {
+			... on BatchAddCustomizedImagesToOrderSuccess {
+				message
+				orderLineIds
+				assetIds
 			}
 			... on CreateCustomizedImageAssetError {
 				errorCode

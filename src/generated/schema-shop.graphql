@@ -111,6 +111,16 @@ type AuthenticationMethod implements Node {
 
 union AuthenticationResult = CurrentUser | InvalidCredentialsError | NotVerifiedError
 
+union BatchAddCustomizedImagesToOrderResult =
+	| BatchAddCustomizedImagesToOrderSuccess
+	| CreateCustomizedImageAssetError
+
+type BatchAddCustomizedImagesToOrderSuccess {
+	assetIds: [ID!]!
+	message: String!
+	orderLineIds: [ID!]!
+}
+
 type BooleanCustomFieldConfig implements CustomField {
 	deprecated: Boolean
 	deprecationReason: String
@@ -2845,6 +2855,10 @@ type Mutation {
 	Authenticates the user using a named authentication strategy
 	"""
 	authenticate(input: AuthenticationInput!, rememberMe: Boolean): AuthenticationResult!
+	batchAddCustomizedImagesToOrder(
+		files: [Upload!]!
+		orderLineIds: [ID!]!
+	): BatchAddCustomizedImagesToOrderResult!
 
 	"""
 	Batch update fulfillment state from Shippo. This

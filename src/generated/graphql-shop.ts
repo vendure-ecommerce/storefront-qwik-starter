@@ -145,6 +145,17 @@ export type AuthenticationMethod = Node & {
 
 export type AuthenticationResult = CurrentUser | InvalidCredentialsError | NotVerifiedError;
 
+export type BatchAddCustomizedImagesToOrderResult =
+	| BatchAddCustomizedImagesToOrderSuccess
+	| CreateCustomizedImageAssetError;
+
+export type BatchAddCustomizedImagesToOrderSuccess = {
+	__typename?: 'BatchAddCustomizedImagesToOrderSuccess';
+	assetIds: Array<Scalars['ID']['output']>;
+	message: Scalars['String']['output'];
+	orderLineIds: Array<Scalars['ID']['output']>;
+};
+
 export type BooleanCustomFieldConfig = CustomField & {
 	__typename?: 'BooleanCustomFieldConfig';
 	deprecated?: Maybe<Scalars['Boolean']['output']>;
@@ -1858,6 +1869,7 @@ export type Mutation = {
 	applyCouponCode: ApplyCouponCodeResult;
 	/** Authenticates the user using a named authentication strategy */
 	authenticate: AuthenticationResult;
+	batchAddCustomizedImagesToOrder: BatchAddCustomizedImagesToOrderResult;
 	/**
 	 * Batch update fulfillment state from Shippo. This
 	 * updates all fulfillments with method 'Shippo' and state 'Pending' or 'Shipped'.
@@ -1983,6 +1995,11 @@ export type MutationApplyCouponCodeArgs = {
 export type MutationAuthenticateArgs = {
 	input: AuthenticationInput;
 	rememberMe?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type MutationBatchAddCustomizedImagesToOrderArgs = {
+	files: Array<Scalars['Upload']['input']>;
+	orderLineIds: Array<Scalars['ID']['input']>;
 };
 
 export type MutationCreateCustomerAddressArgs = {
@@ -4865,6 +4882,23 @@ export type CreateCustomizedImageAssetMutation = {
 		| { __typename?: 'CreateCustomizedImageAssetError'; errorCode: ErrorCode; message: string };
 };
 
+export type BatchAddCustomizedImagesToOrderMutationVariables = Exact<{
+	files: Array<Scalars['Upload']['input']> | Scalars['Upload']['input'];
+	orderLineIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+}>;
+
+export type BatchAddCustomizedImagesToOrderMutation = {
+	__typename?: 'Mutation';
+	batchAddCustomizedImagesToOrder:
+		| {
+				__typename?: 'BatchAddCustomizedImagesToOrderSuccess';
+				message: string;
+				orderLineIds: Array<string>;
+				assetIds: Array<string>;
+		  }
+		| { __typename?: 'CreateCustomizedImageAssetError'; errorCode: ErrorCode; message: string };
+};
+
 export type SetOrderCustomFieldsMutationVariables = Exact<{
 	input: UpdateOrderInput;
 }>;
@@ -6701,6 +6735,21 @@ export const CreateCustomizedImageAssetDocument = gql`
 		}
 	}
 `;
+export const BatchAddCustomizedImagesToOrderDocument = gql`
+	mutation batchAddCustomizedImagesToOrder($files: [Upload!]!, $orderLineIds: [ID!]!) {
+		batchAddCustomizedImagesToOrder(files: $files, orderLineIds: $orderLineIds) {
+			... on BatchAddCustomizedImagesToOrderSuccess {
+				message
+				orderLineIds
+				assetIds
+			}
+			... on CreateCustomizedImageAssetError {
+				errorCode
+				message
+			}
+		}
+	}
+`;
 export const SetOrderCustomFieldsDocument = gql`
 	mutation setOrderCustomFields($input: UpdateOrderInput!) {
 		setOrderCustomFields(input: $input) {
@@ -7209,6 +7258,19 @@ export function getSdk<C>(requester: Requester<C>) {
 				variables,
 				options
 			) as Promise<CreateCustomizedImageAssetMutation>;
+		},
+		batchAddCustomizedImagesToOrder(
+			variables: BatchAddCustomizedImagesToOrderMutationVariables,
+			options?: C
+		): Promise<BatchAddCustomizedImagesToOrderMutation> {
+			return requester<
+				BatchAddCustomizedImagesToOrderMutation,
+				BatchAddCustomizedImagesToOrderMutationVariables
+			>(
+				BatchAddCustomizedImagesToOrderDocument,
+				variables,
+				options
+			) as Promise<BatchAddCustomizedImagesToOrderMutation>;
 		},
 		setOrderCustomFields(
 			variables: SetOrderCustomFieldsMutationVariables,
