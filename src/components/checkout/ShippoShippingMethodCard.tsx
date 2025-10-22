@@ -24,7 +24,7 @@ export default component$<Props>(({ shippingMethod, checked }) => {
 						{$localize`Days`}
 					</span>
 					<span class="block text-xs text-gray-500">
-						{$localize`Shipping to Postal Code: `} {shippingMethod.metadata.shipToPostalCode}
+						{$localize`Shipping to Postal Code: `} {shippingMethod.metadata?.shipToPostalCode}
 					</span>
 				</span>
 			</span>

@@ -21,18 +21,25 @@ interface IProps {
 	order?: Order;
 	onOrderLineChange$?: QRL<() => Promise<void>>;
 	readyToProceedSignal?: Signal<boolean>;
+	readOnly?: Signal<boolean>;
 }
 /**
  * - If `order` prop is provided, the component is in read-only mode.
  *    - This will show the order's lines instead of the appState's activeOrder lines.
- *    - The onOrderLineChange$ and readyToProceedSignal props will be ignored.
+ *    - The onOrderLineChange$, readyToProceedSignal, and `readOnly` props will be ignored.
  * - If `order` prop is not provided, this will pull the appState.activeOrder lines,
  * 		and the component is in editable mode.
- *    - This will allow quantity changes and line item removals.
- *    - The onOrderLineChange$ callback will be called after an order line is successfully changed.
+ * 		- if `readOnly` is set to false (default), the user can edit the cart
+ *      - This will allow quantity changes and line item removals.
+ *      - The onOrderLineChange$ callback will be called after an order line is successfully changed.
  */
 export default component$<IProps>(
-	({ order, onOrderLineChange$, readyToProceedSignal = useSignal(true) }) => {
+	({
+		order,
+		onOrderLineChange$,
+		readyToProceedSignal = useSignal(true),
+		readOnly = useSignal(false),
+	}) => {
 		const navigate = useNavigate();
 		const location = useLocation();
 		const appState = useContext(APP_STATE);
@@ -45,7 +52,10 @@ export default component$<IProps>(
 		const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
 		const FontMenuSignal = useFontMenu();
 
-		const editable = !order; // If order is passed as prop, it's in read-only mode
+		// If order is passed as prop, it's in read-only mode
+		if (order) {
+			readOnly.value = true;
+		}
 		const currencyCode = order?.currencyCode || appState.activeOrder?.currencyCode || 'USD';
 
 		useVisibleTask$(async ({ track }) => {
@@ -80,7 +90,7 @@ export default component$<IProps>(
 							key={line.id}
 							line={line}
 							currencyCode={currencyCode}
-							canEdit={editable}
+							readOnly={readOnly}
 							filamentColorSignal={FilamentColorSignal}
 							fontMenuSignal={FontMenuSignal}
 							onQuantityChange$={async (id, value) => {

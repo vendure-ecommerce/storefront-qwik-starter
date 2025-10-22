@@ -3,6 +3,7 @@ import { Image } from 'qwik-image';
 import { OrderLine } from '~/generated/graphql';
 import { CUSTOMIZABLE_CLASS_DEF_TAG } from '~/routes/constants';
 import { CustomizableClassName, slugToCustomizableClass } from '~/utils';
+import { genCustomizableOptionJsonHash } from '~/utils/customizable-order';
 import CustomNameTagCartDisplay from '../custom-option-visualizer/CustomNameTagCartDisplay';
 
 interface ItemPreviewProps {
@@ -26,6 +27,7 @@ export default component$(({ filamentColorSignal, fontMenuSignal, line }: ItemPr
 					filamentColorSignal={filamentColorSignal}
 					fontMenuSignal={fontMenuSignal}
 					customizableOptionJson={line.customFields?.customizableOptionJson ?? '[]'}
+					concatenate_canvas_element_id={genCustomizableOptionJsonHash(line)}
 					classDef={
 						customizableClassDef.find((def) => def.name === customizableClassName)
 							?.optionDefinition ?? []

@@ -8,6 +8,7 @@ interface CustomNameTagCartDisplayProps {
 	fontMenuSignal: ReadonlySignal<any>;
 	customizableOptionJson: string;
 	classDef: { field: string; type: string }[];
+	concatenate_canvas_element_id?: string;
 }
 
 export default component$(
@@ -16,14 +17,15 @@ export default component$(
 		fontMenuSignal,
 		customizableOptionJson,
 		classDef,
+		concatenate_canvas_element_id,
 	}: CustomNameTagCartDisplayProps) => {
 		const defaultOptionsForNameTag = useContext(DEFAULT_OPTIONS_FOR_NAME_TAG);
-		const uniqueId = genHash(customizableOptionJson);
+		const uniqueId = concatenate_canvas_element_id || genHash(customizableOptionJson);
 
 		const errorMessage = useSignal<string>('');
 
-		const text_top = useSignal<string>('GG'); // Changed from undefined to empty string
-		const text_bottom = useSignal<string>('AA'); // Changed from undefined to empty string
+		const text_top = useSignal<string>('Customized'); // Changed from undefined to empty string
+		const text_bottom = useSignal<string>('Key Ring'); // Changed from undefined to empty string
 		const font_id_top = useSignal<string>(defaultOptionsForNameTag.fontId);
 		const font_id_bottom = useSignal<string>(defaultOptionsForNameTag.fontId);
 		const primary_color_id = useSignal<string>(defaultOptionsForNameTag.primaryColorId);
@@ -65,6 +67,7 @@ export default component$(
 					build_bottom_plate={build_bottom_plate}
 					output_top_canvas_element_id={`top-${uniqueId}`}
 					output_bottom_canvas_element_id={`btm-${uniqueId}`}
+					output_concatenated_canvas_element_id={`${uniqueId}`}
 				/>
 				{errorMessage.value && (
 					<p class="mt-2 text-sm text-red-600" id="email-error">

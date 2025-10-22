@@ -1,4 +1,4 @@
-import { $, component$, useContext, useStore, useVisibleTask$ } from '@qwik.dev/core';
+import { $, component$, QRL, useContext, useStore, useVisibleTask$ } from '@qwik.dev/core';
 import { useNavigate } from '@qwik.dev/router';
 import braintree from 'braintree-web-drop-in';
 import { APP_STATE } from '~/constants';
@@ -9,11 +9,16 @@ import {
 } from '~/providers/shop/checkout/checkout';
 import CreditCardIcon from '../icons/CreditCardIcon';
 import XCircleIcon from '../icons/XCircleIcon';
-const client = {
+
+interface BraintreePaymentProps {
+	onPaymentSuccess$: QRL<() => void>;
+}
+
+const braintreeClient = {
 	dropin: {} as braintree.Dropin,
 };
 
-export default component$(() => {
+export default component$<BraintreePaymentProps>(({ onPaymentSuccess$ }) => {
 	const appState = useContext(APP_STATE);
 	const store = useStore({
 		clientToken: '',
@@ -24,7 +29,7 @@ export default component$(() => {
 	useVisibleTask$(async () => {
 		store.clientToken =
 			(await generateBraintreeClientTokenQuery(appState.activeOrder.id, true)) || '';
-		client.dropin = await braintree.create({
+		braintreeClient.dropin = await braintree.create({
 			authorization: store.clientToken,
 			// This assumes a div in your view with the corresponding ID
 			container: '#payment-form',
@@ -65,18 +70,19 @@ export default component$(() => {
 			<button
 				class="flex px-6 bg-primary-600 hover:bg-primary-700 items-center justify-center space-x-2 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
 				onClick$={$(async () => {
-					if (!client.dropin.isPaymentMethodRequestable()) {
+					if (!braintreeClient.dropin.isPaymentMethodRequestable()) {
 						return;
 					}
-					const paymentResult = await client.dropin.requestPaymentMethod();
+					const paymentResult = await braintreeClient.dropin.requestPaymentMethod();
 					await transitionOrderToStateMutation();
 					const activeOrder = await addPaymentToOrderMutation({
 						method: 'braintree-payment',
 						metadata: paymentResult,
 					});
 					if (activeOrder.__typename === 'Order') {
+						// Payment successful
 						appState.activeOrder = activeOrder;
-						navigate(`/checkout/confirmation/${activeOrder.code}`);
+						onPaymentSuccess$();
 					} else {
 						// @ts-ignore
 						store.error = activeOrder.message;

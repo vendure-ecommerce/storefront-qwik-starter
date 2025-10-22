@@ -8,4 +8,7 @@
     "titleBar.activeBackground": "#1d4ed8",
     "titleBar.activeForeground": "#ffffff",
   },
+  "cSpell.words": [
+    "Braintree"
+  ],
 }

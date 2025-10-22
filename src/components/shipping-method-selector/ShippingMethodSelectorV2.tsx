@@ -51,6 +51,7 @@ export default component$<IProps>(({ reCalculateShipping$ }) => {
 		if (reCalculateShipping$.value) {
 			console.warn('reCalculateShipping$ is true, fetching shipping methods...');
 			state.methods = await getEligibleShippingMethodsQuery();
+			console.log('Fetched shipping methods: ', JSON.stringify(state.methods, null, 2));
 			// preselect the first method
 			state.selectedMethodId = state.methods[0]?.id;
 		}

@@ -1,4 +1,4 @@
-import { $, component$, useContext } from '@qwik.dev/core';
+import { $, component$, Signal, useContext, useSignal } from '@qwik.dev/core';
 import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
 import { removeCouponCodeMutation } from '~/providers/shop/orders/order';
@@ -9,8 +9,8 @@ import CartPrice from './CartPrice';
 
 export default component$<{
 	order?: Order;
-	readonly?: boolean;
-}>(({ order, readonly = false }) => {
+	readonly?: Signal<boolean>;
+}>(({ order, readonly = useSignal<boolean>(false) }) => {
 	const appState = useContext(APP_STATE);
 	const removeCoupon = $(async (couponCode: string) => {
 		const res = await removeCouponCodeMutation(couponCode);
@@ -47,8 +47,8 @@ export default component$<{
 					forcedClass="text-sm font-medium text-gray-900"
 				/>
 			</div>
-			{!readonly && <CouponInput />}
-			{(order?.couponCodes || []).length > 0 && !readonly && (
+			{!readonly.value && <CouponInput />}
+			{(order?.couponCodes || []).length > 0 && !readonly.value && (
 				<div class="flex items-center flex-wrap gap-2">
 					<div class="text-sm font-medium">{$localize`Applied coupons`}: </div>
 					{order?.couponCodes.map((c) => (

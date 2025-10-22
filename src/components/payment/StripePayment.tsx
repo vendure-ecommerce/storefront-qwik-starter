@@ -7,6 +7,8 @@ import { createStripePaymentIntentMutation } from '~/providers/shop/checkout/che
 import CreditCardIcon from '../icons/CreditCardIcon';
 import XCircleIcon from '../icons/XCircleIcon';
 
+// We currently don't use Strip Payment methods. If we do, we will need to include onPaymentSuccess$ prop here
+
 let _stripe: Promise<Stripe | null>;
 function getStripe(publishableKey: string) {
 	if (!_stripe && publishableKey) {

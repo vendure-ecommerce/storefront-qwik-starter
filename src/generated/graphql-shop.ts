@@ -4472,6 +4472,7 @@ export type AddPaymentToOrderMutation = {
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
 						customizableOptionJson?: string | null;
+						customizedImageAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 					} | null;
 				}>;
 				customFields?: {
@@ -4567,6 +4568,7 @@ export type TransitionOrderToStateMutation = {
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
 						customizableOptionJson?: string | null;
+						customizedImageAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 					} | null;
 				}>;
 				customFields?: {
@@ -4982,6 +4984,7 @@ export type SetOrderCustomFieldsMutation = {
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
 						customizableOptionJson?: string | null;
+						customizedImageAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 					} | null;
 				}>;
 				customFields?: {
@@ -5076,6 +5079,7 @@ export type ApplyCouponCodeMutation = {
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
 						customizableOptionJson?: string | null;
+						customizedImageAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 					} | null;
 				}>;
 				customFields?: {
@@ -5166,6 +5170,7 @@ export type RemoveCouponCodeMutation = {
 			customFields?: {
 				__typename?: 'OrderLineCustomFields';
 				customizableOptionJson?: string | null;
+				customizedImageAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 			} | null;
 		}>;
 		customFields?: { __typename?: 'OrderCustomFields'; promisedArrivalDays?: number | null } | null;
@@ -5255,6 +5260,7 @@ export type SetOrderShippingAddressMutation = {
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
 						customizableOptionJson?: string | null;
+						customizedImageAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 					} | null;
 				}>;
 				customFields?: {
@@ -5350,6 +5356,7 @@ export type SetCustomerForOrderMutation = {
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
 						customizableOptionJson?: string | null;
+						customizedImageAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 					} | null;
 				}>;
 				customFields?: {
@@ -5445,6 +5452,7 @@ export type AddItemToOrderMutation = {
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
 						customizableOptionJson?: string | null;
+						customizedImageAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 					} | null;
 				}>;
 				customFields?: {
@@ -5541,6 +5549,7 @@ export type SetOrderShippingMethodMutation = {
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
 						customizableOptionJson?: string | null;
+						customizedImageAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 					} | null;
 				}>;
 				customFields?: {
@@ -5626,6 +5635,7 @@ export type OrderDetailFragment = {
 		customFields?: {
 			__typename?: 'OrderLineCustomFields';
 			customizableOptionJson?: string | null;
+			customizedImageAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 		} | null;
 	}>;
 	customFields?: { __typename?: 'OrderCustomFields'; promisedArrivalDays?: number | null } | null;
@@ -5716,6 +5726,7 @@ export type AdjustOrderLineMutation = {
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
 						customizableOptionJson?: string | null;
+						customizedImageAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 					} | null;
 				}>;
 				customFields?: {
@@ -5810,6 +5821,7 @@ export type RemoveOrderLineMutation = {
 					customFields?: {
 						__typename?: 'OrderLineCustomFields';
 						customizableOptionJson?: string | null;
+						customizedImageAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 					} | null;
 				}>;
 				customFields?: {
@@ -5900,6 +5912,7 @@ export type ActiveOrderQuery = {
 			customFields?: {
 				__typename?: 'OrderLineCustomFields';
 				customizableOptionJson?: string | null;
+				customizedImageAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 			} | null;
 		}>;
 		customFields?: { __typename?: 'OrderCustomFields'; promisedArrivalDays?: number | null } | null;
@@ -5987,6 +6000,7 @@ export type OrderByCodeQuery = {
 			customFields?: {
 				__typename?: 'OrderLineCustomFields';
 				customizableOptionJson?: string | null;
+				customizedImageAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 			} | null;
 		}>;
 		customFields?: { __typename?: 'OrderCustomFields'; promisedArrivalDays?: number | null } | null;
@@ -6240,6 +6254,10 @@ export const OrderDetailFragmentDoc = gql`
 			}
 			customFields {
 				customizableOptionJson
+				customizedImageAsset {
+					id
+					preview
+				}
 			}
 		}
 		customFields {

@@ -289,6 +289,10 @@ gql`
 			}
 			customFields {
 				customizableOptionJson
+				customizedImageAsset {
+					id
+					preview
+				}
 			}
 		}
 		customFields {
