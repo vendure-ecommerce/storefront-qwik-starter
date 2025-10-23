@@ -55,7 +55,7 @@ export default component$(() => {
 						{store.order && (
 							<>
 								<CartContents order={store.order} />
-								<CartTotals order={store.order} readonly />
+								<CartTotals order={store.order} readOnly />
 							</>
 						)}
 					</SectionWithLabel>

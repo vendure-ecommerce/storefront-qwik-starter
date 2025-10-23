@@ -3,6 +3,7 @@ import { APP_STATE } from '~/constants';
 import {
 	addPaymentToOrderMutation,
 	getEligiblePaymentMethodsQuery,
+	transitionOrderToStateMutation,
 } from '~/providers/shop/checkout/checkout';
 import { EligiblePaymentMethods } from '~/types';
 import CreditCardIcon from '../icons/CreditCardIcon';
@@ -33,6 +34,7 @@ export default component$<PaymentProps>(({ onPaymentSuccess$ }) => {
 							<button
 								class="flex px-6 bg-primary-600 hover:bg-primary-700 items-center justify-center space-x-2 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
 								onClick$={$(async () => {
+									await transitionOrderToStateMutation();
 									const activeOrder = await addPaymentToOrderMutation({
 										method: method.code,
 										metadata: {

@@ -1,4 +1,4 @@
-import { QRL, component$, useStore, useVisibleTask$ } from '@qwik.dev/core';
+import { QRL, component$, useSignal, useStore, useVisibleTask$ } from '@qwik.dev/core';
 import { useLocation } from '@qwik.dev/router';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
@@ -14,6 +14,7 @@ export default component$<{ onForward$: QRL<() => void> }>(() => {
 		params: { code },
 	} = useLocation();
 	const store = useStore<{ order?: Order }>({});
+	const readOnlySignal = useSignal<boolean>(true);
 
 	const steps: { name: string; state: Step }[] = [
 		{ name: $localize`Shipping Checkout`, state: 'SHIPPING' },
@@ -59,7 +60,7 @@ export default component$<{ onForward$: QRL<() => void> }>(() => {
 										<div class="mb-6">
 											<CartContents order={store.order} />
 										</div>
-										<CartTotals order={store.order} readonly />
+										<CartTotals order={store.order} readOnly={readOnlySignal} />
 									</div>
 								</div>
 							</div>

@@ -9,8 +9,8 @@ import CartPrice from './CartPrice';
 
 export default component$<{
 	order?: Order;
-	readonly?: Signal<boolean>;
-}>(({ order, readonly = useSignal<boolean>(false) }) => {
+	readOnly?: Signal<boolean>;
+}>(({ order, readOnly = useSignal<boolean>(false) }) => {
 	const appState = useContext(APP_STATE);
 	const removeCoupon = $(async (couponCode: string) => {
 		const res = await removeCouponCodeMutation(couponCode);
@@ -47,8 +47,8 @@ export default component$<{
 					forcedClass="text-sm font-medium text-gray-900"
 				/>
 			</div>
-			{!readonly.value && <CouponInput />}
-			{(order?.couponCodes || []).length > 0 && !readonly.value && (
+			{!readOnly.value && <CouponInput />}
+			{(order?.couponCodes || []).length > 0 && !readOnly.value && (
 				<div class="flex items-center flex-wrap gap-2">
 					<div class="text-sm font-medium">{$localize`Applied coupons`}: </div>
 					{order?.couponCodes.map((c) => (

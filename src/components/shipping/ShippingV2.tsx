@@ -73,11 +73,7 @@ export default component$<IProps>(
 		useVisibleTask$(async ({ track }) => {
 			// Track changes to shipping address and trigger recalculation
 			track(() => appState.shippingAddress);
-			console.log('appstate.shippingAddress: ', JSON.stringify(appState.shippingAddress, null, 2));
-			console.log('appstate.customer: ', JSON.stringify(appState.customer, null, 2));
-
 			if (appState.shippingAddress?.streetLine1) {
-				console.log('Setting order shipping address...');
 				const addressToOrder = parseShippingAddressToCreateAddressInput(appState.shippingAddress);
 				await setOrderShippingAddressMutation(addressToOrder);
 				reCalculateShipping.value = true;

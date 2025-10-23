@@ -39,6 +39,7 @@ export default component$(() => {
 	const goToPaymentStep = $(async () => {
 		// if there is customized images, update them before navigating to confirmation page
 		await safeUpdateCustomizedImages(appState.activeOrder.lines);
+
 		if (isEnvVariableEnabled('VITE_SHOW_PAYMENT_STEP')) {
 			state.step = 'PAYMENT';
 			orderReadOnly.value = true;
@@ -96,7 +97,7 @@ export default component$(() => {
 
 							{!reCalculateShipping.value && (
 								<SectionWithLabel>
-									<CartTotals order={appState.activeOrder} readonly={orderReadOnly} />
+									<CartTotals order={appState.activeOrder} readOnly={orderReadOnly} />
 								</SectionWithLabel>
 							)}
 						</div>
