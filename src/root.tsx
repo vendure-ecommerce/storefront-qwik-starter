@@ -1,5 +1,5 @@
 import { component$, useStyles$ } from '@qwik.dev/core';
-import { QwikRouterProvider, RouterOutlet, ServiceWorkerRegister } from '@qwik.dev/router';
+import { QwikRouterProvider, RouterOutlet } from '@qwik.dev/router';
 import { Head } from './components/head/head';
 import globalStyles from './global.css?inline';
 
@@ -17,7 +17,6 @@ export default component$(() => {
 			<Head />
 			<body lang="en">
 				<RouterOutlet />
-				<ServiceWorkerRegister />
 			</body>
 		</QwikRouterProvider>
 	);
