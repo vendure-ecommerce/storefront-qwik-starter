@@ -1,6 +1,8 @@
-import {
+import type {
 	PropsOf,
-	QRL,
+	QRL
+} from '@qwik.dev/core';
+import {
 	component$,
 	createContextId,
 	useComputed$,
@@ -41,6 +43,7 @@ export interface ImageProps extends Omit<ImageAttributes, 'ref'> {
 	layout: 'fixed' | 'constrained' | 'fullWidth';
 	objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down' | 'inherit' | 'initial';
 	fetchpriority?: 'low' | 'high' | 'auto';
+	preset?: 'tiny' | 'thumb' | 'small' | 'medium' | 'large' | 'full';
 }
 
 export const ImageContext = createContextId<ImageState>('ImageContext');
@@ -127,6 +130,15 @@ export const getSizes = ({ width, layout }: Pick<ImageProps, 'width' | 'layout'>
 	}
 };
 
+export const applyPreset = (url: string, preset?: string): string => {
+	if (!preset) {
+		return url;
+	}
+
+	const separator = url.includes('?') ? '&' : '?';
+	return `${url}${separator}preset=${preset}`;
+};
+
 export const getSrcSet = async ({
 	src = '',
 	width,
@@ -135,7 +147,8 @@ export const getSrcSet = async ({
 	layout,
 	resolutions,
 	imageTransformer$,
-}: Pick<ImageProps, 'src' | 'width' | 'height' | 'aspectRatio' | 'layout'> &
+	preset,
+}: Pick<ImageProps, 'src' | 'width' | 'height' | 'aspectRatio' | 'layout' | 'preset'> &
 	ImageState): Promise<string> => {
 	const breakpoints = getBreakpoints({
 		width: typeof width === 'string' ? parseInt(width, 10) : width,
@@ -151,7 +164,8 @@ export const getSrcSet = async ({
 		}
 
 		if (!imageTransformer$) {
-			srcSets.push(`${src} ${breakpoint}w`);
+			const urlWithPreset = applyPreset(src, preset);
+			srcSets.push(`${urlWithPreset} ${breakpoint}w`);
 			continue;
 		}
 
@@ -161,7 +175,8 @@ export const getSrcSet = async ({
 			height: transformedHeight,
 		});
 
-		srcSets.push(`${transformed} ${breakpoint}w`);
+		const transformedWithPreset = applyPreset(transformed, preset);
+		srcSets.push(`${transformedWithPreset} ${breakpoint}w`);
 	}
 
 	return srcSets.join(',\n');
@@ -210,12 +225,14 @@ export const Image = component$<ImageProps>((props) => {
 		...getStyles(props),
 	}));
 	const sizes = useComputed$(() => getSizes(props));
+
 	useTask$(async ({ track }) => {
 		const src = track(() => props.src);
 		const width = track(() => props.width);
 		const height = track(() => props.height);
 		const aspectRatio = track(() => props.aspectRatio);
 		const layout = track(() => props.layout);
+		const preset = track(() => props.preset);
 
 		srcSetSig.value = await getSrcSet({
 			src,
@@ -225,6 +242,7 @@ export const Image = component$<ImageProps>((props) => {
 			layout,
 			resolutions,
 			imageTransformer$,
+			preset,
 		});
 	});
 	const width = useComputed$(() =>
