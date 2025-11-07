@@ -225,7 +225,6 @@ export const Image = component$<ImageProps>((props) => {
 		...getStyles(props),
 	}));
 	const sizes = useComputed$(() => getSizes(props));
-	const srcWithPreset = useComputed$(() => applyPreset(props.src || '', props.preset));
 
 	useTask$(async ({ track }) => {
 		const src = track(() => props.src);
@@ -257,7 +256,6 @@ export const Image = component$<ImageProps>((props) => {
 		<img
 			decoding="async"
 			{...imageAttributesWithoutChildren}
-			src={srcWithPreset.value}
 			style={style.value}
 			width={width.value}
 			height={height.value}
