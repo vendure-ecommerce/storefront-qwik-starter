@@ -24,12 +24,6 @@ export const customizableClassDefFindAll = async (): Promise<
 		.then((res: CustomizableClassDefFindAllQuery) => res.customizableClassDefFindAll);
 };
 
-export const createCustomizedImageAssetMutation = async (file: File) => {
-	return await shopSdk
-		.createCustomizedImageAsset({ file })
-		.then((res) => res.createCustomizedImageAsset);
-};
-
 export const batchAddCustomizedImagesToOrderMutation = async (
 	files: File[],
 	orderLineIds: string[]
@@ -68,20 +62,6 @@ gql`
 		customizableClassDefFindAll {
 			name
 			optionDefinition
-		}
-	}
-`;
-
-gql`
-	mutation createCustomizedImageAsset($file: Upload!) {
-		createCustomizedImageAsset(file: $file) {
-			... on CreateAssetSuccess {
-				assetId
-			}
-			... on CreateCustomizedImageAssetError {
-				errorCode
-				message
-			}
 		}
 	}
 `;

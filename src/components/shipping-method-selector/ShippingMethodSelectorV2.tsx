@@ -20,6 +20,7 @@ import AnimatedSpinnerIcon from '../icons/AnimatedSpinnerIcon';
 
 interface IProps {
 	reCalculateShipping$: Signal<boolean>;
+	errorMessage: Signal<string | null>;
 }
 
 /**
@@ -31,7 +32,7 @@ interface IProps {
  * 2. that will call order-calculator and update the shippingWithTax
  * with the cheapest shipping method eligible. (see https://github.com/vendure-ecommerce/vendure/blob/1bb9cf8ca1584bce026ccc82f33f866b766ef47d/packages/core/src/service/helpers/order-calculator/order-calculator.ts#L332)
  */
-export default component$<IProps>(({ reCalculateShipping$ }) => {
+export default component$<IProps>(({ reCalculateShipping$, errorMessage }) => {
 	const appState = useContext(APP_STATE);
 	const selecting = useSignal(false);
 
@@ -50,9 +51,14 @@ export default component$<IProps>(({ reCalculateShipping$ }) => {
 		task.track(() => reCalculateShipping$.value);
 		if (reCalculateShipping$.value) {
 			console.warn('reCalculateShipping$ is true, fetching shipping methods...');
-			state.methods = await getEligibleShippingMethodsQuery();
-			// preselect the first method
-			state.selectedMethodId = state.methods[0]?.id;
+			try {
+				state.methods = await getEligibleShippingMethodsQuery();
+				// preselect the first method
+				state.selectedMethodId = state.methods[0]?.id;
+			} catch (error) {
+				console.error('Error fetching shipping methods:', error);
+				errorMessage.value = 'Failed to fetch shipping methods: ' + (error as Error).message;
+			}
 		}
 		reCalculateShipping$.value = false;
 	});

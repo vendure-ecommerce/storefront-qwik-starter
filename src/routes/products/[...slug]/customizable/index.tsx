@@ -12,7 +12,6 @@ import { Order, ProductVariant } from '~/generated/graphql';
 import { useComputed$ } from '@qwik.dev/core';
 import ProductVariantSelector from '~/components/products/ProductVariantSelector';
 import { APP_STATE } from '~/constants';
-import { batchAddCustomizedImagesToOrderMutation } from '~/providers/shop/orders/customizable-order';
 import { addItemToOrderMutation } from '~/providers/shop/orders/order';
 import { CUSTOMIZABLE_CLASS_DEF_TAG, DEFAULT_OPTIONS_FOR_NAME_TAG } from '~/routes/constants';
 import { useFilamentColor, useFontMenu } from '~/routes/layout';
@@ -86,12 +85,7 @@ export default component$(() => {
 	}
 
 	const handleAddToCart = $(
-		async (
-			filename: string,
-			inputArr: any,
-			selectedVariantId: string,
-			addItemToOrderErrorSignal: any
-		) => {
+		async (inputArr: any, selectedVariantId: string, addItemToOrderErrorSignal: any) => {
 			try {
 				// Add item to order
 				const addItemToOrder = await addItemToOrderMutation(selectedVariantId, 1, {
@@ -111,37 +105,6 @@ export default component$(() => {
 			}
 
 			console.log(JSON.stringify(appState.activeOrder.lines, null, 2));
-
-			const orderLineId = appState.activeOrder?.lines.find(
-				(line) =>
-					line.productVariant.id === selectedVariantId &&
-					line.customFields?.customizableOptionJson === JSON.stringify(inputArr)
-			)?.id;
-			if (!orderLineId) {
-				console.error('Order line not found for the added item');
-				return;
-			}
-
-			const canvas = document.getElementById(CONCATENATE_CANVAS_ELEMENT_ID) as HTMLCanvasElement;
-			if (!canvas) {
-				throw new Error(`Canvas with id ${CONCATENATE_CANVAS_ELEMENT_ID} not found`);
-			}
-			canvas.toBlob(
-				(blob) => {
-					if (!blob) {
-						console.error('Failed to create blob from canvas');
-						return;
-					}
-					const file = new File([blob], filename, { type: 'image/jpeg' });
-					try {
-						batchAddCustomizedImagesToOrderMutation([file], [orderLineId]);
-					} catch (error) {
-						console.error('Error adding customized image to order:', error);
-					}
-				},
-				'image/jpeg',
-				0.5
-			);
 		}
 	);
 
@@ -175,12 +138,7 @@ export default component$(() => {
 							const inputArr = getCustomizableOptionArray(input, currentClassDef.optionDefinition);
 
 							// Call the extracted async function
-							handleAddToCart(
-								customizedImageFilename,
-								inputArr,
-								selectedVariantIdSignal.value,
-								addItemToOrderErrorSignal
-							);
+							handleAddToCart(inputArr, selectedVariantIdSignal.value, addItemToOrderErrorSignal);
 						}}
 					>
 						{$localize`Add to cart`}

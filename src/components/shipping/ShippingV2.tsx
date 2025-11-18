@@ -118,7 +118,10 @@ export default component$<IProps>(
 				{/* Delivery Method */}
 
 				<SectionWithLabel label={$localize`Delivery method`} topBorder={true}>
-					<ShippingMethodSelectorV2 reCalculateShipping$={reCalculateShipping} />
+					<ShippingMethodSelectorV2
+						reCalculateShipping$={reCalculateShipping}
+						errorMessage={errorMessage}
+					/>
 				</SectionWithLabel>
 
 				<div class="relative">
