@@ -72,7 +72,7 @@ union ApplyCouponCodeResult =
 
 type Asset implements Node {
 	createdAt: DateTime!
-	customFields: JSON
+	customFields: AssetCustomFields
 	fileSize: Int!
 	focalPoint: Coordinate
 	height: Int!
@@ -85,6 +85,10 @@ type Asset implements Node {
 	type: AssetType!
 	updatedAt: DateTime!
 	width: Int!
+}
+
+type AssetCustomFields {
+	review: ProductReview
 }
 
 type AssetList implements PaginatedList {
@@ -1484,6 +1488,7 @@ enum ErrorCode {
 	PASSWORD_VALIDATION_ERROR
 	PAYMENT_DECLINED_ERROR
 	PAYMENT_FAILED_ERROR
+	REVIEW_SUBMISSION_ERROR
 	SELLER_ADDRESS_NOT_SET_OR_INVALID
 	SELLER_SHIPPO_API_KEY_NOT_SET_OR_INVALID
 	SETTINGS_STORE_SHIPPO_API_KEY_NOT_SET_OR_INVALID
@@ -2871,7 +2876,6 @@ type Mutation {
 	Create a new Customer Address
 	"""
 	createCustomerAddress(input: CreateAddressInput!): Address!
-	createCustomizedImageAsset(file: Upload!): createCustomizedImageAssetResult!
 	createStripePaymentIntent: String
 
 	"""
@@ -2978,6 +2982,7 @@ type Mutation {
 	shipping method will apply to.
 	"""
 	setOrderShippingMethod(shippingMethodId: [ID!]!): SetOrderShippingMethodResult!
+	submitProductReview(input: SubmitProductReviewInput!): SubmitProductReviewResult!
 
 	"""
 	Transitions an Order to a new state. Valid next states can be found by querying `nextOrderStates`
@@ -3025,6 +3030,7 @@ type Mutation {
 	provided here.
 	"""
 	verifyCustomerAccount(password: String, token: String!): VerifyCustomerAccountResult!
+	voteOnReview(id: ID!, vote: Boolean!): ProductReview!
 }
 
 input NativeAuthInput {
@@ -3352,11 +3358,13 @@ type OrderLine implements Node {
 
 type OrderLineCustomFields {
 	customizableOptionJson: String
+	customizedBuildState: String
 	customizedImageAsset: Asset
 }
 
 input OrderLineCustomFieldsInput {
 	customizableOptionJson: String
+	customizedBuildState: String
 	customizedImageAssetId: ID
 }
 
@@ -4110,6 +4118,8 @@ type Product implements Node {
 	languageCode: LanguageCode!
 	name: String!
 	optionGroups: [ProductOptionGroup!]!
+	reviews(options: ProductReviewListOptions): ProductReviewList!
+	reviewsHistogram: [ProductReviewHistogramItem!]!
 	slug: String!
 	translations: [ProductTranslation!]!
 	updatedAt: DateTime!
@@ -4127,6 +4137,9 @@ type Product implements Node {
 
 type ProductCustomFields {
 	customizableClass: String
+	reviewCount: Int
+	reviewRating: Float
+	reviews: [ProductReview!]
 }
 
 input ProductFilterParameter {
@@ -4139,6 +4152,8 @@ input ProductFilterParameter {
 	id: IDOperators
 	languageCode: StringOperators
 	name: StringOperators
+	reviewCount: NumberOperators
+	reviewRating: NumberOperators
 	slug: StringOperators
 	updatedAt: DateOperators
 }
@@ -4216,12 +4231,112 @@ type ProductOptionTranslation {
 	updatedAt: DateTime!
 }
 
+type ProductReview implements Node {
+	assets: [Asset!]
+	authorLocation: String
+	authorName: String!
+	body: String
+	createdAt: DateTime!
+	customFields: JSON
+	downvotes: Int!
+	id: ID!
+	product: Product!
+	productVariant: ProductVariant
+	rating: Float!
+	response: String
+	responseCreatedAt: DateTime
+	state: String!
+	summary: String!
+	translations: [ProductReviewTranslation!]!
+	updatedAt: DateTime!
+	upvotes: Int!
+}
+
+input ProductReviewFilterParameter {
+	_and: [ProductReviewFilterParameter!]
+	_or: [ProductReviewFilterParameter!]
+	authorLocation: StringOperators
+	authorName: StringOperators
+	body: StringOperators
+	createdAt: DateOperators
+	downvotes: NumberOperators
+	id: IDOperators
+	rating: NumberOperators
+	response: StringOperators
+	responseCreatedAt: DateOperators
+	state: StringOperators
+	summary: StringOperators
+	updatedAt: DateOperators
+	upvotes: NumberOperators
+}
+
+type ProductReviewHistogramItem {
+	bin: Int!
+	frequency: Int!
+}
+
+type ProductReviewList implements PaginatedList {
+	items: [ProductReview!]!
+	totalItems: Int!
+}
+
+input ProductReviewListOptions {
+	"""
+	Allows the results to be filtered
+	"""
+	filter: ProductReviewFilterParameter
+
+	"""
+	Specifies whether multiple top-level "filter" fields should be combined with a logical AND or OR operation. Defaults to AND.
+	"""
+	filterOperator: LogicalOperator
+
+	"""
+	Skips the first n results, for use in pagination
+	"""
+	skip: Int
+
+	"""
+	Specifies which properties to sort the results by
+	"""
+	sort: ProductReviewSortParameter
+
+	"""
+	Takes n results, for use in pagination
+	"""
+	take: Int
+}
+
+input ProductReviewSortParameter {
+	authorLocation: SortOrder
+	authorName: SortOrder
+	body: SortOrder
+	createdAt: SortOrder
+	downvotes: SortOrder
+	id: SortOrder
+	rating: SortOrder
+	response: SortOrder
+	responseCreatedAt: SortOrder
+	state: SortOrder
+	summary: SortOrder
+	updatedAt: SortOrder
+	upvotes: SortOrder
+}
+
+type ProductReviewTranslation {
+	id: ID!
+	languageCode: LanguageCode!
+	text: String!
+}
+
 input ProductSortParameter {
 	createdAt: SortOrder
 	customizableClass: SortOrder
 	description: SortOrder
 	id: SortOrder
 	name: SortOrder
+	reviewCount: SortOrder
+	reviewRating: SortOrder
 	slug: SortOrder
 	updatedAt: SortOrder
 }
@@ -4669,6 +4784,11 @@ union ResetPasswordResult =
 	| PasswordResetTokenExpiredError
 	| PasswordResetTokenInvalidError
 	| PasswordValidationError
+
+type ReviewSubmissionError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
 
 type Role implements Node {
 	channels: [Channel!]!
@@ -5484,6 +5604,18 @@ union StructFieldConfig =
 	| StringStructFieldConfig
 	| TextStructFieldConfig
 
+input SubmitProductReviewInput {
+	authorLocation: String
+	body: String!
+	files: [Upload!]
+	productId: ID!
+	rating: Float!
+	summary: String!
+	variantId: ID
+}
+
+union SubmitProductReviewResult = ProductReview | ReviewSubmissionError
+
 """
 Indicates that an operation succeeded, where we do not want to return any more specific information.
 """
@@ -5736,5 +5868,3 @@ type Zone implements Node {
 	name: String!
 	updatedAt: DateTime!
 }
-
-union createCustomizedImageAssetResult = CreateAssetSuccess | CreateCustomizedImageAssetError

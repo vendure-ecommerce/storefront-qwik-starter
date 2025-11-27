@@ -33,12 +33,12 @@ export default component$(() => {
 	});
 
 	const confirmPayment = $(async () => {
+		await safeUpdateCustomizedImages(appState.activeOrder.lines);
 		navigate(`/checkout/confirmation/${appState.activeOrder.code}`);
 	});
 
 	const goToPaymentStep = $(async () => {
 		// if there is customized images, update them before navigating to confirmation page
-		await safeUpdateCustomizedImages(appState.activeOrder.lines);
 
 		if (isEnvVariableEnabled('VITE_SHOW_PAYMENT_STEP')) {
 			state.step = 'PAYMENT';
@@ -84,7 +84,8 @@ export default component$(() => {
 					{state.step !== 'CONFIRMATION' && (
 						<div>
 							{/* Cart Content */}
-
+							{/* Note that this should be here except CONFIRMATION, as we will save the customized 
+							images when payment complete, this prevent taking up unnecessary space on our asset folder */}
 							<SectionWithLabel label={$localize`Order summary`}>
 								<CartContents
 									readOnly={orderReadOnly}
@@ -117,28 +118,6 @@ export default component$(() => {
 						<div></div>
 					)}
 				</div>
-
-				{/* temporary button to run the updateCustomizedImageForOrderLine function */}
-				{/* <button
-							class="mt-4 p-2 bg-blue-500 text-white rounded"
-							onClick$={async () => {
-								console.log('active order lines', JSON.stringify(appState.activeOrder?.lines, null, 2));
-								if (appState.activeOrder?.lines) {
-									await updateCustomizedImageForOrderLine(appState.activeOrder.lines);
-								}
-							}}
-						>
-							Update Customized Images
-						</button> */}
-
-				{/* {state.step !== 'CONFIRMATION' && (
-								<div class="mt-10 lg:mt-0">
-									<h2 class="text-lg font-medium text-gray-900 mb-4">{$localize`Order summary`}</h2>
-									<CartContents />
-									<CartTotals order={appState.activeOrder} />
-								</div>
-							)}
-						</div> */}
 			</div>
 		</div>
 	);

@@ -8,6 +8,7 @@ interface FormInputProps<T extends Action<any, any, any>> {
 	autoComplete?: string;
 	defaults?: any;
 	className?: string;
+	as?: 'input' | 'textarea';
 }
 
 /**
@@ -51,7 +52,7 @@ interface FormInputProps<T extends Action<any, any, any>> {
  *   );
  */
 export default component$<FormInputProps<Action<any, any, any>>>(
-	({ name, label, formAction, autoComplete, defaults, className }) => {
+	({ name, label, formAction, autoComplete, defaults, className, as }) => {
 		const fieldErrors = formAction.value?.fieldErrors as
 			| Record<string, string | undefined>
 			| undefined;
@@ -60,19 +61,28 @@ export default component$<FormInputProps<Action<any, any, any>>>(
 		const defaultValue = defaults ? defaults[name] ?? '' : '';
 
 		return (
-			<div class={className || ''}>
+			<div>
 				<label for={name as string} class="block text-sm font-medium text-gray-700">
 					{label}
 				</label>
 				<div class="mt-1">
-					<input
-						type="text"
-						id={name as string}
-						name={name as string}
-						value={defaultValue as string}
-						autoComplete={autoComplete}
-						class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-					/>
+					{as === 'textarea' ? (
+						<textarea
+							id={name as string}
+							name={name as string}
+							defaultValue={defaultValue as string}
+							class={`block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm ${className ?? ''}`}
+						/>
+					) : (
+						<input
+							type="text"
+							id={name as string}
+							name={name as string}
+							value={defaultValue as string}
+							autoComplete={autoComplete}
+							class={`block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm ${className ?? ''}`}
+						/>
+					)}
 				</div>
 				{error && renderError(error)}
 			</div>

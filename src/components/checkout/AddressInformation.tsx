@@ -64,7 +64,6 @@ export default component$<AddressInformationProps>(({ mode = 'SHIPPING' }) => {
 							<HighlightedButton
 								onClick$={() => {
 									openNewAddress.value = true;
-									guestHasAddedAddress.value = true;
 								}}
 							>
 								<PlusIcon /> {$localize`Shipping Address`}

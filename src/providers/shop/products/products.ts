@@ -69,8 +69,36 @@ export const detailedProductFragment = gql`
 				customBuildJson
 			}
 		}
+		reviews {
+			items {
+				id
+				rating
+				summary
+				body
+				rating
+				authorName
+				authorLocation
+				createdAt
+				upvotes
+				downvotes
+				assets {
+					id
+					preview
+				}
+				response
+				responseCreatedAt
+				translations {
+					id
+					languageCode
+					text
+				}
+			}
+			totalItems
+		}
 		customFields {
 			customizableClass
+			reviewCount
+			reviewRating
 		}
 	}
 `;

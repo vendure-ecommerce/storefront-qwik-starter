@@ -103,7 +103,7 @@ export type ApplyCouponCodeResult =
 export type Asset = Node & {
 	__typename?: 'Asset';
 	createdAt: Scalars['DateTime']['output'];
-	customFields?: Maybe<Scalars['JSON']['output']>;
+	customFields?: Maybe<AssetCustomFields>;
 	fileSize: Scalars['Int']['output'];
 	focalPoint?: Maybe<Coordinate>;
 	height: Scalars['Int']['output'];
@@ -116,6 +116,11 @@ export type Asset = Node & {
 	type: AssetType;
 	updatedAt: Scalars['DateTime']['output'];
 	width: Scalars['Int']['output'];
+};
+
+export type AssetCustomFields = {
+	__typename?: 'AssetCustomFields';
+	review?: Maybe<ProductReview>;
 };
 
 export type AssetList = PaginatedList & {
@@ -1033,6 +1038,7 @@ export const ErrorCode = {
 	PasswordValidationError: 'PASSWORD_VALIDATION_ERROR',
 	PaymentDeclinedError: 'PAYMENT_DECLINED_ERROR',
 	PaymentFailedError: 'PAYMENT_FAILED_ERROR',
+	ReviewSubmissionError: 'REVIEW_SUBMISSION_ERROR',
 	SellerAddressNotSetOrInvalid: 'SELLER_ADDRESS_NOT_SET_OR_INVALID',
 	SellerShippoApiKeyNotSetOrInvalid: 'SELLER_SHIPPO_API_KEY_NOT_SET_OR_INVALID',
 	SettingsStoreShippoApiKeyNotSetOrInvalid: 'SETTINGS_STORE_SHIPPO_API_KEY_NOT_SET_OR_INVALID',
@@ -1878,7 +1884,6 @@ export type Mutation = {
 	batchUpdateShippoFulfillmentState: UpdateFulfillmentStateResult;
 	/** Create a new Customer Address */
 	createCustomerAddress: Address;
-	createCustomizedImageAsset: CreateCustomizedImageAssetResult;
 	createStripePaymentIntent?: Maybe<Scalars['String']['output']>;
 	/** Delete an existing Address */
 	deleteCustomerAddress: Success;
@@ -1942,6 +1947,7 @@ export type Mutation = {
 	 * shipping method will apply to.
 	 */
 	setOrderShippingMethod: SetOrderShippingMethodResult;
+	submitProductReview: SubmitProductReviewResult;
 	/** Transitions an Order to a new state. Valid next states can be found by querying `nextOrderStates` */
 	transitionOrderToState?: Maybe<TransitionOrderToStateResult>;
 	/** Unsets the billing address for the active Order. Available since version 3.1.0 */
@@ -1966,6 +1972,7 @@ export type Mutation = {
 	 * provided here.
 	 */
 	verifyCustomerAccount: VerifyCustomerAccountResult;
+	voteOnReview: ProductReview;
 };
 
 export type MutationAddItemToOrderArgs = {
@@ -2004,10 +2011,6 @@ export type MutationBatchAddCustomizedImagesToOrderArgs = {
 
 export type MutationCreateCustomerAddressArgs = {
 	input: CreateAddressInput;
-};
-
-export type MutationCreateCustomizedImageAssetArgs = {
-	file: Scalars['Upload']['input'];
 };
 
 export type MutationDeleteCustomerAddressArgs = {
@@ -2070,6 +2073,10 @@ export type MutationSetOrderShippingMethodArgs = {
 	shippingMethodId: Array<Scalars['ID']['input']>;
 };
 
+export type MutationSubmitProductReviewArgs = {
+	input: SubmitProductReviewInput;
+};
+
 export type MutationTransitionOrderToStateArgs = {
 	state: Scalars['String']['input'];
 };
@@ -2094,6 +2101,11 @@ export type MutationUpdateCustomerPasswordArgs = {
 export type MutationVerifyCustomerAccountArgs = {
 	password?: InputMaybe<Scalars['String']['input']>;
 	token: Scalars['String']['input'];
+};
+
+export type MutationVoteOnReviewArgs = {
+	id: Scalars['ID']['input'];
+	vote: Scalars['Boolean']['input'];
 };
 
 export type NativeAuthInput = {
@@ -2353,11 +2365,13 @@ export type OrderLine = Node & {
 export type OrderLineCustomFields = {
 	__typename?: 'OrderLineCustomFields';
 	customizableOptionJson?: Maybe<Scalars['String']['output']>;
+	customizedBuildState?: Maybe<Scalars['String']['output']>;
 	customizedImageAsset?: Maybe<Asset>;
 };
 
 export type OrderLineCustomFieldsInput = {
 	customizableOptionJson?: InputMaybe<Scalars['String']['input']>;
+	customizedBuildState?: InputMaybe<Scalars['String']['input']>;
 	customizedImageAssetId?: InputMaybe<Scalars['ID']['input']>;
 };
 
@@ -2806,6 +2820,8 @@ export type Product = Node & {
 	languageCode: LanguageCode;
 	name: Scalars['String']['output'];
 	optionGroups: Array<ProductOptionGroup>;
+	reviews: ProductReviewList;
+	reviewsHistogram: Array<ProductReviewHistogramItem>;
 	slug: Scalars['String']['output'];
 	translations: Array<ProductTranslation>;
 	updatedAt: Scalars['DateTime']['output'];
@@ -2815,6 +2831,10 @@ export type Product = Node & {
 	variants: Array<ProductVariant>;
 };
 
+export type ProductReviewsArgs = {
+	options?: InputMaybe<ProductReviewListOptions>;
+};
+
 export type ProductVariantListArgs = {
 	options?: InputMaybe<ProductVariantListOptions>;
 };
@@ -2822,6 +2842,9 @@ export type ProductVariantListArgs = {
 export type ProductCustomFields = {
 	__typename?: 'ProductCustomFields';
 	customizableClass?: Maybe<Scalars['String']['output']>;
+	reviewCount?: Maybe<Scalars['Int']['output']>;
+	reviewRating?: Maybe<Scalars['Float']['output']>;
+	reviews?: Maybe<Array<ProductReview>>;
 };
 
 export type ProductFilterParameter = {
@@ -2834,6 +2857,8 @@ export type ProductFilterParameter = {
 	id?: InputMaybe<IdOperators>;
 	languageCode?: InputMaybe<StringOperators>;
 	name?: InputMaybe<StringOperators>;
+	reviewCount?: InputMaybe<NumberOperators>;
+	reviewRating?: InputMaybe<NumberOperators>;
 	slug?: InputMaybe<StringOperators>;
 	updatedAt?: InputMaybe<DateOperators>;
 };
@@ -2902,12 +2927,102 @@ export type ProductOptionTranslation = {
 	updatedAt: Scalars['DateTime']['output'];
 };
 
+export type ProductReview = Node & {
+	__typename?: 'ProductReview';
+	assets?: Maybe<Array<Asset>>;
+	authorLocation?: Maybe<Scalars['String']['output']>;
+	authorName: Scalars['String']['output'];
+	body?: Maybe<Scalars['String']['output']>;
+	createdAt: Scalars['DateTime']['output'];
+	customFields?: Maybe<Scalars['JSON']['output']>;
+	downvotes: Scalars['Int']['output'];
+	id: Scalars['ID']['output'];
+	product: Product;
+	productVariant?: Maybe<ProductVariant>;
+	rating: Scalars['Float']['output'];
+	response?: Maybe<Scalars['String']['output']>;
+	responseCreatedAt?: Maybe<Scalars['DateTime']['output']>;
+	state: Scalars['String']['output'];
+	summary: Scalars['String']['output'];
+	translations: Array<ProductReviewTranslation>;
+	updatedAt: Scalars['DateTime']['output'];
+	upvotes: Scalars['Int']['output'];
+};
+
+export type ProductReviewFilterParameter = {
+	_and?: InputMaybe<Array<ProductReviewFilterParameter>>;
+	_or?: InputMaybe<Array<ProductReviewFilterParameter>>;
+	authorLocation?: InputMaybe<StringOperators>;
+	authorName?: InputMaybe<StringOperators>;
+	body?: InputMaybe<StringOperators>;
+	createdAt?: InputMaybe<DateOperators>;
+	downvotes?: InputMaybe<NumberOperators>;
+	id?: InputMaybe<IdOperators>;
+	rating?: InputMaybe<NumberOperators>;
+	response?: InputMaybe<StringOperators>;
+	responseCreatedAt?: InputMaybe<DateOperators>;
+	state?: InputMaybe<StringOperators>;
+	summary?: InputMaybe<StringOperators>;
+	updatedAt?: InputMaybe<DateOperators>;
+	upvotes?: InputMaybe<NumberOperators>;
+};
+
+export type ProductReviewHistogramItem = {
+	__typename?: 'ProductReviewHistogramItem';
+	bin: Scalars['Int']['output'];
+	frequency: Scalars['Int']['output'];
+};
+
+export type ProductReviewList = PaginatedList & {
+	__typename?: 'ProductReviewList';
+	items: Array<ProductReview>;
+	totalItems: Scalars['Int']['output'];
+};
+
+export type ProductReviewListOptions = {
+	/** Allows the results to be filtered */
+	filter?: InputMaybe<ProductReviewFilterParameter>;
+	/** Specifies whether multiple top-level "filter" fields should be combined with a logical AND or OR operation. Defaults to AND. */
+	filterOperator?: InputMaybe<LogicalOperator>;
+	/** Skips the first n results, for use in pagination */
+	skip?: InputMaybe<Scalars['Int']['input']>;
+	/** Specifies which properties to sort the results by */
+	sort?: InputMaybe<ProductReviewSortParameter>;
+	/** Takes n results, for use in pagination */
+	take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type ProductReviewSortParameter = {
+	authorLocation?: InputMaybe<SortOrder>;
+	authorName?: InputMaybe<SortOrder>;
+	body?: InputMaybe<SortOrder>;
+	createdAt?: InputMaybe<SortOrder>;
+	downvotes?: InputMaybe<SortOrder>;
+	id?: InputMaybe<SortOrder>;
+	rating?: InputMaybe<SortOrder>;
+	response?: InputMaybe<SortOrder>;
+	responseCreatedAt?: InputMaybe<SortOrder>;
+	state?: InputMaybe<SortOrder>;
+	summary?: InputMaybe<SortOrder>;
+	updatedAt?: InputMaybe<SortOrder>;
+	upvotes?: InputMaybe<SortOrder>;
+};
+
+export type ProductReviewTranslation = {
+	__typename?: 'ProductReviewTranslation';
+	id: Scalars['ID']['output'];
+	languageCode: LanguageCode;
+	text: Scalars['String']['output'];
+};
+
 export type ProductSortParameter = {
 	createdAt?: InputMaybe<SortOrder>;
 	customizableClass?: InputMaybe<SortOrder>;
 	description?: InputMaybe<SortOrder>;
 	id?: InputMaybe<SortOrder>;
 	name?: InputMaybe<SortOrder>;
+	reviewCount?: InputMaybe<SortOrder>;
+	reviewRating?: InputMaybe<SortOrder>;
 	slug?: InputMaybe<SortOrder>;
 	updatedAt?: InputMaybe<SortOrder>;
 };
@@ -3356,6 +3471,12 @@ export type ResetPasswordResult =
 	| PasswordResetTokenExpiredError
 	| PasswordResetTokenInvalidError
 	| PasswordValidationError;
+
+export type ReviewSubmissionError = ErrorResult & {
+	__typename?: 'ReviewSubmissionError';
+	errorCode: ErrorCode;
+	message: Scalars['String']['output'];
+};
 
 export type Role = Node & {
 	__typename?: 'Role';
@@ -3938,6 +4059,18 @@ export type StructFieldConfig =
 	| StringStructFieldConfig
 	| TextStructFieldConfig;
 
+export type SubmitProductReviewInput = {
+	authorLocation?: InputMaybe<Scalars['String']['input']>;
+	body: Scalars['String']['input'];
+	files?: InputMaybe<Array<Scalars['Upload']['input']>>;
+	productId: Scalars['ID']['input'];
+	rating: Scalars['Float']['input'];
+	summary: Scalars['String']['input'];
+	variantId?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type SubmitProductReviewResult = ProductReview | ReviewSubmissionError;
+
 /** Indicates that an operation succeeded, where we do not want to return any more specific information. */
 export type Success = {
 	__typename?: 'Success';
@@ -4201,8 +4334,6 @@ export type Zone = Node & {
 	name: Scalars['String']['output'];
 	updatedAt: Scalars['DateTime']['output'];
 };
-
-export type CreateCustomizedImageAssetResult = CreateAssetSuccess | CreateCustomizedImageAssetError;
 
 export type AuthenticateMutationVariables = Exact<{
 	input: AuthenticationInput;
@@ -4871,17 +5002,6 @@ export type CustomizableClassDefFindAllQuery = {
 		name: string;
 		optionDefinition: string;
 	}>;
-};
-
-export type CreateCustomizedImageAssetMutationVariables = Exact<{
-	file: Scalars['Upload']['input'];
-}>;
-
-export type CreateCustomizedImageAssetMutation = {
-	__typename?: 'Mutation';
-	createCustomizedImageAsset:
-		| { __typename?: 'CreateAssetSuccess'; assetId: string }
-		| { __typename?: 'CreateCustomizedImageAssetError'; errorCode: ErrorCode; message: string };
 };
 
 export type BatchAddCustomizedImagesToOrderMutationVariables = Exact<{
@@ -6021,6 +6141,17 @@ export type BatchUpdateShippoFulfillmentStateMutation = {
 		  };
 };
 
+export type SubmitProductReviewMutationVariables = Exact<{
+	input: SubmitProductReviewInput;
+}>;
+
+export type SubmitProductReviewMutation = {
+	__typename?: 'Mutation';
+	submitProductReview:
+		| { __typename?: 'ProductReview'; id: string; state: string }
+		| { __typename?: 'ReviewSubmissionError'; errorCode: ErrorCode; message: string };
+};
+
 export type DetailedProductFragment = {
 	__typename?: 'Product';
 	id: string;
@@ -6061,7 +6192,37 @@ export type DetailedProductFragment = {
 			customBuildJson?: string | null;
 		} | null;
 	}>;
-	customFields?: { __typename?: 'ProductCustomFields'; customizableClass?: string | null } | null;
+	reviews: {
+		__typename?: 'ProductReviewList';
+		totalItems: number;
+		items: Array<{
+			__typename?: 'ProductReview';
+			id: string;
+			rating: number;
+			summary: string;
+			body?: string | null;
+			authorName: string;
+			authorLocation?: string | null;
+			createdAt: any;
+			upvotes: number;
+			downvotes: number;
+			response?: string | null;
+			responseCreatedAt?: any | null;
+			assets?: Array<{ __typename?: 'Asset'; id: string; preview: string }> | null;
+			translations: Array<{
+				__typename?: 'ProductReviewTranslation';
+				id: string;
+				languageCode: LanguageCode;
+				text: string;
+			}>;
+		}>;
+	};
+	customFields?: {
+		__typename?: 'ProductCustomFields';
+		customizableClass?: string | null;
+		reviewCount?: number | null;
+		reviewRating?: number | null;
+	} | null;
 };
 
 export type ProductQueryVariables = Exact<{
@@ -6111,7 +6272,37 @@ export type ProductQuery = {
 				customBuildJson?: string | null;
 			} | null;
 		}>;
-		customFields?: { __typename?: 'ProductCustomFields'; customizableClass?: string | null } | null;
+		reviews: {
+			__typename?: 'ProductReviewList';
+			totalItems: number;
+			items: Array<{
+				__typename?: 'ProductReview';
+				id: string;
+				rating: number;
+				summary: string;
+				body?: string | null;
+				authorName: string;
+				authorLocation?: string | null;
+				createdAt: any;
+				upvotes: number;
+				downvotes: number;
+				response?: string | null;
+				responseCreatedAt?: any | null;
+				assets?: Array<{ __typename?: 'Asset'; id: string; preview: string }> | null;
+				translations: Array<{
+					__typename?: 'ProductReviewTranslation';
+					id: string;
+					languageCode: LanguageCode;
+					text: string;
+				}>;
+			}>;
+		};
+		customFields?: {
+			__typename?: 'ProductCustomFields';
+			customizableClass?: string | null;
+			reviewCount?: number | null;
+			reviewRating?: number | null;
+		} | null;
 	} | null;
 };
 
@@ -6313,8 +6504,36 @@ export const DetailedProductFragmentDoc = gql`
 				customBuildJson
 			}
 		}
+		reviews {
+			items {
+				id
+				rating
+				summary
+				body
+				rating
+				authorName
+				authorLocation
+				createdAt
+				upvotes
+				downvotes
+				assets {
+					id
+					preview
+				}
+				response
+				responseCreatedAt
+				translations {
+					id
+					languageCode
+					text
+				}
+			}
+			totalItems
+		}
 		customFields {
 			customizableClass
+			reviewCount
+			reviewRating
 		}
 	}
 `;
@@ -6740,19 +6959,6 @@ export const CustomizableClassDefFindAllDocument = gql`
 		}
 	}
 `;
-export const CreateCustomizedImageAssetDocument = gql`
-	mutation createCustomizedImageAsset($file: Upload!) {
-		createCustomizedImageAsset(file: $file) {
-			... on CreateAssetSuccess {
-				assetId
-			}
-			... on CreateCustomizedImageAssetError {
-				errorCode
-				message
-			}
-		}
-	}
-`;
 export const BatchAddCustomizedImagesToOrderDocument = gql`
 	mutation batchAddCustomizedImagesToOrder($files: [Upload!]!, $orderLineIds: [ID!]!) {
 		batchAddCustomizedImagesToOrder(files: $files, orderLineIds: $orderLineIds) {
@@ -6907,6 +7113,20 @@ export const BatchUpdateShippoFulfillmentStateDocument = gql`
 				success
 				message
 				numFulfillmentsUpdated
+			}
+		}
+	}
+`;
+export const SubmitProductReviewDocument = gql`
+	mutation submitProductReview($input: SubmitProductReviewInput!) {
+		submitProductReview(input: $input) {
+			... on ProductReview {
+				id
+				state
+			}
+			... on ReviewSubmissionError {
+				errorCode
+				message
 			}
 		}
 	}
@@ -7264,19 +7484,6 @@ export function getSdk<C>(requester: Requester<C>) {
 				options
 			) as Promise<CustomizableClassDefFindAllQuery>;
 		},
-		createCustomizedImageAsset(
-			variables: CreateCustomizedImageAssetMutationVariables,
-			options?: C
-		): Promise<CreateCustomizedImageAssetMutation> {
-			return requester<
-				CreateCustomizedImageAssetMutation,
-				CreateCustomizedImageAssetMutationVariables
-			>(
-				CreateCustomizedImageAssetDocument,
-				variables,
-				options
-			) as Promise<CreateCustomizedImageAssetMutation>;
-		},
 		batchAddCustomizedImagesToOrder(
 			variables: BatchAddCustomizedImagesToOrderMutationVariables,
 			options?: C
@@ -7406,6 +7613,16 @@ export function getSdk<C>(requester: Requester<C>) {
 				variables,
 				options
 			) as Promise<BatchUpdateShippoFulfillmentStateMutation>;
+		},
+		submitProductReview(
+			variables: SubmitProductReviewMutationVariables,
+			options?: C
+		): Promise<SubmitProductReviewMutation> {
+			return requester<SubmitProductReviewMutation, SubmitProductReviewMutationVariables>(
+				SubmitProductReviewDocument,
+				variables,
+				options
+			) as Promise<SubmitProductReviewMutation>;
 		},
 		product(variables?: ProductQueryVariables, options?: C): Promise<ProductQuery> {
 			return requester<ProductQuery, ProductQueryVariables>(
