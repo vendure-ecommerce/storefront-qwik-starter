@@ -6148,8 +6148,8 @@ export type SubmitProductReviewMutationVariables = Exact<{
 export type SubmitProductReviewMutation = {
 	__typename?: 'Mutation';
 	submitProductReview:
-		| { __typename?: 'ProductReview'; id: string; state: string }
-		| { __typename?: 'ReviewSubmissionError'; errorCode: ErrorCode; message: string };
+		| { __typename: 'ProductReview'; id: string; state: string }
+		| { __typename: 'ReviewSubmissionError'; errorCode: ErrorCode; message: string };
 };
 
 export type DetailedProductFragment = {
@@ -7121,10 +7121,12 @@ export const SubmitProductReviewDocument = gql`
 	mutation submitProductReview($input: SubmitProductReviewInput!) {
 		submitProductReview(input: $input) {
 			... on ProductReview {
+				__typename
 				id
 				state
 			}
 			... on ReviewSubmissionError {
+				__typename
 				errorCode
 				message
 			}

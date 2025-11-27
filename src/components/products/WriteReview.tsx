@@ -1,10 +1,13 @@
-import { $, component$, QRL, Signal, useSignal } from '@qwik.dev/core';
+import { component$, QRL, Signal, useSignal } from '@qwik.dev/core';
 import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
 import { LuStar } from '@qwikest/icons/lucide';
 import FormInput from '~/components/common/FormInput';
 import { submitProductReviewMutation } from '~/providers/shop/orders/review';
 import { HighlightedButton } from '../buttons/HighlightedButton';
+import FormImageInput from '../common/FormImageInput';
 import { Dialog } from '../dialog/Dialog';
+
+const MAX_IMAGE_FILES = 2;
 
 interface IProps {
 	open: Signal<boolean>;
@@ -39,29 +42,47 @@ export default component$<IProps>(({ open, basicInfo, onSuccess$, onClose$ }) =>
 	const action = useWriteReviewAction();
 	const ratingSignal = useSignal<number>(5);
 
-	const handleSubmit = $(async (detail: any) => {
-		if (detail.value.success) {
-			// Call your mutation here
-			const input = {
-				summary: detail.value.data.summary,
-				body: detail.value.data.body,
-				rating: detail.value.data.rating,
-				...basicInfo,
-			};
-			const result = await submitProductReviewMutation(input);
-			if (result?.__typename === 'ProductReview') {
-				if (onSuccess$) await onSuccess$();
-				open.value = false;
-			}
-			if (result?.__typename === 'ReviewSubmissionError') {
-				// Handle error (you might want to show this in the UI)
-				alert(result.message);
-			}
-		}
-	});
 	return (
 		<Dialog open={open}>
-			<Form action={action} onSubmitCompleted$={handleSubmit}>
+			<Form
+				action={action}
+				onSubmitCompleted$={async (event) => {
+					// Note that this function cannot defined elsewhere for some qwik reasons I don't fully get
+					const { detail, target } = event;
+					if (detail.value.success && detail.value.data) {
+						const form = target as HTMLFormElement;
+						// Get the file input by name
+						const filesInput = form.elements.namedItem('files') as HTMLInputElement;
+						// Get the FileList
+						const fileList = filesInput?.files;
+
+						// Convert FileList to array if needed
+						const filesArray = fileList ? Array.from(fileList) : [];
+						const input = {
+							summary: detail.value.data.summary,
+							body: detail.value.data.body,
+							rating: detail.value.data.rating,
+							files: filesArray || undefined,
+							// files: detail.value.data.files, // Removed because 'files' is not in the schema
+							...basicInfo,
+						};
+
+						console.log('Submitting review with input:', input.summary, input.body, input.rating);
+						const result = await submitProductReviewMutation(input);
+						console.log('Mutation result:', result);
+						if (result?.__typename === 'ProductReview') {
+							console.log('Review submitted successfully:', result);
+							if (onSuccess$) await onSuccess$();
+							open.value = false;
+						}
+						if (result?.__typename === 'ReviewSubmissionError') {
+							console.error('Review submission error:', result);
+							// Handle error (you might want to show this in the UI)
+							alert(result.message);
+						}
+					}
+				}}
+			>
 				<div class="p-2 mt-4 grid grid-cols-1 gap-y-3">
 					<FormInput name="summary" label="Summary" formAction={action} />
 					<FormInput
@@ -71,6 +92,13 @@ export default component$<IProps>(({ open, basicInfo, onSuccess$, onClose$ }) =>
 						className="h-48 w-96"
 						as="textarea"
 					/>
+					<FormImageInput
+						name="files"
+						label={`Upload Images (max ${MAX_IMAGE_FILES})`}
+						formAction={action}
+						maxFiles={MAX_IMAGE_FILES}
+					/>
+					{/* Rating */}
 					<div>
 						<label class="block mb-1 font-medium">Rating</label>
 						<div class="flex items-center space-x-1">
@@ -96,16 +124,6 @@ export default component$<IProps>(({ open, basicInfo, onSuccess$, onClose$ }) =>
 					<HighlightedButton type="submit" extraClass="m-2">
 						Submit Review
 					</HighlightedButton>
-					<button
-						type="button"
-						class="m-2 px-4 py-2 rounded border"
-						onClick$={() => {
-							if (onClose$) onClose$();
-							open.value = false;
-						}}
-					>
-						Cancel
-					</button>
 				</div>
 			</Form>
 		</Dialog>

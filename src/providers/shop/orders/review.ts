@@ -10,10 +10,12 @@ gql`
 	mutation submitProductReview($input: SubmitProductReviewInput!) {
 		submitProductReview(input: $input) {
 			... on ProductReview {
+				__typename
 				id
 				state
 			}
 			... on ReviewSubmissionError {
+				__typename
 				errorCode
 				message
 			}
