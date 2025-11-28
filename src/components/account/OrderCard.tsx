@@ -39,7 +39,7 @@ export default component$<IProps>(({ order }) => {
 				<HighlightedButton
 					extraClass="m-auto"
 					onClick$={() => {
-						navigate(`/account/orders/${order?.code}`);
+						navigate(`/account/purchase-history/${order?.code}`);
 					}}
 				>
 					Go to detail

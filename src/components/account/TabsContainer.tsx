@@ -22,8 +22,8 @@ export const TabsContainer = component$(() => {
 					<Tab
 						Icon={ShoppingBagIcon}
 						text="Purchase history"
-						href="/account/orders"
-						isActive={location.url.pathname.indexOf('orders') >= 0}
+						href="/account/purchase-history"
+						isActive={location.url.pathname.indexOf('purchase-history') >= 0}
 					/>
 
 					<Tab
