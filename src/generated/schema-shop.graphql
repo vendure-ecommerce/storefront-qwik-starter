@@ -1464,6 +1464,7 @@ enum ErrorCode {
 	CREATE_CUSTOMIZED_IMAGE_ASSET_ERROR
 	CUSTOMIZED_IMAGE_AUTHORIZATION_ERROR
 	EMAIL_ADDRESS_CONFLICT_ERROR
+	GET_PURCHASED_VARIANT_FOR_REVIEW_ERROR
 	GUEST_CHECKOUT_ERROR
 	IDENTIFIER_CHANGE_TOKEN_EXPIRED_ERROR
 	IDENTIFIER_CHANGE_TOKEN_INVALID_ERROR
@@ -1764,6 +1765,15 @@ type FulfillmentLine {
 	orderLineId: ID!
 	quantity: Int!
 }
+
+type GetPurchasedVariantForReviewError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+union GetPurchasedVariantForReviewResult =
+	| GetPurchasedVariantForReviewError
+	| PurchasedVariantWithReviewStatusList
 
 enum GlobalFlag {
 	FALSE
@@ -4535,6 +4545,16 @@ type PublicShippingMethod {
 	translations: [ShippingMethodTranslation!]!
 }
 
+type PurchasedVariantWithReviewStatus {
+	canReview: Boolean!
+	notReviewableReason: String
+	variantId: ID!
+}
+
+type PurchasedVariantWithReviewStatusList {
+	items: [PurchasedVariantWithReviewStatus!]!
+}
+
 type Query {
 	"""
 	The active Channel
@@ -4602,6 +4622,7 @@ type Query {
 	filamentColorFindSupported: [FilamentColor!]!
 	fontMenuFindAll: [FontMenu!]!
 	generateBraintreeClientToken(includeCustomerId: Boolean, orderId: ID): String
+	getPurchasedVariantForReview: GetPurchasedVariantForReviewResult!
 
 	"""
 	Returns information about the current authenticated User
@@ -5606,12 +5627,12 @@ union StructFieldConfig =
 
 input SubmitProductReviewInput {
 	authorLocation: String
+	authorName: String
 	body: String!
 	files: [Upload!]
-	productId: ID!
+	productVariantId: ID!
 	rating: Float!
 	summary: String!
-	variantId: ID
 }
 
 union SubmitProductReviewResult = ProductReview | ReviewSubmissionError

@@ -12,7 +12,7 @@ export default component$(() => {
 			>
 				Write a Review
 			</button>
-			<WriteReview open={openSignal} basicInfo={{ productId: '1', variantId: '1' }} />
+			<WriteReview open={openSignal} basicInfo={{ productId: '1', productVariantId: '1' }} />
 		</div>
 	);
 });

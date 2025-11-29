@@ -1,4 +1,5 @@
 import { Collection as CollectionGql, Order } from '~/generated/graphql';
+import { PurchasedVariantWithReviewStatus } from './generated/graphql-shop';
 
 export type AppState = {
 	collections: CollectionGql[];
@@ -9,6 +10,7 @@ export type AppState = {
 	shippingAddress: ShippingAddress;
 	availableCountries: Country[];
 	addressBook: ShippingAddress[];
+	purchasedVariantsWithReviewStatus?: PurchasedVariantWithReviewStatus[]; // this will be filled in when customer access the purchase-history page
 };
 
 export type Product = {

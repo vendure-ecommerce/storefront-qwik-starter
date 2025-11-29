@@ -142,6 +142,7 @@ gql`
 			orders(options: $options) {
 				items {
 					id
+					createdAt
 					code
 					state
 					totalWithTax
@@ -151,6 +152,7 @@ gql`
 							preview
 						}
 						productVariant {
+							id
 							name
 						}
 					}

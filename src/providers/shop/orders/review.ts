@@ -1,10 +1,20 @@
 import gql from 'graphql-tag';
-import { SubmitProductReviewInput } from '~/generated/graphql-shop';
+import {
+	GetPurchasedVariantForReviewResult,
+	SubmitProductReviewInput,
+} from '~/generated/graphql-shop';
 import { shopSdk } from '~/graphql-wrapper';
 
 export const submitProductReviewMutation = async (input: SubmitProductReviewInput) => {
 	return await shopSdk.submitProductReview({ input }).then((res) => res.submitProductReview);
 };
+
+export const getPurchasedVariantForReviewQuery =
+	async (): Promise<GetPurchasedVariantForReviewResult> => {
+		return await shopSdk
+			.getPurchasedVariantForReviewQuery()
+			.then((res) => res.getPurchasedVariantForReview);
+	};
 
 gql`
 	mutation submitProductReview($input: SubmitProductReviewInput!) {
@@ -15,6 +25,26 @@ gql`
 				state
 			}
 			... on ReviewSubmissionError {
+				__typename
+				errorCode
+				message
+			}
+		}
+	}
+`;
+
+gql`
+	query getPurchasedVariantForReviewQuery {
+		getPurchasedVariantForReview {
+			... on PurchasedVariantWithReviewStatusList {
+				__typename
+				items {
+					variantId
+					canReview
+					notReviewableReason
+				}
+			}
+			... on ErrorResult {
 				__typename
 				errorCode
 				message

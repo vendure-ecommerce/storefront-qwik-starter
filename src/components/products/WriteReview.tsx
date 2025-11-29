@@ -1,7 +1,8 @@
-import { component$, QRL, Signal, useSignal } from '@qwik.dev/core';
+import { component$, QRL, Signal, useContext, useSignal } from '@qwik.dev/core';
 import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
 import { LuStar } from '@qwikest/icons/lucide';
 import FormInput from '~/components/common/FormInput';
+import { APP_STATE } from '~/constants';
 import { submitProductReviewMutation } from '~/providers/shop/orders/review';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import FormImageInput from '../common/FormImageInput';
@@ -12,12 +13,10 @@ const MAX_IMAGE_FILES = 2;
 interface IProps {
 	open: Signal<boolean>;
 	basicInfo: {
-		productId: string;
-		variantId?: string;
+		productVariantId: string;
 		authorLocation?: string;
 	};
 	onSuccess$?: QRL<() => void>;
-	onClose$?: QRL<() => void>;
 }
 
 export const useWriteReviewAction = globalAction$(
@@ -26,64 +25,83 @@ export const useWriteReviewAction = globalAction$(
 		return { success: true, data };
 	},
 	zod$({
+		authorName: z
+			.string()
+			.min(1, 'Author name is required')
+			.max(50, 'Author name must be at most 50 characters'),
 		summary: z
 			.string()
 			.min(1, 'Summary is required')
-			.max(20, 'Summary must be at most 20 characters'),
+			.max(30, 'Summary must be at most 30 characters'),
 		body: z
 			.string()
 			.min(1, 'Review body is required')
-			.max(200, 'Review body must be at most 200 characters'),
+			.max(150, 'Review body must be at most 150 characters'),
 		rating: z.coerce.number().int().min(1).max(5),
 	})
 );
 
-export default component$<IProps>(({ open, basicInfo, onSuccess$, onClose$ }) => {
+export default component$<IProps>(({ open, basicInfo, onSuccess$ }) => {
 	const action = useWriteReviewAction();
+	const appState = useContext(APP_STATE);
 	const ratingSignal = useSignal<number>(5);
+	const hideLastName = useSignal(false);
+
+	const firstName = appState.customer.firstName || 'DiliNook';
+	const lastName = appState.customer?.lastName || '';
 
 	return (
 		<Dialog open={open}>
 			<Form
 				action={action}
 				onSubmitCompleted$={async (event) => {
-					// Note that this function cannot defined elsewhere for some qwik reasons I don't fully get
 					const { detail, target } = event;
 					if (detail.value.success && detail.value.data) {
 						const form = target as HTMLFormElement;
-						// Get the file input by name
 						const filesInput = form.elements.namedItem('files') as HTMLInputElement;
-						// Get the FileList
 						const fileList = filesInput?.files;
-
-						// Convert FileList to array if needed
 						const filesArray = fileList ? Array.from(fileList) : [];
 						const input = {
+							authorName: detail.value.data.authorName,
 							summary: detail.value.data.summary,
 							body: detail.value.data.body,
 							rating: detail.value.data.rating,
 							files: filesArray || undefined,
-							// files: detail.value.data.files, // Removed because 'files' is not in the schema
 							...basicInfo,
 						};
 
-						console.log('Submitting review with input:', input.summary, input.body, input.rating);
 						const result = await submitProductReviewMutation(input);
-						console.log('Mutation result:', result);
 						if (result?.__typename === 'ProductReview') {
-							console.log('Review submitted successfully:', result);
 							if (onSuccess$) await onSuccess$();
 							open.value = false;
 						}
 						if (result?.__typename === 'ReviewSubmissionError') {
-							console.error('Review submission error:', result);
-							// Handle error (you might want to show this in the UI)
 							alert(result.message);
 						}
 					}
 				}}
 			>
 				<div class="p-2 mt-4 grid grid-cols-1 gap-y-3">
+					{/* Author Section */}
+					<FormInput
+						name="authorName"
+						label="Author"
+						formAction={action}
+						defaults={{
+							authorName: `${firstName}${hideLastName.value && lastName ? ` ${lastName.charAt(0)}.` : ` ${lastName}`}`,
+						}}
+						readOnly={true}
+					/>
+					<p class="block text-sm font-medium text-gray-700 m-2">
+						<input
+							type="checkbox"
+							checked={hideLastName.value}
+							onChange$={() => (hideLastName.value = !hideLastName.value)}
+							class="mr-2"
+						/>
+						Use Initial on Last Name
+					</p>
+
 					<FormInput name="summary" label="Summary" formAction={action} />
 					<FormInput
 						name="body"

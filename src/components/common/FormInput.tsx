@@ -9,6 +9,7 @@ interface FormInputProps<T extends Action<any, any, any>> {
 	defaults?: any;
 	className?: string;
 	as?: 'input' | 'textarea';
+	readOnly?: boolean;
 }
 
 /**
@@ -52,7 +53,7 @@ interface FormInputProps<T extends Action<any, any, any>> {
  *   );
  */
 export default component$<FormInputProps<Action<any, any, any>>>(
-	({ name, label, formAction, autoComplete, defaults, className, as }) => {
+	({ name, label, formAction, autoComplete, defaults, className, as, readOnly = false }) => {
 		const fieldErrors = formAction.value?.fieldErrors as
 			| Record<string, string | undefined>
 			| undefined;
@@ -80,7 +81,12 @@ export default component$<FormInputProps<Action<any, any, any>>>(
 							name={name as string}
 							value={defaultValue as string}
 							autoComplete={autoComplete}
-							class={`block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm ${className ?? ''}`}
+							class={`
+								block w-full border-gray-300 rounded-md shadow-sm
+								focus:ring-primary-500 focus:border-primary-500 sm:text-sm 
+								${readOnly ? 'bg-gray-100 cursor-not-allowed' : ''}
+								${className ?? ''}`}
+							readOnly={readOnly}
 						/>
 					)}
 				</div>

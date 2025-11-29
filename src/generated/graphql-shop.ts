@@ -1014,6 +1014,7 @@ export const ErrorCode = {
 	CreateCustomizedImageAssetError: 'CREATE_CUSTOMIZED_IMAGE_ASSET_ERROR',
 	CustomizedImageAuthorizationError: 'CUSTOMIZED_IMAGE_AUTHORIZATION_ERROR',
 	EmailAddressConflictError: 'EMAIL_ADDRESS_CONFLICT_ERROR',
+	GetPurchasedVariantForReviewError: 'GET_PURCHASED_VARIANT_FOR_REVIEW_ERROR',
 	GuestCheckoutError: 'GUEST_CHECKOUT_ERROR',
 	IdentifierChangeTokenExpiredError: 'IDENTIFIER_CHANGE_TOKEN_EXPIRED_ERROR',
 	IdentifierChangeTokenInvalidError: 'IDENTIFIER_CHANGE_TOKEN_INVALID_ERROR',
@@ -1294,6 +1295,16 @@ export type FulfillmentLine = {
 	orderLineId: Scalars['ID']['output'];
 	quantity: Scalars['Int']['output'];
 };
+
+export type GetPurchasedVariantForReviewError = ErrorResult & {
+	__typename?: 'GetPurchasedVariantForReviewError';
+	errorCode: ErrorCode;
+	message: Scalars['String']['output'];
+};
+
+export type GetPurchasedVariantForReviewResult =
+	| GetPurchasedVariantForReviewError
+	| PurchasedVariantWithReviewStatusList;
 
 export const GlobalFlag = {
 	False: 'FALSE',
@@ -3221,6 +3232,18 @@ export type PublicShippingMethod = {
 	translations: Array<ShippingMethodTranslation>;
 };
 
+export type PurchasedVariantWithReviewStatus = {
+	__typename?: 'PurchasedVariantWithReviewStatus';
+	canReview: Scalars['Boolean']['output'];
+	notReviewableReason?: Maybe<Scalars['String']['output']>;
+	variantId: Scalars['ID']['output'];
+};
+
+export type PurchasedVariantWithReviewStatusList = {
+	__typename?: 'PurchasedVariantWithReviewStatusList';
+	items: Array<PurchasedVariantWithReviewStatus>;
+};
+
 export type Query = {
 	__typename?: 'Query';
 	/** The active Channel */
@@ -3256,6 +3279,7 @@ export type Query = {
 	filamentColorFindSupported: Array<FilamentColor>;
 	fontMenuFindAll: Array<FontMenu>;
 	generateBraintreeClientToken?: Maybe<Scalars['String']['output']>;
+	getPurchasedVariantForReview: GetPurchasedVariantForReviewResult;
 	/** Returns information about the current authenticated User */
 	me?: Maybe<CurrentUser>;
 	/** Returns the possible next states that the activeOrder can transition to */
@@ -4061,12 +4085,12 @@ export type StructFieldConfig =
 
 export type SubmitProductReviewInput = {
 	authorLocation?: InputMaybe<Scalars['String']['input']>;
+	authorName?: InputMaybe<Scalars['String']['input']>;
 	body: Scalars['String']['input'];
 	files?: InputMaybe<Array<Scalars['Upload']['input']>>;
-	productId: Scalars['ID']['input'];
+	productVariantId: Scalars['ID']['input'];
 	rating: Scalars['Float']['input'];
 	summary: Scalars['String']['input'];
-	variantId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type SubmitProductReviewResult = ProductReview | ReviewSubmissionError;
@@ -4882,6 +4906,7 @@ export type ActiveCustomerOrdersQuery = {
 			items: Array<{
 				__typename?: 'Order';
 				id: string;
+				createdAt: any;
 				code: string;
 				state: string;
 				totalWithTax: any;
@@ -4889,7 +4914,7 @@ export type ActiveCustomerOrdersQuery = {
 				lines: Array<{
 					__typename?: 'OrderLine';
 					featuredAsset?: { __typename?: 'Asset'; preview: string } | null;
-					productVariant: { __typename?: 'ProductVariant'; name: string };
+					productVariant: { __typename?: 'ProductVariant'; id: string; name: string };
 				}>;
 			}>;
 		};
@@ -6152,6 +6177,23 @@ export type SubmitProductReviewMutation = {
 		| { __typename: 'ReviewSubmissionError'; errorCode: ErrorCode; message: string };
 };
 
+export type GetPurchasedVariantForReviewQueryQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetPurchasedVariantForReviewQueryQuery = {
+	__typename?: 'Query';
+	getPurchasedVariantForReview:
+		| { __typename: 'GetPurchasedVariantForReviewError'; errorCode: ErrorCode; message: string }
+		| {
+				__typename: 'PurchasedVariantWithReviewStatusList';
+				items: Array<{
+					__typename?: 'PurchasedVariantWithReviewStatus';
+					variantId: string;
+					canReview: boolean;
+					notReviewableReason?: string | null;
+				}>;
+		  };
+};
+
 export type DetailedProductFragment = {
 	__typename?: 'Product';
 	id: string;
@@ -6872,6 +6914,7 @@ export const ActiveCustomerOrdersDocument = gql`
 			orders(options: $options) {
 				items {
 					id
+					createdAt
 					code
 					state
 					totalWithTax
@@ -6881,6 +6924,7 @@ export const ActiveCustomerOrdersDocument = gql`
 							preview
 						}
 						productVariant {
+							id
 							name
 						}
 					}
@@ -7126,6 +7170,25 @@ export const SubmitProductReviewDocument = gql`
 				state
 			}
 			... on ReviewSubmissionError {
+				__typename
+				errorCode
+				message
+			}
+		}
+	}
+`;
+export const GetPurchasedVariantForReviewQueryDocument = gql`
+	query getPurchasedVariantForReviewQuery {
+		getPurchasedVariantForReview {
+			... on PurchasedVariantWithReviewStatusList {
+				__typename
+				items {
+					variantId
+					canReview
+					notReviewableReason
+				}
+			}
+			... on ErrorResult {
 				__typename
 				errorCode
 				message
@@ -7625,6 +7688,19 @@ export function getSdk<C>(requester: Requester<C>) {
 				variables,
 				options
 			) as Promise<SubmitProductReviewMutation>;
+		},
+		getPurchasedVariantForReviewQuery(
+			variables?: GetPurchasedVariantForReviewQueryQueryVariables,
+			options?: C
+		): Promise<GetPurchasedVariantForReviewQueryQuery> {
+			return requester<
+				GetPurchasedVariantForReviewQueryQuery,
+				GetPurchasedVariantForReviewQueryQueryVariables
+			>(
+				GetPurchasedVariantForReviewQueryDocument,
+				variables,
+				options
+			) as Promise<GetPurchasedVariantForReviewQueryQuery>;
 		},
 		product(variables?: ProductQueryVariables, options?: C): Promise<ProductQuery> {
 			return requester<ProductQuery, ProductQueryVariables>(

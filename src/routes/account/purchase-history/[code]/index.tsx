@@ -1,4 +1,4 @@
-import { component$, useSignal, useStore, useVisibleTask$ } from '@qwik.dev/core';
+import { component$, useContext, useSignal, useStore, useVisibleTask$ } from '@qwik.dev/core';
 import { useLocation } from '@qwik.dev/router';
 import OrderBriefCard from '~/components/account/OrderBriefCard';
 import ShippingAddressCard from '~/components/account/ShippingAddressCard';
@@ -6,6 +6,7 @@ import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
 import { parseToShippingAddress } from '~/components/common/address';
 import SectionWithLabel from '~/components/common/SectionWithLabel';
+import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
 import { getOrderByCodeQuery } from '~/providers/shop/orders/order';
 import { ShippingAddress } from '~/types';
@@ -16,6 +17,7 @@ export default component$(() => {
 	} = useLocation();
 	const store = useStore<{ order?: Order }>({});
 	const shippingAddress = useSignal<ShippingAddress | null>(null);
+	const appState = useContext(APP_STATE);
 
 	useVisibleTask$(async () => {
 		const order = await getOrderByCodeQuery(code);
@@ -54,7 +56,7 @@ export default component$(() => {
 					<SectionWithLabel label={$localize`Order summary`} labelClass="m-6">
 						{store.order && (
 							<>
-								<CartContents order={store.order} />
+								<CartContents order={store.order} allowReview={true} />
 								<CartTotals order={store.order} readOnly={useSignal(true)} />
 							</>
 						)}

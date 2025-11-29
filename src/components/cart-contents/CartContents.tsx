@@ -22,6 +22,7 @@ interface IProps {
 	onOrderLineChange$?: QRL<() => Promise<void>>;
 	readyToProceedSignal?: Signal<boolean>;
 	readOnly?: Signal<boolean>;
+	allowReview?: boolean;
 }
 /**
  * - If `order` prop is provided, the component is in read-only mode.
@@ -39,6 +40,7 @@ export default component$<IProps>(
 		onOrderLineChange$,
 		readyToProceedSignal = useSignal(true),
 		readOnly = useSignal(false),
+		allowReview = false,
 	}) => {
 		const navigate = useNavigate();
 		const location = useLocation();
@@ -57,6 +59,9 @@ export default component$<IProps>(
 			readOnly.value = true;
 		}
 		const currencyCode = order?.currencyCode || appState.activeOrder?.currencyCode || 'USD';
+
+		const variantsWithReviewStatus = appState.purchasedVariantsWithReviewStatus || [];
+		console.log('variantsWithReviewStatus', variantsWithReviewStatus);
 
 		useVisibleTask$(async ({ track }) => {
 			track(() => currentOrderLineSignal.value);
@@ -91,6 +96,12 @@ export default component$<IProps>(
 							line={line}
 							currencyCode={currencyCode}
 							readOnly={readOnly}
+							canReview={
+								allowReview &&
+								variantsWithReviewStatus.some(
+									(v) => v.variantId === line.productVariant.id && v.canReview
+								)
+							}
 							filamentColorSignal={FilamentColorSignal}
 							fontMenuSignal={FontMenuSignal}
 							onQuantityChange$={async (id, value) => {

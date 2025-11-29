@@ -1,7 +1,8 @@
-import { component$, QRL, Signal } from '@qwik.dev/core';
+import { component$, QRL, Signal, useSignal } from '@qwik.dev/core';
 import { OrderLine } from '~/generated/graphql';
 import { slugToRoute } from '~/utils';
 import Price from '../products/Price';
+import WriteReview from '../products/WriteReview';
 import ItemPreview from './ItemPreview';
 
 // signals expected by ItemPreview (passed through from parent)
@@ -16,6 +17,7 @@ interface Props extends Signals {
 	readOnly: Signal<boolean>;
 	onQuantityChange$?: QRL<(id: string, value: number) => void>;
 	onRemove$?: QRL<(id: string) => void>;
+	canReview?: boolean;
 }
 
 export default component$<Props>(
@@ -27,8 +29,10 @@ export default component$<Props>(
 		onRemove$,
 		filamentColorSignal,
 		fontMenuSignal,
+		canReview = false,
 	}) => {
 		const linePriceWithTax = line.linePriceWithTax;
+		const openReviewSignal = useSignal<boolean>(false);
 
 		return (
 			<li key={line.id} class="py-6 flex">
@@ -96,8 +100,30 @@ export default component$<Props>(
 								</button>
 							</div>
 						)}
+						{canReview && (
+							<div class="flex m-2">
+								<a
+									href="#"
+									class="text-primary-600 underline px-2 py-1"
+									onClick$={(e) => {
+										e.preventDefault();
+										openReviewSignal.value = true;
+									}}
+								>
+									review this
+								</a>
+							</div>
+						)}
 					</div>
 				</div>
+				{canReview && (
+					<WriteReview
+						open={openReviewSignal}
+						basicInfo={{
+							productVariantId: line.productVariant.id,
+						}}
+					/>
+				)}
 			</li>
 		);
 	}

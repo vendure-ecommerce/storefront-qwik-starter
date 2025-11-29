@@ -1,11 +1,14 @@
-import { component$, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { component$, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
 import OrderCard from '~/components/account/OrderCard';
 import AnimatedSpinnerIcon from '~/components/icons/AnimatedSpinnerIcon';
+import { APP_STATE } from '~/constants';
 import { Customer, Order } from '~/generated/graphql';
 import { getActiveCustomerOrdersQuery } from '~/providers/shop/customer/customer';
 import { batchUpdateShippoFulfillmentStateMutation } from '~/providers/shop/orders/order';
+import { getPurchasedVariantForReviewQuery } from '~/providers/shop/orders/review';
 
 export default component$(() => {
+	const appState = useContext(APP_STATE);
 	const activeCustomerOrdersSignal = useSignal<Customer>();
 	const isLoading = useSignal(true);
 
@@ -13,7 +16,36 @@ export default component$(() => {
 		isLoading.value = true;
 		await batchUpdateShippoFulfillmentStateMutation(); // Update shippo fulfillment states on load
 		activeCustomerOrdersSignal.value = await getActiveCustomerOrdersQuery();
+
+		// Refactored: Only fetch if not already present
+		if (typeof appState.purchasedVariantsWithReviewStatus === 'undefined') {
+			try {
+				const getPurchasedVariantForReviewResult = await getPurchasedVariantForReviewQuery();
+
+				console.log(
+					'getPurchasedVariantForReviewResult',
+					JSON.stringify(getPurchasedVariantForReviewResult, null, 2)
+				);
+				if (
+					getPurchasedVariantForReviewResult?.__typename === 'PurchasedVariantWithReviewStatusList'
+				) {
+					appState.purchasedVariantsWithReviewStatus = (
+						getPurchasedVariantForReviewResult.items || []
+					).map((item) => ({
+						variantId: item.variantId,
+						canReview: item.canReview,
+						notReviewableReason: item.notReviewableReason ?? undefined,
+					}));
+				}
+			} catch (error) {
+				console.error('Failed to fetch purchased variant review status:', error);
+			}
+		}
 		isLoading.value = false;
+		console.log(
+			'getPurchasedVariantForReviewResult',
+			JSON.stringify(appState.purchasedVariantsWithReviewStatus, null, 2)
+		);
 	});
 
 	if (isLoading.value) {
