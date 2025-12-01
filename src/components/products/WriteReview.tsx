@@ -72,6 +72,17 @@ export default component$<IProps>(({ open, basicInfo, onSuccess$ }) => {
 
 						const result = await submitProductReviewMutation(input);
 						if (result?.__typename === 'ProductReview') {
+							appState.purchasedVariantsWithReviewStatus =
+								appState.purchasedVariantsWithReviewStatus?.map((item) => {
+									if (item.variantId === basicInfo.productVariantId) {
+										return {
+											...item,
+											canReview: false,
+											notReviewableReason: 'Pending Approval',
+										};
+									}
+									return item;
+								});
 							if (onSuccess$) await onSuccess$();
 							open.value = false;
 						}

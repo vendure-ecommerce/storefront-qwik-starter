@@ -96,11 +96,11 @@ export default component$<IProps>(
 							line={line}
 							currencyCode={currencyCode}
 							readOnly={readOnly}
-							canReview={
-								allowReview &&
-								variantsWithReviewStatus.some(
-									(v) => v.variantId === line.productVariant.id && v.canReview
-								)
+							allowReview={allowReview}
+							notReviewableReasonFixed={
+								variantsWithReviewStatus.find(
+									(v) => v.variantId === line.productVariant.id && !v.canReview
+								)?.notReviewableReason || undefined
 							}
 							filamentColorSignal={FilamentColorSignal}
 							fontMenuSignal={FontMenuSignal}

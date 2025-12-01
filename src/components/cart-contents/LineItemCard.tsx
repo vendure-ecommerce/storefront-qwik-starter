@@ -1,6 +1,7 @@
-import { component$, QRL, Signal, useSignal } from '@qwik.dev/core';
+import { $, component$, QRL, Signal, useSignal } from '@qwik.dev/core';
 import { OrderLine } from '~/generated/graphql';
 import { slugToRoute } from '~/utils';
+import Info from '../common/Info';
 import Price from '../products/Price';
 import WriteReview from '../products/WriteReview';
 import ItemPreview from './ItemPreview';
@@ -17,7 +18,8 @@ interface Props extends Signals {
 	readOnly: Signal<boolean>;
 	onQuantityChange$?: QRL<(id: string, value: number) => void>;
 	onRemove$?: QRL<(id: string) => void>;
-	canReview?: boolean;
+	allowReview?: boolean;
+	notReviewableReasonFixed?: string;
 }
 
 export default component$<Props>(
@@ -29,8 +31,10 @@ export default component$<Props>(
 		onRemove$,
 		filamentColorSignal,
 		fontMenuSignal,
-		canReview = false,
+		allowReview = false,
+		notReviewableReasonFixed,
 	}) => {
+		const justReviewed = useSignal<boolean>(false);
 		const linePriceWithTax = line.linePriceWithTax;
 		const openReviewSignal = useSignal<boolean>(false);
 
@@ -100,25 +104,36 @@ export default component$<Props>(
 								</button>
 							</div>
 						)}
-						{canReview && (
+						{allowReview && (
 							<div class="flex m-2">
 								<a
 									href="#"
-									class="text-primary-600 underline px-2 py-1"
+									class={`text-primary-600 underline px-2 py-1 
+										${notReviewableReasonFixed || justReviewed.value ? 'opacity-50 cursor-not-allowed' : ''}
+										`}
 									onClick$={(e) => {
 										e.preventDefault();
+										if (notReviewableReasonFixed || justReviewed.value) {
+											return;
+										}
 										openReviewSignal.value = true;
 									}}
 								>
 									review this
 								</a>
+								{notReviewableReasonFixed && <Info text={notReviewableReasonFixed || ''} />}
+								{justReviewed.value && <Info text="Just Reviewed - Pending Approval" />}
 							</div>
 						)}
 					</div>
 				</div>
-				{canReview && (
+				{allowReview && (
 					<WriteReview
 						open={openReviewSignal}
+						onSuccess$={$(async () => {
+							console.log('Review submitted for line:', line.id);
+							justReviewed.value = true;
+						})}
 						basicInfo={{
 							productVariantId: line.productVariant.id,
 						}}

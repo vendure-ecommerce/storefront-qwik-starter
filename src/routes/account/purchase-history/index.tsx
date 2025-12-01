@@ -18,29 +18,29 @@ export default component$(() => {
 		activeCustomerOrdersSignal.value = await getActiveCustomerOrdersQuery();
 
 		// Refactored: Only fetch if not already present
-		if (typeof appState.purchasedVariantsWithReviewStatus === 'undefined') {
-			try {
-				const getPurchasedVariantForReviewResult = await getPurchasedVariantForReviewQuery();
+		// if (typeof appState.purchasedVariantsWithReviewStatus === 'undefined') {
+		try {
+			const getPurchasedVariantForReviewResult = await getPurchasedVariantForReviewQuery();
 
-				console.log(
-					'getPurchasedVariantForReviewResult',
-					JSON.stringify(getPurchasedVariantForReviewResult, null, 2)
-				);
-				if (
-					getPurchasedVariantForReviewResult?.__typename === 'PurchasedVariantWithReviewStatusList'
-				) {
-					appState.purchasedVariantsWithReviewStatus = (
-						getPurchasedVariantForReviewResult.items || []
-					).map((item) => ({
-						variantId: item.variantId,
-						canReview: item.canReview,
-						notReviewableReason: item.notReviewableReason ?? undefined,
-					}));
-				}
-			} catch (error) {
-				console.error('Failed to fetch purchased variant review status:', error);
+			console.log(
+				'getPurchasedVariantForReviewResult',
+				JSON.stringify(getPurchasedVariantForReviewResult, null, 2)
+			);
+			if (
+				getPurchasedVariantForReviewResult?.__typename === 'PurchasedVariantWithReviewStatusList'
+			) {
+				appState.purchasedVariantsWithReviewStatus = (
+					getPurchasedVariantForReviewResult.items || []
+				).map((item) => ({
+					variantId: item.variantId,
+					canReview: item.canReview,
+					notReviewableReason: item.notReviewableReason ?? undefined,
+				}));
 			}
+		} catch (error) {
+			console.error('Failed to fetch purchased variant review status:', error);
 		}
+		// }
 		isLoading.value = false;
 		console.log(
 			'getPurchasedVariantForReviewResult',
