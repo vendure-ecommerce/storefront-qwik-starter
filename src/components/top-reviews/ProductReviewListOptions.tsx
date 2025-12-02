@@ -1,16 +1,18 @@
 import { Select } from '@qwik-ui/headless';
 import { component$, QRL, Signal } from '@qwik.dev/core';
 import { LuChevronDown } from '@qwikest/icons/lucide';
+import { SortOptionMap } from './TopReviewsV2';
 
 interface ProductReviewListOptionsProps {
 	pageSize: Signal<string>;
 	minRating: Signal<string>;
 	sortBy: Signal<string>;
 	onFilterChange$: QRL<() => void>;
+	sortOptionMap: SortOptionMap;
 }
 
 export default component$<ProductReviewListOptionsProps>(
-	({ pageSize, minRating, sortBy, onFilterChange$ }) => {
+	({ pageSize, minRating, sortBy, onFilterChange$, sortOptionMap }) => {
 		return (
 			<div class="mt-8 flex flex-col gap-4 border-b border-gray-200 pb-6">
 				<div class="flex flex-col sm:flex-row gap-6">
@@ -75,7 +77,7 @@ export default component$<ProductReviewListOptionsProps>(
 						</Select.Popover>
 					</Select.Root>
 
-					{/* Sort By */}
+					{/* Sort By - using sortOptionMap */}
 					<Select.Root bind:value={sortBy}>
 						<div class="flex items-center gap-2">
 							<Select.Label class="text-sm font-medium text-gray-700 whitespace-nowrap">
@@ -86,22 +88,17 @@ export default component$<ProductReviewListOptionsProps>(
 							</Select.Trigger>
 						</div>
 						<Select.Popover class="select-popover">
-							{[
-								{ value: 'recent', label: 'Most Recent' },
-								{ value: 'rating-high', label: 'Highest Rating' },
-								{ value: 'rating-low', label: 'Lowest Rating' },
-								{ value: 'helpful', label: 'Most Helpful' },
-							].map(({ value, label }) => (
+							{Object.entries(sortOptionMap).map(([key, option]) => (
 								<Select.Item
 									class="select-item-label"
-									key={value}
-									value={value}
+									key={key}
+									value={key}
 									onClick$={async () => {
-										sortBy.value = value;
+										sortBy.value = key;
 										await onFilterChange$();
 									}}
 								>
-									{label}
+									{option.label}
 								</Select.Item>
 							))}
 						</Select.Popover>

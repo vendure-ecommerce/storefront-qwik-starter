@@ -1,4 +1,5 @@
 import { $, component$, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { SortOrder } from '~/generated/graphql-shop';
 import { getProductReviewsQuery } from '~/providers/shop/orders/review';
 import ProductReviewListOptions from './ProductReviewListOptions';
 
@@ -42,10 +43,37 @@ function formatDate(dateStr?: string) {
 	});
 }
 
+export interface SortOptionMap {
+	[key: string]: {
+		label: string;
+		sortBy: { [key: string]: SortOrder };
+	};
+}
+
+const sortOptionMap: SortOptionMap = {
+	recent: {
+		label: 'Most Recent',
+		sortBy: { createdAt: SortOrder.Desc },
+	},
+	rating_high: {
+		label: 'Highest Rating',
+		sortBy: { rating: SortOrder.Desc },
+	},
+	rating_low: {
+		label: 'Lowest Rating',
+		sortBy: { rating: SortOrder.Asc },
+	},
+	most_helpful: {
+		label: 'Most Helpful',
+		sortBy: { upvotes: SortOrder.Desc },
+	},
+};
+
 async function fetchReviews(
 	productId: string,
 	pageSize: string,
-	minRating: string
+	minRating: string,
+	sortBy?: string
 ): Promise<{ items: ReviewItem[]; totalItems: string }> {
 	try {
 		const result = await getProductReviewsQuery(productId, {
@@ -53,6 +81,9 @@ async function fetchReviews(
 			take: parseInt(pageSize, 10),
 			filter:
 				parseInt(minRating, 10) > 0 ? { rating: { gte: parseInt(minRating, 10) } } : undefined,
+			sort: sortOptionMap[sortBy as keyof typeof sortOptionMap]?.sortBy || {
+				createdAt: SortOrder.Desc,
+			},
 		});
 
 		console.log('Fetched product reviews:', JSON.stringify(result, null, 2));
@@ -114,6 +145,7 @@ export default component$<TopReviewsV2Props>(({ productId }) => {
 				minRating={minRating}
 				sortBy={sortBy}
 				onFilterChange$={handleFilterChange}
+				sortOptionMap={sortOptionMap}
 			/>
 
 			{isLoading.value ? (
