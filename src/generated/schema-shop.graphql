@@ -1976,6 +1976,8 @@ type InvalidCredentialsError implements ErrorResult {
 	message: String!
 }
 
+union IsReviewAllowedResult = GetPurchasedVariantForReviewError | PurchasedVariantWithReviewStatus
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -4623,6 +4625,7 @@ type Query {
 	fontMenuFindAll: [FontMenu!]!
 	generateBraintreeClientToken(includeCustomerId: Boolean, orderId: ID): String
 	getPurchasedVariantForReview: GetPurchasedVariantForReviewResult!
+	isReviewAllowed(productVariantId: ID!): IsReviewAllowedResult!
 
 	"""
 	Returns information about the current authenticated User

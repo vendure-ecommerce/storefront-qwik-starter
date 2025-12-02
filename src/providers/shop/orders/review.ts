@@ -16,6 +16,10 @@ export const getPurchasedVariantForReviewQuery =
 			.then((res) => res.getPurchasedVariantForReview);
 	};
 
+export const isReviewAllowedQuery = async (productVariantId: string) => {
+	return await shopSdk.isReviewAllowed({ productVariantId }).then((res) => res.isReviewAllowed);
+};
+
 gql`
 	mutation submitProductReview($input: SubmitProductReviewInput!) {
 		submitProductReview(input: $input) {
@@ -43,6 +47,24 @@ gql`
 					canReview
 					notReviewableReason
 				}
+			}
+			... on ErrorResult {
+				__typename
+				errorCode
+				message
+			}
+		}
+	}
+`;
+
+gql`
+	query isReviewAllowed($productVariantId: ID!) {
+		isReviewAllowed(productVariantId: $productVariantId) {
+			... on PurchasedVariantWithReviewStatus {
+				__typename
+				variantId
+				canReview
+				notReviewableReason
 			}
 			... on ErrorResult {
 				__typename

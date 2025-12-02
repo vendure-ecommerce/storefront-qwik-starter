@@ -1,9 +1,9 @@
-import { component$, QRL, Signal, useContext, useSignal } from '@qwik.dev/core';
+import { component$, QRL, Signal, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
 import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
 import { LuStar } from '@qwikest/icons/lucide';
 import FormInput from '~/components/common/FormInput';
 import { APP_STATE } from '~/constants';
-import { submitProductReviewMutation } from '~/providers/shop/orders/review';
+import { isReviewAllowedQuery, submitProductReviewMutation } from '~/providers/shop/orders/review';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import FormImageInput from '../common/FormImageInput';
 import { Dialog } from '../dialog/Dialog';
@@ -46,115 +46,142 @@ export default component$<IProps>(({ open, basicInfo, onSuccess$ }) => {
 	const appState = useContext(APP_STATE);
 	const ratingSignal = useSignal<number>(5);
 	const hideLastName = useSignal(false);
+	const isAllowed = useSignal<boolean>(true);
+	const notAllowedReason = useSignal<string>('');
+
+	useVisibleTask$(async () => {
+		const isAllowedQueryResult = await isReviewAllowedQuery(basicInfo.productVariantId);
+		if (isAllowedQueryResult.__typename === 'PurchasedVariantWithReviewStatus') {
+			isAllowed.value = isAllowedQueryResult.canReview;
+			notAllowedReason.value = isAllowedQueryResult.notReviewableReason || '';
+		} else {
+			console.log(
+				'isReviewAllowedQuery returned unexpected result:',
+				JSON.stringify(isAllowedQueryResult, null, 2)
+			);
+			isAllowed.value = false;
+			notAllowedReason.value = 'Unable to verify review eligibility.';
+		}
+	});
 
 	const firstName = appState.customer.firstName || 'DiliNook';
 	const lastName = appState.customer?.lastName || '';
 
 	return (
 		<Dialog open={open}>
-			<Form
-				action={action}
-				onSubmitCompleted$={async (event) => {
-					const { detail, target } = event;
-					if (detail.value.success && detail.value.data) {
-						const form = target as HTMLFormElement;
-						const filesInput = form.elements.namedItem('files') as HTMLInputElement;
-						const fileList = filesInput?.files;
-						const filesArray = fileList ? Array.from(fileList) : [];
-						const input = {
-							authorName: detail.value.data.authorName,
-							summary: detail.value.data.summary,
-							body: detail.value.data.body,
-							rating: detail.value.data.rating,
-							files: filesArray || undefined,
-							...basicInfo,
-						};
+			{isAllowed.value ? (
+				<Form
+					action={action}
+					onSubmitCompleted$={async (event) => {
+						const { detail, target } = event;
+						if (detail.value.success && detail.value.data) {
+							const form = target as HTMLFormElement;
+							const filesInput = form.elements.namedItem('files') as HTMLInputElement;
+							const fileList = filesInput?.files;
+							const filesArray = fileList ? Array.from(fileList) : [];
+							const input = {
+								authorName: detail.value.data.authorName,
+								summary: detail.value.data.summary,
+								body: detail.value.data.body,
+								rating: detail.value.data.rating,
+								files: filesArray || undefined,
+								...basicInfo,
+							};
 
-						const result = await submitProductReviewMutation(input);
-						if (result?.__typename === 'ProductReview') {
-							appState.purchasedVariantsWithReviewStatus =
-								appState.purchasedVariantsWithReviewStatus?.map((item) => {
-									if (item.variantId === basicInfo.productVariantId) {
-										return {
-											...item,
-											canReview: false,
-											notReviewableReason: 'Pending Approval',
-										};
-									}
-									return item;
-								});
-							if (onSuccess$) await onSuccess$();
-							open.value = false;
+							const result = await submitProductReviewMutation(input);
+							if (result?.__typename === 'ProductReview') {
+								appState.purchasedVariantsWithReviewStatus =
+									appState.purchasedVariantsWithReviewStatus?.map((item) => {
+										if (item.variantId === basicInfo.productVariantId) {
+											return {
+												...item,
+												canReview: false,
+												notReviewableReason: 'Review submitted - pending approval',
+											};
+										}
+										return item;
+									});
+								if (onSuccess$) await onSuccess$();
+								open.value = false;
+							}
+							if (result?.__typename === 'ReviewSubmissionError') {
+								alert(result.message);
+							}
 						}
-						if (result?.__typename === 'ReviewSubmissionError') {
-							alert(result.message);
-						}
-					}
-				}}
-			>
-				<div class="p-2 mt-4 grid grid-cols-1 gap-y-3">
-					{/* Author Section */}
-					<FormInput
-						name="authorName"
-						label="Author"
-						formAction={action}
-						defaults={{
-							authorName: `${firstName}${hideLastName.value && lastName ? ` ${lastName.charAt(0)}.` : ` ${lastName}`}`,
-						}}
-						readOnly={true}
-					/>
-					<p class="block text-sm font-medium text-gray-700 m-2">
-						<input
-							type="checkbox"
-							checked={hideLastName.value}
-							onChange$={() => (hideLastName.value = !hideLastName.value)}
-							class="mr-2"
+					}}
+				>
+					<div class="p-2 mt-4 grid grid-cols-1 gap-y-3">
+						{/* Author Section */}
+						<FormInput
+							name="authorName"
+							label="Author"
+							formAction={action}
+							defaults={{
+								authorName: `${firstName}${hideLastName.value && lastName ? ` ${lastName.charAt(0)}.` : ` ${lastName}`}`,
+							}}
+							readOnly={true}
 						/>
-						Use Initial on Last Name
-					</p>
+						<p class="block text-sm font-medium text-gray-700 m-2">
+							<input
+								type="checkbox"
+								checked={hideLastName.value}
+								onChange$={() => (hideLastName.value = !hideLastName.value)}
+								class="mr-2"
+							/>
+							Use Initial on Last Name
+						</p>
 
-					<FormInput name="summary" label="Summary" formAction={action} />
-					<FormInput
-						name="body"
-						label="Review"
-						formAction={action}
-						className="h-48 w-96"
-						as="textarea"
-					/>
-					<FormImageInput
-						name="files"
-						label={`Upload Images (max ${MAX_IMAGE_FILES})`}
-						formAction={action}
-						maxFiles={MAX_IMAGE_FILES}
-					/>
-					{/* Rating */}
-					<div>
-						<label class="block mb-1 font-medium">Rating</label>
-						<div class="flex items-center space-x-1">
-							{[1, 2, 3, 4, 5].map((star) => (
-								<button
-									type="button"
-									key={star}
-									aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
-									onClick$={() => (ratingSignal.value = star)}
-									class="focus:outline-none"
-								>
-									<LuStar
-										class={`w-6 h-6 ${star <= ratingSignal.value ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
-									/>
-								</button>
-							))}
-							<input type="hidden" name="rating" value={ratingSignal.value} />
-							<span class="ml-2 text-sm text-gray-600">{ratingSignal.value}</span>
+						<FormInput name="summary" label="Summary" formAction={action} />
+						<FormInput
+							name="body"
+							label="Review"
+							formAction={action}
+							className="h-48 w-96"
+							as="textarea"
+						/>
+						<FormImageInput
+							name="files"
+							label={`Upload Images (max ${MAX_IMAGE_FILES})`}
+							formAction={action}
+							maxFiles={MAX_IMAGE_FILES}
+						/>
+						{/* Rating */}
+						<div>
+							<label class="block mb-1 font-medium">Rating</label>
+							<div class="flex items-center space-x-1">
+								{[1, 2, 3, 4, 5].map((star) => (
+									<button
+										type="button"
+										key={star}
+										aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
+										onClick$={() => (ratingSignal.value = star)}
+										class="focus:outline-none"
+									>
+										<LuStar
+											class={`w-6 h-6 ${star <= ratingSignal.value ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
+										/>
+									</button>
+								))}
+								<input type="hidden" name="rating" value={ratingSignal.value} />
+								<span class="ml-2 text-sm text-gray-600">{ratingSignal.value}</span>
+							</div>
 						</div>
 					</div>
+					<div class="flex justify-end">
+						<HighlightedButton type="submit" extraClass="m-2">
+							Submit Review
+						</HighlightedButton>
+					</div>
+				</Form>
+			) : (
+				<div class="p-4">
+					<h2 class="text-lg font-medium mb-4">Sorry! Cannot Submit Review</h2>
+					<p class="text-gray-700">{notAllowedReason.value}</p>
+					<div class="flex justify-end mt-6">
+						<HighlightedButton onClick$={() => (open.value = false)}>Close</HighlightedButton>
+					</div>
 				</div>
-				<div class="flex justify-end">
-					<HighlightedButton type="submit" extraClass="m-2">
-						Submit Review
-					</HighlightedButton>
-				</div>
-			</Form>
+			)}
 		</Dialog>
 	);
 });

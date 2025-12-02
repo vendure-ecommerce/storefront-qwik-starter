@@ -121,8 +121,9 @@ export default component$<Props>(
 								>
 									review this
 								</a>
-								{notReviewableReasonFixed && <Info text={notReviewableReasonFixed || ''} />}
-								{justReviewed.value && <Info text="Just Reviewed - Pending Approval" />}
+								{(notReviewableReasonFixed || justReviewed.value) && (
+									<Info text={notReviewableReasonFixed || 'Just Reviewed - Pending Approval'} />
+								)}
 							</div>
 						)}
 					</div>

@@ -1492,6 +1492,10 @@ export type InvalidCredentialsError = ErrorResult & {
 	message: Scalars['String']['output'];
 };
 
+export type IsReviewAllowedResult =
+	| GetPurchasedVariantForReviewError
+	| PurchasedVariantWithReviewStatus;
+
 /**
  * @description
  * Languages in the form of a ISO 639-1 language code with optional
@@ -3280,6 +3284,7 @@ export type Query = {
 	fontMenuFindAll: Array<FontMenu>;
 	generateBraintreeClientToken?: Maybe<Scalars['String']['output']>;
 	getPurchasedVariantForReview: GetPurchasedVariantForReviewResult;
+	isReviewAllowed: IsReviewAllowedResult;
 	/** Returns information about the current authenticated User */
 	me?: Maybe<CurrentUser>;
 	/** Returns the possible next states that the activeOrder can transition to */
@@ -3365,6 +3370,10 @@ export type QueryFacetsArgs = {
 export type QueryGenerateBraintreeClientTokenArgs = {
 	includeCustomerId?: InputMaybe<Scalars['Boolean']['input']>;
 	orderId?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type QueryIsReviewAllowedArgs = {
+	productVariantId: Scalars['ID']['input'];
 };
 
 export type QueryOrderArgs = {
@@ -6194,6 +6203,22 @@ export type GetPurchasedVariantForReviewQueryQuery = {
 		  };
 };
 
+export type IsReviewAllowedQueryVariables = Exact<{
+	productVariantId: Scalars['ID']['input'];
+}>;
+
+export type IsReviewAllowedQuery = {
+	__typename?: 'Query';
+	isReviewAllowed:
+		| { __typename: 'GetPurchasedVariantForReviewError'; errorCode: ErrorCode; message: string }
+		| {
+				__typename: 'PurchasedVariantWithReviewStatus';
+				variantId: string;
+				canReview: boolean;
+				notReviewableReason?: string | null;
+		  };
+};
+
 export type DetailedProductFragment = {
 	__typename?: 'Product';
 	id: string;
@@ -7196,6 +7221,23 @@ export const GetPurchasedVariantForReviewQueryDocument = gql`
 		}
 	}
 `;
+export const IsReviewAllowedDocument = gql`
+	query isReviewAllowed($productVariantId: ID!) {
+		isReviewAllowed(productVariantId: $productVariantId) {
+			... on PurchasedVariantWithReviewStatus {
+				__typename
+				variantId
+				canReview
+				notReviewableReason
+			}
+			... on ErrorResult {
+				__typename
+				errorCode
+				message
+			}
+		}
+	}
+`;
 export const ProductDocument = gql`
 	query product($slug: String, $id: ID) {
 		product(slug: $slug, id: $id) {
@@ -7701,6 +7743,16 @@ export function getSdk<C>(requester: Requester<C>) {
 				variables,
 				options
 			) as Promise<GetPurchasedVariantForReviewQueryQuery>;
+		},
+		isReviewAllowed(
+			variables: IsReviewAllowedQueryVariables,
+			options?: C
+		): Promise<IsReviewAllowedQuery> {
+			return requester<IsReviewAllowedQuery, IsReviewAllowedQueryVariables>(
+				IsReviewAllowedDocument,
+				variables,
+				options
+			) as Promise<IsReviewAllowedQuery>;
 		},
 		product(variables?: ProductQueryVariables, options?: C): Promise<ProductQuery> {
 			return requester<ProductQuery, ProductQueryVariables>(
