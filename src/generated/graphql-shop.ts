@@ -6219,6 +6219,39 @@ export type IsReviewAllowedQuery = {
 		  };
 };
 
+export type GetProductReviewsQueryVariables = Exact<{
+	id: Scalars['ID']['input'];
+	options?: InputMaybe<ProductReviewListOptions>;
+}>;
+
+export type GetProductReviewsQuery = {
+	__typename?: 'Query';
+	product?: {
+		__typename?: 'Product';
+		id: string;
+		reviews: {
+			__typename?: 'ProductReviewList';
+			totalItems: number;
+			items: Array<{
+				__typename?: 'ProductReview';
+				id: string;
+				rating: number;
+				summary: string;
+				body?: string | null;
+				authorName: string;
+				authorLocation?: string | null;
+				createdAt: any;
+				upvotes: number;
+				downvotes: number;
+				response?: string | null;
+				responseCreatedAt?: any | null;
+				productVariant?: { __typename?: 'ProductVariant'; id: string } | null;
+				assets?: Array<{ __typename?: 'Asset'; id: string; preview: string }> | null;
+			}>;
+		};
+	} | null;
+};
+
 export type DetailedProductFragment = {
 	__typename?: 'Product';
 	id: string;
@@ -6259,31 +6292,6 @@ export type DetailedProductFragment = {
 			customBuildJson?: string | null;
 		} | null;
 	}>;
-	reviews: {
-		__typename?: 'ProductReviewList';
-		totalItems: number;
-		items: Array<{
-			__typename?: 'ProductReview';
-			id: string;
-			rating: number;
-			summary: string;
-			body?: string | null;
-			authorName: string;
-			authorLocation?: string | null;
-			createdAt: any;
-			upvotes: number;
-			downvotes: number;
-			response?: string | null;
-			responseCreatedAt?: any | null;
-			assets?: Array<{ __typename?: 'Asset'; id: string; preview: string }> | null;
-			translations: Array<{
-				__typename?: 'ProductReviewTranslation';
-				id: string;
-				languageCode: LanguageCode;
-				text: string;
-			}>;
-		}>;
-	};
 	customFields?: {
 		__typename?: 'ProductCustomFields';
 		customizableClass?: string | null;
@@ -6339,31 +6347,6 @@ export type ProductQuery = {
 				customBuildJson?: string | null;
 			} | null;
 		}>;
-		reviews: {
-			__typename?: 'ProductReviewList';
-			totalItems: number;
-			items: Array<{
-				__typename?: 'ProductReview';
-				id: string;
-				rating: number;
-				summary: string;
-				body?: string | null;
-				authorName: string;
-				authorLocation?: string | null;
-				createdAt: any;
-				upvotes: number;
-				downvotes: number;
-				response?: string | null;
-				responseCreatedAt?: any | null;
-				assets?: Array<{ __typename?: 'Asset'; id: string; preview: string }> | null;
-				translations: Array<{
-					__typename?: 'ProductReviewTranslation';
-					id: string;
-					languageCode: LanguageCode;
-					text: string;
-				}>;
-			}>;
-		};
 		customFields?: {
 			__typename?: 'ProductCustomFields';
 			customizableClass?: string | null;
@@ -6570,32 +6553,6 @@ export const DetailedProductFragmentDoc = gql`
 			customFields {
 				customBuildJson
 			}
-		}
-		reviews {
-			items {
-				id
-				rating
-				summary
-				body
-				rating
-				authorName
-				authorLocation
-				createdAt
-				upvotes
-				downvotes
-				assets {
-					id
-					preview
-				}
-				response
-				responseCreatedAt
-				translations {
-					id
-					languageCode
-					text
-				}
-			}
-			totalItems
 		}
 		customFields {
 			customizableClass
@@ -7238,6 +7195,37 @@ export const IsReviewAllowedDocument = gql`
 		}
 	}
 `;
+export const GetProductReviewsDocument = gql`
+	query getProductReviews($id: ID!, $options: ProductReviewListOptions) {
+		product(id: $id) {
+			id
+			reviews(options: $options) {
+				items {
+					id
+					productVariant {
+						id
+					}
+					rating
+					summary
+					body
+					rating
+					authorName
+					authorLocation
+					createdAt
+					upvotes
+					downvotes
+					assets {
+						id
+						preview
+					}
+					response
+					responseCreatedAt
+				}
+				totalItems
+			}
+		}
+	}
+`;
 export const ProductDocument = gql`
 	query product($slug: String, $id: ID) {
 		product(slug: $slug, id: $id) {
@@ -7753,6 +7741,16 @@ export function getSdk<C>(requester: Requester<C>) {
 				variables,
 				options
 			) as Promise<IsReviewAllowedQuery>;
+		},
+		getProductReviews(
+			variables: GetProductReviewsQueryVariables,
+			options?: C
+		): Promise<GetProductReviewsQuery> {
+			return requester<GetProductReviewsQuery, GetProductReviewsQueryVariables>(
+				GetProductReviewsDocument,
+				variables,
+				options
+			) as Promise<GetProductReviewsQuery>;
 		},
 		product(variables?: ProductQueryVariables, options?: C): Promise<ProductQuery> {
 			return requester<ProductQuery, ProductQueryVariables>(

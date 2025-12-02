@@ -2,13 +2,14 @@ import { component$, Signal, Slot, useSignal } from '@qwik.dev/core';
 import { DocumentHead, routeLoader$ } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
-import TopReviews from '~/components/top-reviews/TopReviews';
+import TopReviewsV2 from '~/components/top-reviews/TopReviewsV2';
 import { getProductBySlug } from '~/providers/shop/products/products';
 import { cleanUpParams, generateDocumentHead, isEnvVariableEnabled } from '~/utils';
 
 export const useProductLoader = routeLoader$(async ({ params }) => {
 	const { slug } = cleanUpParams(params);
 	const product = await getProductBySlug(slug);
+	console.log('Product loaded:', JSON.stringify(product, null, 2));
 	if (product.assets.length === 1) {
 		product.assets.push({
 			...product.assets[0],
@@ -115,7 +116,7 @@ export default component$(() => {
 			</div>
 			{isEnvVariableEnabled('VITE_SHOW_REVIEWS') && (
 				<div class="mt-24">
-					<TopReviews />
+					<TopReviewsV2 productId={productSignal.value.id} />
 				</div>
 			)}
 		</div>

@@ -61,7 +61,6 @@ export default component$<IProps>(
 		const currencyCode = order?.currencyCode || appState.activeOrder?.currencyCode || 'USD';
 
 		const variantsWithReviewStatus = appState.purchasedVariantsWithReviewStatus || [];
-		console.log('variantsWithReviewStatus', variantsWithReviewStatus);
 
 		useVisibleTask$(async ({ track }) => {
 			track(() => currentOrderLineSignal.value);

@@ -1,6 +1,7 @@
 import gql from 'graphql-tag';
 import {
 	GetPurchasedVariantForReviewResult,
+	ProductReviewListOptions,
 	SubmitProductReviewInput,
 } from '~/generated/graphql-shop';
 import { shopSdk } from '~/graphql-wrapper';
@@ -18,6 +19,21 @@ export const getPurchasedVariantForReviewQuery =
 
 export const isReviewAllowedQuery = async (productVariantId: string) => {
 	return await shopSdk.isReviewAllowed({ productVariantId }).then((res) => res.isReviewAllowed);
+};
+
+/**
+ *
+ * @param id product.id
+ * @param options e.g.
+ * {
+ *		"skip": 0,
+ *		"take": 10,
+ *		"filter": { "state": { "eq": "approved" } }
+ *	}
+ * @returns
+ */
+export const getProductReviewsQuery = async (id: string, options?: ProductReviewListOptions) => {
+	return await shopSdk.getProductReviews({ id, options }).then((res) => res.product?.reviews);
 };
 
 gql`
@@ -70,6 +86,38 @@ gql`
 				__typename
 				errorCode
 				message
+			}
+		}
+	}
+`;
+
+gql`
+	query getProductReviews($id: ID!, $options: ProductReviewListOptions) {
+		product(id: $id) {
+			id
+			reviews(options: $options) {
+				items {
+					id
+					productVariant {
+						id
+					}
+					rating
+					summary
+					body
+					rating
+					authorName
+					authorLocation
+					createdAt
+					upvotes
+					downvotes
+					assets {
+						id
+						preview
+					}
+					response
+					responseCreatedAt
+				}
+				totalItems
 			}
 		}
 	}
