@@ -63,7 +63,6 @@ export default component$<ReviewCardProps>(({ review }) => {
 						{review.rating}
 						<span class="sr-only"> out of 5 stars</span>
 					</p>
-					<ReviewVote reviewId={review.id} upvotes={upvotes} downvotes={downvotes} />
 				</div>
 				<div class="mt-4 lg:mt-6 xl:mt-0 xl:col-span-2">
 					<h3 class="text-sm font-medium text-gray-900">{review.summary}</h3>
@@ -81,6 +80,7 @@ export default component$<ReviewCardProps>(({ review }) => {
 								))}
 							</div>
 						)}
+						<ReviewVote reviewId={review.id} upvotes={upvotes} downvotes={downvotes} />
 					</div>
 				</div>
 			</div>

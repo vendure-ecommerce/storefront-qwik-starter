@@ -61,8 +61,6 @@ async function fetchReviews(
 			},
 		});
 
-		console.log('Fetched product reviews:', JSON.stringify(result, null, 2));
-
 		if (!result?.items) {
 			console.error('Error fetching reviews:', result);
 			return { items: [], totalItems: '0' };
