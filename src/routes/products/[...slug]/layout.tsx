@@ -9,7 +9,6 @@ import { cleanUpParams, generateDocumentHead, isEnvVariableEnabled } from '~/uti
 export const useProductLoader = routeLoader$(async ({ params }) => {
 	const { slug } = cleanUpParams(params);
 	const product = await getProductBySlug(slug);
-	console.log('Product loaded:', JSON.stringify(product, null, 2));
 	if (product.assets.length === 1) {
 		product.assets.push({
 			...product.assets[0],

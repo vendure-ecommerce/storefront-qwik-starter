@@ -2,6 +2,7 @@ import { $, component$, QRL, Signal, useContext, useSignal, useVisibleTask$ } fr
 import { LuThumbsDown, LuThumbsUp, LuX } from '@qwikest/icons/lucide';
 import { APP_STATE } from '~/constants';
 import { voteOnReviewMutation } from '~/providers/shop/orders/review';
+import { SpinnerWaitingAnimation } from '../icons/SpinnerWaitingAnimation';
 
 interface ReviewVoteProps {
 	reviewId: string;
@@ -26,41 +27,40 @@ export default component$<ReviewVoteProps>(({ reviewId, upvotes, downvotes, onSu
 	const handleVote = $(async (vote: boolean) => {
 		isLoading.value = true;
 		try {
-			const result = await voteOnReviewMutation(reviewId, vote);
-			if (result?.__typename === 'Success') {
-				if (currentVerdict.value !== null) {
-					if (currentVerdict && currentVerdict.value !== vote) {
-						// User is changing their vote (as if nothing happened)
-						currentVerdict.value = null;
-						if (vote) {
-							downvotes.value--;
-							appState.customer.downvoteReviewIds.splice(
-								appState.customer.downvoteReviewIds.indexOf(reviewId),
-								1
-							);
-						} else {
-							upvotes.value--;
-							appState.customer.upvoteReviewIds.splice(
-								appState.customer.upvoteReviewIds.indexOf(reviewId),
-								1
-							);
-						}
+			if (currentVerdict.value === null) {
+				await voteOnReviewMutation(reviewId, vote);
+				if (vote) {
+					upvotes.value++;
+					appState.customer.upvoteReviewIds.push(reviewId);
+				} else {
+					downvotes.value++;
+					appState.customer.downvoteReviewIds.push(reviewId);
+				}
+				currentVerdict.value = vote;
+			} else {
+				if (currentVerdict.value === vote) {
+					// User is retracting their vote
+					await voteOnReviewMutation(reviewId, !vote);
+					currentVerdict.value = null;
+					if (!vote) {
+						// Retracting a downvote
+						downvotes.value--;
+						appState.customer.downvoteReviewIds.splice(
+							appState.customer.downvoteReviewIds.indexOf(reviewId),
+							1
+						);
+					} else {
+						// Retracting an upvote
+						upvotes.value--;
+						appState.customer.upvoteReviewIds.splice(
+							appState.customer.upvoteReviewIds.indexOf(reviewId),
+							1
+						);
 					}
 				} else {
-					currentVerdict.value = vote;
-					if (vote) {
-						upvotes.value++;
-						appState.customer.upvoteReviewIds.push(reviewId);
-					} else {
-						downvotes.value++;
-						appState.customer.downvoteReviewIds.push(reviewId);
-					}
+					// User is changing their vote, which is not allowed directly
+					errMessage.value = $localize`To change your vote, please retract your current vote first.`;
 				}
-				if (onSuccess) {
-					await onSuccess(vote);
-				}
-			} else {
-				errMessage.value = result.message || 'An error occurred while voting on the review.';
 			}
 		} catch (error) {
 			console.error('Failed to vote on review:', error);
@@ -76,16 +76,18 @@ export default component$<ReviewVoteProps>(({ reviewId, upvotes, downvotes, onSu
 				<p>{$localize`Was this review helpful?`}</p>
 				<VoteButton
 					mode="up"
-					count={upvotes}
-					currentVerdict={currentVerdict}
+					count={upvotes.value}
+					currentVerdict={currentVerdict.value}
 					isLoading={isLoading.value}
+					disabled={currentVerdict.value === false}
 					onClick$={async () => await handleVote(true)}
 				/>
 				<VoteButton
 					mode="down"
-					count={downvotes}
-					currentVerdict={currentVerdict}
+					count={downvotes.value}
+					currentVerdict={currentVerdict.value}
 					isLoading={isLoading.value}
+					disabled={currentVerdict.value === true}
 					onClick$={async () => await handleVote(false)}
 				/>
 			</div>
@@ -106,37 +108,43 @@ export default component$<ReviewVoteProps>(({ reviewId, upvotes, downvotes, onSu
 
 interface VoteButtonProps {
 	mode: 'up' | 'down';
-	count: Signal<number>;
-	currentVerdict: Signal<boolean | null>;
+	count: number;
+	currentVerdict: boolean | null;
 	isLoading: boolean;
+	disabled: boolean;
 	onClick$: QRL<() => void>;
 }
 
 export const VoteButton = component$<VoteButtonProps>(
-	({ mode, count, currentVerdict, isLoading, onClick$ }) => {
+	({ mode, count, currentVerdict, isLoading, disabled, onClick$ }) => {
 		const isUp = mode === 'up';
 		const Icon = isUp ? LuThumbsUp : LuThumbsDown;
 		const bgColor = isUp ? 'bg-blue-100' : 'bg-red-100';
 		const textColor = isUp ? 'text-blue-600' : 'text-red-600';
 
 		// Determine if this button is voted
-		const isVoted = isUp ? currentVerdict.value === true : currentVerdict.value === false;
+		const isVoted = isUp ? currentVerdict === true : currentVerdict === false;
 		const iconColor = isVoted ? (isUp ? '#2563eb' : '#dc2626') : '#9ca3af';
 
 		return (
 			<div class="flex items-center gap-1">
 				<button
 					onClick$={onClick$}
-					disabled={isLoading}
+					disabled={isLoading || disabled}
 					class={`flex items-center gap-1 px-2 py-1 rounded transition 
             ${isVoted ? `${bgColor} ${textColor}` : 'text-gray-500 hover:text-gray-700'} 
             ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
 					aria-label={`${isUp ? 'Upvote' : 'Downvote'} this review`}
 				>
-					<Icon class="w-4 h-4" style={{ fill: iconColor }} />
-					<span>{count.value}</span>
+					{isLoading ? (
+						<SpinnerWaitingAnimation />
+					) : (
+						<>
+							<Icon class="w-4 h-4" style={{ fill: iconColor }} />
+							<span>{count}</span>
+						</>
+					)}
 				</button>
-				{isLoading && <span class="ml-2 text-xs text-gray-500">{$localize`Loading...`}</span>}
 			</div>
 		);
 	}
