@@ -1,25 +1,31 @@
 import { Slot, component$, useContext, useVisibleTask$ } from '@qwik.dev/core';
 import { TabsContainer } from '~/components/account/TabsContainer';
-import { APP_STATE } from '~/constants';
-import { getActiveCustomerQuery } from '~/providers/shop/customer/customer';
+import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { fullNameWithTitle } from '~/utils';
 
 export default component$(() => {
 	const appState = useContext(APP_STATE);
 
 	useVisibleTask$(async () => {
-		const activeCustomer = await getActiveCustomerQuery();
-		if (activeCustomer) {
-			appState.customer = {
-				title: activeCustomer.title ?? '',
-				firstName: activeCustomer.firstName,
-				id: activeCustomer.id,
-				lastName: activeCustomer.lastName,
-				emailAddress: activeCustomer.emailAddress,
-				phoneNumber: activeCustomer.phoneNumber ?? '',
-			};
-		} else {
-			// window.location.href = '/';
+		// const activeCustomer = await getActiveCustomerQuery();
+		// if (activeCustomer) {
+		// 	appState.customer = {
+		// 		title: activeCustomer.title ?? '',
+		// 		firstName: activeCustomer.firstName,
+		// 		id: activeCustomer.id,
+		// 		lastName: activeCustomer.lastName,
+		// 		emailAddress: activeCustomer.emailAddress,
+		// 		phoneNumber: activeCustomer.phoneNumber ?? '',
+		// 		upvoteReviewIds: activeCustomer.customFields?.upvoteReviews || [],
+		// 		downvoteReviewIds: activeCustomer.customFields?.downvoteReviews || [],
+		// 	};
+		// 	console.log('activeCustomer:', JSON.stringify(appState.customer, null, 2));
+		// } else {
+		// 	// window.location.href = '/';
+		// }
+		if (appState.customer.id === CUSTOMER_NOT_DEFINED_ID) {
+			// the user should not be here if not logged in, redirect to home
+			window.location.href = '/';
 		}
 	});
 

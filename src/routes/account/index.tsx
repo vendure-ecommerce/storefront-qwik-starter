@@ -14,7 +14,6 @@ import {
 	requestUpdateCustomerEmailAddressMutation,
 	updateCustomerMutation,
 } from '~/providers/shop/account/account';
-import { getActiveCustomerQuery } from '~/providers/shop/customer/customer';
 import { ActiveCustomer } from '~/types';
 
 export default component$(() => {
@@ -29,16 +28,7 @@ export default component$(() => {
 	};
 
 	useVisibleTask$(async () => {
-		const activeCustomer = await getActiveCustomerQuery();
-		appState.customer = {
-			title: activeCustomer.title ?? '',
-			firstName: activeCustomer.firstName,
-			id: activeCustomer.id,
-			lastName: activeCustomer.lastName,
-			emailAddress: activeCustomer.emailAddress,
-			phoneNumber: activeCustomer.phoneNumber ?? '',
-		};
-		newEmail.value = activeCustomer?.emailAddress as string;
+		newEmail.value = appState.customer?.emailAddress as string;
 	});
 
 	const updateCustomer = $(async (): Promise<void> => {

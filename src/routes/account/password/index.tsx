@@ -1,4 +1,5 @@
 import { $, component$, useContext, useSignal } from '@qwik.dev/core';
+import { Link } from '@qwik.dev/router';
 import { PasswordInput } from '~/components/account/PasswordInput';
 import { ErrorMessage } from '~/components/error-message/ErrorMessage';
 import { APP_STATE } from '~/constants';
@@ -53,9 +54,9 @@ export default component$(() => {
 					<div class="mb-6 bg-yellow-50 border border-yellow-400 text-yellow-800 rounded p-4 text-center text-sm">
 						<p>
 							Password Changed successfully! You can now &nbsp;
-							<a href="/account" class="font-medium text-primary-600 hover:text-primary-500">
+							<Link href="/account" class="font-medium text-primary-600 hover:text-primary-500">
 								return to your account
-							</a>
+							</Link>
 							.
 						</p>
 					</div>

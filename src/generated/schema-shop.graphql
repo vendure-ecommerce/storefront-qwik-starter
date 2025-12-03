@@ -422,8 +422,13 @@ type CreateAssetSuccess {
 	assetId: ID!
 }
 
+input CreateCustomerCustomFieldsInput {
+	downvoteReviews: [String!]
+	upvoteReviews: [String!]
+}
+
 input CreateCustomerInput {
-	customFields: JSON
+	customFields: CreateCustomerCustomFieldsInput
 	emailAddress: String!
 	firstName: String!
 	lastName: String!
@@ -1272,7 +1277,7 @@ union CustomFieldConfig =
 type Customer implements Node {
 	addresses: [Address!]
 	createdAt: DateTime!
-	customFields: JSON
+	customFields: CustomerCustomFields
 	emailAddress: String!
 	firstName: String!
 	id: ID!
@@ -1284,10 +1289,16 @@ type Customer implements Node {
 	user: User
 }
 
+type CustomerCustomFields {
+	downvoteReviews: [String!]
+	upvoteReviews: [String!]
+}
+
 input CustomerFilterParameter {
 	_and: [CustomerFilterParameter!]
 	_or: [CustomerFilterParameter!]
 	createdAt: DateOperators
+	downvoteReviews: StringListOperators
 	emailAddress: StringOperators
 	firstName: StringOperators
 	id: IDOperators
@@ -1295,6 +1306,7 @@ input CustomerFilterParameter {
 	phoneNumber: StringOperators
 	title: StringOperators
 	updatedAt: DateOperators
+	upvoteReviews: StringListOperators
 }
 
 type CustomerGroup implements Node {
@@ -1500,6 +1512,7 @@ enum ErrorCode {
 	VALIDATE_ADDRESS_ERROR
 	VERIFICATION_TOKEN_EXPIRED_ERROR
 	VERIFICATION_TOKEN_INVALID_ERROR
+	VOTE_ON_REVIEW_ERROR
 }
 
 interface ErrorResult {
@@ -3042,7 +3055,7 @@ type Mutation {
 	provided here.
 	"""
 	verifyCustomerAccount(password: String, token: String!): VerifyCustomerAccountResult!
-	voteOnReview(id: ID!, vote: Boolean!): ProductReview!
+	voteOnReview(id: ID!, vote: Boolean!): VoteOnReviewResult!
 }
 
 input NativeAuthInput {
@@ -4765,7 +4778,13 @@ union RegisterCustomerAccountResult =
 	| PasswordValidationError
 	| Success
 
+input RegisterCustomerCustomFieldsInput {
+	downvoteReviews: [String!]
+	upvoteReviews: [String!]
+}
+
 input RegisterCustomerInput {
+	customFields: RegisterCustomerCustomFieldsInput
 	emailAddress: String!
 	firstName: String
 	lastName: String
@@ -5752,6 +5771,11 @@ input UpdateAddressInput {
 	streetLine2: String
 }
 
+input UpdateCustomerCustomFieldsInput {
+	downvoteReviews: [String!]
+	upvoteReviews: [String!]
+}
+
 union UpdateCustomerEmailAddressResult =
 	| IdentifierChangeTokenExpiredError
 	| IdentifierChangeTokenInvalidError
@@ -5759,7 +5783,7 @@ union UpdateCustomerEmailAddressResult =
 	| Success
 
 input UpdateCustomerInput {
-	customFields: JSON
+	customFields: UpdateCustomerCustomFieldsInput
 	firstName: String
 	lastName: String
 	phoneNumber: String
@@ -5883,6 +5907,13 @@ union VerifyCustomerAccountResult =
 	| PasswordValidationError
 	| VerificationTokenExpiredError
 	| VerificationTokenInvalidError
+
+type VoteOnReviewError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+union VoteOnReviewResult = Success | VoteOnReviewError
 
 type Zone implements Node {
 	createdAt: DateTime!

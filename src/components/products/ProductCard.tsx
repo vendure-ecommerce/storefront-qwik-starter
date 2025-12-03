@@ -1,4 +1,5 @@
 import { component$ } from '@qwik.dev/core';
+import { Link } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import { slugToRoute } from '~/utils';
 import Price from './Price';
@@ -6,7 +7,7 @@ import Price from './Price';
 export default component$(
 	({ productAsset, productName, slug, priceWithTax, currencyCode }: any) => {
 		return (
-			<a class="flex flex-col mx-auto" href={slugToRoute(slug)}>
+			<Link class="flex flex-col mx-auto" href={slugToRoute(slug)}>
 				<Image
 					layout="fixed"
 					class="rounded-xl flex-grow object-cover aspect-[7/8]"
@@ -22,7 +23,7 @@ export default component$(
 					currencyCode={currencyCode}
 					forcedClass="text-sm font-medium text-gray-900"
 				/>
-			</a>
+			</Link>
 		);
 	}
 );

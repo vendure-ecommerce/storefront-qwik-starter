@@ -101,6 +101,10 @@ gql`
 			lastName
 			emailAddress
 			phoneNumber
+			customFields {
+				upvoteReviews
+				downvoteReviews
+			}
 		}
 	}
 `;

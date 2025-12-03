@@ -1,5 +1,5 @@
 import { $, component$, useSignal } from '@qwik.dev/core';
-import { useNavigate } from '@qwik.dev/router';
+import { Link, useNavigate } from '@qwik.dev/router';
 import { PasswordInput } from '~/components/account/PasswordInput';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import { loginMutation } from '~/providers/shop/account/account';
@@ -121,9 +121,9 @@ export default component$(() => {
 				<div class="mt-4">
 					<div class="space-y-4">
 						<p class="mt-1 text-center text-sm text-gray-600">
-							<a href="/sign-up" class="font-medium text-primary-600 hover:text-primary-500">
+							<Link href="/sign-up" class="font-medium text-primary-600 hover:text-primary-500">
 								{$localize`Register a new account`}
-							</a>
+							</Link>
 						</p>
 						<GoogleSignInButton googleClientId={GOOGLE_CLIENT_ID} />
 					</div>

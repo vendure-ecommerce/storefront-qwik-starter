@@ -210,6 +210,8 @@ export type ActiveCustomer = {
 	lastName: string;
 	emailAddress?: string;
 	phoneNumber?: string;
+	upvoteReviewIds: string[];
+	downvoteReviewIds: string[];
 };
 
 export type Login = ActiveCustomer & {

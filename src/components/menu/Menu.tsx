@@ -1,4 +1,5 @@
 import { component$, useContext } from '@qwik.dev/core';
+import { Link } from '@qwik.dev/router';
 import { APP_STATE } from '~/constants';
 import CloseIcon from '../icons/CloseIcon';
 
@@ -33,13 +34,13 @@ export default component$(() => {
 										</div>
 										<div class="flex flex-col pt-6">
 											{collections.map((collection) => (
-												<a
+												<Link
 													class="text-lg font-medium text-gray-90 hover:text-gray-500 pt-4"
 													href={`/collections/${collection.slug}`}
 													key={collection.id}
 												>
 													{collection.name}
-												</a>
+												</Link>
 											))}
 										</div>
 									</div>

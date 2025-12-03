@@ -450,8 +450,13 @@ export type CreateAssetSuccess = {
 	assetId: Scalars['ID']['output'];
 };
 
+export type CreateCustomerCustomFieldsInput = {
+	downvoteReviews?: InputMaybe<Array<Scalars['String']['input']>>;
+	upvoteReviews?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
 export type CreateCustomerInput = {
-	customFields?: InputMaybe<Scalars['JSON']['input']>;
+	customFields?: InputMaybe<CreateCustomerCustomFieldsInput>;
 	emailAddress: Scalars['String']['input'];
 	firstName: Scalars['String']['input'];
 	lastName: Scalars['String']['input'];
@@ -835,7 +840,7 @@ export type Customer = Node & {
 	__typename?: 'Customer';
 	addresses?: Maybe<Array<Address>>;
 	createdAt: Scalars['DateTime']['output'];
-	customFields?: Maybe<Scalars['JSON']['output']>;
+	customFields?: Maybe<CustomerCustomFields>;
 	emailAddress: Scalars['String']['output'];
 	firstName: Scalars['String']['output'];
 	id: Scalars['ID']['output'];
@@ -851,10 +856,17 @@ export type CustomerOrdersArgs = {
 	options?: InputMaybe<OrderListOptions>;
 };
 
+export type CustomerCustomFields = {
+	__typename?: 'CustomerCustomFields';
+	downvoteReviews?: Maybe<Array<Scalars['String']['output']>>;
+	upvoteReviews?: Maybe<Array<Scalars['String']['output']>>;
+};
+
 export type CustomerFilterParameter = {
 	_and?: InputMaybe<Array<CustomerFilterParameter>>;
 	_or?: InputMaybe<Array<CustomerFilterParameter>>;
 	createdAt?: InputMaybe<DateOperators>;
+	downvoteReviews?: InputMaybe<StringListOperators>;
 	emailAddress?: InputMaybe<StringOperators>;
 	firstName?: InputMaybe<StringOperators>;
 	id?: InputMaybe<IdOperators>;
@@ -862,6 +874,7 @@ export type CustomerFilterParameter = {
 	phoneNumber?: InputMaybe<StringOperators>;
 	title?: InputMaybe<StringOperators>;
 	updatedAt?: InputMaybe<DateOperators>;
+	upvoteReviews?: InputMaybe<StringListOperators>;
 };
 
 export type CustomerGroup = Node & {
@@ -1050,6 +1063,7 @@ export const ErrorCode = {
 	ValidateAddressError: 'VALIDATE_ADDRESS_ERROR',
 	VerificationTokenExpiredError: 'VERIFICATION_TOKEN_EXPIRED_ERROR',
 	VerificationTokenInvalidError: 'VERIFICATION_TOKEN_INVALID_ERROR',
+	VoteOnReviewError: 'VOTE_ON_REVIEW_ERROR',
 } as const;
 
 export type ErrorCode = (typeof ErrorCode)[keyof typeof ErrorCode];
@@ -1987,7 +2001,7 @@ export type Mutation = {
 	 * provided here.
 	 */
 	verifyCustomerAccount: VerifyCustomerAccountResult;
-	voteOnReview: ProductReview;
+	voteOnReview: VoteOnReviewResult;
 };
 
 export type MutationAddItemToOrderArgs = {
@@ -3460,7 +3474,13 @@ export type RegisterCustomerAccountResult =
 	| PasswordValidationError
 	| Success;
 
+export type RegisterCustomerCustomFieldsInput = {
+	downvoteReviews?: InputMaybe<Array<Scalars['String']['input']>>;
+	upvoteReviews?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
 export type RegisterCustomerInput = {
+	customFields?: InputMaybe<RegisterCustomerCustomFieldsInput>;
 	emailAddress: Scalars['String']['input'];
 	firstName?: InputMaybe<Scalars['String']['input']>;
 	lastName?: InputMaybe<Scalars['String']['input']>;
@@ -4224,6 +4244,11 @@ export type UpdateAddressInput = {
 	streetLine2?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateCustomerCustomFieldsInput = {
+	downvoteReviews?: InputMaybe<Array<Scalars['String']['input']>>;
+	upvoteReviews?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
 export type UpdateCustomerEmailAddressResult =
 	| IdentifierChangeTokenExpiredError
 	| IdentifierChangeTokenInvalidError
@@ -4231,7 +4256,7 @@ export type UpdateCustomerEmailAddressResult =
 	| Success;
 
 export type UpdateCustomerInput = {
-	customFields?: InputMaybe<Scalars['JSON']['input']>;
+	customFields?: InputMaybe<UpdateCustomerCustomFieldsInput>;
 	firstName?: InputMaybe<Scalars['String']['input']>;
 	lastName?: InputMaybe<Scalars['String']['input']>;
 	phoneNumber?: InputMaybe<Scalars['String']['input']>;
@@ -4357,6 +4382,14 @@ export type VerifyCustomerAccountResult =
 	| PasswordValidationError
 	| VerificationTokenExpiredError
 	| VerificationTokenInvalidError;
+
+export type VoteOnReviewError = ErrorResult & {
+	__typename?: 'VoteOnReviewError';
+	errorCode: ErrorCode;
+	message: Scalars['String']['output'];
+};
+
+export type VoteOnReviewResult = Success | VoteOnReviewError;
 
 export type Zone = Node & {
 	__typename?: 'Zone';
@@ -4858,6 +4891,11 @@ export type ActiveCustomerQuery = {
 		lastName: string;
 		emailAddress: string;
 		phoneNumber?: string | null;
+		customFields?: {
+			__typename?: 'CustomerCustomFields';
+			upvoteReviews?: Array<string> | null;
+			downvoteReviews?: Array<string> | null;
+		} | null;
 	} | null;
 };
 
@@ -6252,6 +6290,18 @@ export type GetProductReviewsQuery = {
 	} | null;
 };
 
+export type VoteOnReviewMutationVariables = Exact<{
+	id: Scalars['ID']['input'];
+	vote: Scalars['Boolean']['input'];
+}>;
+
+export type VoteOnReviewMutation = {
+	__typename?: 'Mutation';
+	voteOnReview:
+		| { __typename: 'Success'; success: boolean }
+		| { __typename: 'VoteOnReviewError'; errorCode: ErrorCode; message: string };
+};
+
 export type DetailedProductFragment = {
 	__typename?: 'Product';
 	id: string;
@@ -6877,6 +6927,10 @@ export const ActiveCustomerDocument = gql`
 			lastName
 			emailAddress
 			phoneNumber
+			customFields {
+				upvoteReviews
+				downvoteReviews
+			}
 		}
 	}
 `;
@@ -7222,6 +7276,21 @@ export const GetProductReviewsDocument = gql`
 					responseCreatedAt
 				}
 				totalItems
+			}
+		}
+	}
+`;
+export const VoteOnReviewDocument = gql`
+	mutation voteOnReview($id: ID!, $vote: Boolean!) {
+		voteOnReview(id: $id, vote: $vote) {
+			... on Success {
+				__typename
+				success
+			}
+			... on ErrorResult {
+				__typename
+				errorCode
+				message
 			}
 		}
 	}
@@ -7751,6 +7820,16 @@ export function getSdk<C>(requester: Requester<C>) {
 				variables,
 				options
 			) as Promise<GetProductReviewsQuery>;
+		},
+		voteOnReview(
+			variables: VoteOnReviewMutationVariables,
+			options?: C
+		): Promise<VoteOnReviewMutation> {
+			return requester<VoteOnReviewMutation, VoteOnReviewMutationVariables>(
+				VoteOnReviewDocument,
+				variables,
+				options
+			) as Promise<VoteOnReviewMutation>;
 		},
 		product(variables?: ProductQueryVariables, options?: C): Promise<ProductQuery> {
 			return requester<ProductQuery, ProductQueryVariables>(

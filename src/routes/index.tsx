@@ -1,4 +1,5 @@
 import { component$, useContext } from '@qwik.dev/core';
+import { Link } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import { APP_STATE, HOMEPAGE_IMAGE } from '~/constants';
@@ -29,21 +30,21 @@ export default component$(() => {
 
 					<p class="mt-4 text-2xl text-white">
 						{$localize`A headless commerce storefront starter kit built with`}{' '}
-						<a
+						<Link
 							href="https://www.vendure.io"
 							target="_blank"
 							class="text-blue-300 hover:text-blue-500"
 						>
 							Vendure
-						</a>{' '}
+						</Link>{' '}
 						&{' '}
-						<a
+						<Link
 							href="https://qwik.builder.io/"
 							target="_blank"
 							class="text-[#4092ff] hover:text-red-500"
 						>
 							Qwik
-						</a>
+						</Link>
 					</p>
 				</div>
 			</div>

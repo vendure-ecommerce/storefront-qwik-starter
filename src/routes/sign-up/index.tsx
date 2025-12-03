@@ -1,4 +1,5 @@
 import { $, component$, useSignal } from '@qwik.dev/core';
+import { Link } from '@qwik.dev/router';
 import { PasswordInput } from '~/components/account/PasswordInput';
 import CheckIcon from '~/components/icons/CheckIcon';
 import XCircleIcon from '~/components/icons/XCircleIcon';
@@ -64,9 +65,9 @@ export default component$(() => {
 				<h2 class="mt-6 text-center text-3xl text-gray-900">Create a new account</h2>
 				<p class="mt-2 text-center text-sm text-gray-600">
 					Or{' '}
-					<a href="/sign-in" class="font-medium text-primary-600 hover:text-primary-500">
+					<Link href="/sign-in" class="font-medium text-primary-600 hover:text-primary-500">
 						login to your existing account
-					</a>
+					</Link>
 				</p>
 			</div>
 

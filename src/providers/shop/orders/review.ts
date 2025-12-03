@@ -36,6 +36,14 @@ export const getProductReviewsQuery = async (id: string, options?: ProductReview
 	return await shopSdk.getProductReviews({ id, options }).then((res) => res.product?.reviews);
 };
 
+/**
+ * @param vote true for upvote, false for downvote
+ * @returns
+ */
+export const voteOnReviewMutation = async (id: string, vote: boolean) => {
+	return await shopSdk.voteOnReview({ id, vote }).then((res) => res.voteOnReview);
+};
+
 gql`
 	mutation submitProductReview($input: SubmitProductReviewInput!) {
 		submitProductReview(input: $input) {
@@ -118,6 +126,22 @@ gql`
 					responseCreatedAt
 				}
 				totalItems
+			}
+		}
+	}
+`;
+
+gql`
+	mutation voteOnReview($id: ID!, $vote: Boolean!) {
+		voteOnReview(id: $id, vote: $vote) {
+			... on Success {
+				__typename
+				success
+			}
+			... on ErrorResult {
+				__typename
+				errorCode
+				message
 			}
 		}
 	}

@@ -1,4 +1,5 @@
 import { component$ } from '@qwik.dev/core';
+import { Link } from '@qwik.dev/router';
 import { Order } from '~/generated/graphql';
 import { formatDateTime } from '~/utils';
 
@@ -34,7 +35,7 @@ export default component$<Props>(({ order }) => {
 								{order.fulfillments.map((fulfillment, idx) => {
 									const url = fulfillment?.customFields?.trackingUrl;
 									return url ? (
-										<a
+										<Link
 											key={fulfillment?.id ?? idx}
 											href={url}
 											target="_blank"
@@ -42,7 +43,7 @@ export default component$<Props>(({ order }) => {
 											class="underline"
 										>
 											{url}
-										</a>
+										</Link>
 									) : (
 										<span key={fulfillment?.id ?? idx} class="font-semibold">
 											{$localize`Not provided`}

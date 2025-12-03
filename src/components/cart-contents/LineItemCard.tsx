@@ -1,4 +1,5 @@
 import { $, component$, QRL, Signal, useSignal } from '@qwik.dev/core';
+import { Link } from '@qwik.dev/router';
 import { OrderLine } from '~/generated/graphql';
 import { slugToRoute } from '~/utils';
 import Info from '../common/Info';
@@ -52,9 +53,9 @@ export default component$<Props>(
 					<div>
 						<div class="flex justify-between text-base font-medium text-gray-900">
 							<h3>
-								<a href={slugToRoute(line.productVariant.product.slug)}>
+								<Link href={slugToRoute(line.productVariant.product.slug)}>
 									{line.productVariant.name}
-								</a>
+								</Link>
 							</h3>
 							<Price
 								priceWithTax={linePriceWithTax}
@@ -106,7 +107,7 @@ export default component$<Props>(
 						)}
 						{allowReview && (
 							<div class="flex m-2">
-								<a
+								<Link
 									href="#"
 									class={`text-primary-600 underline px-2 py-1 
 										${notReviewableReasonFixed || justReviewed.value ? 'opacity-50 cursor-not-allowed' : ''}
@@ -120,7 +121,7 @@ export default component$<Props>(
 									}}
 								>
 									review this
-								</a>
+								</Link>
 								{(notReviewableReasonFixed || justReviewed.value) && (
 									<Info text={notReviewableReasonFixed || 'Just Reviewed - Pending Approval'} />
 								)}

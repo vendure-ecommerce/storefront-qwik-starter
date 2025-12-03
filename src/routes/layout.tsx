@@ -14,6 +14,7 @@ import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, IMAGE_RESOLUTIONS } from '~/constan
 import { Order } from '~/generated/graphql';
 import { getAvailableCountriesQuery } from '~/providers/shop/checkout/checkout';
 import { getCollections } from '~/providers/shop/collections/collections';
+import { getActiveCustomerQuery } from '~/providers/shop/customer/customer';
 import {
 	customizableClassDefFindAll,
 	filamentColorFindSupported,
@@ -78,7 +79,13 @@ export default component$(() => {
 	const state = useStore<AppState>({
 		showCart: false,
 		showMenu: false,
-		customer: { id: CUSTOMER_NOT_DEFINED_ID, firstName: '', lastName: '' } as ActiveCustomer,
+		customer: {
+			id: CUSTOMER_NOT_DEFINED_ID,
+			firstName: '',
+			lastName: '',
+			upvoteReviewIds: [],
+			downvoteReviewIds: [],
+		} as ActiveCustomer,
 		activeOrder: {} as Order,
 		collections: collectionsSignal.value || [],
 		availableCountries: availableCountriesSignal.value || [],
@@ -122,6 +129,23 @@ export default component$(() => {
 	useContextProvider(CUSTOMIZABLE_CLASS_DEF_TAG, customizableClassDefTag);
 
 	useVisibleTask$(async () => {
+		if (state.customer.id === CUSTOMER_NOT_DEFINED_ID) {
+			console.log('Fetching active customer in layout...');
+			console.log('Before getActiveCustomerQuery call: ', JSON.stringify(state.customer, null, 2));
+			const activeCustomer = await getActiveCustomerQuery();
+			if (activeCustomer) {
+				state.customer = {
+					id: activeCustomer.id,
+					firstName: activeCustomer.firstName,
+					lastName: activeCustomer.lastName,
+					emailAddress: activeCustomer.emailAddress,
+					phoneNumber: activeCustomer.phoneNumber ?? '',
+					upvoteReviewIds: activeCustomer.customFields?.upvoteReviews || [],
+					downvoteReviewIds: activeCustomer.customFields?.downvoteReviews || [],
+				};
+				console.log('After getActiveCustomerQuery call: ', JSON.stringify(state.customer, null, 2));
+			}
+		}
 		const activeOrder = await getActiveOrderQuery();
 		if (activeOrder) state.activeOrder = activeOrder;
 
