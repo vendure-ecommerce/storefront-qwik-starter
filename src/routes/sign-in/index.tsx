@@ -1,4 +1,4 @@
-import { $, component$, useSignal } from '@qwik.dev/core';
+import { $, component$, useContext, useSignal } from '@qwik.dev/core';
 import { Link, useNavigate } from '@qwik.dev/router';
 import { PasswordInput } from '~/components/account/PasswordInput';
 import XCircleIcon from '~/components/icons/XCircleIcon';
@@ -6,7 +6,8 @@ import { loginMutation } from '~/providers/shop/account/account';
 
 import { GoogleSignInButton } from '~/components/account/GoogleSignIn';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';
-import { GOOGLE_CLIENT_ID } from '~/constants';
+import { APP_STATE, GOOGLE_CLIENT_ID } from '~/constants';
+import { loadCustomerData } from '~/utils';
 
 export default component$(() => {
 	const navigate = useNavigate();
@@ -15,10 +16,12 @@ export default component$(() => {
 	const setPasswordValid = useSignal(false);
 	const rememberMe = useSignal(true);
 	const error = useSignal('');
+	const appState = useContext(APP_STATE);
 
 	const onLogin$ = $(async () => {
 		const { login } = await loginMutation(email.value, password.value, rememberMe.value);
 		if (login.__typename === 'CurrentUser') {
+			appState.customer = await loadCustomerData();
 			navigate('/account');
 		} else {
 			error.value = login.message;

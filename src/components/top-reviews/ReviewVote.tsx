@@ -1,5 +1,5 @@
 import { $, component$, QRL, Signal, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
-import { LuThumbsDown, LuThumbsUp } from '@qwikest/icons/lucide';
+import { LuThumbsDown, LuThumbsUp, LuX } from '@qwikest/icons/lucide';
 import { APP_STATE } from '~/constants';
 import { voteOnReviewMutation } from '~/providers/shop/orders/review';
 
@@ -60,7 +60,6 @@ export default component$<ReviewVoteProps>(({ reviewId, upvotes, downvotes, onSu
 					await onSuccess(vote);
 				}
 			} else {
-				console.error('Error voting on review:', JSON.stringify(result, null, 2));
 				errMessage.value = result.message || 'An error occurred while voting on the review.';
 			}
 		} catch (error) {
@@ -92,12 +91,13 @@ export default component$<ReviewVoteProps>(({ reviewId, upvotes, downvotes, onSu
 			</div>
 			{errMessage.value && (
 				<div
-					class="text-red-600 text-xs border rounded-sm cursor-pointer"
+					class="text-red-600 text-xs border rounded-sm cursor-pointer m-2"
 					onClick$={$(() => {
 						errMessage.value = null;
 					})}
 				>
 					{errMessage.value}
+					<LuX class="inline-block w-4 h-4 ml-1" />
 				</div>
 			)}
 		</div>

@@ -7,6 +7,7 @@ import {
 } from '~/constants';
 import { ENV_VARIABLES } from '~/env';
 import { SearchResponse } from '~/generated/graphql';
+import { getActiveCustomerQuery } from '~/providers/shop/customer/customer';
 import {
 	DEFAULT_BASE_COLOR_NAME,
 	DEFAULT_FONT_NAME,
@@ -276,4 +277,32 @@ export async function handleGqlResult<TSuccess = any>(
 	}
 
 	return result as TSuccess;
+}
+
+export async function loadCustomerData(): Promise<ActiveCustomer> {
+	const activeCustomer = await getActiveCustomerQuery();
+
+	if (activeCustomer) {
+		return {
+			id: activeCustomer.id,
+			title: activeCustomer.title ?? '',
+			firstName: activeCustomer.firstName,
+			lastName: activeCustomer.lastName,
+			emailAddress: activeCustomer.emailAddress,
+			phoneNumber: activeCustomer.phoneNumber ?? '',
+			upvoteReviewIds: activeCustomer.customFields?.upvoteReviews || [],
+			downvoteReviewIds: activeCustomer.customFields?.downvoteReviews || [],
+		};
+	}
+
+	return {
+		id: CUSTOMER_NOT_DEFINED_ID,
+		title: '',
+		firstName: '',
+		lastName: '',
+		emailAddress: '',
+		phoneNumber: '',
+		upvoteReviewIds: [],
+		downvoteReviewIds: [],
+	};
 }

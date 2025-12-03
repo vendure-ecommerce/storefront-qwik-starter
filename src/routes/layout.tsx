@@ -22,7 +22,7 @@ import {
 } from '~/providers/shop/orders/customizable-order';
 import { getActiveOrderQuery } from '~/providers/shop/orders/order';
 import { ActiveCustomer, AppState } from '~/types';
-import { getDefaultCustomNameTagOptions, getGoogleFontLink } from '~/utils';
+import { getDefaultCustomNameTagOptions, getGoogleFontLink, loadCustomerData } from '~/utils';
 import { parseCustomizableClassDef } from '~/utils/customizable-order';
 import { extractLang } from '~/utils/i18n';
 import Cart from '../components/cart/Cart';
@@ -129,23 +129,11 @@ export default component$(() => {
 	useContextProvider(CUSTOMIZABLE_CLASS_DEF_TAG, customizableClassDefTag);
 
 	useVisibleTask$(async () => {
-		if (state.customer.id === CUSTOMER_NOT_DEFINED_ID) {
-			console.log('Fetching active customer in layout...');
-			console.log('Before getActiveCustomerQuery call: ', JSON.stringify(state.customer, null, 2));
-			const activeCustomer = await getActiveCustomerQuery();
-			if (activeCustomer) {
-				state.customer = {
-					id: activeCustomer.id,
-					firstName: activeCustomer.firstName,
-					lastName: activeCustomer.lastName,
-					emailAddress: activeCustomer.emailAddress,
-					phoneNumber: activeCustomer.phoneNumber ?? '',
-					upvoteReviewIds: activeCustomer.customFields?.upvoteReviews || [],
-					downvoteReviewIds: activeCustomer.customFields?.downvoteReviews || [],
-				};
-				console.log('After getActiveCustomerQuery call: ', JSON.stringify(state.customer, null, 2));
-			}
-		}
+		// This should happen once when the layout is initialized
+		// This shouldn't happen on every navigation (if so, please use <Link> instead of <a href...>)
+		console.log('Layout useVisibleTask$ running...');
+		const activeCustomer = await getActiveCustomerQuery();
+		state.customer = await loadCustomerData();
 		const activeOrder = await getActiveOrderQuery();
 		if (activeOrder) state.activeOrder = activeOrder;
 
