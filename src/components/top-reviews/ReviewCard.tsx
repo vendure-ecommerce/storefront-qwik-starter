@@ -1,4 +1,5 @@
 import { component$, useSignal } from '@qwik.dev/core';
+import ImageGallery from '../image/ImageGallery';
 import ReviewVote from './ReviewVote';
 
 interface ReviewAsset {
@@ -68,19 +69,10 @@ export default component$<ReviewCardProps>(({ review }) => {
 					<h3 class="text-sm font-medium text-gray-900">{review.summary}</h3>
 					<div class="mt-3 space-y-2 text-sm text-gray-700">
 						<p>{review.body}</p>
-						{review.assets && review.assets.length > 0 && (
-							<div class="flex space-x-2 mt-2">
-								{review.assets.map((asset) => (
-									<img
-										key={asset.id}
-										src={asset.preview}
-										alt="Review image"
-										class="w-20 h-20 object-cover rounded border"
-									/>
-								))}
-							</div>
-						)}
-						<ReviewVote reviewId={review.id} upvotes={upvotes} downvotes={downvotes} />
+						{review.assets && review.assets.length > 0 && <ImageGallery assets={review.assets} />}
+						<div>
+							<ReviewVote reviewId={review.id} upvotes={upvotes} downvotes={downvotes} />
+						</div>
 					</div>
 				</div>
 			</div>

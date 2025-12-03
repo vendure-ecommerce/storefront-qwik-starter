@@ -74,6 +74,7 @@ export default component$<ReviewVoteProps>(({ reviewId, upvotes, downvotes, onSu
 	return (
 		<div class="flex flex-col items-start gap-2 mt-4 text-sm">
 			<div class="flex items-center gap-4">
+				<p>{$localize`Was this review helpful?`}</p>
 				<VoteButton
 					mode="up"
 					count={upvotes}
