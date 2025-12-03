@@ -451,7 +451,6 @@ export type CreateAssetSuccess = {
 };
 
 export type CreateCustomerCustomFieldsInput = {
-	downvoteReviews?: InputMaybe<Array<Scalars['String']['input']>>;
 	upvoteReviews?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
@@ -858,7 +857,6 @@ export type CustomerOrdersArgs = {
 
 export type CustomerCustomFields = {
 	__typename?: 'CustomerCustomFields';
-	downvoteReviews?: Maybe<Array<Scalars['String']['output']>>;
 	upvoteReviews?: Maybe<Array<Scalars['String']['output']>>;
 };
 
@@ -866,7 +864,6 @@ export type CustomerFilterParameter = {
 	_and?: InputMaybe<Array<CustomerFilterParameter>>;
 	_or?: InputMaybe<Array<CustomerFilterParameter>>;
 	createdAt?: InputMaybe<DateOperators>;
-	downvoteReviews?: InputMaybe<StringListOperators>;
 	emailAddress?: InputMaybe<StringOperators>;
 	firstName?: InputMaybe<StringOperators>;
 	id?: InputMaybe<IdOperators>;
@@ -2964,7 +2961,6 @@ export type ProductReview = Node & {
 	body?: Maybe<Scalars['String']['output']>;
 	createdAt: Scalars['DateTime']['output'];
 	customFields?: Maybe<Scalars['JSON']['output']>;
-	downvotes: Scalars['Int']['output'];
 	id: Scalars['ID']['output'];
 	product: Product;
 	productVariant?: Maybe<ProductVariant>;
@@ -2985,7 +2981,6 @@ export type ProductReviewFilterParameter = {
 	authorName?: InputMaybe<StringOperators>;
 	body?: InputMaybe<StringOperators>;
 	createdAt?: InputMaybe<DateOperators>;
-	downvotes?: InputMaybe<NumberOperators>;
 	id?: InputMaybe<IdOperators>;
 	rating?: InputMaybe<NumberOperators>;
 	response?: InputMaybe<StringOperators>;
@@ -3026,7 +3021,6 @@ export type ProductReviewSortParameter = {
 	authorName?: InputMaybe<SortOrder>;
 	body?: InputMaybe<SortOrder>;
 	createdAt?: InputMaybe<SortOrder>;
-	downvotes?: InputMaybe<SortOrder>;
 	id?: InputMaybe<SortOrder>;
 	rating?: InputMaybe<SortOrder>;
 	response?: InputMaybe<SortOrder>;
@@ -3475,7 +3469,6 @@ export type RegisterCustomerAccountResult =
 	| Success;
 
 export type RegisterCustomerCustomFieldsInput = {
-	downvoteReviews?: InputMaybe<Array<Scalars['String']['input']>>;
 	upvoteReviews?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
@@ -4245,7 +4238,6 @@ export type UpdateAddressInput = {
 };
 
 export type UpdateCustomerCustomFieldsInput = {
-	downvoteReviews?: InputMaybe<Array<Scalars['String']['input']>>;
 	upvoteReviews?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
@@ -4894,7 +4886,6 @@ export type ActiveCustomerQuery = {
 		customFields?: {
 			__typename?: 'CustomerCustomFields';
 			upvoteReviews?: Array<string> | null;
-			downvoteReviews?: Array<string> | null;
 		} | null;
 	} | null;
 };
@@ -6280,11 +6271,15 @@ export type GetProductReviewsQuery = {
 				authorLocation?: string | null;
 				createdAt: any;
 				upvotes: number;
-				downvotes: number;
 				response?: string | null;
 				responseCreatedAt?: any | null;
 				productVariant?: { __typename?: 'ProductVariant'; id: string } | null;
-				assets?: Array<{ __typename?: 'Asset'; id: string; preview: string }> | null;
+				assets?: Array<{
+					__typename?: 'Asset';
+					id: string;
+					preview: string;
+					focalPoint?: { __typename?: 'Coordinate'; x: number; y: number } | null;
+				}> | null;
 			}>;
 		};
 	} | null;
@@ -6929,7 +6924,6 @@ export const ActiveCustomerDocument = gql`
 			phoneNumber
 			customFields {
 				upvoteReviews
-				downvoteReviews
 			}
 		}
 	}
@@ -7267,10 +7261,13 @@ export const GetProductReviewsDocument = gql`
 					authorLocation
 					createdAt
 					upvotes
-					downvotes
 					assets {
 						id
 						preview
+						focalPoint {
+							x
+							y
+						}
 					}
 					response
 					responseCreatedAt

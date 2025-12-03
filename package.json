@@ -27,12 +27,12 @@
 		"lint": "eslint \"src/**/*.ts*\"",
 		"prepare": "husky install",
 		"preview": "qwik build preview && vite preview --open",
-		"start": "pnpm generate && vite --open --mode ssr",
+		"start": "pnpm codegen && vite --open --mode ssr",
 		"qwik": "qwik",
-		"generate-shop": "DOTENV_CONFIG_PATH=.env graphql-codegen -r dotenv/config --config codegen-shop.ts",
-		"generate-dev": "export IS_DEV=TRUE && pnpm generate-shop",
-		"generate-local": "export IS_LOCAL=TRUE && pnpm generate-shop",
-		"generate": "pnpm generate-shop",
+		"codegen-shop": "DOTENV_CONFIG_PATH=.env graphql-codegen -r dotenv/config --config codegen-shop.ts",
+		"codegen-dev": "export IS_DEV=TRUE && pnpm codegen-shop",
+		"codegen-local": "export IS_LOCAL=TRUE && pnpm codegen-shop",
+		"codegen": "pnpm codegen-shop",
 		"test": "vitest"
 	},
 	"devDependencies": {

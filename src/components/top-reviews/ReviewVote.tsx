@@ -1,5 +1,5 @@
 import { $, component$, QRL, Signal, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
-import { LuThumbsUp, LuX } from '@qwikest/icons/lucide';
+import { LuThumbsUp } from '@qwikest/icons/lucide';
 import { APP_STATE } from '~/constants';
 import { voteOnReviewMutation } from '~/providers/shop/orders/review';
 import { SpinnerWaitingAnimation } from '../icons/SpinnerWaitingAnimation';
@@ -14,7 +14,6 @@ export default component$<ReviewVoteProps>(({ reviewId, upvotes, onSuccess }) =>
 	const appState = useContext(APP_STATE);
 	const currentVerdict = useSignal<boolean>(false); // true for upvote, false for no vote
 	const isLoading = useSignal(false);
-	const errMessage = useSignal<string | null>(null);
 
 	useVisibleTask$(() => {
 		currentVerdict.value = appState.customer.upvoteReviewIds.includes(reviewId.toString()) || false;
@@ -40,14 +39,7 @@ export default component$<ReviewVoteProps>(({ reviewId, upvotes, onSuccess }) =>
 			}
 		} catch (error) {
 			console.error('Failed to vote on review:', error);
-			errMessage.value = 'Failed to vote on the review. Please try again.';
-
-			// Clear error message after 3 seconds
-			setTimeout(() => {
-				errMessage.value = null;
-			}, 3000);
 		} finally {
-			console.log('currentVerdict after vote:', currentVerdict.value);
 			isLoading.value = false;
 		}
 	});
@@ -63,17 +55,6 @@ export default component$<ReviewVoteProps>(({ reviewId, upvotes, onSuccess }) =>
 					onClick$={handleVote}
 				/>
 			</div>
-			{errMessage.value && (
-				<div
-					class="text-red-600 text-xs border rounded-sm cursor-pointer m-2"
-					onClick$={$(() => {
-						errMessage.value = null;
-					})}
-				>
-					{errMessage.value}
-					<LuX class="inline-block w-4 h-4 ml-1" />
-				</div>
-			)}
 		</div>
 	);
 });

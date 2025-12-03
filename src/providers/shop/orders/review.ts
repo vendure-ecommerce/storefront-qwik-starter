@@ -120,6 +120,10 @@ gql`
 					assets {
 						id
 						preview
+						focalPoint {
+							x
+							y
+						}
 					}
 					response
 					responseCreatedAt

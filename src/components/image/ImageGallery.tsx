@@ -4,6 +4,10 @@ import { LuX } from '@qwikest/icons/lucide';
 interface ReviewAsset {
 	id: string;
 	preview: string;
+	focalPoint?: {
+		x: number;
+		y: number;
+	} | null;
 }
 
 interface ImageGalleryProps {
@@ -38,6 +42,16 @@ export default component$<ImageGalleryProps>(({ assets }) => {
 		}
 	});
 
+	// Helper function to get background position from focal point
+	const getBackgroundPosition = (focalPoint?: { x: number; y: number } | null): string => {
+		if (!focalPoint) {
+			return 'center';
+		}
+		const x = Math.round(focalPoint.x * 100);
+		const y = Math.round(focalPoint.y * 100);
+		return `${x}% ${y}%`;
+	};
+
 	return (
 		<>
 			{/* Thumbnail Gallery */}
@@ -52,7 +66,10 @@ export default component$<ImageGalleryProps>(({ assets }) => {
 						<img
 							src={asset.preview}
 							alt="Review image"
-							class="w-20 h-20 object-cover rounded border hover:border-blue-500"
+							class="w-10 h-10 object-cover rounded border hover:border-blue-500"
+							style={{
+								objectPosition: getBackgroundPosition(asset.focalPoint),
+							}}
 						/>
 					</button>
 				))}
@@ -80,6 +97,9 @@ export default component$<ImageGalleryProps>(({ assets }) => {
 								src={selectedImage.value.preview}
 								alt="Enlarged review image"
 								class="max-h-96 max-w-full object-contain"
+								style={{
+									objectPosition: getBackgroundPosition(selectedImage.value.focalPoint),
+								}}
 							/>
 						</div>
 

@@ -423,7 +423,6 @@ type CreateAssetSuccess {
 }
 
 input CreateCustomerCustomFieldsInput {
-	downvoteReviews: [String!]
 	upvoteReviews: [String!]
 }
 
@@ -1290,7 +1289,6 @@ type Customer implements Node {
 }
 
 type CustomerCustomFields {
-	downvoteReviews: [String!]
 	upvoteReviews: [String!]
 }
 
@@ -1298,7 +1296,6 @@ input CustomerFilterParameter {
 	_and: [CustomerFilterParameter!]
 	_or: [CustomerFilterParameter!]
 	createdAt: DateOperators
-	downvoteReviews: StringListOperators
 	emailAddress: StringOperators
 	firstName: StringOperators
 	id: IDOperators
@@ -4263,7 +4260,6 @@ type ProductReview implements Node {
 	body: String
 	createdAt: DateTime!
 	customFields: JSON
-	downvotes: Int!
 	id: ID!
 	product: Product!
 	productVariant: ProductVariant
@@ -4284,7 +4280,6 @@ input ProductReviewFilterParameter {
 	authorName: StringOperators
 	body: StringOperators
 	createdAt: DateOperators
-	downvotes: NumberOperators
 	id: IDOperators
 	rating: NumberOperators
 	response: StringOperators
@@ -4337,7 +4332,6 @@ input ProductReviewSortParameter {
 	authorName: SortOrder
 	body: SortOrder
 	createdAt: SortOrder
-	downvotes: SortOrder
 	id: SortOrder
 	rating: SortOrder
 	response: SortOrder
@@ -4779,7 +4773,6 @@ union RegisterCustomerAccountResult =
 	| Success
 
 input RegisterCustomerCustomFieldsInput {
-	downvoteReviews: [String!]
 	upvoteReviews: [String!]
 }
 
@@ -5772,7 +5765,6 @@ input UpdateAddressInput {
 }
 
 input UpdateCustomerCustomFieldsInput {
-	downvoteReviews: [String!]
 	upvoteReviews: [String!]
 }
 
