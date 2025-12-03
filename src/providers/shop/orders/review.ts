@@ -37,7 +37,7 @@ export const getProductReviewsQuery = async (id: string, options?: ProductReview
 };
 
 /**
- * @param vote true for upvote, false for downvote
+ * @param vote true for upvote, false for reverting the previous upvote
  * @returns
  */
 export const voteOnReviewMutation = async (id: string, vote: boolean) => {
@@ -117,7 +117,6 @@ gql`
 					authorLocation
 					createdAt
 					upvotes
-					downvotes
 					assets {
 						id
 						preview

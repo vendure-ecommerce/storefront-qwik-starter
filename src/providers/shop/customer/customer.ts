@@ -103,7 +103,6 @@ gql`
 			phoneNumber
 			customFields {
 				upvoteReviews
-				downvoteReviews
 			}
 		}
 	}

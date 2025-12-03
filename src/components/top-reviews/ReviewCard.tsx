@@ -21,7 +21,6 @@ export interface ReviewItem {
 	authorLocation?: string | null;
 	createdAt: string;
 	upvotes: number;
-	downvotes: number;
 	assets?: ReviewAsset[] | null;
 	response?: string | null;
 	responseCreatedAt?: string | null;
@@ -44,7 +43,6 @@ function formatDate(dateStr?: string) {
 
 export default component$<ReviewCardProps>(({ review }) => {
 	const upvotes = useSignal<number>(review.upvotes);
-	const downvotes = useSignal<number>(review.downvotes);
 
 	return (
 		<div class="pt-10 lg:grid lg:grid-cols-12 lg:gap-x-8">
@@ -71,7 +69,7 @@ export default component$<ReviewCardProps>(({ review }) => {
 						<p>{review.body}</p>
 						{review.assets && review.assets.length > 0 && <ImageGallery assets={review.assets} />}
 						<div>
-							<ReviewVote reviewId={review.id} upvotes={upvotes} downvotes={downvotes} />
+							<ReviewVote reviewId={review.id} upvotes={upvotes} />
 						</div>
 					</div>
 				</div>

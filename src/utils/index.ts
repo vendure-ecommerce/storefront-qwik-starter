@@ -291,7 +291,6 @@ export async function loadCustomerData(): Promise<ActiveCustomer> {
 			emailAddress: activeCustomer.emailAddress,
 			phoneNumber: activeCustomer.phoneNumber ?? '',
 			upvoteReviewIds: activeCustomer.customFields?.upvoteReviews || [],
-			downvoteReviewIds: activeCustomer.customFields?.downvoteReviews || [],
 		};
 	}
 
@@ -303,6 +302,5 @@ export async function loadCustomerData(): Promise<ActiveCustomer> {
 		emailAddress: '',
 		phoneNumber: '',
 		upvoteReviewIds: [],
-		downvoteReviewIds: [],
 	};
 }
