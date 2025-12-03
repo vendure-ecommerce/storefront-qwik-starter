@@ -14,7 +14,7 @@ interface ProductReviewListOptionsProps {
 export default component$<ProductReviewListOptionsProps>(
 	({ pageSize, minRating, sortBy, onFilterChange$, sortOptionMap }) => {
 		return (
-			<div class="mt-8 flex flex-col gap-4 border-b border-gray-200 pb-6">
+			<div class="mt-8 flex flex-col gap-4 pb-6">
 				<div class="flex flex-col sm:flex-row gap-6">
 					{/* Page Size */}
 					<Select.Root bind:value={pageSize}>

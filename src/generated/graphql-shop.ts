@@ -1973,6 +1973,11 @@ export type Mutation = {
 	 * shipping method will apply to.
 	 */
 	setOrderShippingMethod: SetOrderShippingMethodResult;
+	/**
+	 * Submit a product review for a purchased product variant
+	 * Note that this won't check whether the customer is allowed to review the product variant.
+	 * For that, please use the 'isReviewAllowed' query first.
+	 */
 	submitProductReview: SubmitProductReviewResult;
 	/** Transitions an Order to a new state. Valid next states can be found by querying `nextOrderStates` */
 	transitionOrderToState?: Maybe<TransitionOrderToStateResult>;
@@ -1998,6 +2003,13 @@ export type Mutation = {
 	 * provided here.
 	 */
 	verifyCustomerAccount: VerifyCustomerAccountResult;
+	/**
+	 * Upvote or remove upvote from a product review
+	 *
+	 * If vote is true, it means upvote; if false, it means remove previous upvote.
+	 * If the customer has already upvoted the review, and vote is true again, it will throw an error.
+	 * If the customer has not upvoted the review, and vote is false (revert the upvote), it will throw an error.
+	 */
 	voteOnReview: VoteOnReviewResult;
 };
 
@@ -2846,7 +2858,12 @@ export type Product = Node & {
 	languageCode: LanguageCode;
 	name: Scalars['String']['output'];
 	optionGroups: Array<ProductOptionGroup>;
+	/** The list of reviews associated with this product.         */
 	reviews: ProductReviewList;
+	/**
+	 * The histogram data of the product reviews' ratings.
+	 * Each item represents a bin (0-5) and the frequency of reviews in that bin.
+	 */
 	reviewsHistogram: Array<ProductReviewHistogramItem>;
 	slug: Scalars['String']['output'];
 	translations: Array<ProductTranslation>;
@@ -2957,20 +2974,34 @@ export type ProductReview = Node & {
 	__typename?: 'ProductReview';
 	assets?: Maybe<Array<Asset>>;
 	authorLocation?: Maybe<Scalars['String']['output']>;
+	/** The name of the review author, user can input any name they like.  */
 	authorName: Scalars['String']['output'];
+	/** The main content of the review */
 	body?: Maybe<Scalars['String']['output']>;
 	createdAt: Scalars['DateTime']['output'];
 	customFields?: Maybe<Scalars['JSON']['output']>;
 	id: Scalars['ID']['output'];
 	product: Product;
 	productVariant?: Maybe<ProductVariant>;
+	/**
+	 * The rating given by the reviewer, it can be a float value between 0 and 5
+	 * Higher means user is more satisfied with the product
+	 * However, the frontend can choose to round it to the nearest integer for display purposes
+	 */
 	rating: Scalars['Float']['output'];
+	/** The response from the store admin to this review */
 	response?: Maybe<Scalars['String']['output']>;
 	responseCreatedAt?: Maybe<Scalars['DateTime']['output']>;
+	/** The moderation state of the review, e.g. 'new', 'approved', 'rejected' */
 	state: Scalars['String']['output'];
+	/**
+	 * A brief summary of the review
+	 * It will be shown as the title of the review
+	 */
 	summary: Scalars['String']['output'];
 	translations: Array<ProductReviewTranslation>;
 	updatedAt: Scalars['DateTime']['output'];
+	/** The number of upvotes this review (i.e. thumbs up) has received from other customers */
 	upvotes: Scalars['Int']['output'];
 };
 
@@ -3244,6 +3275,7 @@ export type PublicShippingMethod = {
 	translations: Array<ShippingMethodTranslation>;
 };
 
+/** The purchased productVariant and the review eligibility status */
 export type PurchasedVariantWithReviewStatus = {
 	__typename?: 'PurchasedVariantWithReviewStatus';
 	canReview: Scalars['Boolean']['output'];
@@ -3291,7 +3323,12 @@ export type Query = {
 	filamentColorFindSupported: Array<FilamentColor>;
 	fontMenuFindAll: Array<FontMenu>;
 	generateBraintreeClientToken?: Maybe<Scalars['String']['output']>;
+	/**
+	 * Get the list of purchased product variants along with their review eligibility status for the current customer
+	 * This is for review eligibility check about whether the customer can review the purchased variants
+	 */
 	getPurchasedVariantForReview: GetPurchasedVariantForReviewResult;
+	/** Check whether the current customer is allowed to review the given product variant */
 	isReviewAllowed: IsReviewAllowedResult;
 	/** Returns information about the current authenticated User */
 	me?: Maybe<CurrentUser>;
@@ -6285,6 +6322,23 @@ export type GetProductReviewsQuery = {
 	} | null;
 };
 
+export type GetReviewHistogramQueryVariables = Exact<{
+	productId: Scalars['ID']['input'];
+}>;
+
+export type GetReviewHistogramQuery = {
+	__typename?: 'Query';
+	product?: {
+		__typename?: 'Product';
+		id: string;
+		reviewsHistogram: Array<{
+			__typename?: 'ProductReviewHistogramItem';
+			bin: number;
+			frequency: number;
+		}>;
+	} | null;
+};
+
 export type VoteOnReviewMutationVariables = Exact<{
 	id: Scalars['ID']['input'];
 	vote: Scalars['Boolean']['input'];
@@ -7277,6 +7331,17 @@ export const GetProductReviewsDocument = gql`
 		}
 	}
 `;
+export const GetReviewHistogramDocument = gql`
+	query getReviewHistogram($productId: ID!) {
+		product(id: $productId) {
+			id
+			reviewsHistogram {
+				bin
+				frequency
+			}
+		}
+	}
+`;
 export const VoteOnReviewDocument = gql`
 	mutation voteOnReview($id: ID!, $vote: Boolean!) {
 		voteOnReview(id: $id, vote: $vote) {
@@ -7817,6 +7882,16 @@ export function getSdk<C>(requester: Requester<C>) {
 				variables,
 				options
 			) as Promise<GetProductReviewsQuery>;
+		},
+		getReviewHistogram(
+			variables: GetReviewHistogramQueryVariables,
+			options?: C
+		): Promise<GetReviewHistogramQuery> {
+			return requester<GetReviewHistogramQuery, GetReviewHistogramQueryVariables>(
+				GetReviewHistogramDocument,
+				variables,
+				options
+			) as Promise<GetReviewHistogramQuery>;
 		},
 		voteOnReview(
 			variables: VoteOnReviewMutationVariables,

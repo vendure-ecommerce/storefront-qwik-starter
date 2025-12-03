@@ -21,6 +21,12 @@ export const isReviewAllowedQuery = async (productVariantId: string) => {
 	return await shopSdk.isReviewAllowed({ productVariantId }).then((res) => res.isReviewAllowed);
 };
 
+export const getReviewHistogramQuery = async (productId: string) => {
+	return await shopSdk
+		.getReviewHistogram({ productId })
+		.then((res) => res.product?.reviewsHistogram);
+};
+
 /**
  *
  * @param id product.id
@@ -129,6 +135,18 @@ gql`
 					responseCreatedAt
 				}
 				totalItems
+			}
+		}
+	}
+`;
+
+gql`
+	query getReviewHistogram($productId: ID!) {
+		product(id: $productId) {
+			id
+			reviewsHistogram {
+				bin
+				frequency
 			}
 		}
 	}

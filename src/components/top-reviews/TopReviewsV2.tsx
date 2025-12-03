@@ -1,6 +1,7 @@
 import { $, component$, useSignal, useVisibleTask$ } from '@qwik.dev/core';
 import { SortOrder } from '~/generated/graphql-shop';
 import { getProductReviewsQuery } from '~/providers/shop/orders/review';
+import { SpinnerWaitingAnimation } from '../icons/SpinnerWaitingAnimation';
 import ProductReviewListOptions from './ProductReviewListOptions';
 import ReviewCard, { ReviewItem } from './ReviewCard';
 
@@ -110,8 +111,8 @@ export default component$<TopReviewsV2Props>(({ productId }) => {
 	});
 
 	return (
-		<div class="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-6xl lg:px-8">
-			<h2 class="text-lg font-medium text-gray-900">Customer Reviews</h2>
+		<div class="max-w-2xl mx-auto px-4 lg:max-w-6xl lg:px-8">
+			<h2 class="text-lg font-medium text-gray-900">{$localize`Customer Reviews`}</h2>
 
 			<ProductReviewListOptions
 				pageSize={pageSize}
@@ -122,11 +123,11 @@ export default component$<TopReviewsV2Props>(({ productId }) => {
 			/>
 
 			{isLoading.value ? (
-				<div class="py-8 text-center text-gray-500">Loading reviews...</div>
+				<SpinnerWaitingAnimation />
 			) : reviews.value.length === 0 ? (
-				<div class="py-8 text-center text-gray-500">No reviews yet.</div>
+				<div class="py-8 text-center text-gray-500">{$localize`No reviews yet.`}</div>
 			) : (
-				<div class="mt-6 pb-10 border-t border-gray-200 divide-y divide-gray-200 space-y-10">
+				<div class="mt-6 pb-10 border-gray-200 divide-y divide-gray-200 space-y-10">
 					{reviews.value.map((review) => (
 						<ReviewCard key={review.id} review={review} />
 					))}

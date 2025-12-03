@@ -2,6 +2,7 @@ import { component$, Signal, Slot, useSignal } from '@qwik.dev/core';
 import { DocumentHead, routeLoader$ } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
+import ReviewStats from '~/components/top-reviews/ReviewStats';
 import TopReviewsV2 from '~/components/top-reviews/TopReviewsV2';
 import { getProductBySlug } from '~/providers/shop/products/products';
 import { cleanUpParams, generateDocumentHead, isEnvVariableEnabled } from '~/utils';
@@ -114,8 +115,22 @@ export default component$(() => {
 				</div>
 			</div>
 			{isEnvVariableEnabled('VITE_SHOW_REVIEWS') && (
-				<div class="mt-24">
-					<TopReviewsV2 productId={productSignal.value.id} />
+				<div class="max-w-6xl mx-auto px-4 border-t pt-10">
+					<div class="lg:grid lg:grid-cols-5 lg:gap-x-8">
+						{/* ReviewStats - Small Left Column (1/5 width) */}
+						<div class="lg:col-span-1">
+							<ReviewStats
+								reviewCount={productSignal.value.customFields.reviewCount}
+								averageRating={productSignal.value.customFields.reviewRating}
+								productId={productSignal.value.id}
+							/>
+						</div>
+
+						{/* TopReviewsV2 - Right Column (4/5 width) */}
+						<div class="lg:col-span-4 lg:mt-0">
+							<TopReviewsV2 productId={productSignal.value.id} />
+						</div>
+					</div>
 				</div>
 			)}
 		</div>

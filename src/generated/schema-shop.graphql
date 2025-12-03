@@ -3004,6 +3004,12 @@ type Mutation {
 	shipping method will apply to.
 	"""
 	setOrderShippingMethod(shippingMethodId: [ID!]!): SetOrderShippingMethodResult!
+
+	"""
+	Submit a product review for a purchased product variant
+	Note that this won't check whether the customer is allowed to review the product variant.
+	For that, please use the 'isReviewAllowed' query first.
+	"""
 	submitProductReview(input: SubmitProductReviewInput!): SubmitProductReviewResult!
 
 	"""
@@ -3052,6 +3058,14 @@ type Mutation {
 	provided here.
 	"""
 	verifyCustomerAccount(password: String, token: String!): VerifyCustomerAccountResult!
+
+	"""
+	Upvote or remove upvote from a product review
+
+	If vote is true, it means upvote; if false, it means remove previous upvote.
+	If the customer has already upvoted the review, and vote is true again, it will throw an error.
+	If the customer has not upvoted the review, and vote is false (revert the upvote), it will throw an error.
+	"""
 	voteOnReview(id: ID!, vote: Boolean!): VoteOnReviewResult!
 }
 
@@ -4140,7 +4154,16 @@ type Product implements Node {
 	languageCode: LanguageCode!
 	name: String!
 	optionGroups: [ProductOptionGroup!]!
+
+	"""
+	The list of reviews associated with this product.
+	"""
 	reviews(options: ProductReviewListOptions): ProductReviewList!
+
+	"""
+	The histogram data of the product reviews' ratings.
+	Each item represents a bin (0-5) and the frequency of reviews in that bin.
+	"""
 	reviewsHistogram: [ProductReviewHistogramItem!]!
 	slug: String!
 	translations: [ProductTranslation!]!
@@ -4256,20 +4279,51 @@ type ProductOptionTranslation {
 type ProductReview implements Node {
 	assets: [Asset!]
 	authorLocation: String
+
+	"""
+	The name of the review author, user can input any name they like.
+	"""
 	authorName: String!
+
+	"""
+	The main content of the review
+	"""
 	body: String
 	createdAt: DateTime!
 	customFields: JSON
 	id: ID!
 	product: Product!
 	productVariant: ProductVariant
+
+	"""
+	The rating given by the reviewer, it can be a float value between 0 and 5
+	Higher means user is more satisfied with the product
+	However, the frontend can choose to round it to the nearest integer for display purposes
+	"""
 	rating: Float!
+
+	"""
+	The response from the store admin to this review
+	"""
 	response: String
 	responseCreatedAt: DateTime
+
+	"""
+	The moderation state of the review, e.g. 'new', 'approved', 'rejected'
+	"""
 	state: String!
+
+	"""
+	A brief summary of the review
+	It will be shown as the title of the review
+	"""
 	summary: String!
 	translations: [ProductReviewTranslation!]!
 	updatedAt: DateTime!
+
+	"""
+	The number of upvotes this review (i.e. thumbs up) has received from other customers
+	"""
 	upvotes: Int!
 }
 
@@ -4554,6 +4608,9 @@ type PublicShippingMethod {
 	translations: [ShippingMethodTranslation!]!
 }
 
+"""
+The purchased productVariant and the review eligibility status
+"""
 type PurchasedVariantWithReviewStatus {
 	canReview: Boolean!
 	notReviewableReason: String
@@ -4631,7 +4688,16 @@ type Query {
 	filamentColorFindSupported: [FilamentColor!]!
 	fontMenuFindAll: [FontMenu!]!
 	generateBraintreeClientToken(includeCustomerId: Boolean, orderId: ID): String
+
+	"""
+	Get the list of purchased product variants along with their review eligibility status for the current customer
+	This is for review eligibility check about whether the customer can review the purchased variants
+	"""
 	getPurchasedVariantForReview: GetPurchasedVariantForReviewResult!
+
+	"""
+	Check whether the current customer is allowed to review the given product variant
+	"""
 	isReviewAllowed(productVariantId: ID!): IsReviewAllowedResult!
 
 	"""
