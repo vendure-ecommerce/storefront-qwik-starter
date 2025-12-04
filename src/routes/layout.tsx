@@ -14,7 +14,6 @@ import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, IMAGE_RESOLUTIONS } from '~/constan
 import { Order } from '~/generated/graphql';
 import { getAvailableCountriesQuery } from '~/providers/shop/checkout/checkout';
 import { getCollections } from '~/providers/shop/collections/collections';
-import { getActiveCustomerQuery } from '~/providers/shop/customer/customer';
 import {
 	customizableClassDefFindAll,
 	filamentColorFindSupported,
@@ -132,7 +131,6 @@ export default component$(() => {
 		// This should happen once when the layout is initialized
 		// This shouldn't happen on every navigation (if so, please use <Link> instead of <a href...>)
 		console.log('Layout useVisibleTask$ running...');
-		const activeCustomer = await getActiveCustomerQuery();
 		state.customer = await loadCustomerData();
 		const activeOrder = await getActiveOrderQuery();
 		if (activeOrder) state.activeOrder = activeOrder;

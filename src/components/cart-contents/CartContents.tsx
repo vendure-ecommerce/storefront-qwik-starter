@@ -62,6 +62,10 @@ export default component$<IProps>(
 
 		const variantsWithReviewStatus = appState.purchasedVariantsWithReviewStatus || [];
 
+		const reviewLocation = `${order?.shippingAddress?.province || ''}, ${order?.shippingAddress?.countryCode || ''}`;
+
+		console.log('reviewLocation', reviewLocation);
+
 		useVisibleTask$(async ({ track }) => {
 			track(() => currentOrderLineSignal.value);
 			if (currentOrderLineSignal.value) {
@@ -101,6 +105,7 @@ export default component$<IProps>(
 									(v) => v.variantId === line.productVariant.id && !v.canReview
 								)?.notReviewableReason || undefined
 							}
+							reviewLocation={reviewLocation}
 							filamentColorSignal={FilamentColorSignal}
 							fontMenuSignal={FontMenuSignal}
 							onQuantityChange$={async (id, value) => {

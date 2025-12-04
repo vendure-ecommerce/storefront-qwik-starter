@@ -84,6 +84,20 @@ export default component$<ReviewCardProps>(({ review }) => {
 					<h3 class="text-sm font-medium text-gray-900">{review.summary}</h3>
 					<div class="mt-3 space-y-2 text-sm text-gray-700">
 						<p>{review.body}</p>
+						{review.response && (
+							<div class="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg text-xs">
+								<h2 class="text-xs font-medium text-gray-900 mr-2">
+									{$localize`Response from seller`}:
+								</h2>
+								{review.response}
+								<time
+									dateTime={review.responseCreatedAt || undefined}
+									class="block mt-1 text-gray-500"
+								>
+									Updated at {formatDate(review.responseCreatedAt || undefined)}
+								</time>
+							</div>
+						)}
 						{review.assets && review.assets.length > 0 && <ImageGallery assets={review.assets} />}
 						<div>
 							<ReviewVote reviewId={review.id} upvotes={upvotes} />

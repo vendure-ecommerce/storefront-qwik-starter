@@ -41,7 +41,7 @@ export default component$(({ filamentColorSignal, fontMenuSignal, line }: ItemPr
 					width="100"
 					height="100"
 					class="w-full h-full object-center object-cover"
-					src={line.featuredAsset?.preview + '?preset=thumb'}
+					src={line.featuredAsset?.preview + '?w=1500&h=150&format=webp'}
 					alt={`Image of: ${line.productVariant.name}`}
 				/>
 			)}

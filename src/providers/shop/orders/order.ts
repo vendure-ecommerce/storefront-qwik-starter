@@ -281,6 +281,7 @@ gql`
 				price
 				product {
 					id
+					name
 					slug
 					customFields {
 						customizableClass

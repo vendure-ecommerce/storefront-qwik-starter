@@ -21,6 +21,7 @@ interface Props extends Signals {
 	onRemove$?: QRL<(id: string) => void>;
 	allowReview?: boolean;
 	notReviewableReasonFixed?: string;
+	reviewLocation?: string;
 }
 
 export default component$<Props>(
@@ -34,6 +35,7 @@ export default component$<Props>(
 		fontMenuSignal,
 		allowReview = false,
 		notReviewableReasonFixed,
+		reviewLocation = '',
 	}) => {
 		const justReviewed = useSignal<boolean>(false);
 		const linePriceWithTax = line.linePriceWithTax;
@@ -54,7 +56,7 @@ export default component$<Props>(
 						<div class="flex justify-between text-base font-medium text-gray-900">
 							<h3>
 								<Link href={slugToRoute(line.productVariant.product.slug)}>
-									{line.productVariant.name}
+									{line.productVariant.product.name}
 								</Link>
 							</h3>
 							<Price
@@ -63,6 +65,9 @@ export default component$<Props>(
 								forcedClass="ml-4"
 							/>
 						</div>
+						<p class="mt-1 text-sm text-gray-500 border rounded-md p-1 w-fit">
+							{line.productVariant.name}
+						</p>
 					</div>
 					<div class="flex-1 flex items-center text-sm">
 						{!readOnly.value ? (
@@ -135,9 +140,16 @@ export default component$<Props>(
 						onSuccess$={$(async () => {
 							console.log('Review submitted for line:', line.id);
 							justReviewed.value = true;
+							openReviewSignal.value = false;
 						})}
+						productInfo={{
+							variantName: line.productVariant.name,
+							productName: line.productVariant.product.name,
+							preview: line.featuredAsset?.preview || '',
+						}}
 						basicInfo={{
 							productVariantId: line.productVariant.id,
+							authorLocation: reviewLocation,
 						}}
 					/>
 				)}

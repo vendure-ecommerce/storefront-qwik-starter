@@ -1,4 +1,4 @@
-import { component$ } from '@qwik.dev/core';
+import { component$, Slot } from '@qwik.dev/core';
 import { Action } from '@qwik.dev/router';
 
 interface FormInputProps<T extends Action<any, any, any>> {
@@ -62,17 +62,22 @@ export default component$<FormInputProps<Action<any, any, any>>>(
 		const defaultValue = defaults ? defaults[name] ?? '' : '';
 
 		return (
-			<div>
-				<label for={name as string} class="block text-sm font-medium text-gray-700">
-					{label}
-				</label>
+			<div class={`mb-2 ${className ?? ''}`}>
+				<div class="flex gap-4">
+					<label for={name as string} class="block text-sm font-medium text-gray-700">
+						{label}
+					</label>
+					<Slot />
+				</div>
 				<div class="mt-1">
 					{as === 'textarea' ? (
 						<textarea
 							id={name as string}
 							name={name as string}
 							defaultValue={defaultValue as string}
-							class={`block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm ${className ?? ''}`}
+							rows={6}
+							class={`block w-full border-gray-300 rounded-md shadow-sm
+								 focus:ring-primary-500 focus:border-primary-500 sm:text-sm mb-2`}
 						/>
 					) : (
 						<input

@@ -4688,6 +4688,7 @@ export type AddPaymentToOrderMutation = {
 						product: {
 							__typename?: 'Product';
 							id: string;
+							name: string;
 							slug: string;
 							customFields?: {
 								__typename?: 'ProductCustomFields';
@@ -4784,6 +4785,7 @@ export type TransitionOrderToStateMutation = {
 						product: {
 							__typename?: 'Product';
 							id: string;
+							name: string;
 							slug: string;
 							customFields?: {
 								__typename?: 'ProductCustomFields';
@@ -5194,6 +5196,7 @@ export type SetOrderCustomFieldsMutation = {
 						product: {
 							__typename?: 'Product';
 							id: string;
+							name: string;
 							slug: string;
 							customFields?: {
 								__typename?: 'ProductCustomFields';
@@ -5289,6 +5292,7 @@ export type ApplyCouponCodeMutation = {
 						product: {
 							__typename?: 'Product';
 							id: string;
+							name: string;
 							slug: string;
 							customFields?: {
 								__typename?: 'ProductCustomFields';
@@ -5380,6 +5384,7 @@ export type RemoveCouponCodeMutation = {
 				product: {
 					__typename?: 'Product';
 					id: string;
+					name: string;
 					slug: string;
 					customFields?: {
 						__typename?: 'ProductCustomFields';
@@ -5470,6 +5475,7 @@ export type SetOrderShippingAddressMutation = {
 						product: {
 							__typename?: 'Product';
 							id: string;
+							name: string;
 							slug: string;
 							customFields?: {
 								__typename?: 'ProductCustomFields';
@@ -5566,6 +5572,7 @@ export type SetCustomerForOrderMutation = {
 						product: {
 							__typename?: 'Product';
 							id: string;
+							name: string;
 							slug: string;
 							customFields?: {
 								__typename?: 'ProductCustomFields';
@@ -5662,6 +5669,7 @@ export type AddItemToOrderMutation = {
 						product: {
 							__typename?: 'Product';
 							id: string;
+							name: string;
 							slug: string;
 							customFields?: {
 								__typename?: 'ProductCustomFields';
@@ -5759,6 +5767,7 @@ export type SetOrderShippingMethodMutation = {
 						product: {
 							__typename?: 'Product';
 							id: string;
+							name: string;
 							slug: string;
 							customFields?: {
 								__typename?: 'ProductCustomFields';
@@ -5845,6 +5854,7 @@ export type OrderDetailFragment = {
 			product: {
 				__typename?: 'Product';
 				id: string;
+				name: string;
 				slug: string;
 				customFields?: {
 					__typename?: 'ProductCustomFields';
@@ -5936,6 +5946,7 @@ export type AdjustOrderLineMutation = {
 						product: {
 							__typename?: 'Product';
 							id: string;
+							name: string;
 							slug: string;
 							customFields?: {
 								__typename?: 'ProductCustomFields';
@@ -6031,6 +6042,7 @@ export type RemoveOrderLineMutation = {
 						product: {
 							__typename?: 'Product';
 							id: string;
+							name: string;
 							slug: string;
 							customFields?: {
 								__typename?: 'ProductCustomFields';
@@ -6122,6 +6134,7 @@ export type ActiveOrderQuery = {
 				product: {
 					__typename?: 'Product';
 					id: string;
+					name: string;
 					slug: string;
 					customFields?: {
 						__typename?: 'ProductCustomFields';
@@ -6210,6 +6223,7 @@ export type OrderByCodeQuery = {
 				product: {
 					__typename?: 'Product';
 					id: string;
+					name: string;
 					slug: string;
 					customFields?: {
 						__typename?: 'ProductCustomFields';
@@ -6586,6 +6600,7 @@ export const OrderDetailFragmentDoc = gql`
 				price
 				product {
 					id
+					name
 					slug
 					customFields {
 						customizableClass
