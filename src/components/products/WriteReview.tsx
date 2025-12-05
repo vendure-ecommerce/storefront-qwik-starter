@@ -1,6 +1,5 @@
 import { component$, QRL, Signal, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
 import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
-import { LuStar } from '@qwikest/icons/lucide';
 import FormInput from '~/components/common/FormInput';
 import { APP_STATE } from '~/constants';
 import { isReviewAllowedQuery, submitProductReviewMutation } from '~/providers/shop/orders/review';
@@ -188,9 +187,12 @@ export default component$<IProps>(({ open, productInfo, basicInfo, onSuccess$ })
 											onClick$={() => (ratingSignal.value = star)}
 											class="focus:outline-none"
 										>
-											<LuStar
-												class={`w-6 h-6 ${star <= ratingSignal.value ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
-											/>
+											<span
+												key={star}
+												class={`${star <= ratingSignal.value ? 'text-yellow-400' : 'text-gray-300'}`}
+											>
+												★
+											</span>
 										</button>
 									))}
 									<input type="hidden" name="rating" value={ratingSignal.value} />

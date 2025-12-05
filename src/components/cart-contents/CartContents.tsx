@@ -62,9 +62,7 @@ export default component$<IProps>(
 
 		const variantsWithReviewStatus = appState.purchasedVariantsWithReviewStatus || [];
 
-		const reviewLocation = `${order?.shippingAddress?.province || ''}, ${order?.shippingAddress?.countryCode || ''}`;
-
-		console.log('reviewLocation', reviewLocation);
+		const reviewLocation = `${order?.shippingAddress?.city || ''}, ${order?.shippingAddress?.province || ''}`;
 
 		useVisibleTask$(async ({ track }) => {
 			track(() => currentOrderLineSignal.value);

@@ -17,8 +17,18 @@ export default component$<FormImageInputProps<Action<any, any, any>>>(
 			| undefined;
 		const error = fieldErrors?.[name as string];
 
+		const fileInputRef = useSignal<HTMLInputElement>();
 		const imageFiles = useSignal<File[]>([]);
 		const warning = useSignal<string>('');
+
+		// Helper function to update the file input's files
+		const updateFileInput = $((files: File[]) => {
+			if (fileInputRef.value) {
+				const dt = new DataTransfer();
+				files.forEach((file) => dt.items.add(file));
+				fileInputRef.value.files = dt.files;
+			}
+		});
 
 		const handleFileChange = $(async (event: Event) => {
 			const input = event.target as HTMLInputElement;
@@ -26,16 +36,24 @@ export default component$<FormImageInputProps<Action<any, any, any>>>(
 				const filesArray = Array.from(input.files);
 				if (filesArray.length > maxFiles) {
 					warning.value = `You can only upload up to ${maxFiles} images.`;
+					// Keep only maxFiles
+					const limitedFiles = filesArray.slice(0, maxFiles);
+					imageFiles.value = limitedFiles;
+					await updateFileInput(limitedFiles);
 				} else {
 					warning.value = '';
+					imageFiles.value = filesArray;
 				}
-				imageFiles.value = filesArray.slice(0, maxFiles);
 			}
 		});
 
-		const handleDelete = $((idx: number) => {
-			imageFiles.value = imageFiles.value.filter((_, i) => i !== idx);
+		const handleDelete = $(async (idx: number) => {
+			const newFiles = imageFiles.value.filter((_, i) => i !== idx);
+			imageFiles.value = newFiles;
 			warning.value = '';
+
+			// Update the actual file input
+			await updateFileInput(newFiles);
 		});
 
 		return (
@@ -44,6 +62,7 @@ export default component$<FormImageInputProps<Action<any, any, any>>>(
 					{label}
 				</label>
 				<input
+					ref={fileInputRef}
 					type="file"
 					id={name}
 					name={name}

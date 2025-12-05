@@ -114,6 +114,7 @@ gql`
 					id
 					productVariant {
 						id
+						name
 					}
 					rating
 					summary

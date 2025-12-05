@@ -9,6 +9,7 @@ interface ReviewAsset {
 
 interface ProductVariant {
 	id: string;
+	name: string;
 }
 
 export interface ReviewItem {
@@ -73,6 +74,11 @@ export default component$<ReviewCardProps>(({ review }) => {
 						{review.authorLocation}
 					</span>
 				)}
+				{review.productVariant?.name && (
+					<span class="mt-2 pl-2 pr-2 border rounded-xl bg-gray-200 border-gray-500 text-gray-500 text-xs">
+						{review.productVariant?.name}
+					</span>
+				)}
 			</div>
 			<div
 				class={`lg:col-start-4 lg:col-span-8 
@@ -85,16 +91,14 @@ export default component$<ReviewCardProps>(({ review }) => {
 					<div class="mt-3 space-y-2 text-sm text-gray-700">
 						<p>{review.body}</p>
 						{review.response && (
-							<div class="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg text-xs">
-								<h2 class="text-xs font-medium text-gray-900 mr-2">
-									{$localize`Response from seller`}:
-								</h2>
+							<div class="mt-3 p-3 bg-gray-50 border border-gray-200 rounded-lg text-xs">
+								<h2 class="text-xs font-medium text-gray-900 mr-2 mb-2">{$localize`Response`}:</h2>
 								{review.response}
 								<time
 									dateTime={review.responseCreatedAt || undefined}
 									class="block mt-1 text-gray-500"
 								>
-									Updated at {formatDate(review.responseCreatedAt || undefined)}
+									{$localize`Updated at`} {formatDate(review.responseCreatedAt || undefined)}
 								</time>
 							</div>
 						)}

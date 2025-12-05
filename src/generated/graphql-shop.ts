@@ -6324,7 +6324,7 @@ export type GetProductReviewsQuery = {
 				upvotes: number;
 				response?: string | null;
 				responseCreatedAt?: any | null;
-				productVariant?: { __typename?: 'ProductVariant'; id: string } | null;
+				productVariant?: { __typename?: 'ProductVariant'; id: string; name: string } | null;
 				assets?: Array<{
 					__typename?: 'Asset';
 					id: string;
@@ -7321,6 +7321,7 @@ export const GetProductReviewsDocument = gql`
 					id
 					productVariant {
 						id
+						name
 					}
 					rating
 					summary
