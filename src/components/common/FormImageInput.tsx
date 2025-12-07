@@ -35,7 +35,7 @@ export default component$<FormImageInputProps<Action<any, any, any>>>(
 			if (input.files) {
 				const filesArray = Array.from(input.files);
 				if (filesArray.length > maxFiles) {
-					warning.value = `You can only upload up to ${maxFiles} images.`;
+					warning.value = $localize`You can only upload up to ${maxFiles} images.`;
 					// Keep only maxFiles
 					const limitedFiles = filesArray.slice(0, maxFiles);
 					imageFiles.value = limitedFiles;

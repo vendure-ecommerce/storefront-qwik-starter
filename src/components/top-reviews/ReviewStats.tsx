@@ -10,7 +10,6 @@ interface ReviewStatsProps {
 
 export default component$<ReviewStatsProps>(({ productId, reviewCount, averageRating }) => {
 	const ratingHistogramSignal = useSignal<ProductReviewHistogramItem[] | null>(null);
-	const hoveredRating = useSignal<number | null>(null);
 
 	useVisibleTask$(async () => {
 		ratingHistogramSignal.value = (await getReviewHistogramQuery(productId)) || null;
@@ -26,14 +25,27 @@ export default component$<ReviewStatsProps>(({ productId, reviewCount, averageRa
 				<div class="flex flex-col items-center">
 					<div class="text-4xl font-bold text-gray-900">{averageRating.toFixed(1)}</div>
 					<div class="flex items-center gap-1 mt-1">
-						{[1, 2, 3, 4, 5].map((star) => (
-							<span
-								key={star}
-								class={`${star <= Math.round(averageRating) ? 'text-yellow-400' : 'text-gray-300'}`}
-							>
-								★
-							</span>
-						))}
+						{[1, 2, 3, 4, 5].map((star) => {
+							// Calculate how much of this star should be filled (0..1)
+							const fill = Math.max(0, Math.min(1, averageRating - (star - 1)));
+							const percent = (fill * 100).toFixed(2) + '%';
+							return (
+								<span
+									key={star}
+									class="relative inline-block w-4 h-4 text-gray-300 leading-none mr-0.5"
+								>
+									{/* base (empty) star */}
+									<span class="text-gray-300">★</span>
+									{/* overlay filled star clipped to percentage */}
+									<span
+										class="absolute left-0 top-0 overflow-hidden whitespace-nowrap"
+										style={{ width: percent }}
+									>
+										<span class="text-yellow-400">★</span>
+									</span>
+								</span>
+							);
+						})}
 					</div>
 					<div class="text-sm text-gray-500 mt-1">{reviewCount} reviews</div>
 				</div>
@@ -47,8 +59,6 @@ export default component$<ReviewStatsProps>(({ productId, reviewCount, averageRa
 								: undefined;
 							const frequency = histogramItem?.frequency || 0;
 							const percentage = reviewCount > 0 ? (frequency / reviewCount) * 100 : 0;
-							const isHovered = hoveredRating.value === rating;
-
 							return (
 								<div key={rating} class="flex items-center gap-2 mb-3">
 									{/* Rating Label */}
@@ -57,31 +67,15 @@ export default component$<ReviewStatsProps>(({ productId, reviewCount, averageRa
 									</div>
 
 									{/* Progress Bar with Tooltip */}
-									<div
-										class="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden relative group cursor-pointer"
-										onMouseEnter$={() => (hoveredRating.value = rating)}
-										onMouseLeave$={() => (hoveredRating.value = null)}
-									>
+									<div class="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden relative group">
 										<div
 											class="bg-yellow-400 h-full rounded-full transition-all duration-300"
 											style={{ width: `${percentage}%` }}
 										/>
-										s
-									</div>
-
-									{/* Tooltip */}
-									<div class="w-12 text-sm text-gray-600 text-right block">
-										{isHovered && (
-											// <div class="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10 pointer-events-none">
-											//   {percentage.toFixed(1)}%
-											//   <div class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800" />
-											// </div>
-											<div> {percentage.toFixed(1)}% </div>
-										)}
 									</div>
 
 									{/* Frequency Count */}
-									{/* <div class="w-12 text-sm text-gray-600 text-right">{frequency}</div> */}
+									<div class="w-12 text-sm text-gray-600 text-right">{percentage.toFixed(0)}%</div>
 								</div>
 							);
 						})}
