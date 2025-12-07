@@ -2,8 +2,8 @@ import { component$, Signal, Slot, useSignal } from '@qwik.dev/core';
 import { DocumentHead, routeLoader$ } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
-import ReviewStats from '~/components/top-reviews/ReviewStats';
-import TopReviewsV2 from '~/components/top-reviews/TopReviewsV2';
+import TopReviewsV2 from '~/components/reviews/DisplayReviews';
+import ReviewStats from '~/components/reviews/ReviewStats';
 import { getProductBySlug } from '~/providers/shop/products/products';
 import { cleanUpParams, generateDocumentHead, isEnvVariableEnabled } from '~/utils';
 
