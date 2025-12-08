@@ -50,6 +50,23 @@ export const voteOnReviewMutation = async (id: string, vote: boolean) => {
 	return await shopSdk.voteOnReview({ id, vote }).then((res) => res.voteOnReview);
 };
 
+/**
+ *
+ * @param productIds
+ * @returns
+ * { items: [
+ *     productId
+ *     reviewCount
+ *     reviewRating
+ *   ]
+ * }
+ */
+export const getReviewRatingsForProductsQuery = async (productIds: string[]) => {
+	return await shopSdk
+		.getReviewRatingsForProducts({ productIds })
+		.then((res) => res.getReviewRatingsForProducts);
+};
+
 gql`
 	mutation submitProductReview($input: SubmitProductReviewInput!) {
 		submitProductReview(input: $input) {
@@ -161,6 +178,26 @@ gql`
 				success
 			}
 			... on ErrorResult {
+				__typename
+				errorCode
+				message
+			}
+		}
+	}
+`;
+
+gql`
+	query getReviewRatingsForProducts($productIds: [ID!]!) {
+		getReviewRatingsForProducts(productIds: $productIds) {
+			... on ProductReviewRatingList {
+				__typename
+				items {
+					productId
+					reviewCount
+					reviewRating
+				}
+			}
+			... on GetReviewRatingsForProductsError {
 				__typename
 				errorCode
 				message

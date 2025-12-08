@@ -1,11 +1,34 @@
 import { component$ } from '@qwik.dev/core';
 import { Link } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
+import { PriceRange, SinglePrice } from '~/generated/graphql-shop';
 import { slugToRoute } from '~/utils';
+import ReviewRatingStars from '../reviews/ReviewRatingStars';
 import Price from './Price';
 
+interface ProductCardProps {
+	productAsset?: {
+		preview: string;
+	} | null;
+	productName: string;
+	slug: string;
+	priceWithTax: PriceRange | SinglePrice;
+	currencyCode: string;
+	reviewStat?: {
+		rating: number;
+		reviewCount?: number;
+	};
+}
+
 export default component$(
-	({ productAsset, productName, slug, priceWithTax, currencyCode }: any) => {
+	({
+		productAsset,
+		productName,
+		slug,
+		priceWithTax,
+		currencyCode,
+		reviewStat,
+	}: ProductCardProps) => {
 		return (
 			<Link class="flex flex-col mx-auto" href={slugToRoute(slug)}>
 				<Image
@@ -23,6 +46,9 @@ export default component$(
 					currencyCode={currencyCode}
 					forcedClass="text-sm font-medium text-gray-900"
 				/>
+				{reviewStat && (
+					<ReviewRatingStars rating={reviewStat.rating} reviewCount={reviewStat.reviewCount} />
+				)}
 			</Link>
 		);
 	}

@@ -2,7 +2,7 @@ import { $, component$, useStore, useTask$ } from '@qwik.dev/core';
 import { routeLoader$, useLocation } from '@qwik.dev/router';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
-import ProductCard from '~/components/products/ProductCard';
+import ProductsDisplay from '~/components/products/ProductsDisplay';
 import { SearchResponse } from '~/generated/graphql';
 import { searchQueryWithTerm } from '~/providers/shop/products/products';
 import { FacetWithValues } from '~/types';
@@ -107,18 +107,7 @@ export default component$(() => {
 					/>
 				)}
 				<div class="sm:col-span-5 lg:col-span-4">
-					<div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-						{(state.search.items || []).map((item) => (
-							<ProductCard
-								key={item.productId}
-								productAsset={item.productAsset}
-								productName={item.productName}
-								slug={item.slug}
-								priceWithTax={item.priceWithTax}
-								currencyCode={item.currencyCode}
-							></ProductCard>
-						))}
-					</div>
+					<ProductsDisplay items={state.search.items || []} />
 				</div>
 			</div>
 		</div>

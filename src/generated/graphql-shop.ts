@@ -1025,6 +1025,7 @@ export const ErrorCode = {
 	CustomizedImageAuthorizationError: 'CUSTOMIZED_IMAGE_AUTHORIZATION_ERROR',
 	EmailAddressConflictError: 'EMAIL_ADDRESS_CONFLICT_ERROR',
 	GetPurchasedVariantForReviewError: 'GET_PURCHASED_VARIANT_FOR_REVIEW_ERROR',
+	GetReviewRatingsForProductsError: 'GET_REVIEW_RATINGS_FOR_PRODUCTS_ERROR',
 	GuestCheckoutError: 'GUEST_CHECKOUT_ERROR',
 	IdentifierChangeTokenExpiredError: 'IDENTIFIER_CHANGE_TOKEN_EXPIRED_ERROR',
 	IdentifierChangeTokenInvalidError: 'IDENTIFIER_CHANGE_TOKEN_INVALID_ERROR',
@@ -1316,6 +1317,16 @@ export type GetPurchasedVariantForReviewError = ErrorResult & {
 export type GetPurchasedVariantForReviewResult =
 	| GetPurchasedVariantForReviewError
 	| PurchasedVariantWithReviewStatusList;
+
+export type GetReviewRatingsForProductsError = ErrorResult & {
+	__typename?: 'GetReviewRatingsForProductsError';
+	errorCode: ErrorCode;
+	message: Scalars['String']['output'];
+};
+
+export type GetReviewRatingsForProductsResult =
+	| GetReviewRatingsForProductsError
+	| ProductReviewRatingList;
 
 export const GlobalFlag = {
 	False: 'FALSE',
@@ -2887,7 +2898,6 @@ export type ProductCustomFields = {
 	customizableClass?: Maybe<Scalars['String']['output']>;
 	reviewCount?: Maybe<Scalars['Int']['output']>;
 	reviewRating?: Maybe<Scalars['Float']['output']>;
-	reviews?: Maybe<Array<ProductReview>>;
 };
 
 export type ProductFilterParameter = {
@@ -3045,6 +3055,18 @@ export type ProductReviewListOptions = {
 	sort?: InputMaybe<ProductReviewSortParameter>;
 	/** Takes n results, for use in pagination */
 	take?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type ProductReviewRating = {
+	__typename?: 'ProductReviewRating';
+	productId: Scalars['ID']['output'];
+	reviewCount: Scalars['Int']['output'];
+	reviewRating: Scalars['Float']['output'];
+};
+
+export type ProductReviewRatingList = {
+	__typename?: 'ProductReviewRatingList';
+	items: Array<ProductReviewRating>;
 };
 
 export type ProductReviewSortParameter = {
@@ -3328,6 +3350,8 @@ export type Query = {
 	 * This is for review eligibility check about whether the customer can review the purchased variants
 	 */
 	getPurchasedVariantForReview: GetPurchasedVariantForReviewResult;
+	/** Get the review ratings (review rating and review count) for a list of products */
+	getReviewRatingsForProducts: GetReviewRatingsForProductsResult;
 	/** Check whether the current customer is allowed to review the given product variant */
 	isReviewAllowed: IsReviewAllowedResult;
 	/** Returns information about the current authenticated User */
@@ -3415,6 +3439,10 @@ export type QueryFacetsArgs = {
 export type QueryGenerateBraintreeClientTokenArgs = {
 	includeCustomerId?: InputMaybe<Scalars['Boolean']['input']>;
 	orderId?: InputMaybe<Scalars['ID']['input']>;
+};
+
+export type QueryGetReviewRatingsForProductsArgs = {
+	productIds: Array<Scalars['ID']['input']>;
 };
 
 export type QueryIsReviewAllowedArgs = {
@@ -6365,6 +6393,25 @@ export type VoteOnReviewMutation = {
 		| { __typename: 'VoteOnReviewError'; errorCode: ErrorCode; message: string };
 };
 
+export type GetReviewRatingsForProductsQueryVariables = Exact<{
+	productIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+}>;
+
+export type GetReviewRatingsForProductsQuery = {
+	__typename?: 'Query';
+	getReviewRatingsForProducts:
+		| { __typename: 'GetReviewRatingsForProductsError'; errorCode: ErrorCode; message: string }
+		| {
+				__typename: 'ProductReviewRatingList';
+				items: Array<{
+					__typename?: 'ProductReviewRating';
+					productId: string;
+					reviewCount: number;
+					reviewRating: number;
+				}>;
+		  };
+};
+
 export type DetailedProductFragment = {
 	__typename?: 'Product';
 	id: string;
@@ -7373,6 +7420,25 @@ export const VoteOnReviewDocument = gql`
 		}
 	}
 `;
+export const GetReviewRatingsForProductsDocument = gql`
+	query getReviewRatingsForProducts($productIds: [ID!]!) {
+		getReviewRatingsForProducts(productIds: $productIds) {
+			... on ProductReviewRatingList {
+				__typename
+				items {
+					productId
+					reviewCount
+					reviewRating
+				}
+			}
+			... on GetReviewRatingsForProductsError {
+				__typename
+				errorCode
+				message
+			}
+		}
+	}
+`;
 export const ProductDocument = gql`
 	query product($slug: String, $id: ID) {
 		product(slug: $slug, id: $id) {
@@ -7918,6 +7984,16 @@ export function getSdk<C>(requester: Requester<C>) {
 				variables,
 				options
 			) as Promise<VoteOnReviewMutation>;
+		},
+		getReviewRatingsForProducts(
+			variables: GetReviewRatingsForProductsQueryVariables,
+			options?: C
+		): Promise<GetReviewRatingsForProductsQuery> {
+			return requester<GetReviewRatingsForProductsQuery, GetReviewRatingsForProductsQueryVariables>(
+				GetReviewRatingsForProductsDocument,
+				variables,
+				options
+			) as Promise<GetReviewRatingsForProductsQuery>;
 		},
 		product(variables?: ProductQueryVariables, options?: C): Promise<ProductQuery> {
 			return requester<ProductQuery, ProductQueryVariables>(

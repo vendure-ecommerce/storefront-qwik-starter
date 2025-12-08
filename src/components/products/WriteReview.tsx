@@ -177,7 +177,7 @@ export default component$<IProps>(({ open, productInfo, basicInfo, onSuccess$ })
 							/>
 							{/* Rating */}
 							<div>
-								<label class="block mb-1 font-medium">{$localize`Rating`}</label>
+								<label class="block mt-2 mb-1 font-medium">{$localize`Rating`}</label>
 								<div class="flex items-center space-x-1">
 									{[1, 2, 3, 4, 5].map((star) => (
 										<button

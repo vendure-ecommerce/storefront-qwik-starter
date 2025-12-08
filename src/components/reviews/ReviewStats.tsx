@@ -1,6 +1,7 @@
 import { component$, useSignal, useVisibleTask$ } from '@qwik.dev/core';
 import { ProductReviewHistogramItem } from '~/generated/graphql-shop';
 import { getReviewHistogramQuery } from '~/providers/shop/orders/review';
+import ReviewRatingStars from './ReviewRatingStars';
 
 interface ReviewStatsProps {
 	productId: string;
@@ -11,43 +12,29 @@ interface ReviewStatsProps {
 export default component$<ReviewStatsProps>(({ productId, reviewCount, averageRating }) => {
 	const ratingHistogramSignal = useSignal<ProductReviewHistogramItem[] | null>(null);
 
+	if (reviewCount === 0) {
+		return <div></div>;
+	}
+
 	useVisibleTask$(async () => {
+		if (reviewCount === 0) return;
 		ratingHistogramSignal.value = (await getReviewHistogramQuery(productId)) || null;
 	});
 
 	return (
 		<div class="border-gray-200">
-			<h3 class="text-lg font-medium text-gray-900 mb-4">Product Rating</h3>
-
+			<h3 class="text-lg font-medium text-gray-900 mb-4">{$localize`Product Rating`}</h3>
 			{/* Summary Stats */}
 			<div class="flex flex-col items-center gap-8 mb-8">
 				{/* Average Rating */}
 				<div class="flex flex-col items-center">
 					<div class="text-4xl font-bold text-gray-900">{averageRating.toFixed(1)}</div>
 					<div class="flex items-center gap-1 mt-1">
-						{[1, 2, 3, 4, 5].map((star) => {
-							// Calculate how much of this star should be filled (0..1)
-							const fill = Math.max(0, Math.min(1, averageRating - (star - 1)));
-							const percent = (fill * 100).toFixed(2) + '%';
-							return (
-								<span
-									key={star}
-									class="relative inline-block w-4 h-4 text-gray-300 leading-none mr-0.5"
-								>
-									{/* base (empty) star */}
-									<span class="text-gray-300">★</span>
-									{/* overlay filled star clipped to percentage */}
-									<span
-										class="absolute left-0 top-0 overflow-hidden whitespace-nowrap"
-										style={{ width: percent }}
-									>
-										<span class="text-yellow-400">★</span>
-									</span>
-								</span>
-							);
-						})}
+						<ReviewRatingStars rating={averageRating} />
 					</div>
-					<div class="text-sm text-gray-500 mt-1">{reviewCount} reviews</div>
+					<div class="text-sm text-gray-500 mt-1">
+						{reviewCount} {$localize`reviews`}
+					</div>
 				</div>
 
 				{/* Rating Breakdown Histogram */}

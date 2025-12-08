@@ -1474,6 +1474,7 @@ enum ErrorCode {
 	CUSTOMIZED_IMAGE_AUTHORIZATION_ERROR
 	EMAIL_ADDRESS_CONFLICT_ERROR
 	GET_PURCHASED_VARIANT_FOR_REVIEW_ERROR
+	GET_REVIEW_RATINGS_FOR_PRODUCTS_ERROR
 	GUEST_CHECKOUT_ERROR
 	IDENTIFIER_CHANGE_TOKEN_EXPIRED_ERROR
 	IDENTIFIER_CHANGE_TOKEN_INVALID_ERROR
@@ -1784,6 +1785,13 @@ type GetPurchasedVariantForReviewError implements ErrorResult {
 union GetPurchasedVariantForReviewResult =
 	| GetPurchasedVariantForReviewError
 	| PurchasedVariantWithReviewStatusList
+
+type GetReviewRatingsForProductsError implements ErrorResult {
+	errorCode: ErrorCode!
+	message: String!
+}
+
+union GetReviewRatingsForProductsResult = GetReviewRatingsForProductsError | ProductReviewRatingList
 
 enum GlobalFlag {
 	FALSE
@@ -4184,7 +4192,6 @@ type ProductCustomFields {
 	customizableClass: String
 	reviewCount: Int
 	reviewRating: Float
-	reviews: [ProductReview!]
 }
 
 input ProductFilterParameter {
@@ -4379,6 +4386,16 @@ input ProductReviewListOptions {
 	Takes n results, for use in pagination
 	"""
 	take: Int
+}
+
+type ProductReviewRating {
+	productId: ID!
+	reviewCount: Int!
+	reviewRating: Float!
+}
+
+type ProductReviewRatingList {
+	items: [ProductReviewRating!]!
 }
 
 input ProductReviewSortParameter {
@@ -4694,6 +4711,11 @@ type Query {
 	This is for review eligibility check about whether the customer can review the purchased variants
 	"""
 	getPurchasedVariantForReview: GetPurchasedVariantForReviewResult!
+
+	"""
+	Get the review ratings (review rating and review count) for a list of products
+	"""
+	getReviewRatingsForProducts(productIds: [ID!]!): GetReviewRatingsForProductsResult!
 
 	"""
 	Check whether the current customer is allowed to review the given product variant
