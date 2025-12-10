@@ -56,7 +56,7 @@ export default component$(() => {
 	});
 
 	useVisibleTask$(({ track }) => {
-		track(() => selectedVariantIdSignal.value);
+		track(() => [selectedVariantIdSignal.value]);
 		buildPlates.top = parseBuildJson(selectedVariantSignal.value)?.build_top_plate ?? true;
 		buildPlates.bottom = parseBuildJson(selectedVariantSignal.value)?.build_bottom_plate ?? true;
 	});
@@ -69,7 +69,7 @@ export default component$(() => {
 
 	// Final ATC validation including stock check
 	const is_atc_allowed = useComputed$(() => {
-		if (selectedVariantSignal.value?.stockLevel !== 'IN_STOCK') {
+		if (selectedVariantSignal.value?.stockLevel === 'OUT_OF_STOCK') {
 			addItemToOrderErrorSignal.value = 'The selected variant is out of stock.';
 			return false;
 		}
@@ -133,6 +133,7 @@ export default component$(() => {
 							'bg-primary-600 hover:bg-primary-700': is_atc_allowed.value,
 							'cursor-not-allowed opacity-50 bg-primary-400': !is_atc_allowed.value,
 						}}
+						disabled={!is_atc_allowed.value}
 						onClick$={() => {
 							const input = {
 								textTop: buildPlates.top ? buildParams.text_top : null,
@@ -185,8 +186,7 @@ export default component$(() => {
 				onAtcEligibility$={$((allowed: boolean, reason: string) => {
 					atcEligibility.value = { allowed, reason };
 				})}
-				build_top_plate={buildPlates.top}
-				build_bottom_plate={buildPlates.bottom}
+				build_plates={buildPlates}
 				canvas_width_px={250}
 			/>
 		</>

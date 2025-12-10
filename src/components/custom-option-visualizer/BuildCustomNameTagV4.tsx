@@ -29,8 +29,7 @@ interface BuildCustomNameTagProps {
 	fontMenus: PartialFontMenu[]; // using useFontMenu() for this (can only be used inside of routes folder)
 	buildParams: NameTagBuildParams;
 	onAtcEligibility$: QRL<(allowed: boolean, disabled_reason: string) => void>;
-	build_top_plate: boolean; // Whether to build the top plate
-	build_bottom_plate: boolean; // Whether to build the bottom plate
+	build_plates: { top: boolean; bottom: boolean }; // Whether to build the top plate
 	canvas_width_px?: number; // Width of the canvas in pixels
 }
 
@@ -41,8 +40,7 @@ export default component$(
 		buildParams,
 		onAtcEligibility$,
 		canvas_width_px = 250,
-		build_top_plate,
-		build_bottom_plate,
+		build_plates,
 	}: BuildCustomNameTagProps) => {
 		const top_canvas_id = 'canvas_top';
 		const bottom_canvas_id = 'canvas_bottom';
@@ -72,16 +70,16 @@ export default component$(
 				buildParams.text_bottom,
 				buildParams.font_id_top,
 				buildParams.font_id_bottom,
-				build_top_plate,
-				build_bottom_plate,
+				build_plates.top,
+				build_plates.bottom,
 			]);
 			if (canvas_top.value && canvas_bottom.value) {
 				const buildResult = BuildPlateVisualizerV4({
 					font_menu: fontMenus,
 					filament_color: filamentColors,
 					buildParams: buildParams,
-					build_top_plate: build_top_plate,
-					build_bottom_plate: build_bottom_plate,
+					build_top_plate: build_plates.top,
+					build_bottom_plate: build_plates.bottom,
 					canvas_top: canvas_top.value,
 					canvas_bottom: canvas_bottom.value,
 				});
@@ -94,8 +92,8 @@ export default component$(
 		useVisibleTask$(({ track }) => {
 			track(() => [
 				is_primary_and_base_color_different.value,
-				build_top_plate,
-				build_bottom_plate,
+				build_plates.top,
+				build_plates.bottom,
 				is_top_text_valid.value,
 				is_bottom_text_valid.value,
 				is_build_valid.value,
@@ -106,8 +104,8 @@ export default component$(
 				return;
 			}
 			if (
-				(build_top_plate && !is_top_text_valid.value) ||
-				(build_bottom_plate && !is_bottom_text_valid.value)
+				(build_plates.top && !is_top_text_valid.value) ||
+				(build_plates.bottom && !is_bottom_text_valid.value)
 			) {
 				onAtcEligibility$(false, 'Text is required');
 				return;
@@ -146,7 +144,7 @@ export default component$(
 									buildParams.base_color_id = newColorId;
 								}}
 							/>
-							{build_top_plate && (
+							{build_plates.top && (
 								<button
 									title="Change Top Plate style"
 									class="mx-2 my-1 select-trigger-button"
@@ -163,12 +161,12 @@ export default component$(
 								topCanvasInfo={{
 									canvasRef: canvas_top,
 									id: top_canvas_id,
-									skip: !build_top_plate,
+									skip: !build_plates.top,
 								}}
 								bottomCanvasInfo={{
 									canvasRef: canvas_bottom,
 									id: bottom_canvas_id,
-									skip: !build_bottom_plate,
+									skip: !build_plates.bottom,
 								}}
 								canvas_width_px={canvas_width_px}
 							>
@@ -183,7 +181,7 @@ export default component$(
 								</div>
 							</BuildCanvases>
 							<div class="flex flex-col justify-around p-2">
-								<div class={build_top_plate ? 'block' : 'hidden'}>
+								<div class={build_plates.top ? 'block' : 'hidden'}>
 									<TextWithFontInput
 										fontMenu={fontMenus}
 										defaultText={defaultOptionsForNameTag.textTop}
@@ -197,7 +195,7 @@ export default component$(
 										}}
 									/>
 								</div>
-								<div class={build_bottom_plate ? 'block' : 'hidden'}>
+								<div class={build_plates.bottom ? 'block' : 'hidden'}>
 									<TextWithFontInput
 										fontMenu={fontMenus}
 										defaultText={defaultOptionsForNameTag.textBottom}
