@@ -43,7 +43,7 @@ export default component$<Props>(
 
 		return (
 			<li key={line.id} class="py-6 flex">
-				<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
+				<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden flex justify-center items-center">
 					<ItemPreview
 						filamentColorSignal={filamentColorSignal}
 						fontMenuSignal={fontMenuSignal}

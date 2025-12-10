@@ -74,18 +74,14 @@ export default component$(
 					topCanvasInfo={{
 						canvasRef: canvas_top,
 						id: top_canvas_id,
-						hidden: true,
+						skip: !build_top_plate,
 					}}
 					bottomCanvasInfo={{
 						canvasRef: canvas_bottom,
 						id: bottom_canvas_id,
-						hidden: true,
+						skip: !build_bottom_plate,
 					}}
-					stackedCanvasInfo={{
-						canvasRef: canvas_concatenated,
-						id: uniqueId,
-						hidden: false,
-					}}
+					concatenate_canvas_element_id={uniqueId}
 					canvas_width_px={100}
 				/>
 				{errorMessage.value && (

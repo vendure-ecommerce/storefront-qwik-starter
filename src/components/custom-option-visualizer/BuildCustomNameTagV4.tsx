@@ -163,12 +163,12 @@ export default component$(
 								topCanvasInfo={{
 									canvasRef: canvas_top,
 									id: top_canvas_id,
-									hidden: !build_top_plate,
+									skip: !build_top_plate,
 								}}
 								bottomCanvasInfo={{
 									canvasRef: canvas_bottom,
 									id: bottom_canvas_id,
-									hidden: !build_bottom_plate,
+									skip: !build_bottom_plate,
 								}}
 								canvas_width_px={canvas_width_px}
 							>
