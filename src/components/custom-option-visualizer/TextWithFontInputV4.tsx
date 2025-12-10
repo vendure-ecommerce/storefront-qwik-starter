@@ -9,7 +9,6 @@ import FontIcon from '../icons/FontIcon';
 import GoPreviousIcon from '../icons/GoPreviousIcon';
 import PencilEditIcon from '../icons/PencilEditIcon';
 import { CONSTRAINTS } from './constants';
-// import { FONT_MENU, FontMenuItem } from './data';
 /**
  
  FONT_MENU type should be as follows:
@@ -58,10 +57,11 @@ interface TextWithFontProps {
 	fontMenu: Pick<FontMenu, 'id' | 'name' | 'additiveFontId' | 'subtractiveFontId' | 'isDisabled'>[];
 	defaultText: string;
 	defaultFontId: string;
-	onChange$: QRL<(text: string, fontId: string, isValid: boolean) => void>;
+	onChange$: QRL<(text: string, fontId: string) => void>;
+	onEligibilityChange$: QRL<(allowed: boolean) => void>;
 }
 
-function isValidText(text: string): {
+function verifyText(text: string): {
 	isValid: boolean;
 	message: string;
 } {
@@ -92,7 +92,13 @@ function isValidText(text: string): {
 }
 
 export default component$(
-	({ fontMenu, defaultText, defaultFontId, onChange$ }: TextWithFontProps) => {
+	({
+		fontMenu,
+		defaultText,
+		defaultFontId,
+		onChange$,
+		onEligibilityChange$,
+	}: TextWithFontProps) => {
 		// const fontId = useSignal<string>(fontOptions[0].value); // This has to be a string to match the Select component's value type (Select.item.value), e.g. 'Crimson_Text__bold_italic'
 		const fontOptions = getFontOptions(fontMenu);
 		const fontId = useSignal<string>(defaultFontId); // This has to be a string to match the Select component's value type (Select.item.value), e.g. 'Crimson_Text__bold_italic'
@@ -111,7 +117,7 @@ export default component$(
 
 		useVisibleTask$(() => {
 			// Check if the text is valid on initial load
-			({ isValid: isTextValid.value, message: invalidTextMessage.value } = isValidText(text.value));
+			({ isValid: isTextValid.value, message: invalidTextMessage.value } = verifyText(text.value));
 		});
 
 		return (
@@ -130,14 +136,17 @@ export default component$(
 								type="text"
 								value={text.value}
 								onInput$={(e: any) => {
-									if (isValidText(e.target.value).isValid) {
+									const verifyResult = verifyText(e.target.value);
+									if (verifyResult.isValid) {
 										isTextValid.value = true;
 										text.value = e.target.value;
-										onChange$(e.target.value, fontId.value, isTextValid.value);
+										onChange$(e.target.value, fontId.value);
+										onEligibilityChange$(true);
 									} else {
-										isTextValid.value = false;
-										invalidTextMessage.value = isValidText(e.target.value).message;
+										onEligibilityChange$(false);
 									}
+									isTextValid.value = verifyResult.isValid;
+									invalidTextMessage.value = verifyResult.message;
 								}}
 								style={{
 									fontFamily: selectedFontInfo.value.fontFamily,
@@ -158,7 +167,7 @@ export default component$(
 						<Select.Root
 							bind:value={fontId}
 							onChange$={(newFontId: string) => {
-								onChange$(text.value, newFontId, isTextValid.value);
+								onChange$(text.value, newFontId);
 							}}
 						>
 							<Select.Trigger class="select-trigger-button" title="Select Font">

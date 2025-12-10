@@ -1,4 +1,4 @@
-import { component$, useContext, useSignal, useStore } from '@qwik.dev/core';
+import { $, component$, useContext, useSignal, useStore } from '@qwik.dev/core';
 import BuildCustomNameTagV4 from '~/components/custom-option-visualizer/BuildCustomNameTagV4';
 import { NameTagBuildParams } from '~/components/custom-option-visualizer/CustomVisualizerV4';
 import { DEFAULT_OPTIONS_FOR_NAME_TAG } from '~/routes/constants';
@@ -21,8 +21,11 @@ export default component$(() => {
 	});
 
 	// Validation signals (managed by BuildCustomNameTagV4)
-	const is_atc_allowed = useSignal<boolean>(false);
-	const atc_disabled_reason = useSignal<string>('None');
+	const atcEligibility = useSignal<{ allowed: boolean; reason: string }>({
+		allowed: false,
+		reason: '',
+	});
+	const buildPlates = useStore<{ top: boolean; bottom: boolean }>({ top: true, bottom: true });
 
 	return (
 		<div class="p-8">
@@ -30,10 +33,11 @@ export default component$(() => {
 
 			<div class="mb-4">
 				<p class="text-sm text-gray-600 mb-2">
-					<strong>Validation Status:</strong> {is_atc_allowed.value ? '✅ Valid' : '❌ Invalid'}
+					<strong>Validation Status:</strong>{' '}
+					{atcEligibility.value.allowed ? '✅ Valid' : '❌ Invalid'}
 				</p>
 				<p class="text-sm text-gray-600">
-					<strong>Reason:</strong> {atc_disabled_reason.value}
+					<strong>Reason:</strong> {atcEligibility.value.reason}
 				</p>
 			</div>
 
@@ -41,12 +45,12 @@ export default component$(() => {
 				filamentColors={FilamentColorSignal.value}
 				fontMenus={FontMenuSignal.value}
 				buildParams={buildParams}
-				is_atc_allowed={is_atc_allowed}
-				atc_disabled_reason={atc_disabled_reason}
-				build_top_plate={{ value: true }}
-				build_bottom_plate={{ value: true }}
+				onAtcEligibility$={$((allowed: boolean, disabled_reason: string) => {
+					atcEligibility.value = { allowed, reason: disabled_reason };
+				})}
+				build_top_plate={buildPlates.top}
+				build_bottom_plate={buildPlates.bottom}
 				canvas_width_px={250}
-				show_estimated_board_width={true}
 			/>
 		</div>
 	);
