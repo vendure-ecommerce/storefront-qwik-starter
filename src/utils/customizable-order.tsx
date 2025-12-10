@@ -124,10 +124,6 @@ const updateCustomizedImageForOrderLine = async (
 		if (!line.customFields?.customizableOptionJson) {
 			continue;
 		}
-		if (line.customFields?.customizedImageAsset?.id) {
-			// Customized image already exists, skip
-			continue;
-		}
 
 		const hash = genCustomizableOptionJsonHash(line);
 		const canvas = document.getElementById(hash) as HTMLCanvasElement;

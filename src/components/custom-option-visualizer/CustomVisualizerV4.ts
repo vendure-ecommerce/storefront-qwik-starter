@@ -1,5 +1,5 @@
 import { FilamentColor, FontMenu } from '~/generated/graphql-shop';
-import { getFontInfoFromID } from './FontSelector';
+import { getFontInfoFromID } from './TextWithFontInputV4';
 import { buildDimsPX, CONSTRAINTS, px2mm } from './constants';
 
 // drawing's top left position on the canvas for the margin

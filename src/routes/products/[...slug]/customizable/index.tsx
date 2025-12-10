@@ -98,7 +98,6 @@ export default component$(() => {
 				// Add item to order
 				const addItemToOrder = await addItemToOrderMutation(selectedVariantId, 1, {
 					customizableOptionJson: JSON.stringify(inputArr),
-					// customizedImageAssetId: canvasAssetId || undefined,
 				});
 
 				if (addItemToOrder.__typename !== 'Order') {
