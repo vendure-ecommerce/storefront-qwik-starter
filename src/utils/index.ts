@@ -12,6 +12,9 @@ import {
 	DEFAULT_BASE_COLOR_NAME,
 	DEFAULT_FONT_NAME,
 	DEFAULT_PRIMARY_COLOR_NAME,
+	DEFAULT_TEXT_BOTTOM,
+	DEFAULT_TEXT_TOP,
+	DefaultOptionsForNameTag,
 	FILAMENT_COLOR,
 	FONT_MENU,
 } from '~/routes/constants';
@@ -235,7 +238,7 @@ export const getGoogleFontLink = (fontMenuItems: FONT_MENU[]): string => {
 export const getDefaultCustomNameTagOptions = (
 	fontMenu: FONT_MENU[],
 	filamentColor: FILAMENT_COLOR[]
-): { primaryColorId: string; baseColorId: string; fontId: string } => {
+): DefaultOptionsForNameTag => {
 	const defaultPrimaryColorId = filamentColor.find(
 		(c) => c.name === DEFAULT_PRIMARY_COLOR_NAME
 	)?.id;
@@ -251,6 +254,8 @@ export const getDefaultCustomNameTagOptions = (
 		primaryColorId: defaultPrimaryColorId,
 		baseColorId: defaultBaseColorId,
 		fontId: defaultFontId,
+		textTop: DEFAULT_TEXT_TOP,
+		textBottom: DEFAULT_TEXT_BOTTOM,
 	};
 };
 

@@ -1,5 +1,6 @@
-import { $, component$, useContext, useSignal } from '@qwik.dev/core';
-import BuildCustomNameTag from '~/components/custom-option-visualizer/BuildCustomNameTag';
+import { $, component$, useContext, useSignal, useStore, useVisibleTask$ } from '@qwik.dev/core';
+import BuildCustomNameTagV4 from '~/components/custom-option-visualizer/BuildCustomNameTagV4';
+import { NameTagBuildParams } from '~/components/custom-option-visualizer/CustomVisualizerV4';
 
 import { useProductLoader } from '../layout';
 
@@ -24,8 +25,6 @@ function parseBuildJson(productVariant?: ProductVariant) {
 	return null;
 }
 
-const CONCATENATE_CANVAS_ELEMENT_ID = 'custom-name-tag-preview-canvas';
-
 export default component$(() => {
 	const appState = useContext(APP_STATE);
 	const productSignal = useProductLoader();
@@ -38,40 +37,49 @@ export default component$(() => {
 	const selectedVariantSignal = useComputed$(() =>
 		productSignal.value.variants.find((v) => v.id === selectedVariantIdSignal.value)
 	);
-
-	const build_top_plate = useComputed$(() => {
-		return parseBuildJson(selectedVariantSignal.value)?.build_top_plate ?? true;
-	});
-
-	const build_bottom_plate = useComputed$(() => {
-		return parseBuildJson(selectedVariantSignal.value)?.build_bottom_plate ?? true;
+	const buildPlates = useStore<{ top: boolean; bottom: boolean }>({
+		top: true,
+		bottom: true,
 	});
 
 	const defaultOptionsForNameTag = useContext(DEFAULT_OPTIONS_FOR_NAME_TAG);
 
-	const text_top = useSignal<string>('Happy');
-	const text_bottom = useSignal<string>('Day');
-	const font_id_top = useSignal<string>(defaultOptionsForNameTag.fontId);
-	const font_id_bottom = useSignal<string>(defaultOptionsForNameTag.fontId);
-	const primary_color_id = useSignal<string>(defaultOptionsForNameTag.primaryColorId);
-	const base_color_id = useSignal<string>(defaultOptionsForNameTag.baseColorId);
-	const is_build_valid = useSignal<boolean>(true);
-	const atc_disabled_reason = useSignal<string>('None');
-	const is_top_additive = useSignal<boolean>(true);
+	// Build parameters store
+	const buildParams = useStore<NameTagBuildParams>({
+		text_top: defaultOptionsForNameTag.textTop,
+		text_bottom: defaultOptionsForNameTag.textBottom,
+		font_id_top: defaultOptionsForNameTag.fontId,
+		font_id_bottom: defaultOptionsForNameTag.fontId,
+		primary_color_id: defaultOptionsForNameTag.primaryColorId,
+		base_color_id: defaultOptionsForNameTag.baseColorId,
+		is_top_additive: true,
+	});
 
+	useVisibleTask$(({ track }) => {
+		track(() => selectedVariantIdSignal.value);
+		buildPlates.top = parseBuildJson(selectedVariantSignal.value)?.build_top_plate ?? true;
+		buildPlates.bottom = parseBuildJson(selectedVariantSignal.value)?.build_bottom_plate ?? true;
+	});
+
+	// ATC eligibility managed by BuildCustomNameTagV4
+	const atcEligibility = useSignal<{ allowed: boolean; reason: string }>({
+		allowed: false,
+		reason: '',
+	});
+
+	// Final ATC validation including stock check
 	const is_atc_allowed = useComputed$(() => {
 		if (selectedVariantSignal.value?.stockLevel !== 'IN_STOCK') {
 			addItemToOrderErrorSignal.value = 'The selected variant is out of stock.';
 			return false;
 		}
-		if (!is_build_valid.value) {
+		if (!atcEligibility.value.allowed) {
+			addItemToOrderErrorSignal.value = atcEligibility.value.reason;
 			return false;
 		}
 		addItemToOrderErrorSignal.value = '';
 		return true;
 	});
-
-	const customizedImageFilename = `custom-name-tag-${Date.now()}.jpg`;
 
 	const customizableClassDef = useContext(CUSTOMIZABLE_CLASS_DEF_TAG);
 	const currentClassDef = customizableClassDef.find(
@@ -127,14 +135,14 @@ export default component$(() => {
 						}}
 						onClick$={() => {
 							const input = {
-								textTop: build_top_plate.value ? text_top.value : null,
-								textBottom: build_bottom_plate.value ? text_bottom.value : null,
-								fontMenuIdTop: build_top_plate.value ? font_id_top.value : null,
-								fontMenuIdBottom: build_bottom_plate.value ? font_id_bottom.value : null,
-								filamentColorIdPrimary: primary_color_id.value,
-								filamentColorIdBase: base_color_id.value,
-								isTopAdditive: is_top_additive.value,
-							};
+								textTop: buildPlates.top ? buildParams.text_top : null,
+								textBottom: buildPlates.bottom ? buildParams.text_bottom : null,
+								fontMenuIdTop: buildPlates.top ? buildParams.font_id_top : null,
+								fontMenuIdBottom: buildPlates.bottom ? buildParams.font_id_bottom : null,
+								filamentColorIdPrimary: buildParams.primary_color_id,
+								filamentColorIdBase: buildParams.base_color_id,
+								isTopAdditive: buildParams.is_top_additive,
+							} as Record<string, string | number | boolean | null>;
 							const inputArr = getCustomizableOptionArray(input, currentClassDef.optionDefinition);
 
 							// Call the extracted async function
@@ -170,23 +178,16 @@ export default component$(() => {
 				</div>
 			)}
 
-			<BuildCustomNameTag
-				FilamentColorSignal={FilamentColorSignal}
-				FontMenuSignal={FontMenuSignal}
-				primary_color_id={primary_color_id}
-				is_atc_allowed={is_build_valid}
-				atc_disabled_reason={atc_disabled_reason}
-				base_color_id={base_color_id}
+			<BuildCustomNameTagV4
+				filamentColors={FilamentColorSignal.value}
+				fontMenus={FontMenuSignal.value}
+				buildParams={buildParams}
+				onAtcEligibility$={$((allowed: boolean, reason: string) => {
+					atcEligibility.value = { allowed, reason };
+				})}
+				build_top_plate={buildPlates.top}
+				build_bottom_plate={buildPlates.bottom}
 				canvas_width_px={250}
-				text_top={text_top}
-				text_bottom={text_bottom}
-				font_id_top={font_id_top}
-				font_id_bottom={font_id_bottom}
-				is_top_additive={is_top_additive}
-				build_top_plate={build_top_plate}
-				build_bottom_plate={build_bottom_plate}
-				show_estimated_board_width={true}
-				output_concatenated_canvas_element_id={CONCATENATE_CANVAS_ELEMENT_ID}
 			/>
 		</>
 	);

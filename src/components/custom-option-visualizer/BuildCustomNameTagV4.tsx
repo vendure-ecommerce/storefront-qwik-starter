@@ -100,27 +100,24 @@ export default component$(
 				is_bottom_text_valid.value,
 				is_build_valid.value,
 			]);
-			let atc_allowed = false;
-			let atc_disabled_reason = '';
 
 			if (!is_primary_and_base_color_different.value) {
-				atc_disabled_reason = 'Primary color and base color cannot be the same.';
-			}
-			if (!is_build_valid.value) {
-				atc_disabled_reason = 'The build is invalid.';
+				onAtcEligibility$(false, 'Primary color and base color cannot be the same.');
+				return;
 			}
 			if (
 				(build_top_plate && !is_top_text_valid.value) ||
 				(build_bottom_plate && !is_bottom_text_valid.value)
 			) {
-				atc_disabled_reason = 'Text is required';
+				onAtcEligibility$(false, 'Text is required');
+				return;
 			}
-			if (is_top_text_valid.value && is_bottom_text_valid.value && is_build_valid.value) {
-				atc_allowed = true;
-			} else {
-				atc_disabled_reason = 'The build is invalid.';
+			if (!is_build_valid.value) {
+				onAtcEligibility$(false, 'The build is invalid.');
+				return;
 			}
-			onAtcEligibility$(atc_allowed, atc_disabled_reason);
+
+			onAtcEligibility$(true, '');
 		});
 
 		return (
