@@ -4,7 +4,7 @@ import { OrderLine } from '~/generated/graphql';
 import { CUSTOMIZABLE_CLASS_DEF_TAG } from '~/routes/constants';
 import { CustomizableClassName, slugToCustomizableClass } from '~/utils';
 import { genCustomizableOptionJsonHash } from '~/utils/customizable-order';
-import CustomNameTagCartDisplay from '../custom-option-visualizer/CustomNameTagCartDisplay';
+import CustomNameTagCartDisplayV4 from '../custom-option-visualizer/CustomNameTagCartDisplayV4';
 
 interface ItemPreviewProps {
 	filamentColorSignal: any; // Replace 'any' with the actual type if available
@@ -23,7 +23,7 @@ export default component$(({ filamentColorSignal, fontMenuSignal, line }: ItemPr
 		<>
 			{/* <p> {line.customFields?.customVariant.id} </p> */}
 			{customizableClassName === CustomizableClassName.CustomNameTag && (
-				<CustomNameTagCartDisplay
+				<CustomNameTagCartDisplayV4
 					filamentColorSignal={filamentColorSignal}
 					fontMenuSignal={fontMenuSignal}
 					customizableOptionJson={line.customFields?.customizableOptionJson ?? '[]'}
@@ -41,7 +41,7 @@ export default component$(({ filamentColorSignal, fontMenuSignal, line }: ItemPr
 					width="100"
 					height="100"
 					class="w-full h-full object-center object-cover"
-					src={line.featuredAsset?.preview + '?w=1500&h=150&format=webp'}
+					src={line.featuredAsset?.preview + '?w=150&h=150&format=webp'}
 					alt={`Image of: ${line.productVariant.name}`}
 				/>
 			)}

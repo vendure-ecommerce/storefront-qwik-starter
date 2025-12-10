@@ -9,7 +9,7 @@ interface CanvasInfo {
 interface BuildCanvasesProps {
 	topCanvasInfo: CanvasInfo;
 	bottomCanvasInfo: CanvasInfo;
-	stackedHiddenCanvasInfo?: CanvasInfo;
+	stackedCanvasInfo?: CanvasInfo;
 	canvas_width_px?: number;
 }
 
@@ -17,7 +17,7 @@ export default component$(
 	({
 		topCanvasInfo,
 		bottomCanvasInfo,
-		stackedHiddenCanvasInfo,
+		stackedCanvasInfo,
 		canvas_width_px = 250,
 	}: BuildCanvasesProps) => {
 		return (
@@ -40,11 +40,11 @@ export default component$(
 						height: '100%',
 					}}
 				/>
-				{stackedHiddenCanvasInfo && (
+				{stackedCanvasInfo && (
 					<canvas
-						ref={stackedHiddenCanvasInfo.canvasRef}
-						id={stackedHiddenCanvasInfo.id}
-						class="hidden"
+						ref={stackedCanvasInfo.canvasRef}
+						id={stackedCanvasInfo.id}
+						class={`${stackedCanvasInfo.hidden ? 'hidden' : 'block'}`}
 						style={{
 							width: `${canvas_width_px}px`,
 							height: '100%',
@@ -56,3 +56,27 @@ export default component$(
 		);
 	}
 );
+
+// const stackTwoCanvases = (
+//   canvas_top: HTMLCanvasElement,
+//   canvas_bottom: HTMLCanvasElement
+// ): HTMLCanvasElement => {
+//   const stackedCanvas = document.createElement('canvas');
+//   const context = stackedCanvas.getContext('2d');
+
+//   if (context) {
+//     const width = Math.max(canvas_top.width, canvas_bottom.width);
+//     const height = canvas_top.height + canvas_bottom.height;
+
+//     stackedCanvas.width = width;
+//     stackedCanvas.height = height;
+
+//     context.fillStyle = 'white';
+//     context.fillRect(0, 0, width, height);
+
+//     context.drawImage(canvas_top, 0, 0);
+//     context.drawImage(canvas_bottom, 0, canvas_top.height);
+//   }
+
+//   return stackedCanvas;
+// };
