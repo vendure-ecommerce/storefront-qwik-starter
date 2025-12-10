@@ -1,6 +1,7 @@
-import { component$, Signal } from '@builder.io/qwik';
+import { component$, useSignal } from '@builder.io/qwik';
 import { Select } from '@qwik-ui/headless';
 // import { FILAMENT_COLOR } from '~/routes/constants';
+import { QRL } from '@qwik.dev/core';
 import { FilamentColor } from '~/generated/graphql-shop';
 import BackgroundColorIcon from '../icons/BackgroundColorIcon';
 import TextColorIcon from '../icons/TextColorIcon';
@@ -17,8 +18,9 @@ import TextColorIcon from '../icons/TextColorIcon';
 interface ColorSelectorProps {
 	fieldTitle?: string; // The title of the field, e.g. "Filament Color"
 	colorOptions: Pick<FilamentColor, 'id' | 'name' | 'displayName' | 'hexCode' | 'isOutOfStock'>[]; // The list of color options to display
-	selectedValue: Signal<string>; // The currently selected color value (this should be a filament color name, e.g. 'lemon_yellow')
+	defaultColorId?: string; // The default selected color value (this should be a filament color id, e.g. 'lemon_yellow')
 	isBackgroundColor?: boolean; // Optional: if true, we will use background color icon, if false, we will use text color icon
+	onChange$: QRL<(newColorId: string) => void>; // Callback when the selected color changes
 }
 
 const colorTag = (hexCode: string) => {
@@ -34,9 +36,15 @@ const colorTag = (hexCode: string) => {
 };
 
 export default component$(
-	({ fieldTitle, colorOptions, selectedValue, isBackgroundColor }: ColorSelectorProps) => {
+	({
+		fieldTitle,
+		colorOptions,
+		defaultColorId,
+		isBackgroundColor,
+		onChange$,
+	}: ColorSelectorProps) => {
 		// const FilamentColorSignal = useFilamentColor();
-
+		const selectedValue = useSignal<string>(defaultColorId || colorOptions[0].id);
 		// throw an error if the selectedValue is not in the FilamentColorSignal.value
 		if (!colorOptions.some((c) => c.id === selectedValue.value)) {
 			throw new Error(
@@ -46,7 +54,12 @@ export default component$(
 
 		return (
 			<div class="custom-input-container px-2">
-				<Select.Root bind:value={selectedValue}>
+				<Select.Root
+					bind:value={selectedValue}
+					onChange$={(newColorId: string) => {
+						onChange$(newColorId);
+					}}
+				>
 					<Select.Trigger class="select-trigger-button flex" title={fieldTitle || 'Select Color'}>
 						{isBackgroundColor ? <BackgroundColorIcon /> : <TextColorIcon />}
 						{colorTag(colorOptions.find((c) => c.id === selectedValue.value)!.hexCode)}

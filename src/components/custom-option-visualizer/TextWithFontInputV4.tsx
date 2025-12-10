@@ -1,8 +1,9 @@
 // Qwik select references: https://qwikui.com/docs/headless/select/
-import { component$, Signal, useVisibleTask$ } from '@builder.io/qwik';
+import { component$, useVisibleTask$ } from '@builder.io/qwik';
 
 import { Select } from '@qwik-ui/headless';
-import { useComputed$, useSignal } from '@qwik.dev/core';
+import { QRL, useComputed$, useSignal } from '@qwik.dev/core';
+import { FontMenu } from '~/generated/graphql-shop';
 import { FONT_MENU } from '~/routes/constants';
 import FontIcon from '../icons/FontIcon';
 import GoPreviousIcon from '../icons/GoPreviousIcon';
@@ -54,11 +55,10 @@ function getFontOptions(fontMenuItems: FONT_MENU[]): FontOption[] {
 }
 
 interface TextWithFontProps {
-	fieldTitle?: string; // Optional title for the font selector
-	fontMenu: FONT_MENU[];
-	text: Signal<string>; // This is the text input value, e.g. `const textInput = useSignal<string>('Hello World');`
-	fontId: Signal<string>; // This is the selected font value, which will be bound to the Select component, e.g. `const selectedFont = useSignal<string>('Comic_Neue__bold');`
-	isTextValid: Signal<boolean>; // This is a signal to indicate if the text input is valid, e.g. `const isTextValid = useSignal<boolean>(true);`
+	fontMenu: Pick<FontMenu, 'id' | 'name' | 'additiveFontId' | 'subtractiveFontId' | 'isDisabled'>[];
+	defaultText: string;
+	defaultFontId: string;
+	onChange$: QRL<(text: string, fontId: string, isValid: boolean) => void>;
 }
 
 function isValidText(text: string): {
@@ -92,9 +92,13 @@ function isValidText(text: string): {
 }
 
 export default component$(
-	({ fieldTitle, fontMenu, text, fontId, isTextValid }: TextWithFontProps) => {
+	({ fontMenu, defaultText, defaultFontId, onChange$ }: TextWithFontProps) => {
 		// const fontId = useSignal<string>(fontOptions[0].value); // This has to be a string to match the Select component's value type (Select.item.value), e.g. 'Crimson_Text__bold_italic'
 		const fontOptions = getFontOptions(fontMenu);
+		const fontId = useSignal<string>(defaultFontId); // This has to be a string to match the Select component's value type (Select.item.value), e.g. 'Crimson_Text__bold_italic'
+		const text = useSignal<string>(defaultText);
+		const isTextValid = useSignal<boolean>(true);
+
 		const showInput = useSignal<boolean>(false);
 		const invalidTextMessage = useSignal<string>('');
 		const selectedFontInfo = useComputed$(() => {
@@ -129,6 +133,7 @@ export default component$(
 									if (isValidText(e.target.value).isValid) {
 										isTextValid.value = true;
 										text.value = e.target.value;
+										onChange$(e.target.value, fontId.value, isTextValid.value);
 									} else {
 										isTextValid.value = false;
 										invalidTextMessage.value = isValidText(e.target.value).message;
@@ -150,7 +155,12 @@ export default component$(
 					<div
 						class={`px-1 flex item-center ${isTextValid.value ? '' : 'opacity-50 pointer-events-none'}`}
 					>
-						<Select.Root bind:value={fontId}>
+						<Select.Root
+							bind:value={fontId}
+							onChange$={(newFontId: string) => {
+								onChange$(text.value, newFontId, isTextValid.value);
+							}}
+						>
 							<Select.Trigger class="select-trigger-button" title="Select Font">
 								<FontIcon />
 							</Select.Trigger>

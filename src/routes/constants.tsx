@@ -5,6 +5,8 @@ export interface DefaultOptionsForNameTag {
 	primaryColorId: string;
 	baseColorId: string;
 	fontId: string;
+	textTop: string;
+	textBottom: string;
 }
 
 export const DEFAULT_OPTIONS_FOR_NAME_TAG = createContextId<DefaultOptionsForNameTag>(
@@ -14,6 +16,8 @@ export const DEFAULT_OPTIONS_FOR_NAME_TAG = createContextId<DefaultOptionsForNam
 export const DEFAULT_PRIMARY_COLOR_NAME = 'latte_brown';
 export const DEFAULT_BASE_COLOR_NAME = 'ivory_white';
 export const DEFAULT_FONT_NAME = 'Comic Neue';
+export const DEFAULT_TEXT_TOP = 'Happy';
+export const DEFAULT_TEXT_BOTTOM = 'Day';
 
 export type FONT_MENU = FontMenuFindAllQuery['fontMenuFindAll'][number];
 

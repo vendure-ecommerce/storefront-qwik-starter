@@ -1,10 +1,13 @@
 import gql from 'graphql-tag';
 import {
 	GetPurchasedVariantForReviewResult,
+	ProductReviewList,
 	ProductReviewListOptions,
+	ProductReviewRatingList,
 	SubmitProductReviewInput,
 } from '~/generated/graphql-shop';
 import { shopSdk } from '~/graphql-wrapper';
+import { handleGqlResult } from '~/utils';
 
 export const submitProductReviewMutation = async (input: SubmitProductReviewInput) => {
 	return await shopSdk.submitProductReview({ input }).then((res) => res.submitProductReview);
@@ -39,7 +42,9 @@ export const getReviewHistogramQuery = async (productId: string) => {
  * @returns
  */
 export const getProductReviewsQuery = async (id: string, options?: ProductReviewListOptions) => {
-	return await shopSdk.getProductReviews({ id, options }).then((res) => res.product?.reviews);
+	return handleGqlResult<ProductReviewList>(
+		shopSdk.getProductReviews({ id, options }).then((res) => res.product?.reviews)
+	);
 };
 
 /**
@@ -62,9 +67,11 @@ export const voteOnReviewMutation = async (id: string, vote: boolean) => {
  * }
  */
 export const getReviewRatingsForProductsQuery = async (productIds: string[]) => {
-	return await shopSdk
-		.getReviewRatingsForProducts({ productIds })
-		.then((res) => res.getReviewRatingsForProducts);
+	return handleGqlResult<ProductReviewRatingList>(
+		shopSdk
+			.getReviewRatingsForProducts({ productIds })
+			.then((res) => res.getReviewRatingsForProducts)
+	);
 };
 
 gql`

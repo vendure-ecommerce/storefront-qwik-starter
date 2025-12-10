@@ -7,7 +7,7 @@ import {
 	useVisibleTask$,
 } from '@qwik.dev/core';
 import { routeLoader$ } from '@qwik.dev/router';
-import { FONT_MENU } from '~/components/custom-option-visualizer/TextWithFontInput';
+
 import {
 	filamentColorFindSupported,
 	fontMenuFindAll,
@@ -36,6 +36,8 @@ interface DefaultOptionsForNameTag {
 	primaryColorId: string;
 	baseColorId: string;
 	fontId: string;
+	textTop: string;
+	textBottom: string;
 }
 
 // Create a context to hold the default options for the name tag, that can be accessed in child components
@@ -66,6 +68,8 @@ export default component$(() => {
 		primaryColorId: defaultPrimaryColorId,
 		baseColorId: defaultBaseColorId,
 		fontId: defaultFontId,
+		textTop: 'Happy',
+		textBottom: 'Day',
 	});
 
 	useContextProvider(DEFAULT_OPTIONS_FOR_NAME_TAG, defaultOptionsForNameTag);

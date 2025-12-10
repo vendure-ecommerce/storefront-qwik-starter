@@ -1,7 +1,7 @@
 import { component$, ReadonlySignal, Signal, useComputed$, useSignal } from '@qwik.dev/core';
 import ColorSelector from '~/components/custom-option-visualizer/ColorSelectorV2';
 import { BuildPlateVisualizerV3 } from '~/components/custom-option-visualizer/CustomVisualizerV3';
-import TextWithFontInput from '~/components/custom-option-visualizer/TextWithFontInput';
+import TextWithFontInput from '~/components/custom-option-visualizer/TextWithFontInputV4';
 import DarkModeIcon from '~/components/icons/DarkModeIcon';
 
 interface BuildCustomNameTagProps {
