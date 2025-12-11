@@ -1,5 +1,5 @@
 import { Collection as CollectionGql, Order, SortOrder } from '~/generated/graphql';
-import { PurchasedVariantWithReviewStatus } from './generated/graphql-shop';
+import { OrderFilterParameter, PurchasedVariantWithReviewStatus } from './generated/graphql-shop';
 
 export type AppState = {
 	collections: CollectionGql[];
@@ -265,10 +265,27 @@ export type ActiveCustomerOrder = {
 	}[];
 };
 
+/**
+ * A map of sort options for products, orders, etc. This used in a query that output paginated list.
+ * See [Paginated list](https://docs.vendure.io/guides/how-to/paginated-list/) for more details.
+ * This helps configure the sort options available to the user.
+ */
 export interface SortOptionMap {
 	[key: string]: {
 		label: string;
 		sortBy: { [key: string]: SortOrder };
+	};
+}
+
+/**
+ * A map of filter options for products, orders, etc. This used in a query that output paginated list.
+ * See [Paginated list](https://docs.vendure.io/guides/how-to/paginated-list/) for more details.
+ * This helps configure the filter options available to the user.
+ */
+export interface OrderFilterOptionMap {
+	[key: string]: {
+		label: string;
+		filterBy: OrderFilterParameter;
 	};
 }
 

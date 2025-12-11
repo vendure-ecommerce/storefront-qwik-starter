@@ -18,13 +18,13 @@ export default component$<OrderHistoryListOptionsProps>(({ pageSize, sortBy, onC
 						<select
 							class="border rounded-md bg-white  text-gray-500 text-sm px-2 w-12 h-6 p-0 m-0"
 							value={pageSize.value}
-							onChange$={(e) => {
+							onChange$={async (e) => {
 								pageSize.value = (e.target as HTMLSelectElement).value;
-								onChange$();
+								if (onChange$) await onChange$();
 							}}
 						>
 							{['5', '10', '20', '50'].map((size) => (
-								<option key={size} value={size} selected={pageSize.value === size}>
+								<option key={size} value={size}>
 									{size}
 								</option>
 							))}
@@ -39,13 +39,13 @@ export default component$<OrderHistoryListOptionsProps>(({ pageSize, sortBy, onC
 						<select
 							class="border rounded-md bg-white  text-gray-500 text-sm px-2 w-32 h-6 p-0 m-0"
 							value={sortBy.value}
-							onChange$={(e) => {
+							onChange$={async (e) => {
 								sortBy.value = (e.target as HTMLSelectElement).value;
-								onChange$();
+								if (onChange$) await onChange$();
 							}}
 						>
 							{Object.entries(orderHistorySortOptionMap).map(([key, option]) => (
-								<option key={key} value={key} selected={sortBy.value === key}>
+								<option key={key} value={key}>
 									{option.label}
 								</option>
 							))}

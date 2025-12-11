@@ -20,7 +20,10 @@ export default component$<IProps>(({ order }) => {
 
 	return (
 		<div class="container mx-auto p-9 bg-white max-w-sm rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition duration-300 text-center">
-			<div class="flex justify-center mb-2 relative" style={{ height: '100px', width: '120px' }}>
+			<div
+				class="flex justify-center mb-2 relative overflow-hidden"
+				style={{ height: '100px', width: '120px' }}
+			>
 				{shownImages.map((src, idx) => (
 					<Image
 						key={idx}
@@ -28,7 +31,7 @@ export default component$<IProps>(({ order }) => {
 						width="100"
 						height="100"
 						aspectRatio={1}
-						class={`absolute top-0 ${idx === 0 ? 'left-0 z-10' : 'left-8 z-0'} w-[100px] h-[100px] object-center object-cover rounded-lg border-2 border-white shadow`}
+						class={`absolute ${idx === 0 ? '' : 'left-8'} w-[100px] h-[100px] object-center object-cover rounded-lg border-2 border-white shadow`}
 						src={src}
 						alt={order.lines[idx]?.productVariant?.name}
 					/>
