@@ -1,4 +1,4 @@
-import { Collection as CollectionGql, Order } from '~/generated/graphql';
+import { Collection as CollectionGql, Order, SortOrder } from '~/generated/graphql';
 import { PurchasedVariantWithReviewStatus } from './generated/graphql-shop';
 
 export type AppState = {
@@ -264,6 +264,13 @@ export type ActiveCustomerOrder = {
 		productVariant: { name: string };
 	}[];
 };
+
+export interface SortOptionMap {
+	[key: string]: {
+		label: string;
+		sortBy: { [key: string]: SortOrder };
+	};
+}
 
 export type CurrencyCode =
 	/** United Arab Emirates dirham */

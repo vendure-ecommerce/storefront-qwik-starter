@@ -1,6 +1,7 @@
 import { $, component$, useSignal, useVisibleTask$ } from '@qwik.dev/core';
 import { SortOrder } from '~/generated/graphql-shop';
 import { getProductReviewsQuery } from '~/providers/shop/orders/review';
+import { SortOptionMap } from '~/types';
 import { SpinnerWaitingAnimation } from '../icons/SpinnerWaitingAnimation';
 import ProductReviewListOptions from './ProductReviewListOptions';
 import ReviewCard, { ReviewItem } from './ReviewCard';
@@ -17,13 +18,6 @@ function formatDate(dateStr?: string) {
 		month: 'short',
 		day: 'numeric',
 	});
-}
-
-export interface SortOptionMap {
-	[key: string]: {
-		label: string;
-		sortBy: { [key: string]: SortOrder };
-	};
 }
 
 const sortOptionMap: SortOptionMap = {

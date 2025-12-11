@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { OrderListOptions } from '~/generated/graphql';
 import {
 	ActiveCustomerAddressesQuery,
 	ActiveCustomerOrdersQuery,
@@ -36,17 +37,21 @@ export const deleteCustomerAddressMutation = async (id: string) => {
 	return shopSdk.deleteCustomerAddress({ id });
 };
 
-export const getActiveCustomerOrdersQuery = async () => {
+export const getActiveCustomerOrdersQuery = async (options?: OrderListOptions) => {
 	const variables: ActiveCustomerOrdersQueryVariables = {
 		options: {
 			filter: {
 				active: {
 					eq: false,
 				},
+				...(options?.filter || {}),
 			},
 			sort: {
 				createdAt: 'DESC',
+				...(options?.sort || {}),
 			},
+			skip: options?.skip,
+			take: options?.take,
 		},
 	};
 	return shopSdk

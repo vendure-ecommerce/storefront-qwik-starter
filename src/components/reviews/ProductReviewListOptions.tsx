@@ -1,7 +1,7 @@
 import { Select } from '@qwik-ui/headless';
 import { component$, QRL, Signal } from '@qwik.dev/core';
 import { LuChevronDown } from '@qwikest/icons/lucide';
-import { SortOptionMap } from './DisplayReviews';
+import { SortOptionMap } from '~/types';
 
 interface ProductReviewListOptionsProps {
 	pageSize: Signal<string>;
