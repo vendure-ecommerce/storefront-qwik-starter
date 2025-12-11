@@ -1,5 +1,5 @@
 import { component$, QRL, Signal } from '@qwik.dev/core';
-
+import { NumberOperators, SortOrder, StringOperators } from '~/generated/graphql';
 /**
  * The key will be the selectedValue, and the label will be the display value
  * E.g. {
@@ -12,7 +12,15 @@ import { component$, QRL, Signal } from '@qwik.dev/core';
  *  '10': { label: '10' }
  * }
  */
-export type GeneralSelectOption = { [key: string]: { label: string } };
+export type GeneralSelectOption = {
+	[key: string]: {
+		label: string;
+		sort?: { [key: string]: SortOrder };
+		filter?: { [key: string]: NumberOperators | StringOperators };
+		take?: number;
+		skip?: number;
+	};
+};
 
 interface GeneralSelectorProps {
 	options: GeneralSelectOption;
