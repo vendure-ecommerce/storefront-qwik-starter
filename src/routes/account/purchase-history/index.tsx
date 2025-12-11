@@ -9,6 +9,8 @@ import { batchUpdateShippoFulfillmentStateMutation } from '~/providers/shop/orde
 import { getPurchasedVariantForReviewQuery } from '~/providers/shop/orders/review';
 import { OrderFilterOptionMap, SortOptionMap } from '~/types';
 
+const PAGE_SIZE = 10;
+
 export const orderHistorySortOptionMap: SortOptionMap = {
 	recent: {
 		label: 'Most recent',
@@ -55,7 +57,6 @@ export default component$(() => {
 	const appState = useContext(APP_STATE);
 	const activeCustomerOrdersSignal = useSignal<Customer>();
 	const isLoading = useSignal(true);
-	const pageSize = useSignal<string>('5');
 	const sortBy = useSignal<string>('recent');
 	const filterBy = useSignal<string>('recentMonth');
 	const page = useSignal<number>(1);
@@ -82,13 +83,13 @@ export default component$(() => {
 
 	useVisibleTask$(async ({ track }) => {
 		// react to page, pageSize or sortBy changes
-		track(() => [page.value, pageSize.value, sortBy.value, filterBy.value]);
-		if (pageSize.value && sortBy.value) {
+		track(() => [page.value, sortBy.value, filterBy.value]);
+		if ((sortBy.value, filterBy.value)) {
 			isLoading.value = true;
-			const take = parseInt(pageSize.value, 10) || 0;
+
 			const listOptions = {
-				take,
-				skip: Math.max(0, (page.value - 1) * take),
+				take: PAGE_SIZE,
+				skip: Math.max(0, (page.value - 1) * PAGE_SIZE),
 				sort: orderHistorySortOptionMap[sortBy.value]?.sortBy as any,
 				filter: orderHistoryFilterOptionMap[filterBy.value]?.filterBy as any,
 			};
@@ -143,7 +144,12 @@ export default component$(() => {
 	}
 
 	return activeCustomerOrdersSignal.value ? (
-		<GeneralListOptions ListOptions={listOptions} page={page} totalItems={totalItems}>
+		<GeneralListOptions
+			ListOptions={listOptions}
+			page={page}
+			totalItems={totalItems}
+			pageSize={PAGE_SIZE}
+		>
 			<div class="flex flex-wrap gap-6 justify-evenly">
 				{(activeCustomerOrdersSignal.value?.orders?.items || []).map((order: Order) => (
 					<div key={order.id}>
@@ -155,52 +161,4 @@ export default component$(() => {
 	) : (
 		<div class="h-[100vh]" />
 	);
-
-	// return activeCustomerOrdersSignal.value ? (
-	// 	<div class="max-w-6xl m-auto rounded-lg p-4 space-y-4">
-	// 		<div class="flex justify-center">
-	// 			<GeneralListOptions
-	// 			ListOptions={listOptions}
-	// 			page={page}
-	// 			totalItems={totalItems}
-	// 			/>
-	// 		</div>
-	// 		<div class="flex flex-wrap gap-6 justify-evenly">
-	// 			{(activeCustomerOrdersSignal.value?.orders?.items || []).map((order: Order) => (
-	// 				<div key={order.id}>
-	// 					<OrderCard order={order} />
-	// 				</div>
-	// 			))}
-	// 		</div>
-	// 		{/* Pagination controls */}
-	// 		<div class="flex justify-center items-center gap-3">
-	// 			<button
-	// 				class="px-3 py-1 rounded border"
-	// 				onClick$={() => (page.value = Math.max(1, page.value - 1))}
-	// 				disabled={page.value <= 1}
-	// 			>
-	// 				<LuMoveLeft />
-	// 			</button>
-	// 			<span class="text-sm">
-	// 				Page {page.value}
-	// 				{totalItems.value
-	// 					? ` of ${Math.max(1, Math.ceil(totalItems.value / (parseInt(pageSize.value, 10) || 1)))}`
-	// 					: ''}
-	// 			</span>
-	// 			<button
-	// 				class="px-3 py-1 rounded border"
-	// 				onClick$={() => (page.value = page.value + 1)}
-	// 				disabled={
-	// 					!!(totalItems.value !== null) &&
-	// 					page.value >=
-	// 					Math.max(1, Math.ceil(totalItems.value / (parseInt(pageSize.value, 10) || 1)))
-	// 				}
-	// 			>
-	// 				<LuMoveRight />
-	// 			</button>
-	// 		</div>
-	// 	</div>
-	// ) : (
-	// 	<div class="h-[100vh]" />
-	// );
 });
