@@ -2,19 +2,19 @@ import gql from 'graphql-tag';
 import {
 	ActiveOrderQuery,
 	AddItemToOrderMutation,
+	ApplyCouponCodeMutation,
 	CreateAddressInput,
 	CreateCustomerInput,
 	Order,
 	OrderByCodeQuery,
+	OrderLineCustomFieldsInput,
+	RemoveCouponCodeMutation,
 	RemoveOrderLineMutation,
 	SetCustomerForOrderMutation,
+	SetOrderCustomFieldsMutation,
 	SetOrderShippingAddressMutation,
 	SetOrderShippingMethodMutation,
 	UpdateOrderInput,
-	ApplyCouponCodeMutation,
-	OrderLineCustomFieldsInput,
-	RemoveCouponCodeMutation,
-	SetOrderCustomFieldsMutation,
 } from '~/generated/graphql-shop';
 import { shopSdk } from '~/graphql-wrapper';
 import { handleGqlResult } from '~/utils';

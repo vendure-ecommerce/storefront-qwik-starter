@@ -7,6 +7,7 @@ import {
 	useVisibleTask$,
 } from '@builder.io/qwik';
 import { routeLoader$ } from '@builder.io/qwik-city';
+import { FontMenu } from '~/generated/graphql-shop';
 
 import {
 	filamentColorFindSupported,
@@ -17,7 +18,7 @@ const DEFAULT_PRIMARY_COLOR_NAME = 'latte_brown';
 const DEFAULT_BASE_COLOR_NAME = 'ivory_white';
 const DEFAULT_FONT_NAME = 'Comic Neue';
 
-const getGoogleFontLink = (fontMenuItems: FONT_MENU[]): string => {
+const getGoogleFontLink = (fontMenuItems: FontMenu[]): string => {
 	const fontFamilies = fontMenuItems
 		.map((font) => font.name.split(' (')[0].replace(/ /g, '+'))
 		.join('&family='); // join the font family with &family=

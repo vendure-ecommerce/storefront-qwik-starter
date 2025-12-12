@@ -10,11 +10,11 @@
 // Import the middleware namespace and resolve the router factory at runtime
 // to avoid TypeScript type mismatches between versions.
 import * as qwikCityCF from '@builder.io/qwik-city/middleware/cloudflare-pages';
-type PlatformCloudflarePages = any;
-const createQwikRouter: any = (qwikCityCF as any).createQwikRouter ?? (qwikCityCF as any).default;
 import qwikCityPlan from '@qwik-city-plan';
 import { manifest } from '@qwik-client-manifest';
 import render from './entry.ssr';
+type PlatformCloudflarePages = any;
+const createQwikRouter: any = (qwikCityCF as any).createQwikRouter ?? (qwikCityCF as any).default;
 
 declare global {
 	interface QwikCityPlatform extends PlatformCloudflarePages {}
