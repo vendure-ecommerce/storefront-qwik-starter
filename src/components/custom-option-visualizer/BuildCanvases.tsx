@@ -1,4 +1,4 @@
-import { component$, Signal, Slot, useVisibleTask$ } from '@qwik.dev/core';
+import { component$, Signal, Slot, useVisibleTask$ } from '@builder.io/qwik';
 
 interface CanvasInfo {
 	id: string;

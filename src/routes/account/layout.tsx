@@ -1,4 +1,4 @@
-import { Slot, component$, useContext, useVisibleTask$ } from '@qwik.dev/core';
+import { Slot, component$, useContext, useVisibleTask$ } from '@builder.io/qwik';
 import { useNavigate } from '@qwik.dev/router';
 import { TabsContainer } from '~/components/account/TabsContainer';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';

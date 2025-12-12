@@ -1,4 +1,4 @@
-import { component$, useContext } from '@qwik.dev/core';
+import { component$, useContext } from '@builder.io/qwik';
 import { Image } from 'qwik-image';
 import { OrderLine } from '~/generated/graphql';
 import { CUSTOMIZABLE_CLASS_DEF_TAG } from '~/routes/constants';

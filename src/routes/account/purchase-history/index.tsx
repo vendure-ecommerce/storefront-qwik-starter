@@ -1,4 +1,4 @@
-import { $, component$, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { $, component$, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import OrderCard from '~/components/account/OrderCard';
 import GeneralListOptions, { GeneralListOptionType } from '~/components/common/GeneralListOptions';
 import AnimatedSpinnerIcon from '~/components/icons/AnimatedSpinnerIcon';

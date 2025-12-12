@@ -1,4 +1,4 @@
-import { component$, useSignal, useStore, useVisibleTask$ } from '@qwik.dev/core';
+import { component$, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation } from '@qwik.dev/router';
 import OrderBriefCard from '~/components/account/OrderBriefCard';
 import ShippingAddressCard from '~/components/account/ShippingAddressCard';

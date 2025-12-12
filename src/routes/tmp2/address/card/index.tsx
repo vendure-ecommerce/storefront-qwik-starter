@@ -1,4 +1,4 @@
-import { component$ } from '@qwik.dev/core';
+import { component$ } from '@builder.io/qwik';
 import ShippingAddressCard from '~/components/account/ShippingAddressCard';
 
 const tmpAddress = {
@@ -28,7 +28,7 @@ export default component$(() => {
 	);
 });
 
-// import { component$ } from '@qwik.dev/core';
+// import { component$ } from '@builder.io/qwik';
 // import { TestForm } from '~/components/address-form/TestFormV2';
 
 // export default component$(() => {

@@ -1,4 +1,4 @@
-import { $, component$, useContext, useSignal } from '@qwik.dev/core';
+import { $, component$, useContext, useSignal } from '@builder.io/qwik';
 import { Link } from '@qwik.dev/router';
 import { PasswordInput } from '~/components/account/PasswordInput';
 import { ErrorMessage } from '~/components/error-message/ErrorMessage';

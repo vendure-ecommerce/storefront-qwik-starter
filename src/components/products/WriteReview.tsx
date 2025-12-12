@@ -1,4 +1,4 @@
-import { component$, QRL, Signal, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { component$, QRL, Signal, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
 import FormInput from '~/components/common/FormInput';
 import { APP_STATE } from '~/constants';

@@ -1,4 +1,4 @@
-import { component$, useComputed$, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { component$, useComputed$, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
 import { ShippingAddress } from '~/types';
 import { isGuestCustomer } from '~/utils';

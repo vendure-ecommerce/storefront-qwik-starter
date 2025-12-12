@@ -1,4 +1,4 @@
-import { component$, QRL, useSignal } from '@qwik.dev/core';
+import { component$, QRL, useSignal } from '@builder.io/qwik';
 import Tooltip from '~/components/tooltip/Tooltip';
 import { ShippingAddress } from '~/types';
 import { AddressForm } from '../address-form/AddressFormV2';

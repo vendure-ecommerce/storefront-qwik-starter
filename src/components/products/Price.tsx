@@ -1,4 +1,4 @@
-import { component$, ReadonlySignal } from '@qwik.dev/core';
+import { component$, ReadonlySignal } from '@builder.io/qwik';
 import { ProductVariant } from '~/generated/graphql';
 import { CurrencyCode } from '~/types';
 import { formatPrice } from '~/utils';

@@ -1,4 +1,4 @@
-import { component$ } from '@qwik.dev/core';
+import { component$ } from '@builder.io/qwik';
 
 export type StockLevel = 'IN_STOCK' | 'OUT_OF_STOCK' | 'LOW_STOCK';
 

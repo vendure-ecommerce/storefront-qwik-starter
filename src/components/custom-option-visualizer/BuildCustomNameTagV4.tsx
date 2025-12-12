@@ -5,7 +5,7 @@ import {
 	useContext,
 	useSignal,
 	useVisibleTask$,
-} from '@qwik.dev/core';
+} from '@builder.io/qwik';
 import ColorSelector from '~/components/custom-option-visualizer/ColorSelectorV4';
 import TextWithFontInput from '~/components/custom-option-visualizer/TextWithFontInputV4';
 import DarkModeIcon from '~/components/icons/DarkModeIcon';

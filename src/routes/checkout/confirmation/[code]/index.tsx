@@ -1,4 +1,4 @@
-import { QRL, component$, useSignal, useStore, useVisibleTask$ } from '@qwik.dev/core';
+import { QRL, component$, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation } from '@qwik.dev/router';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';

@@ -1,5 +1,5 @@
 import type { Signal } from '@builder.io/qwik';
-import { $, component$, useSignal } from '@qwik.dev/core';
+import { $, component$, useSignal } from '@builder.io/qwik';
 import CheckIcon from '~/components/icons/CheckIcon';
 import EyeIcon from '~/components/icons/EyeIcon';
 import EyeSlashIcon from '~/components/icons/EyeSlashIcon';

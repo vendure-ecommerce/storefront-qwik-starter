@@ -1,4 +1,4 @@
-import { component$, Signal } from '@qwik.dev/core';
+import { component$, Signal } from '@builder.io/qwik';
 import { ProductVariant } from '~/generated/graphql';
 
 interface ProductVariantSelectorProps {

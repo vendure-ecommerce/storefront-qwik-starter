@@ -1,4 +1,4 @@
-import { $, component$, useSignal } from '@qwik.dev/core';
+import { $, component$, useSignal } from '@builder.io/qwik';
 import { Action } from '@qwik.dev/router';
 import { LuTrash } from '@qwikest/icons/lucide';
 

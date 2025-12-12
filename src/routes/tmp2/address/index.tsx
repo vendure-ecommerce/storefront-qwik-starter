@@ -1,4 +1,4 @@
-import { component$ } from '@qwik.dev/core';
+import { component$ } from '@builder.io/qwik';
 import AddressSelector from '~/components/checkout/AddressSelector';
 
 export default component$(() => {
@@ -13,7 +13,7 @@ export default component$(() => {
 	);
 });
 
-// import { component$ } from '@qwik.dev/core';
+// import { component$ } from '@builder.io/qwik';
 // import { TestForm } from '~/components/address-form/TestFormV2';
 
 // export default component$(() => {

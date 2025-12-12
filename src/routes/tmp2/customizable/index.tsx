@@ -1,4 +1,4 @@
-import { $, component$, useContext, useSignal, useStore } from '@qwik.dev/core';
+import { $, component$, useContext, useSignal, useStore } from '@builder.io/qwik';
 import BuildCustomNameTagV4 from '~/components/custom-option-visualizer/BuildCustomNameTagV4';
 import { NameTagBuildParams } from '~/components/custom-option-visualizer/CustomVisualizerV4';
 import { DEFAULT_OPTIONS_FOR_NAME_TAG } from '~/routes/constants';

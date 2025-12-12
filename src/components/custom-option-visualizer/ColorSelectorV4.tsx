@@ -1,7 +1,7 @@
 import { component$, useSignal } from '@builder.io/qwik';
 import { Select } from '@qwik-ui/headless';
 // import { FILAMENT_COLOR } from '~/routes/constants';
-import { QRL } from '@qwik.dev/core';
+import { QRL } from '@builder.io/qwik';
 import { FilamentColor } from '~/generated/graphql-shop';
 import BackgroundColorIcon from '../icons/BackgroundColorIcon';
 import TextColorIcon from '../icons/TextColorIcon';

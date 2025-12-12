@@ -1,4 +1,4 @@
-import { component$ } from '@qwik.dev/core';
+import { component$ } from '@builder.io/qwik';
 import CheckCircleIcon from '../icons/CheckCircleIcon';
 
 export default component$<{ message: string }>(({ message }) => {

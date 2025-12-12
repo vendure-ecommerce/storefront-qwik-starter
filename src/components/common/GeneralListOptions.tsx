@@ -1,4 +1,4 @@
-import { component$, QRL, Signal, Slot } from '@qwik.dev/core';
+import { component$, QRL, Signal, Slot } from '@builder.io/qwik';
 import { LuMoveLeft, LuMoveRight } from '@qwikest/icons/lucide';
 import GeneralSelector, { GeneralSelectOption } from './GeneralSelector';
 

@@ -1,4 +1,4 @@
-import { component$, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { Address } from '~/generated/graphql';
 import {
 	deleteCustomerAddressMutation,

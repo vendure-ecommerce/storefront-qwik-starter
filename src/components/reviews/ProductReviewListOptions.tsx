@@ -1,5 +1,5 @@
 import { Select } from '@qwik-ui/headless';
-import { component$, QRL, Signal } from '@qwik.dev/core';
+import { component$, QRL, Signal } from '@builder.io/qwik';
 import { LuChevronDown } from '@qwikest/icons/lucide';
 import { SortOptionMap } from '~/types';
 

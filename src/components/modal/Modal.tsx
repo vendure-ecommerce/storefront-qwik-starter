@@ -1,4 +1,4 @@
-import { QRL, Slot, component$ } from '@qwik.dev/core';
+import { QRL, Slot, component$ } from '@builder.io/qwik';
 import { Button } from '../buttons/Button';
 import { HighlightedButton } from '../buttons/HighlightedButton';
 import CheckIcon from '../icons/CheckIcon';

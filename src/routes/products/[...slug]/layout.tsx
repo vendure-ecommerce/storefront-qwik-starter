@@ -1,4 +1,4 @@
-import { component$, Signal, Slot, useSignal } from '@qwik.dev/core';
+import { component$, Signal, Slot, useSignal } from '@builder.io/qwik';
 import { DocumentHead, routeLoader$ } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';

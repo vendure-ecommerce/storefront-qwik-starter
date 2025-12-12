@@ -1,4 +1,4 @@
-import { component$ } from '@qwik.dev/core';
+import { component$ } from '@builder.io/qwik';
 import { Link } from '@qwik.dev/router';
 import { Order } from '~/generated/graphql';
 import { formatDateTime } from '~/utils';

@@ -1,4 +1,4 @@
-import { $, component$, useContext, useSignal, useStore, useVisibleTask$ } from '@qwik.dev/core';
+import { $, component$, useContext, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import BuildCustomNameTagV4 from '~/components/custom-option-visualizer/BuildCustomNameTagV4';
 import { NameTagBuildParams } from '~/components/custom-option-visualizer/CustomVisualizerV4';
 
@@ -10,7 +10,7 @@ import Price from '~/components/products/Price';
 import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import { Order, ProductVariant } from '~/generated/graphql';
 
-import { useComputed$ } from '@qwik.dev/core';
+import { useComputed$ } from '@builder.io/qwik';
 import ProductVariantSelector from '~/components/products/ProductVariantSelector';
 import { APP_STATE } from '~/constants';
 import { addItemToOrderMutation } from '~/providers/shop/orders/order';

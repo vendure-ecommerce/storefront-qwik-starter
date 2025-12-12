@@ -1,4 +1,4 @@
-import { component$, useComputed$, useContext, useSignal } from '@qwik.dev/core';
+import { component$, useComputed$, useContext, useSignal } from '@builder.io/qwik';
 import { DocumentHead, routeLoader$ } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import Alert from '~/components/alert/Alert';

@@ -6,7 +6,7 @@ import {
 	useOn,
 	useStore,
 	useVisibleTask$,
-} from '@qwik.dev/core';
+} from '@builder.io/qwik';
 import { RequestHandler, routeLoader$ } from '@qwik.dev/router';
 import { ImageTransformerProps, useImageProvider } from 'qwik-image';
 import Menu from '~/components/menu/Menu';

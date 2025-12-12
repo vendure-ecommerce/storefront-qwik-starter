@@ -1,6 +1,6 @@
+import { qwikVite } from '@builder.io/qwik/optimizer';
 import { qwikRouter } from '@qwik.dev/router/vite';
-import { qwikVite } from '@qwik.dev/core/optimizer';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig(async (config) => {

@@ -5,7 +5,7 @@ import {
 	useContextProvider,
 	useStore,
 	useVisibleTask$,
-} from '@qwik.dev/core';
+} from '@builder.io/qwik';
 import { routeLoader$ } from '@qwik.dev/router';
 
 import {

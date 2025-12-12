@@ -1,4 +1,4 @@
-import { $, component$, useStore, useTask$ } from '@qwik.dev/core';
+import { $, component$, useStore, useTask$ } from '@builder.io/qwik';
 import { routeLoader$, useLocation } from '@qwik.dev/router';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';

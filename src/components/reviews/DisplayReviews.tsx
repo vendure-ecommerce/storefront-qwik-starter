@@ -1,4 +1,4 @@
-import { $, component$, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { $, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import GeneralListOptions from '~/components/common/GeneralListOptions';
 import { SortOrder } from '~/generated/graphql-shop';
 import { getProductReviewsQuery } from '~/providers/shop/orders/review';
@@ -10,15 +10,15 @@ interface TopReviewsV2Props {
 	productId: string;
 }
 
-function formatDate(dateStr?: string) {
-	if (!dateStr) return '';
-	const date = new Date(dateStr);
-	return date.toLocaleDateString('en-US', {
-		year: 'numeric',
-		month: 'short',
-		day: 'numeric',
-	});
-}
+// function formatDate(dateStr?: string) {
+// 	if (!dateStr) return '';
+// 	const date = new Date(dateStr);
+// 	return date.toLocaleDateString('en-US', {
+// 		year: 'numeric',
+// 		month: 'short',
+// 		day: 'numeric',
+// 	});
+// }
 
 const sortOptionMap: GeneralSelectOption = {
 	recent: {
@@ -128,7 +128,9 @@ export default component$<TopReviewsV2Props>(({ productId }) => {
 
 	useVisibleTask$(async ({ track }) => {
 		track(() => [page.value, rating.value, sortBy.value]);
-		await fetchAndSet();
+		if (rating.value && sortBy.value) {
+			await fetchAndSet();
+		}
 	});
 
 	const handleFilterChange = $(async () => {

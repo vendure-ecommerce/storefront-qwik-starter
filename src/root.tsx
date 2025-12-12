@@ -1,4 +1,4 @@
-import { $, component$, useOnDocument, useStyles$ } from '@qwik.dev/core';
+import { $, component$, useOnDocument, useStyles$ } from '@builder.io/qwik';
 import { QwikRouterProvider, RouterOutlet, ServiceWorkerRegister } from '@qwik.dev/router';
 import { Head } from './components/head/head';
 

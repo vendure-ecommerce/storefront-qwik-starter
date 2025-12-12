@@ -1,4 +1,12 @@
-import { $, component$, QRL, Signal, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import {
+	$,
+	component$,
+	QRL,
+	Signal,
+	useContext,
+	useSignal,
+	useVisibleTask$,
+} from '@builder.io/qwik';
 import { LuThumbsUp } from '@qwikest/icons/lucide';
 import { APP_STATE } from '~/constants';
 import { voteOnReviewMutation } from '~/providers/shop/orders/review';

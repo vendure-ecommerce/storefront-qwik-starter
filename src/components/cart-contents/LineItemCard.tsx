@@ -1,4 +1,4 @@
-import { $, component$, QRL, Signal, useSignal } from '@qwik.dev/core';
+import { $, component$, QRL, Signal, useSignal } from '@builder.io/qwik';
 import { Link } from '@qwik.dev/router';
 import { OrderLine } from '~/generated/graphql';
 import { slugToRoute } from '~/utils';

@@ -7,7 +7,7 @@ import {
 	useSignal,
 	useStore,
 	useVisibleTask$,
-} from '@qwik.dev/core';
+} from '@builder.io/qwik';
 import { useLocation, useNavigate } from '@qwik.dev/router';
 import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';

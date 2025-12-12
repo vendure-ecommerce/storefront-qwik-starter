@@ -1,4 +1,4 @@
-import { $, component$, useSignal } from '@qwik.dev/core';
+import { $, component$, useSignal } from '@builder.io/qwik';
 import { Link } from '@qwik.dev/router';
 import { PasswordInput } from '~/components/account/PasswordInput';
 import CheckIcon from '~/components/icons/CheckIcon';

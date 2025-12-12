@@ -1,4 +1,4 @@
-import { component$, useContext } from '@qwik.dev/core';
+import { component$, useContext } from '@builder.io/qwik';
 import { Link } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import CollectionCard from '~/components/collection-card/CollectionCard';

@@ -1,4 +1,4 @@
-import { component$, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { useLocation, useNavigate } from '@qwik.dev/router';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import { verifyCustomerAccountMutation } from '~/providers/shop/account/account';

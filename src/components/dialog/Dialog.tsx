@@ -1,4 +1,4 @@
-import { component$, Signal, Slot } from '@qwik.dev/core';
+import { component$, Signal, Slot } from '@builder.io/qwik';
 import CloseIcon from '../icons/CloseIcon';
 
 interface DialogProps {

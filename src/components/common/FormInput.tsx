@@ -1,4 +1,4 @@
-import { component$, Slot } from '@qwik.dev/core';
+import { component$, Slot } from '@builder.io/qwik';
 import { Action } from '@qwik.dev/router';
 
 interface FormInputProps<T extends Action<any, any, any>> {
@@ -24,7 +24,7 @@ interface FormInputProps<T extends Action<any, any, any>> {
  *
  * @example
  *
- * import {  component$ } from '@qwik.dev/core';
+ * import {  component$ } from '@builder.io/qwik';
  * import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
  * import FormInput from '~/utils/FormInput';
  *

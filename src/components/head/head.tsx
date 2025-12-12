@@ -1,4 +1,4 @@
-import { component$ } from '@qwik.dev/core';
+import { component$ } from '@builder.io/qwik';
 import { useDocumentHead, useLocation } from '@qwik.dev/router';
 import { DEFAULT_METADATA_TITLE } from '~/constants';
 import { generateDocumentHead } from '~/utils';

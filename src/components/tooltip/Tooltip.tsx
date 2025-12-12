@@ -1,4 +1,4 @@
-import { component$, Slot } from '@qwik.dev/core';
+import { component$, Slot } from '@builder.io/qwik';
 
 interface TooltipProps {
 	/** Text to show inside the tooltip */

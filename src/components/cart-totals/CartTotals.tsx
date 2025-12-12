@@ -1,4 +1,4 @@
-import { $, component$, Signal, useContext, useSignal } from '@qwik.dev/core';
+import { $, component$, Signal, useContext, useSignal } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
 import { removeCouponCodeMutation } from '~/providers/shop/orders/order';

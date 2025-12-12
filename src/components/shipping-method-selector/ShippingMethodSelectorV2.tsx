@@ -6,7 +6,7 @@ import {
 	useSignal,
 	useStore,
 	useVisibleTask$,
-} from '@qwik.dev/core';
+} from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
 import { CreateAddressInput, ShippingMethodQuote } from '~/generated/graphql';
 import { getEligibleShippingMethodsQuery } from '~/providers/shop/checkout/checkout';

@@ -146,79 +146,8 @@ The resulting language should match your browser language. You can also override
 
 ## Note
 
-- Connection to ship-api is defined in `src/raphql-wrapper` -> `baseUrl`, which was point to `.env`-> `VITE_VENDURE_PROD_URL` or `VITE_VENDURE_DEV_URL`
+- Connection to shop-api is defined in `src/raphql-wrapper` -> `baseUrl`, which was point to `.env`-> `VITE_VENDURE_PROD_URL` or `VITE_VENDURE_DEV_URL`
 
-## The setup for `node-canvas`
+## TODO
 
-(Legacy note as I am not using it anymore. The cusomizable image is generated in the client side now)
-In the past, I usd node-cavas to generate image for customizable product. The usage is to generate a canvas in server side (Note that usually canvas is generated at client side). As I could not find a good solution in qwik to generate canvas interactively at client side, I use node-canvas to generate the image in server side and then send the image to client side.
-
-Note that node-canas requires some native libraries to be installed on the server. You can find the installation instructions in the [node-canvas documentation](https://github.com/Automattic/node-canvas)
-
-For what I did, I run (on my Mac):
-
-```bash
-brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman python-setuptools
-```
-
-Then I installed the node-canvas package:
-
-```bash
-pnpm install node-canvas
-```
-
-```bash
-pnpm rebuild canvas
-```
-
-## Writing gql queries
-
-When you need to access database (query or mutation), you need to write a gql query. For example, I want to access a mutation `createOrRetrieveCustomNameTag`:
-
-1. Create file in `providers/shop` directory, e.g. `orders/customizable-order.ts`
-2. Write the gql query in the file, e.g.
-
-```typescript
-import gql from 'graphql-tag';
-gql`
-	mutation createOrRetrieveCustomNameTag($input: CreateCustomNameTagInput!) {
-		createOrRetrieveCustomNameTag(input: $input) {
-			... on CreateCustomNameTagError {
-				errorCode
-				message
-			}
-			... on CreateCustomNameTagSuccess {
-				customNameTagId
-			}
-		}
-	}
-`;
-```
-
-Note that variables type CreateCustomNameTagInput can already be found because it is in the shop-api. So you don't need to define the type here.
-
-3. Now you need to do the codegen by running the following command:
-
-```bash
-pnpm run generate
-```
-
-This will provide you the types for the query and mutation you just wrote. so you can use it in the `shopSdk`.
-For example, now you should have defined `CreateOrRetrieveCustomNameTagMutation` in the `./generated/graphql-shop.ts` file.
-
-4. Define the function to call the mutation in the same file, e.g. `src/providers/shop/orders/customizable-order.ts`:
-
-```typescript
-import gql from 'graphql-tag';
-import {
-	CreateCustomNameTagInput,
-	CreateOrRetrieveCustomNameTagMutation,
-} from '~/generated/graphql-shop';
-import { shopSdk } from '~/graphql-wrapper';
-
-export const createOrRetrieveCustomNameTagMutation = async (input: CreateCustomNameTagInput) => {
-	return shopSdk
-		.createOrRetrieveCustomNameTag({ input })
-		.then((res: CreateOrRetrieveCustomNameTagMutation) => res.createOrRetrieveCustomNameTag);
-};
-```
+- [ ] Using [fontsource](https://fontsource.org/docs/getting-started/introduction) to self-host fonts

@@ -1,4 +1,4 @@
-import { $, component$, useContext } from '@qwik.dev/core';
+import { $, component$, useContext } from '@builder.io/qwik';
 import { Link } from '@qwik.dev/router';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { logoutMutation } from '~/providers/shop/account/account';

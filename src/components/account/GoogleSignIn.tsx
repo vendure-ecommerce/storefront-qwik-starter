@@ -1,4 +1,4 @@
-import { $, component$, useOnDocument, useSignal } from '@qwik.dev/core';
+import { $, component$, useOnDocument, useSignal } from '@builder.io/qwik';
 import { useNavigate } from '@qwik.dev/router';
 import { authenticateMutation } from '~/providers/shop/account/account';
 

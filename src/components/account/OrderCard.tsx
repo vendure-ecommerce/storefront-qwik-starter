@@ -1,4 +1,4 @@
-import { component$ } from '@qwik.dev/core';
+import { component$ } from '@builder.io/qwik';
 import { useNavigate } from '@qwik.dev/router';
 import { Image } from 'qwik-image';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';

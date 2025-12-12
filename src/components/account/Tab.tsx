@@ -1,4 +1,4 @@
-import { Component, component$ } from '@qwik.dev/core';
+import { Component, component$ } from '@builder.io/qwik';
 import { Link } from '@qwik.dev/router';
 
 interface IProps {

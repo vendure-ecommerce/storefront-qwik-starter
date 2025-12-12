@@ -1,4 +1,4 @@
-import { $, component$, QRL, Slot } from '@qwik.dev/core';
+import { $, component$, QRL, Slot } from '@builder.io/qwik';
 import AnimatedSpinnerIcon from '../icons/AnimatedSpinnerIcon';
 
 type Props = {

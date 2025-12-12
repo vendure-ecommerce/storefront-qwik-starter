@@ -1,4 +1,4 @@
-import { component$, useComputed$, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { component$, useComputed$, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { APP_STATE, GUEST_ADDED_ADDRESS_ID } from '~/constants';
 import { Address } from '~/generated/graphql';
 import { getActiveCustomerAddressesQuery } from '~/providers/shop/customer/customer';

@@ -1,4 +1,4 @@
-import { $, component$, useContext, useSignal } from '@qwik.dev/core';
+import { $, component$, useContext, useSignal } from '@builder.io/qwik';
 import { Link, useNavigate } from '@qwik.dev/router';
 import { PasswordInput } from '~/components/account/PasswordInput';
 import XCircleIcon from '~/components/icons/XCircleIcon';

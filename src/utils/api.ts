@@ -1,4 +1,4 @@
-import { isBrowser } from '@qwik.dev/core/build';
+import { isBrowser } from '@builder.io/qwik/build';
 import { server$ } from '@qwik.dev/router';
 import type { DocumentNode } from 'graphql/index';
 import { print } from 'graphql/index';

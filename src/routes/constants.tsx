@@ -1,4 +1,4 @@
-import { createContextId } from '@qwik.dev/core';
+import { createContextId } from '@builder.io/qwik';
 import { FilamentColorFindSupportedQuery, FontMenuFindAllQuery } from '~/generated/graphql-shop';
 
 export interface DefaultOptionsForNameTag {

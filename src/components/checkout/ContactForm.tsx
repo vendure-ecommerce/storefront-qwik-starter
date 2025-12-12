@@ -1,4 +1,4 @@
-import { $, component$, QRL, Signal } from '@qwik.dev/core';
+import { $, component$, QRL, Signal } from '@builder.io/qwik';
 import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
 import FormInput from '~/components/common/FormInput';
 import { CUSTOMER_NOT_DEFINED_ID } from '~/constants';

@@ -1,4 +1,4 @@
-import { component$ } from '@qwik.dev/core';
+import { component$ } from '@builder.io/qwik';
 import { Link } from '@qwik.dev/router';
 import HomeIcon from '../icons/HomeIcon';
 import SlashIcon from '../icons/SlashIcon';

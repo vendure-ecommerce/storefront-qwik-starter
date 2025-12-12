@@ -1,4 +1,4 @@
-import { component$, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { ProductReviewHistogramItem } from '~/generated/graphql-shop';
 import { getReviewHistogramQuery } from '~/providers/shop/orders/review';
 import ReviewRatingStars from './ReviewRatingStars';

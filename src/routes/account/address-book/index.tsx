@@ -1,4 +1,4 @@
-import { component$, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import ShippingAddressCard from '~/components/account/ShippingAddressCard';
 import { AddressForm } from '~/components/address-form/AddressFormV2';
 import { HighlightedButton } from '~/components/buttons/HighlightedButton';

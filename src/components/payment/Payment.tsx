@@ -1,4 +1,4 @@
-import { $, component$, QRL, useContext, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { $, component$, QRL, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
 import {
 	addPaymentToOrderMutation,

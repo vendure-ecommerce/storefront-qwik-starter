@@ -1,4 +1,4 @@
-import { $, component$, useSignal, useStore, useVisibleTask$ } from '@qwik.dev/core';
+import { $, component$, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import type { ProductReviewRating, SearchResult } from '~/generated/graphql-shop';
 import { getReviewRatingsForProductsQuery } from '~/providers/shop/orders/review';
 import ProductCard from './ProductCard';

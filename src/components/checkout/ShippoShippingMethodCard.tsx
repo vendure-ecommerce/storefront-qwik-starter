@@ -1,4 +1,4 @@
-import { component$ } from '@qwik.dev/core';
+import { component$ } from '@builder.io/qwik';
 import { ShippingMethodQuote } from '~/generated/graphql';
 import { formatPrice } from '~/utils';
 import CheckCircleIcon from '../icons/CheckCircleIcon';

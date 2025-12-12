@@ -1,4 +1,4 @@
-import { component$, useContext } from '@qwik.dev/core';
+import { component$, useContext } from '@builder.io/qwik';
 import { APP_STATE } from '~/constants';
 import { ShippingAddress } from '~/types';
 

@@ -1,4 +1,4 @@
-import { component$, QRL, Signal } from '@qwik.dev/core';
+import { component$, QRL, Signal } from '@builder.io/qwik';
 import { NumberOperators, SortOrder, StringOperators } from '~/generated/graphql';
 /**
  * The key will be the selectedValue, and the label will be the display value

@@ -1,4 +1,4 @@
-import { $, component$, useStore, useTask$ } from '@qwik.dev/core';
+import { $, component$, useStore, useTask$ } from '@builder.io/qwik';
 import { DocumentHead, routeLoader$, useLocation } from '@qwik.dev/router';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CollectionCard from '~/components/collection-card/CollectionCard';

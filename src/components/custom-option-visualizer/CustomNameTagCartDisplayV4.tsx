@@ -1,4 +1,4 @@
-import { component$, ReadonlySignal, useSignal, useVisibleTask$ } from '@qwik.dev/core';
+import { component$, ReadonlySignal, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { genHash, getCustomizableOption } from '~/utils/customizable-order';
 import BuildCanvases from './BuildCanvases';
 import { BuildPlateVisualizerV4 } from './CustomVisualizerV4';

@@ -1,4 +1,4 @@
-import { component$, useContext } from '@qwik.dev/core';
+import { component$, useContext } from '@builder.io/qwik';
 
 import { useProductLoader } from '../layout';
 
@@ -10,7 +10,7 @@ import StockLevelLabel from '~/components/stock-level-label/StockLevelLabel';
 import { Order } from '~/generated/graphql';
 import { addItemToOrderMutation } from '~/providers/shop/orders/order';
 
-import { useComputed$, useSignal } from '@qwik.dev/core';
+import { useComputed$, useSignal } from '@builder.io/qwik';
 import ProductVariantSelector from '~/components/products/ProductVariantSelector';
 import { APP_STATE } from '~/constants';
 import { OrderLine } from '~/generated/graphql';

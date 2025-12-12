@@ -6,7 +6,7 @@ import {
 	useSignal,
 	useTask$,
 	useVisibleTask$,
-} from '@qwik.dev/core';
+} from '@builder.io/qwik';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import {
 	Address,

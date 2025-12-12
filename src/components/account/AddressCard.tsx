@@ -1,4 +1,4 @@
-import { $, component$, useContext } from '@qwik.dev/core';
+import { $, component$, useContext } from '@builder.io/qwik';
 import { useNavigate } from '@qwik.dev/router';
 import { APP_STATE } from '~/constants';
 import { deleteCustomerAddressMutation } from '~/providers/shop/customer/customer';

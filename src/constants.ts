@@ -1,4 +1,4 @@
-import { createContextId } from '@qwik.dev/core';
+import { createContextId } from '@builder.io/qwik';
 import { ENV_VARIABLES } from './env';
 import { AppState } from './types';
 
