@@ -1,5 +1,5 @@
 import { component$, Signal, Slot, useSignal } from '@builder.io/qwik';
-import { DocumentHead, routeLoader$ } from '@qwik.dev/router';
+import { DocumentHead, routeLoader$ } from '@builder.io/qwik-city';
 import { Image } from 'qwik-image';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import TopReviewsV2 from '~/components/reviews/DisplayReviews';

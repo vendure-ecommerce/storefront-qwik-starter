@@ -1,5 +1,5 @@
 import { $, component$, useContext, useSignal } from '@builder.io/qwik';
-import { Link } from '@qwik.dev/router';
+import { Link } from '@builder.io/qwik-city';
 import { PasswordInput } from '~/components/account/PasswordInput';
 import { ErrorMessage } from '~/components/error-message/ErrorMessage';
 import { APP_STATE } from '~/constants';

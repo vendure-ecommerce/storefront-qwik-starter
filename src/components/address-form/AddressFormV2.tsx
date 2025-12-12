@@ -1,5 +1,5 @@
 import { component$, QRL, Signal, useContext } from '@builder.io/qwik';
-import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
+import { Form, globalAction$, z, zod$ } from '@builder.io/qwik-city';
 import FormInput from '~/components/common/FormInput';
 import { APP_STATE, AUTH_TOKEN } from '~/constants';
 import { validateAddressByShippoQuery } from '~/providers/shop/account/account';

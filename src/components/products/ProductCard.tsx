@@ -1,5 +1,5 @@
 import { component$ } from '@builder.io/qwik';
-import { Link } from '@qwik.dev/router';
+import { Link } from '@builder.io/qwik-city';
 import { Image } from 'qwik-image';
 import { PriceRange, SinglePrice } from '~/generated/graphql-shop';
 import { slugToRoute } from '~/utils';

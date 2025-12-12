@@ -19,6 +19,7 @@ interface ProductRatingsMap {
 const runGetReviewRatingsForProductsQuery = $(
 	async (productIds: string[]): Promise<ProductRatingsMap | {}> => {
 		const res = await getReviewRatingsForProductsQuery(productIds);
+		if (!res) return {};
 		if (res.__typename === 'ProductReviewRatingList') {
 			const ratingsList: ProductReviewRating[] = res.items;
 			//
@@ -31,11 +32,11 @@ const runGetReviewRatingsForProductsQuery = $(
 			});
 
 			return ratingsMap;
+		} else if (res.__typename === 'GetReviewRatingsForProductsError') {
+			console.error('Error fetching review ratings for products:', (res as any).message);
+			return {};
 		} else {
-			console.error(
-				'Error fetching review ratings for products:',
-				res.__typename === 'GetReviewRatingsForProductsError' ? res.message : 'Unknown error'
-			);
+			console.error('Error fetching review ratings for products: Unknown error', res);
 			return {};
 		}
 	}

@@ -1,5 +1,5 @@
 import { $, component$, QRL, Signal } from '@builder.io/qwik';
-import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
+import { Form, globalAction$, z, zod$ } from '@builder.io/qwik-city';
 import FormInput from '~/components/common/FormInput';
 import { CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { ActiveCustomer } from '~/types';

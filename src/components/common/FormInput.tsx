@@ -1,5 +1,5 @@
 import { component$, Slot } from '@builder.io/qwik';
-import { Action } from '@qwik.dev/router';
+import { Action } from '@builder.io/qwik-city';
 
 interface FormInputProps<T extends Action<any, any, any>> {
 	name: string;
@@ -25,7 +25,7 @@ interface FormInputProps<T extends Action<any, any, any>> {
  * @example
  *
  * import {  component$ } from '@builder.io/qwik';
- * import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
+ * import { Form, globalAction$, z, zod$ } from '@builder.io/qwik-city';
  * import FormInput from '~/utils/FormInput';
  *
  * export const useContactFormAction = globalAction$(

@@ -1,5 +1,5 @@
 import { $, component$, useStore, useTask$ } from '@builder.io/qwik';
-import { routeLoader$, useLocation } from '@qwik.dev/router';
+import { routeLoader$, useLocation } from '@builder.io/qwik-city';
 import Filters from '~/components/facet-filter-controls/Filters';
 import FiltersButton from '~/components/filters-button/FiltersButton';
 import ProductsDisplay from '~/components/products/ProductsDisplay';

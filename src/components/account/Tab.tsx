@@ -1,5 +1,5 @@
 import { Component, component$ } from '@builder.io/qwik';
-import { Link } from '@qwik.dev/router';
+import { Link } from '@builder.io/qwik-city';
 
 interface IProps {
 	Icon: Component<{ class: string }>;

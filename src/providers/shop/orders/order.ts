@@ -11,8 +11,6 @@ import {
 	SetOrderShippingAddressMutation,
 	SetOrderShippingMethodMutation,
 	UpdateOrderInput,
-} from '~/generated/graphql';
-import {
 	ApplyCouponCodeMutation,
 	OrderLineCustomFieldsInput,
 	RemoveCouponCodeMutation,

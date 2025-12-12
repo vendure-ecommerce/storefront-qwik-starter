@@ -7,7 +7,7 @@ import {
 	useStore,
 	useVisibleTask$,
 } from '@builder.io/qwik';
-import { RequestHandler, routeLoader$ } from '@qwik.dev/router';
+import { RequestHandler, routeLoader$ } from '@builder.io/qwik-city';
 import { ImageTransformerProps, useImageProvider } from 'qwik-image';
 import Menu from '~/components/menu/Menu';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, IMAGE_RESOLUTIONS } from '~/constants';

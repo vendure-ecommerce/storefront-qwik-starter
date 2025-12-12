@@ -10,7 +10,12 @@
  * - https://vitejs.dev/config/preview-options.html#preview-options
  *
  */
-import { createQwikRouter } from '@qwik.dev/router/middleware/node';
+// Import the middleware as a namespace and access the router factory at runtime
+// to avoid TypeScript errors if the installed package's types don't include
+// the named export. We then fallback to `.default` as a last resort.
+import * as qwikCityNode from '@builder.io/qwik-city/middleware/node';
+const createQwikRouter: any =
+	(qwikCityNode as any).createQwikRouter ?? (qwikCityNode as any).default;
 import qwikCityPlan from '@qwik-city-plan';
 import render from './entry.ssr';
 

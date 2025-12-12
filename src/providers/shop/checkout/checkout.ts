@@ -11,7 +11,7 @@ import {
 	PaymentInput,
 	PaymentMethodQuote,
 	ShippingMethodQuote,
-} from '~/generated/graphql';
+} from '~/generated/graphql-shop';
 import { shopSdk } from '~/graphql-wrapper';
 
 export const getAvailableCountriesQuery = async () => {

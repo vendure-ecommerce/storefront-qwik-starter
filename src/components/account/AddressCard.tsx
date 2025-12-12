@@ -1,5 +1,5 @@
 import { $, component$, useContext } from '@builder.io/qwik';
-import { useNavigate } from '@qwik.dev/router';
+import { useNavigate } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import { deleteCustomerAddressMutation } from '~/providers/shop/customer/customer';
 import { ShippingAddress } from '~/types';

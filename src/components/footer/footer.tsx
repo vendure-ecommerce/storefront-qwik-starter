@@ -1,5 +1,5 @@
 import { component$, useContext } from '@builder.io/qwik';
-import { Link } from '@qwik.dev/router';
+import { Link } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import GitIcon from '../icons/GitIcon';
 

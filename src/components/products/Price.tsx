@@ -8,6 +8,7 @@ interface PriceProps {
 	currencyCode: CurrencyCode | string | undefined;
 	variantSig?: ReadonlySignal<ProductVariant | undefined>;
 	forcedClass?: string;
+	reviewStat?: { rating: number; reviewCount: number } | undefined;
 }
 
 export default component$<PriceProps>(

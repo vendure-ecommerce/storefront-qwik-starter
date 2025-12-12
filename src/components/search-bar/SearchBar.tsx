@@ -1,5 +1,5 @@
 import { $, component$, useSignal } from '@builder.io/qwik';
-import { useNavigate } from '@qwik.dev/router';
+import { useNavigate } from '@builder.io/qwik-city';
 import { LuSearch } from '@qwikest/icons/lucide';
 
 export default component$(() => {

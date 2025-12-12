@@ -6,7 +6,7 @@ import {
 	useStore,
 	useVisibleTask$,
 } from '@builder.io/qwik';
-import { routeLoader$ } from '@qwik.dev/router';
+import { routeLoader$ } from '@builder.io/qwik-city';
 
 import {
 	filamentColorFindSupported,

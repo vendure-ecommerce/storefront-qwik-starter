@@ -1,5 +1,5 @@
 import { component$, useContext } from '@builder.io/qwik';
-import { Link, useLocation } from '@qwik.dev/router';
+import { Link, useLocation } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import { isCheckoutPage } from '~/utils';
 import CartContents from '../cart-contents/CartContents';

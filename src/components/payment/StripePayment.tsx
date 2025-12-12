@@ -6,7 +6,7 @@ import {
 	useStore,
 	useVisibleTask$,
 } from '@builder.io/qwik';
-import { useLocation } from '@qwik.dev/router';
+import { useLocation } from '@builder.io/qwik-city';
 import { Stripe, StripeElements, loadStripe } from '@stripe/stripe-js';
 import { APP_STATE } from '~/constants';
 import { ENV_VARIABLES } from '~/env';

@@ -1,5 +1,5 @@
 import { isBrowser } from '@builder.io/qwik/build';
-import { server$ } from '@qwik.dev/router';
+import { server$ } from '@builder.io/qwik-city';
 import type { DocumentNode } from 'graphql/index';
 import { print } from 'graphql/index';
 import { AUTH_TOKEN, DEV_API, HEADER_AUTH_TOKEN_KEY, PROD_API } from '~/constants';

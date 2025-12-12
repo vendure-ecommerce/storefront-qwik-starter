@@ -1,5 +1,5 @@
 import { QRL, component$, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
-import { useLocation } from '@qwik.dev/router';
+import { useLocation } from '@builder.io/qwik-city';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
 import CheckCircleIcon from '~/components/icons/CheckCircleIcon';

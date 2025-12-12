@@ -1,5 +1,5 @@
 import { Slot, component$, useContext, useVisibleTask$ } from '@builder.io/qwik';
-import { useNavigate } from '@qwik.dev/router';
+import { useNavigate } from '@builder.io/qwik-city';
 import { TabsContainer } from '~/components/account/TabsContainer';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { fullNameWithTitle } from '~/utils';

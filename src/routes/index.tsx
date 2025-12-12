@@ -1,5 +1,5 @@
 import { component$, useContext } from '@builder.io/qwik';
-import { Link } from '@qwik.dev/router';
+import { Link } from '@builder.io/qwik-city';
 import { Image } from 'qwik-image';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import { APP_STATE, HOMEPAGE_IMAGE } from '~/constants';

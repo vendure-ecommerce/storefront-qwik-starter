@@ -1,5 +1,5 @@
 import { $, component$, QRL, useContext, useStore, useVisibleTask$ } from '@builder.io/qwik';
-import { useNavigate } from '@qwik.dev/router';
+import { useNavigate } from '@builder.io/qwik-city';
 import braintree from 'braintree-web-drop-in';
 import { APP_STATE } from '~/constants';
 import {

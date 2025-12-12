@@ -1,5 +1,5 @@
 import { component$, QRL, Signal, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
-import { Form, globalAction$, z, zod$ } from '@qwik.dev/router';
+import { Form, globalAction$, z, zod$ } from '@builder.io/qwik-city';
 import FormInput from '~/components/common/FormInput';
 import { APP_STATE } from '~/constants';
 import { isReviewAllowedQuery, submitProductReviewMutation } from '~/providers/shop/orders/review';

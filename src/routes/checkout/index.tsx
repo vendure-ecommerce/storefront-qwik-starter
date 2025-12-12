@@ -1,5 +1,5 @@
 import { $, component$, useContext, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
-import { useNavigate } from '@qwik.dev/router';
+import { useNavigate } from '@builder.io/qwik-city';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
 import SectionWithLabel from '~/components/common/SectionWithLabel';

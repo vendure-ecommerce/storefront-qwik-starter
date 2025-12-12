@@ -1,5 +1,5 @@
 import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
-import { useLocation, useNavigate } from '@qwik.dev/router';
+import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import XCircleIcon from '~/components/icons/XCircleIcon';
 import { updateCustomerEmailAddressMutation } from '~/providers/shop/account/account';
 

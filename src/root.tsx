@@ -1,5 +1,5 @@
 import { $, component$, useOnDocument, useStyles$ } from '@builder.io/qwik';
-import { QwikRouterProvider, RouterOutlet, ServiceWorkerRegister } from '@qwik.dev/router';
+import { QwikCityProvider, RouterOutlet, ServiceWorkerRegister } from '@builder.io/qwik-city';
 import { Head } from './components/head/head';
 
 import globalStyles from './global.css?inline';
@@ -16,12 +16,12 @@ export default component$(() => {
 	useOnDocument('qinit', $(useI18n));
 
 	return (
-		<QwikRouterProvider>
+		<QwikCityProvider>
 			<Head />
 			<body lang="en">
 				<RouterOutlet />
 				<ServiceWorkerRegister />
 			</body>
-		</QwikRouterProvider>
+		</QwikCityProvider>
 	);
 });

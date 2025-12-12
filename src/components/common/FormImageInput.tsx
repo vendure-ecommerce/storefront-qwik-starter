@@ -1,5 +1,5 @@
 import { $, component$, useSignal } from '@builder.io/qwik';
-import { Action } from '@qwik.dev/router';
+import { Action } from '@builder.io/qwik-city';
 import { LuTrash } from '@qwikest/icons/lucide';
 
 interface FormImageInputProps<T extends Action<any, any, any>> {

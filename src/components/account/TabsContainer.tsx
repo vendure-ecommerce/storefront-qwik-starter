@@ -1,5 +1,5 @@
 import { Slot, component$ } from '@builder.io/qwik';
-import { useLocation } from '@qwik.dev/router';
+import { useLocation } from '@builder.io/qwik-city';
 import HashtagIcon from '../icons/HashtagIcon';
 import MapPinIcon from '../icons/MapPinIcon';
 import ShoppingBagIcon from '../icons/ShoppingBagIcon';

@@ -72,6 +72,7 @@ export default component$<IProps>(({ onForward$ }) => {
 				lastName: customer.lastName,
 				emailAddress: customer.emailAddress,
 				phoneNumber: customer.phoneNumber ?? '',
+				upvoteReviewIds: [],
 			};
 		}
 		if (activeOrder?.shippingAddress) {

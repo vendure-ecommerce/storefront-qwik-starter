@@ -9,7 +9,7 @@ import {
 	useVisibleTask$,
 } from '@builder.io/qwik';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
-import { CreateAddressInput, CreateCustomerInput } from '~/generated/graphql';
+import { CreateAddressInput, CreateCustomerInput } from '~/generated/graphql-shop';
 import {
 	getActiveOrderQuery,
 	setCustomerForOrderMutation,
@@ -60,6 +60,7 @@ export default component$<IProps>(
 					lastName: customer.lastName,
 					emailAddress: customer.emailAddress,
 					phoneNumber: customer.phoneNumber ?? '',
+					upvoteReviewIds: [],
 				};
 			}
 			if (activeOrder?.shippingAddress) {

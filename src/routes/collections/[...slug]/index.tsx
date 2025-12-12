@@ -1,5 +1,5 @@
 import { $, component$, useStore, useTask$ } from '@builder.io/qwik';
-import { DocumentHead, routeLoader$, useLocation } from '@qwik.dev/router';
+import { DocumentHead, routeLoader$, useLocation } from '@builder.io/qwik-city';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import CollectionCard from '~/components/collection-card/CollectionCard';
 import Filters from '~/components/facet-filter-controls/Filters';
