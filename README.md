@@ -151,3 +151,22 @@ The resulting language should match your browser language. You can also override
 ## TODO
 
 - [ ] Using [fontsource](https://fontsource.org/docs/getting-started/introduction) to self-host fonts
+  - Utilize [Qwik's Glob Import & Dynamic Import](https://qwik.dev/docs/cookbook/glob-import/) for importing fonts dynamically
+
+## Maybe Useful tools
+
+In qwik's ecosystem, the [integrations](https://qwik.dev/docs/integrations) page lists some useful tools, such as:
+
+- Web Testing:
+  - [Playwright](https://playwright.dev/) - End-to-end testing framework to test your web applications across different browsers.
+  - [Cypress](https://www.cypress.io/) for Qwik - A JavaScript end-to-end testing framework.
+- WISYWIG Editor:
+  - [Storybook](https://storybook.js.org/) (free) for Qwik - An open-source tool for building UI components and pages in isolation.
+  - [Builder.io](https://www.builder.io/) - A no-code platform for building and managing web content visually.
+- CSS Frameworks:
+  - [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework for rapidly building custom user interfaces.
+  - [DaisyUI](https://daisyui.com/) - (free) A plugin for Tailwind CSS that provides a set of pre-designed components.
+  - [Styled Vanilla Extract]
+  - [Panda CSS]
+- Form Handling:
+  - [Modular Forms](https://modularforms.dev/) - A form library for building complex forms with ease in Qwik applications.
