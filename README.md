@@ -153,6 +153,14 @@ The resulting language should match your browser language. You can also override
 - [ ] Using [fontsource](https://fontsource.org/docs/getting-started/introduction) to self-host fonts
   - Utilize [Qwik's Glob Import & Dynamic Import](https://qwik.dev/docs/cookbook/glob-import/) for importing fonts dynamically
 
+## Storybook integration
+
+The project has [Storybook](https://storybook.js.org/) integrated for building and testing UI components in isolation.
+You can run `pnpm run storybook` to start it.
+
+- Note that if the component has element from Qwikcity, you need to use QwikCityMockProvider to wrap it.
+  - [See example](https://qwik.dev/docs/integrations/storybook/)
+
 ## Maybe Useful tools
 
 In qwik's ecosystem, the [integrations](https://qwik.dev/docs/integrations) page lists some useful tools, such as:
@@ -162,6 +170,7 @@ In qwik's ecosystem, the [integrations](https://qwik.dev/docs/integrations) page
   - [Cypress](https://www.cypress.io/) for Qwik - A JavaScript end-to-end testing framework.
 - WISYWIG Editor:
   - [Storybook](https://storybook.js.org/) (free) for Qwik - An open-source tool for building UI components and pages in isolation.
+    - [v] integrated: you can run `pnpm run storybook` to start it.
   - [Builder.io](https://www.builder.io/) - A no-code platform for building and managing web content visually.
 - CSS Frameworks:
   - [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework for rapidly building custom user interfaces.

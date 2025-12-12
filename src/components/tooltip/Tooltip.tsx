@@ -1,6 +1,6 @@
 import { component$, Slot } from '@builder.io/qwik';
 
-interface TooltipProps {
+export interface TooltipProps {
 	/** Text to show inside the tooltip */
 	text: string;
 	/** Additional classes to apply to the tooltip container */
