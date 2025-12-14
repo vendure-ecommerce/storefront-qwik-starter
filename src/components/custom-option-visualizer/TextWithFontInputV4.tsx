@@ -1,10 +1,8 @@
 // Qwik select references: https://qwikui.com/docs/headless/select/
 import { component$, QRL, useComputed$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
-import { LuType } from '@qwikest/icons/lucide';
+import { LuChevronLeft, LuPencilLine, LuType } from '@qwikest/icons/lucide';
 import { FontMenu } from '~/generated/graphql-shop';
 import { FONT_MENU } from '~/routes/constants';
-import GoPreviousIcon from '../icons/GoPreviousIcon';
-import PencilEditIcon from '../icons/PencilEditIcon';
 import { CONSTRAINTS } from './constants';
 
 /**
@@ -127,7 +125,7 @@ export default component$(
 								class={`btn btn-ghost btn-sm px-1 ${isTextValid.value ? '' : 'opacity-50 pointer-events-none'}`}
 								title="Close Text Input"
 							>
-								<GoPreviousIcon />
+								<LuChevronLeft class="w-5 h-5" />
 							</button>
 							<input
 								type="text"
@@ -159,7 +157,7 @@ export default component$(
 							title="Edit"
 							onClick$={() => (showInput.value = true)}
 						>
-							<PencilEditIcon />
+							<LuPencilLine class="w-5 h-5" />
 						</button>
 					)}
 					<div class="dropdown">
@@ -170,7 +168,7 @@ export default component$(
 							disabled={!isTextValid.value}
 							class={`btn btn-ghost btn-sm ${!isTextValid.value ? 'opacity-50 pointer-events-none' : ''}`}
 						>
-							<LuType class="w-5 h-5 border" />
+							<LuType class="w-5 h-5 border rounded-sm" />
 						</button>
 						<ul
 							tabIndex={-1}
@@ -212,9 +210,11 @@ export default component$(
 						</ul>
 					</div>
 				</div>
-				<div class={`text-error text-xs px-8 h-1 ${!isTextValid.value ? '' : 'hidden'}`}>
-					{invalidTextMessage.value || 'Invalid text input. Please correct it.'}
-				</div>
+				{!isTextValid.value && (
+					<div role="alert" class="alert alert-error alert-soft">
+						<span>{invalidTextMessage.value || 'Invalid text input. Please correct it.'}</span>
+					</div>
+				)}
 			</div>
 		);
 	}
