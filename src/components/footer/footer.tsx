@@ -92,12 +92,12 @@ export default component$(() => {
 								type="email"
 								autoComplete="email"
 								required
-								class="input-text"
+								class="input input-primary"
 								placeholder={$localize`Enter your email`}
 								aria-labelledby="email-subscription"
 							/>
 							<div class="mt-3 rounded-md sm:mt-0 sm:ml-3 sm:flex-shrink-0">
-								<button class="btn-primary" onClick$={() => {}}>
+								<button class="btn btn-sm" onClick$={() => {}}>
 									{$localize`Subscribe`}
 								</button>
 							</div>

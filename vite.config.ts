@@ -1,5 +1,6 @@
 import { qwikCity } from '@builder.io/qwik-city/vite';
 import { qwikVite } from '@builder.io/qwik/optimizer';
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
@@ -19,7 +20,7 @@ export default defineConfig(async (config) => {
 		build: {
 			sourcemap: config.mode === 'development',
 		},
-		plugins: [qwikCity(), qwikVite(), tsconfigPaths()],
+		plugins: [tailwindcss(), qwikCity(), qwikVite(), tsconfigPaths()],
 		preview: {
 			headers: {
 				'Cache-Control': 'public, max-age=600',

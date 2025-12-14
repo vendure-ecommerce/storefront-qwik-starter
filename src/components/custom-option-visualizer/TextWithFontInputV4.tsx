@@ -1,14 +1,12 @@
 // Qwik select references: https://qwikui.com/docs/headless/select/
-import { component$, useVisibleTask$ } from '@builder.io/qwik';
-
-import { Select } from '@qwik-ui/headless';
-import { QRL, useComputed$, useSignal } from '@builder.io/qwik';
+import { component$, QRL, useComputed$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { LuType } from '@qwikest/icons/lucide';
 import { FontMenu } from '~/generated/graphql-shop';
 import { FONT_MENU } from '~/routes/constants';
-import FontIcon from '../icons/FontIcon';
 import GoPreviousIcon from '../icons/GoPreviousIcon';
 import PencilEditIcon from '../icons/PencilEditIcon';
 import { CONSTRAINTS } from './constants';
+
 /**
  
  FONT_MENU type should be as follows:
@@ -98,13 +96,13 @@ export default component$(
 		onChange$,
 		onEligibilityChange$,
 	}: TextWithFontProps) => {
-		// const fontId = useSignal<string>(fontOptions[0].value); // This has to be a string to match the Select component's value type (Select.item.value), e.g. 'Crimson_Text__bold_italic'
 		const fontOptions = getFontOptions(fontMenu);
-		const fontId = useSignal<string>(defaultFontId); // This has to be a string to match the Select component's value type (Select.item.value), e.g. 'Crimson_Text__bold_italic'
+		const fontId = useSignal<string>(defaultFontId);
 		const text = useSignal<string>(defaultText);
 		const isTextValid = useSignal<boolean>(true);
 
 		const showInput = useSignal<boolean>(false);
+		// const showDropdown = useSignal<boolean>(false);
 		const invalidTextMessage = useSignal<string>('');
 		const selectedFontInfo = useComputed$(() => {
 			const raw_font_string = fontMenu.find((f) => f.id === fontId.value)?.additiveFontId;
@@ -121,12 +119,12 @@ export default component$(
 
 		return (
 			<div>
-				<div class="custom-input-container">
+				<div class="flex items-center gap-2">
 					{showInput.value ? (
 						<>
 							<button
 								onClick$={() => (showInput.value = false)}
-								class={`px-1 ${isTextValid.value ? '' : 'opacity-50 pointer-events-none'}`}
+								class={`btn btn-ghost btn-sm px-1 ${isTextValid.value ? '' : 'opacity-50 pointer-events-none'}`}
 								title="Close Text Input"
 							>
 								<GoPreviousIcon />
@@ -152,51 +150,71 @@ export default component$(
 									fontWeight: selectedFontInfo.value.fontWeight,
 									fontStyle: selectedFontInfo.value.fontStyle,
 								}}
-								class="custom-input-text"
+								class="input input-sm w-48"
 							/>
 						</>
 					) : (
-						<button title="Edit" onClick$={() => (showInput.value = true)}>
+						<button
+							class="btn btn-ghost btn-sm"
+							title="Edit"
+							onClick$={() => (showInput.value = true)}
+						>
 							<PencilEditIcon />
 						</button>
 					)}
-					<div
-						class={`px-1 flex item-center ${isTextValid.value ? '' : 'opacity-50 pointer-events-none'}`}
-					>
-						<Select.Root
-							bind:value={fontId}
-							onChange$={(newFontId: string) => {
-								onChange$(text.value, newFontId);
-							}}
+					<div class="dropdown">
+						<button
+							type="button"
+							aria-label="Select font"
+							aria-disabled={!isTextValid.value}
+							disabled={!isTextValid.value}
+							class={`btn btn-ghost btn-sm ${!isTextValid.value ? 'opacity-50 pointer-events-none' : ''}`}
 						>
-							<Select.Trigger class="select-trigger-button" title="Select Font">
-								<FontIcon />
-							</Select.Trigger>
-							<Select.Popover class="select-popover">
-								{fontOptions.map((option) => (
-									<Select.Item key={option.id} value={option.id} disabled={option.isDisabled}>
-										<Select.ItemLabel
-											class="select-item-label"
-											style={{
-												fontFamily: option.fontFamily,
-												fontWeight: 'normal',
-												fontStyle: option.fontStyle,
-											}}
-											title={option.name} // Show full name on hover
-										>
-											{text.value}
-										</Select.ItemLabel>
-									</Select.Item>
-								))}
-							</Select.Popover>
-						</Select.Root>
+							<LuType class="w-5 h-5 border" />
+						</button>
+						<ul
+							tabIndex={-1}
+							class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+						>
+							{fontOptions.map((option) => (
+								<li
+									key={option.id}
+									role="option"
+									tabIndex={0}
+									aria-selected={fontId.value === option.id}
+									class={`px-2 py-1 hover:bg-primary/10 cursor-pointer ${fontId.value === option.id ? 'bg-primary/20' : ''}`}
+									onClick$={() => {
+										fontId.value = option.id;
+										onChange$(text.value, option.id);
+										(document.activeElement as HTMLElement | null)?.blur();
+										// showDropdown.value = false;
+									}}
+									onKeyDown$={(e: any) => {
+										if (e.key === 'Enter' || e.key === ' ') {
+											fontId.value = option.id;
+											onChange$(text.value, option.id);
+											(document.activeElement as HTMLElement | null)?.blur();
+											// showDropdown.value = false;
+										}
+									}}
+								>
+									<span
+										style={{
+											fontFamily: option.fontFamily,
+											fontStyle: option.fontStyle,
+											fontWeight: option.fontWeight,
+										}}
+									>
+										{text.value}
+									</span>
+								</li>
+							))}
+						</ul>
 					</div>
 				</div>
-				{/* {!isTextValid.value && ( */}
-				<div class={`text-red-500 text-xs px-8 h-1 ${!isTextValid.value ? '' : 'w-0 opacity-0'}`}>
+				<div class={`text-error text-xs px-8 h-1 ${!isTextValid.value ? '' : 'hidden'}`}>
 					{invalidTextMessage.value || 'Invalid text input. Please correct it.'}
 				</div>
-				{/* )} */}
 			</div>
 		);
 	}
