@@ -19,7 +19,9 @@
 		forest,
 		luxury,
 		coffee dim,
-		night caramellatte lemonade;
+		night,
+		caramellatte,
+		lemonade;
 	/* themes: nord --default, coffee --prefersdark, all; */
 	root: ':root';
 	logs: true;

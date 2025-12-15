@@ -1,6 +1,4 @@
 import { QRL, Slot, component$ } from '@builder.io/qwik';
-import { Button } from '../buttons/Button';
-import { HighlightedButton } from '../buttons/HighlightedButton';
 import CheckIcon from '../icons/CheckIcon';
 import XMarkIcon from '../icons/XMarkIcon';
 
@@ -46,15 +44,15 @@ export const Modal = component$(({ title, open, iconBackground, onSubmit$, onCan
 						</div>
 						<div class="sm:bg-base-200 px-4 pb-3 sm:pt-3 sm:px-6 sm:flex sm:flex-row-reverse sm:gap-x-4 space-y-2 sm:space-y-0">
 							{onCancel$ && (
-								<Button onClick$={onCancel$}>
+								<button class="btn btn-neutral" onClick$={onCancel$}>
 									<XMarkIcon /> Cancel
-								</Button>
+								</button>
 							)}
 
 							{onSubmit$ && (
-								<HighlightedButton onClick$={onSubmit$}>
+								<button class="btn btn-primary" onClick$={onSubmit$}>
 									<CheckIcon /> Submit
-								</HighlightedButton>
+								</button>
 							)}
 						</div>
 					</div>

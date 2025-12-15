@@ -1,11 +1,11 @@
 import { component$, Signal, Slot, useSignal } from '@builder.io/qwik';
-import { routeLoader$ } from '@builder.io/qwik-city';
+import { DocumentHead, routeLoader$ } from '@builder.io/qwik-city';
 import { Image } from 'qwik-image';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import TopReviewsV2 from '~/components/reviews/DisplayReviews';
 import ReviewStats from '~/components/reviews/ReviewStats';
 import { getProductBySlug } from '~/providers/shop/products/products';
-import { cleanUpParams, isEnvVariableEnabled } from '~/utils';
+import { cleanUpParams, generateDocumentHead, isEnvVariableEnabled } from '~/utils';
 
 export const useProductLoader = routeLoader$(async ({ params }) => {
 	const { slug } = cleanUpParams(params);
@@ -134,12 +134,19 @@ export default component$(() => {
 	);
 });
 
-// export const head: DocumentHead = ({ resolveValue, url }) => {
-// 	const product = resolveValue(useProductLoader);
-// 	return generateDocumentHead(
-// 		url.href,
-// 		product.name,
-// 		product.description,
-// 		product.featuredAsset?.preview
-// 	);
-// };
+/**
+ * Head Export
+ * Although there is no file reference to this, it is used to set the document head for the product page.
+ * See https://qwik.dev/docs/pages/#head-export
+ * @param param0
+ * @returns
+ */
+export const head: DocumentHead = ({ resolveValue, url }) => {
+	const product = resolveValue(useProductLoader);
+	return generateDocumentHead(
+		url.href,
+		product.name,
+		product.description,
+		product.featuredAsset?.preview
+	);
+};

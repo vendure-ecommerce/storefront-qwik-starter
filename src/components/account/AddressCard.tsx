@@ -3,8 +3,6 @@ import { useNavigate } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import { deleteCustomerAddressMutation } from '~/providers/shop/customer/customer';
 import { ShippingAddress } from '~/types';
-import { Button } from '../buttons/Button';
-import { HighlightedButton } from '../buttons/HighlightedButton';
 import BillingAddressIcon from '../icons/BillingAddressIcon';
 import LocationIcon from '../icons/LocationIcon';
 import PencilIcon from '../icons/PencilIcon';
@@ -52,16 +50,17 @@ export default component$<IProps>(({ address }) => {
 					<h1 class="px-2 text-sm">{address.phoneNumber}</h1>
 				</div>
 				<div class="flex justify-around">
-					<HighlightedButton
+					<button
+						class="btn btn-neutral"
 						onClick$={() => {
 							navigate(`/account/address-book/${address.id}`);
 						}}
 					>
 						<PencilIcon /> &nbsp; Edit
-					</HighlightedButton>
-					<Button onClick$={onDelete$}>
+					</button>
+					<button class="btn btn-error" onClick$={onDelete$}>
 						<XCircleIcon /> &nbsp; Delete
-					</Button>
+					</button>
 				</div>
 				<div class="flex text-xs justify-between mt-4">
 					{address.defaultShippingAddress && (

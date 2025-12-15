@@ -1,8 +1,6 @@
 import { $, component$, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { isBrowser } from '@builder.io/qwik/build';
 import { Image } from 'qwik-image';
-import { Button } from '~/components/buttons/Button';
-import { HighlightedButton } from '~/components/buttons/HighlightedButton';
 import { ErrorMessage } from '~/components/error-message/ErrorMessage';
 import CheckIcon from '~/components/icons/CheckIcon';
 import PencilSquareIcon from '~/components/icons/PencilSquareIcon';
@@ -81,7 +79,7 @@ export default component$(() => {
 							</div>
 							<div class="absolute -bottom-12 right-0">
 								<button
-									class="hover:text-primary-700"
+									class="btn btm-neutral"
 									onClick$={() => {
 										isEditing.value = !isEditing.value;
 										if (isBrowser) {
@@ -229,22 +227,24 @@ export default component$(() => {
 						</div>
 
 						<div class="flex gap-x-4 mt-8">
-							<HighlightedButton
+							<button
+								class="btn btn-primary flex items-center justify-around"
 								onClick$={() => {
 									appState.customer = { ...appState.customer, ...update.customer };
 									updateCustomer();
 								}}
 							>
 								<CheckIcon /> &nbsp; Save
-							</HighlightedButton>
+							</button>
 
-							<Button
+							<button
+								class="btn btn-neutral flex items-center justify-around"
 								onClick$={() => {
 									isEditing.value = false;
 								}}
 							>
 								<XMarkIcon forcedClass="w-4 h-4" /> &nbsp; Cancel
-							</Button>
+							</button>
 						</div>
 					</div>
 				)}
