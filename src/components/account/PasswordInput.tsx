@@ -1,8 +1,6 @@
 import type { Signal } from '@builder.io/qwik';
 import { $, component$, useSignal } from '@builder.io/qwik';
-import CheckIcon from '~/components/icons/CheckIcon';
-import EyeIcon from '~/components/icons/EyeIcon';
-import EyeSlashIcon from '~/components/icons/EyeSlashIcon';
+import { LuEye, LuEyeOff, LuXCircle } from '@qwikest/icons/lucide';
 import { isStrongPassword } from '~/utils/ensure-strong-password';
 
 interface PasswordInputProps {
@@ -83,12 +81,21 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 	});
 
 	return (
-		<div>
-			<label>{props.label}</label>
-			<div class="mt-1 relative">
+		<label class="fieldset">
+			<span class="label flex">{props.label}</span>
+			<div class="flex relative">
 				<input
 					type={isPasswordVisible.value ? 'text' : 'password'}
+					class={`input
+						 ${
+								props.fieldValue.value.length < 1
+									? ''
+									: props.completeSignal.value
+										? 'input-success'
+										: 'input-error'
+							}`}
 					value={props.fieldValue.value}
+					maxLength={30}
 					required
 					onClick$={() => {
 						if (props.checkStrongPassword) {
@@ -115,32 +122,29 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 							props.completeSignal.value = true;
 						}
 					}}
-					class="appearance-none block w-full px-3 py-2 border  rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 				/>
-				{!props.withoutCompleteMark && props.completeSignal.value && (
-					<div class="absolute inset-y-0 right-6 pr-3 flex items-center">
-						<CheckIcon forcedClass="text-green-600 w-6 h-6" />
-					</div>
-				)}
 
 				<button
 					type="button"
-					class="absolute inset-y-0 right-0 pr-3 flex items-center group"
+					aria-label="Toggle password visibility"
+					class="btn text-base-content/60"
 					onClick$={() => {
 						isPasswordVisible.value = !isPasswordVisible.value;
 					}}
 				>
-					{isPasswordVisible.value ? <EyeSlashIcon /> : <EyeIcon />}
-					<span class="absolute bottom-full mb-1 hidden group-hover:block  text-white text-xs rounded py-1 px-2">
-						{isPasswordVisible.value ? 'Hide' : 'Show'}
-					</span>
+					{isPasswordVisible.value ? <LuEyeOff class="text-xl" /> : <LuEye class="text-xl" />}
 				</button>
 			</div>
-			{!isValid.value && !props.completeSignal.value && (
-				<div class="text-xs text-red-600 mt-2">
-					{invalidateMessages?.value.map((msg) => <p key={msg}>{msg}</p>)}
+			{!isValid.value && !props.completeSignal.value && props.fieldValue.value.length > 0 && (
+				<div role="alert" class="alert alert-error alert-soft flex flex-col text-left">
+					{invalidateMessages?.value.map((msg) => (
+						<div key={msg} class="flex gap-2 items-start w-full">
+							<LuXCircle class="mt-1" />
+							<p class="m-0">{msg}</p>
+						</div>
+					))}
 				</div>
 			)}
-		</div>
+		</label>
 	);
 });
