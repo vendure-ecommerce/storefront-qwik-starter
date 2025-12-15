@@ -1,10 +1,8 @@
 import { component$, useSignal } from '@builder.io/qwik';
-import { Select } from '@qwik-ui/headless';
 // import { FILAMENT_COLOR } from '~/routes/constants';
 import { QRL } from '@builder.io/qwik';
+import { LuBaseline, LuPaintBucket } from '@qwikest/icons/lucide';
 import { FilamentColor } from '~/generated/graphql-shop';
-import BackgroundColorIcon from '../icons/BackgroundColorIcon';
-import TextColorIcon from '../icons/TextColorIcon';
 
 /**
  FILAMENT_COLOR type should be as follows:
@@ -43,9 +41,8 @@ export default component$(
 		isBackgroundColor,
 		onChange$,
 	}: ColorSelectorProps) => {
-		// const FilamentColorSignal = useFilamentColor();
 		const selectedValue = useSignal<string>(defaultColorId || colorOptions[0].id);
-		// throw an error if the selectedValue is not in the FilamentColorSignal.value
+		// throw an error if the selectedValue is not in the provided colorOptions
 		if (!colorOptions.some((c) => c.id === selectedValue.value)) {
 			throw new Error(
 				`The default value "${selectedValue.value}" is not a valid filament color id!`
@@ -54,26 +51,46 @@ export default component$(
 
 		return (
 			<div class="custom-input-container px-2">
-				<Select.Root
-					bind:value={selectedValue}
-					onChange$={(newColorId: string) => {
-						onChange$(newColorId);
-					}}
-				>
-					<Select.Trigger class="select-trigger-button flex" title={fieldTitle || 'Select Color'}>
-						{isBackgroundColor ? <BackgroundColorIcon /> : <TextColorIcon />}
+				<div class="dropdown">
+					<button
+						type="button"
+						title={fieldTitle || 'Select Color'}
+						aria-label={fieldTitle || 'Select Color'}
+						class="btn btn-ghost btn-sm flex items-center gap-2"
+					>
+						{isBackgroundColor ? <LuPaintBucket class="w-5 h-5" /> : <LuBaseline class="w-5 h-5" />}
 						{colorTag(colorOptions.find((c) => c.id === selectedValue.value)!.hexCode)}
-					</Select.Trigger>
-					<Select.Popover class="select-color-popover">
+					</button>
+					<ul role="listbox" class="menu dropdown-content bg-base-100 rounded-box shadow-sm">
 						{colorOptions.map((color) => (
-							<Select.Item key={color.id} value={color.id} disabled={false}>
-								<Select.ItemLabel class="select-item-label" title={color.displayName}>
-									{colorTag(color.hexCode)}
-								</Select.ItemLabel>
-							</Select.Item>
+							<li
+								key={color.id}
+								role="option"
+								tabIndex={0}
+								aria-selected={selectedValue.value === color.id}
+								class={`
+									flex items-center gap-2 px-2 py-1 hover:bg-primary/10 cursor-pointer 
+									${selectedValue.value === color.id ? 'bg-primary/20' : ''}`}
+								onClick$={() => {
+									selectedValue.value = color.id;
+									onChange$(color.id);
+									(document.activeElement as HTMLElement | null)?.blur();
+								}}
+								onKeyDown$={(e: any) => {
+									if (e.key === 'Enter' || e.key === ' ') {
+										selectedValue.value = color.id;
+										onChange$(color.id);
+										(document.activeElement as HTMLElement | null)?.blur();
+									}
+								}}
+								title={color.displayName}
+							>
+								{colorTag(color.hexCode)}
+								{/* <span class="ml-2">{color.displayName}</span> */}
+							</li>
 						))}
-					</Select.Popover>
-				</Select.Root>
+					</ul>
+				</div>
 			</div>
 		);
 	}

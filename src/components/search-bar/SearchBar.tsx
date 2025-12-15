@@ -19,7 +19,7 @@ export default component$(() => {
 				bind:value={searchValue}
 				placeholder={$localize`Search`}
 				autoComplete="off"
-				class="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 flex-1"
+				class="input text-base-content block w-full sm:text-sm p-2 flex-1"
 				aria-label="Search products"
 				onKeyDown$={(e) => {
 					if (e.key === 'Enter') {
@@ -29,8 +29,8 @@ export default component$(() => {
 			/>
 			<button
 				onClick$={handleSearch}
-				class="ml-2 p-2 bg-primary-600 text-white rounded hover:bg-primary-700 disabled:opacity-50"
-				disabled={!searchValue.value}
+				class="btn btn-md p-1 ml-2 w-9 h-9"
+				// disabled={!searchValue.value}
 				aria-label="Search"
 			>
 				<LuSearch class="w-5 h-5" />

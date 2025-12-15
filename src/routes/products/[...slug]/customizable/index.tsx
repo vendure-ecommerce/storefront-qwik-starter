@@ -181,12 +181,14 @@ export default component$(() => {
 			<BuildCustomNameTagV4
 				filamentColors={FilamentColorSignal.value}
 				fontMenus={FontMenuSignal.value}
-				buildParams={buildParams}
 				onAtcEligibility$={$((allowed: boolean, reason: string) => {
 					atcEligibility.value = { allowed, reason };
 				})}
 				build_plates={buildPlates}
 				canvas_width_px={250}
+				onChange$={(buildParams: NameTagBuildParams) => {
+					buildParams = buildParams;
+				}}
 			/>
 		</>
 	);

@@ -2,15 +2,14 @@ import {
 	component$,
 	QRL,
 	useComputed$,
-	useContext,
 	useSignal,
+	useStore,
 	useVisibleTask$,
 } from '@builder.io/qwik';
 import ColorSelector from '~/components/custom-option-visualizer/ColorSelectorV4';
 import TextWithFontInput from '~/components/custom-option-visualizer/TextWithFontInputV4';
 import DarkModeIcon from '~/components/icons/DarkModeIcon';
 import { FilamentColor, FontMenu } from '~/generated/graphql-shop';
-import { DEFAULT_OPTIONS_FOR_NAME_TAG } from '~/routes/tmp2/layout';
 import BuildCanvases from './BuildCanvases';
 import { CONSTRAINTS } from './constants';
 import { BuildPlateVisualizerV4, NameTagBuildParams } from './CustomVisualizerV4';
@@ -27,25 +26,45 @@ type PartialFontMenu = Pick<
 interface BuildCustomNameTagProps {
 	filamentColors: PartialFilamentColor[]; // using useFilamentColor() for this (can only be used inside of routes folder)
 	fontMenus: PartialFontMenu[]; // using useFontMenu() for this (can only be used inside of routes folder)
-	buildParams: NameTagBuildParams;
+	// buildParams: NameTagBuildParams;
 	onAtcEligibility$: QRL<(allowed: boolean, disabled_reason: string) => void>;
 	build_plates: { top: boolean; bottom: boolean }; // Whether to build the top plate
 	canvas_width_px?: number; // Width of the canvas in pixels
+	onChange$: QRL<(buildParams: NameTagBuildParams) => void>;
 }
 
 export default component$(
 	({
 		filamentColors,
 		fontMenus,
-		buildParams,
 		onAtcEligibility$,
 		canvas_width_px = 250,
 		build_plates,
+		onChange$,
 	}: BuildCustomNameTagProps) => {
 		const top_canvas_id = 'canvas_top';
 		const bottom_canvas_id = 'canvas_bottom';
 
-		const defaultOptionsForNameTag = useContext(DEFAULT_OPTIONS_FOR_NAME_TAG);
+		// const defaultOptionsForNameTag = useContext(DEFAULT_OPTIONS_FOR_NAME_TAG);
+		const defaultOptionsForNameTag = {
+			primaryColorId: filamentColors[0].id,
+			baseColorId: filamentColors[1].id,
+			isTopAdditive: true,
+			textTop: 'Hello',
+			textBottom: 'World',
+			fontIdTop: fontMenus[0].id,
+			fontIdBottom: fontMenus[0].id,
+		};
+
+		const buildParams = useStore<NameTagBuildParams>({
+			text_top: defaultOptionsForNameTag.textTop,
+			text_bottom: defaultOptionsForNameTag.textBottom,
+			font_id_top: defaultOptionsForNameTag.fontIdTop,
+			font_id_bottom: defaultOptionsForNameTag.fontIdBottom,
+			primary_color_id: defaultOptionsForNameTag.primaryColorId,
+			base_color_id: defaultOptionsForNameTag.baseColorId,
+			is_top_additive: defaultOptionsForNameTag.isTopAdditive,
+		});
 		const is_top_text_valid = useSignal<boolean>(true);
 		const is_bottom_text_valid = useSignal<boolean>(true);
 		const is_build_valid = useSignal<boolean>(true);
@@ -85,6 +104,7 @@ export default component$(
 				});
 				boardWidth_cm.value = buildResult.boardWidth_cm;
 				is_build_valid.value = buildResult.valid;
+				onChange$(buildParams);
 			}
 		});
 
@@ -122,10 +142,10 @@ export default component$(
 			<>
 				<div>
 					<div
-						class={`border-2 border-gray-500 bg-gray-200 rounded-lg h-auto p-0 w-fit`}
+						class={`border-2 rounded-lg h-auto p-0 w-fit`}
 						// style={{ width: `${canvas_width_px}px` }}
 					>
-						<div class="flex">
+						<div class="flex bg-base-300 p-2 rounded-t-lg">
 							<ColorSelector
 								fieldTitle="Primary Color"
 								colorOptions={filamentColors}
@@ -147,7 +167,7 @@ export default component$(
 							{build_plates.top && (
 								<button
 									title="Change Top Plate style"
-									class="mx-2 my-1 select-trigger-button"
+									class="btn btn-ghost btn-sm ml-2"
 									onClick$={() => {
 										buildParams.is_top_additive = !buildParams.is_top_additive;
 									}}
@@ -156,7 +176,7 @@ export default component$(
 								</button>
 							)}
 						</div>
-						<div class="bg-white rounded-b-lg flex">
+						<div class="rounded-b-lg flex">
 							<BuildCanvases
 								topCanvasInfo={{
 									canvasRef: canvas_top,
@@ -170,13 +190,12 @@ export default component$(
 								}}
 								canvas_width_px={canvas_width_px}
 							>
-								<div class="text-center text-sm text-gray-500">
+								<div class="text text-center text-sm">
 									Board width (estimated): {boardWidth_cm.value} cm
 									{!is_build_valid.value && (
-										<span class="text-red-500">
-											{' '}
+										<div role="alert" class="alert alert-error alert-soft text-sm">
 											(Error: build exceeds {CONSTRAINTS.maxPlateWidth} cm)
-										</span>
+										</div>
 									)}
 								</div>
 							</BuildCanvases>
@@ -185,7 +204,7 @@ export default component$(
 									<TextWithFontInput
 										fontMenu={fontMenus}
 										defaultText={defaultOptionsForNameTag.textTop}
-										defaultFontId={defaultOptionsForNameTag.fontId}
+										defaultFontId={defaultOptionsForNameTag.fontIdTop}
 										onChange$={(newText: string, newFontId: string) => {
 											buildParams.text_top = newText;
 											buildParams.font_id_top = newFontId;
@@ -199,7 +218,7 @@ export default component$(
 									<TextWithFontInput
 										fontMenu={fontMenus}
 										defaultText={defaultOptionsForNameTag.textBottom}
-										defaultFontId={defaultOptionsForNameTag.fontId}
+										defaultFontId={defaultOptionsForNameTag.fontIdBottom}
 										onChange$={(newText: string, newFontId: string) => {
 											buildParams.text_bottom = newText;
 											buildParams.font_id_bottom = newFontId;

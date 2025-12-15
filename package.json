@@ -1,5 +1,5 @@
 {
-	"name": "storefront-qwik-starter",
+	"name": "ddiligence-front-qwik",
 	"description": "A headless commerce storefront starter kit built with Vendure & Qwik",
 	"homepage": "https://qwik.builder.io/",
 	"license": "",
@@ -66,7 +66,7 @@
 		"prettier": "3.2.5",
 		"pretty-quick": "^4.0.0",
 		"storybook": "^8.2.8",
-		"storybook-framework-qwik": "^0.4.0",
+		"storybook-framework-qwik": "^0.4.3",
 		"typescript": "5.3.3",
 		"undici": "6.6.2",
 		"vite": "5.4.6",

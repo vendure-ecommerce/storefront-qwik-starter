@@ -3,7 +3,27 @@
 @tailwind utilities; */
 
 @import 'tailwindcss';
-@plugin 'daisyui';
+
+@plugin 'daisyui' {
+	themes:
+		nord --default,
+		coffee --prefersdark,
+		light,
+		dark,
+		cupcake,
+		dracula,
+		retro,
+		valentine,
+		synthwave,
+		aqua,
+		forest,
+		luxury,
+		coffee dim,
+		night caramellatte lemonade;
+	/* themes: nord --default, coffee --prefersdark, all; */
+	root: ':root';
+	logs: true;
+}
 
 /* @layer components {
 	.btn-primary {
