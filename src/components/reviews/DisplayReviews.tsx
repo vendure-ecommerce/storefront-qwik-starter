@@ -168,7 +168,7 @@ export default component$<TopReviewsV2Props>(({ productId }) => {
 				) : reviews.value.length === 0 ? (
 					<div class="py-8 text-center ">{$localize`No reviews yet.`}</div>
 				) : (
-					<div class="mt-6 pb-10 border-gray-200 divide-y divide-gray-200 space-y-10">
+					<div class="mt-6 pb-10  divide-y divide-gray-200 space-y-10">
 						{reviews.value.map((review) => (
 							<ReviewCard key={review.id} review={review} />
 						))}

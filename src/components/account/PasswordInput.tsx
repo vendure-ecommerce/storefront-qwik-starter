@@ -115,7 +115,7 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 							props.completeSignal.value = true;
 						}
 					}}
-					class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+					class="appearance-none block w-full px-3 py-2 border  rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 				/>
 				{!props.withoutCompleteMark && props.completeSignal.value && (
 					<div class="absolute inset-y-0 right-6 pr-3 flex items-center">
@@ -131,7 +131,7 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 					}}
 				>
 					{isPasswordVisible.value ? <EyeSlashIcon /> : <EyeIcon />}
-					<span class="absolute bottom-full mb-1 hidden group-hover:block bg-gray-700 text-white text-xs rounded py-1 px-2">
+					<span class="absolute bottom-full mb-1 hidden group-hover:block  text-white text-xs rounded py-1 px-2">
 						{isPasswordVisible.value ? 'Hide' : 'Show'}
 					</span>
 				</button>

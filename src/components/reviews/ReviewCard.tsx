@@ -46,7 +46,7 @@ export default component$<ReviewCardProps>(({ review }) => {
 	const upvotes = useSignal<number>(review.upvotes);
 
 	return (
-		<div class="pt-10 lg:grid lg:grid-cols-12 lg:gap-x-8 border-t border-gray-200">
+		<div class="pt-10 lg:grid lg:grid-cols-12 lg:gap-x-8 border-t ">
 			<div
 				class={`mt-6 flex text-sm 
 					lg:mt-0 lg:col-start-1 lg:col-span-3 lg:row-start-1 lg:flex-col lg:items-start 
@@ -60,19 +60,16 @@ export default component$<ReviewCardProps>(({ review }) => {
 					))}
 				</div>
 				<p class="font-medium ">{review.authorName}</p>
-				<time
-					dateTime={review.createdAt}
-					class="ml-4 border-gray-200 pl-4 lg:ml-0 lg:mt-2 lg:border-0 lg:pl-0"
-				>
+				<time dateTime={review.createdAt} class="ml-4  pl-4 lg:ml-0 lg:mt-2 lg:border-0 lg:pl-0">
 					{formatDate(review.createdAt)}
 				</time>
 				{review.authorLocation && (
-					<span class="ml-4 border-gray-200 pl-4 lg:ml-0 lg:mt-2 lg:border-0 lg:pl-0">
+					<span class="ml-4  pl-4 lg:ml-0 lg:mt-2 lg:border-0 lg:pl-0">
 						{review.authorLocation}
 					</span>
 				)}
 				{review.productVariant?.name && (
-					<span class="mt-2 pl-2 pr-2 border rounded-xl bg-gray-200 border-gray-500 text-xs">
+					<span class="mt-2 pl-2 pr-2 border rounded-xl   text-xs">
 						{review.productVariant?.name}
 					</span>
 				)}
@@ -88,7 +85,7 @@ export default component$<ReviewCardProps>(({ review }) => {
 					<div class="mt-3 space-y-2 text-sm ">
 						<p>{review.body}</p>
 						{review.response && (
-							<div class="mt-3 p-3 bg-gray-50 border border-gray-200 rounded-lg text-xs">
+							<div class="mt-3 p-3  border  rounded-lg text-xs">
 								<h2 class="text-xs font-medium mr-2 mb-2">{$localize`Response`}:</h2>
 								{review.response}
 								<time dateTime={review.responseCreatedAt || undefined} class="block mt-1 ">

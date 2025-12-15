@@ -165,7 +165,7 @@ export default component$(() => {
 									onInput$={(_, el) => {
 										update.customer.title = el.value;
 									}}
-									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+									class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
 
@@ -181,7 +181,7 @@ export default component$(() => {
 											update.customer.firstName = el.value;
 										}
 									}}
-									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+									class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
 							<div>
@@ -196,7 +196,7 @@ export default component$(() => {
 											update.customer.lastName = el.value;
 										}
 									}}
-									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+									class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
 							<div>
@@ -209,7 +209,7 @@ export default component$(() => {
 											newEmail.value = el.value;
 										}
 									}}
-									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+									class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
 
@@ -221,7 +221,7 @@ export default component$(() => {
 									onChange$={(_, el) => {
 										update.customer.phoneNumber = el.value;
 									}}
-									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+									class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
 						</div>

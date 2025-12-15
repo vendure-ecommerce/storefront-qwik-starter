@@ -18,7 +18,7 @@ export const Modal = component$(({ title, open, iconBackground, onSubmit$, onCan
 			role="dialog"
 			aria-modal="true"
 		>
-			<div class="fixed inset-0 bg-gray-500 bg-opacity-75"></div>
+			<div class="fixed inset-0  bg-opacity-75"></div>
 
 			<div class="fixed z-10 inset-0 overflow-y-auto">
 				<div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">

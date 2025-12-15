@@ -43,7 +43,7 @@ export default component$<Props>(
 
 		return (
 			<li key={line.id} class="py-6 flex">
-				<div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden flex justify-center items-center">
+				<div class="flex-shrink-0 w-24 h-24 border  rounded-md overflow-hidden flex justify-center items-center">
 					<ItemPreview
 						filamentColorSignal={filamentColorSignal}
 						fontMenuSignal={fontMenuSignal}
@@ -81,7 +81,7 @@ export default component$<Props>(
 									onChange$={(_, el) =>
 										onQuantityChange$ && onQuantityChange$!.call(undefined, line.id, +el.value)
 									}
-									class="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+									class="max-w-full rounded-md border  py-1.5 text-base leading-5 font-medium text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								>
 									{[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
 										<option key={num} value={num} selected={line.quantity === num}>

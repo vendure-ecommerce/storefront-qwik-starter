@@ -23,9 +23,7 @@ export default component$<Props>(({ order }) => {
 
 					<div class="flex items-center gap-x-2">
 						{$localize`Status:`}
-						<span class="font-semibold bg-white border border-gray-300 rounded-lg px-2 py-1">
-							{order?.state}
-						</span>
+						<span class="font-semibold bg-white border  rounded-lg px-2 py-1">{order?.state}</span>
 					</div>
 
 					<div class="flex items-center gap-x-2">

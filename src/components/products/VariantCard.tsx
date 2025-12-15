@@ -17,9 +17,7 @@ export default component$(({ variantName, preview, productName }: VariantCardPro
 				alt={`Image of: ${productName}`}
 			/>
 			<h2 class="text-2xl font-semibold mt-5 mb-3">{productName}</h2>
-			<h3 class="text-sm border rounded-md p-1 w-fit font-medium mb-4 hover:bg-gray-100">
-				{variantName}
-			</h3>
+			<h3 class="text-sm border rounded-md p-1 w-fit font-medium mb-4 ">{variantName}</h3>
 		</>
 	);
 });

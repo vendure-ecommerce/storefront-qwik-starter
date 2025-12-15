@@ -4,26 +4,20 @@ export type StockLevel = 'IN_STOCK' | 'OUT_OF_STOCK' | 'LOW_STOCK';
 
 export default component$<{ stockLevel?: string }>(({ stockLevel }) => {
 	let stockLevelLabel = '';
-	let badgeClasses = 'bg-base-200 text-base-content';
+	let badgeClasses = '';
 	switch (stockLevel as StockLevel) {
 		case 'IN_STOCK':
 			stockLevelLabel = $localize`In stock`;
-			badgeClasses = 'bg-green-100 text-green-800';
+			badgeClasses = 'badge-success';
 			break;
 		case 'OUT_OF_STOCK':
 			stockLevelLabel = $localize`Out of stock`;
-			badgeClasses = 'bg-red-100 text-red-800';
+			badgeClasses = 'badge-error';
 			break;
 		case 'LOW_STOCK':
 			stockLevelLabel = $localize`Low stock`;
-			badgeClasses = 'bg-yellow-100 text-yellow-800';
+			badgeClasses = 'badge-warning';
 			break;
 	}
-	return (
-		<span
-			class={'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ' + badgeClasses}
-		>
-			{stockLevelLabel}
-		</span>
-	);
+	return <div class={'badge badge-outline ' + badgeClasses}>{stockLevelLabel}</div>;
 });

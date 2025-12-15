@@ -16,7 +16,7 @@ export default component$(() => {
 			{appState.showCart && (
 				<div class="fixed inset-0 overflow-hidden z-20">
 					<div class="absolute inset-0 overflow-hidden">
-						<div class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity opacity-100"></div>
+						<div class="absolute inset-0  bg-opacity-75 transition-opacity opacity-100"></div>
 						<div class="fixed inset-y-0 right-0 pl-10 max-w-full flex">
 							<div class="w-screen max-w-md translate-x-0">
 								<div class="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
@@ -45,7 +45,7 @@ export default component$(() => {
 										</div>
 									</div>
 									{appState.activeOrder?.totalQuantity && isInEditableUrl && (
-										<div class="border-t border-gray-200 py-6 px-4 sm:px-6">
+										<div class="border-t  py-6 px-4 sm:px-6">
 											<div class="flex justify-between text-base font-medium ">
 												<p>{$localize`Subtotal`}</p>
 												<p>

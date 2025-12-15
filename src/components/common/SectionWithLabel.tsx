@@ -10,9 +10,7 @@ interface IProps {
 
 export default component$((props: IProps) => {
 	return (
-		<div
-			class={`${props.topBorder ? 'mt-5 border-t pt-3' : ''} border-gray-200 ${props.extraClass}`}
-		>
+		<div class={`${props.topBorder ? 'mt-5 border-t pt-3' : ''}  ${props.extraClass}`}>
 			{props.label && <h2 class={`text-lg font-medium ${props.labelClass}`}>{props.label}</h2>}
 			{props.description && <p class="mt-1 text-sm ">{props.description}</p>}
 			<div class="mt-3">

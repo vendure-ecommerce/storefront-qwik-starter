@@ -85,14 +85,14 @@ export default component$<ImageGalleryProps>(({ assets }) => {
 						{/* Close Button */}
 						<button
 							onClick$={closeImage}
-							class="absolute top-4 right-4 bg-white rounded-full p-2 hover:bg-gray-100 z-10"
+							class="absolute top-4 right-4 bg-white rounded-full p-2  z-10"
 							aria-label="Close image"
 						>
 							<LuX class="w-6 h-6" />
 						</button>
 
 						{/* Main Image */}
-						<div class="flex items-center justify-center bg-gray-100 p-4">
+						<div class="flex items-center justify-center  p-4">
 							<img
 								src={selectedImage.value.preview}
 								alt="Enlarged review image"
@@ -109,7 +109,7 @@ export default component$<ImageGalleryProps>(({ assets }) => {
 							<button
 								onClick$={prevImage}
 								disabled={selectedImageIndex.value === 0}
-								class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+								class="px-4 py-2  rounded  disabled:opacity-50 disabled:cursor-not-allowed"
 								aria-label="Previous image"
 							>
 								← Previous
@@ -124,7 +124,7 @@ export default component$<ImageGalleryProps>(({ assets }) => {
 							<button
 								onClick$={nextImage}
 								disabled={selectedImageIndex.value === assets.length - 1}
-								class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+								class="px-4 py-2  rounded  disabled:opacity-50 disabled:cursor-not-allowed"
 								aria-label="Next image"
 							>
 								Next →

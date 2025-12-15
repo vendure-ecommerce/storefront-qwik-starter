@@ -39,7 +39,7 @@ export default component$(() => {
 							placeholder={$localize`Enter a coupon code`}
 							value={couponCodeSignal.value}
 							onInput$={(_, el) => (couponCodeSignal.value = el.value)}
-							class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+							class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							required
 						/>
 						<HighlightedButton>{$localize`Apply`}</HighlightedButton>

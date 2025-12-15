@@ -23,7 +23,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 								name="fullName"
 								value={shippingAddress.fullName}
 								autoComplete="given-name"
-								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+								class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								onChange$={(_, el) => {
 									appState.shippingAddress = {
 										...appState.shippingAddress,
@@ -44,7 +44,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 								name="company"
 								id="company"
 								value={shippingAddress.company}
-								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+								class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								onChange$={(_, el) => {
 									appState.shippingAddress = {
 										...appState.shippingAddress,
@@ -72,7 +72,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 										streetLine1: el.value,
 									};
 								}}
-								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+								class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							/>
 						</div>
 					</div>
@@ -87,7 +87,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 								name="streetLine2"
 								id="streetLine2"
 								value={shippingAddress.streetLine2}
-								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+								class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								onChange$={(_, el) => {
 									appState.shippingAddress = {
 										...appState.shippingAddress,
@@ -109,7 +109,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 								id="city"
 								autoComplete="address-level2"
 								value={shippingAddress.city}
-								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+								class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								onChange$={(_, el) => {
 									appState.shippingAddress = { ...appState.shippingAddress, city: el.value };
 								}}
@@ -127,7 +127,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 									id="countryCode"
 									name="countryCode"
 									value={shippingAddress.countryCode}
-									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+									class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 									onChange$={(_, el) => {
 										appState.shippingAddress = {
 											...appState.shippingAddress,
@@ -166,7 +166,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 										province: el.value,
 									};
 								}}
-								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+								class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							/>
 						</div>
 					</div>
@@ -188,7 +188,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 										postalCode: el.value,
 									};
 								}}
-								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+								class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							/>
 						</div>
 					</div>
@@ -210,7 +210,7 @@ export default component$<IProps>(({ shippingAddress }) => {
 										phoneNumber: el.value,
 									};
 								}}
-								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+								class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							/>
 						</div>
 					</div>

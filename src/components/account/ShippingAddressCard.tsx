@@ -65,7 +65,7 @@ export default component$<IProps>(
 						<div class="flex-1" />
 						{allowEdit && (
 							<button
-								class="mr-1 rounded hover:bg-gray-20"
+								class="mr-1 rounded "
 								onClick$={() => {
 									openEditForm.value = true;
 								}}

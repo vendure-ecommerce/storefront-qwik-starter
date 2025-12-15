@@ -54,7 +54,7 @@ export default component$<ReviewStatsProps>(({ productId, reviewCount, averageRa
 									</div>
 
 									{/* Progress Bar with Tooltip */}
-									<div class="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden relative group">
+									<div class="flex-1  rounded-full h-2 overflow-hidden relative group">
 										<div
 											class="bg-yellow-400 h-full rounded-full transition-all duration-300"
 											style={{ width: `${percentage}%` }}

@@ -22,7 +22,7 @@ export default component$<{
 			<div>
 				<div class="hidden lg:block">
 					{_facetsWithValues.map((facet: FacetWithValues) => (
-						<div key={facet.id} class="border-b border-gray-200 py-6">
+						<div key={facet.id} class="border-b  py-6">
 							<h3 class="-my-3 flow-root">
 								<button
 									class="py-3 bg-white w-full flex items-center justify-between text-sm "
@@ -46,7 +46,7 @@ export default component$<{
 											<div key={value.id} class="flex items-center cursor-pointer">
 												<label class="text-sm ">
 													<input
-														class="h-4 w-4 border-gray-300 rounded text-primary-600 focus:ring-primary-500 cursor-pointer"
+														class="h-4 w-4  rounded text-primary-600 focus:ring-primary-500 cursor-pointer"
 														type="checkbox"
 														checked={value.selected}
 														onClick$={() => onFilterChange$(value.id)}
@@ -79,9 +79,9 @@ export default component$<{
 										<CloseIcon />
 									</button>
 								</div>
-								<form class="mt-4 border-t border-gray-200">
+								<form class="mt-4 border-t ">
 									{_facetsWithValues.map((facet) => (
-										<div key={facet.id} class="border-t border-gray-200 px-4 py-6">
+										<div key={facet.id} class="border-t  px-4 py-6">
 											<h3 class="-mx-2 -my-3 flow-root">
 												<button
 													class="px-2 py-3 bg-white w-full flex items-center justify-between "
@@ -104,7 +104,7 @@ export default component$<{
 														{facet.values.map((value) => (
 															<div key={value.id} class="flex items-center cursor-pointer">
 																<input
-																	class="h-4 w-4 border-gray-300 rounded text-primary-600 focus:ring-primary-500 cursor-pointer"
+																	class="h-4 w-4  rounded text-primary-600 focus:ring-primary-500 cursor-pointer"
 																	type="checkbox"
 																	checked={value.selected}
 																	onClick$={() => onFilterChange$(value.id)}

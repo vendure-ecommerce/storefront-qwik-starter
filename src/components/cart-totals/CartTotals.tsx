@@ -64,7 +64,7 @@ export default component$<{
 					))}
 				</div>
 			)}
-			<div class="flex items-center justify-between border-t border-gray-200 pt-6">
+			<div class="flex items-center justify-between border-t  pt-6">
 				<dt class="text-base font-medium">{$localize`Total`}</dt>
 				<CartPrice order={order} field={'totalWithTax'} forcedClass="text-sm font-medium " />
 			</div>

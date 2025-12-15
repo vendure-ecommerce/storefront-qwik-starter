@@ -54,7 +54,7 @@ export default component$(() => {
 									value={email.value}
 									required
 									onInput$={(_, el) => (email.value = el.value)}
-									class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+									class="appearance-none block w-full px-3 py-2 border  rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
 						</div>
@@ -70,7 +70,7 @@ export default component$(() => {
 									type="checkbox"
 									checked
 									onChange$={(_, el) => (rememberMe.value = el.checked)}
-									class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+									class="h-4 w-4 text-primary-600 focus:ring-primary-500  rounded"
 								/>
 								<label class="ml-2 block text-sm ">{$localize`Remember me`}</label>
 							</div>
@@ -115,7 +115,7 @@ export default component$(() => {
 				{/* horizontal line with "Or" in the middle */}
 				<div class="mt-4 relative">
 					<div class="absolute inset-0 flex items-center">
-						<div class="w-full border-t border-gray-300"></div>
+						<div class="w-full border-t "></div>
 					</div>
 					<div class="relative flex justify-center text-sm">
 						<span class="px-2 bg-white ">{$localize`Or`}</span>

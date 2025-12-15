@@ -20,7 +20,7 @@ export default component$(() => {
 					/>
 					<div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-700 mix-blend-overlay" />
 				</div>
-				<div class="absolute inset-0 bg-gray-900 opacity-50" />
+				<div class="absolute inset-0  opacity-50" />
 				<div class="relative max-w-3xl mx-auto py-32 px-6 flex flex-col items-center text-center sm:py-64 lg:px-0">
 					<div class="relative bg-zinc-800 bg-opacity-0 rounded-lg p-0">
 						<h1 class="text-6xl text-transparent bg-clip-text font-extrabold tracking-normal lg:text-6xl bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600">

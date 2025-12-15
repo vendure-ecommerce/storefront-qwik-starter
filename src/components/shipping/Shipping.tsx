@@ -122,7 +122,7 @@ export default component$<IProps>(({ onForward$ }) => {
 								onChange$={(_, el) => {
 									appState.customer = { ...appState.customer, emailAddress: el.value };
 								}}
-								class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+								class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 							/>
 						</div>
 					</div>
@@ -137,7 +137,7 @@ export default component$<IProps>(({ onForward$ }) => {
 									onChange$={(_, el) => {
 										appState.customer = { ...appState.customer, firstName: el.value };
 									}}
-									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+									class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
 						</div>
@@ -152,7 +152,7 @@ export default component$<IProps>(({ onForward$ }) => {
 									onChange$={(_, el) => {
 										appState.customer = { ...appState.customer, lastName: el.value };
 									}}
-									class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+									class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
 						</div>
@@ -161,14 +161,14 @@ export default component$<IProps>(({ onForward$ }) => {
 			</div>
 
 			<input type="hidden" name="action" value="setCheckoutShipping" />
-			<div class="mt-10 border-t border-gray-200 pt-10">
+			<div class="mt-10 border-t  pt-10">
 				<h2 class="text-lg font-medium ">{$localize`Shipping information`}</h2>
 			</div>
 
 			<ShippingAddressCard address={appState.shippingAddress} />
 			<AddressForm shippingAddress={appState.shippingAddress} />
 
-			<div class="mt-10 border-t border-gray-200 pt-10">
+			<div class="mt-10 border-t  pt-10">
 				<ShippingMethodSelector appState={appState} />
 			</div>
 

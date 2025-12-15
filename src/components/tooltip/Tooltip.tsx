@@ -20,7 +20,7 @@ export default component$<TooltipProps>(
 			<div class={`relative inline-flex group ${containerClass}`}>
 				<Slot />
 				<span
-					class={`invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity duration-150 absolute ${bubbleClass} bg-gray-800 text-white text-xs rounded px-2 py-1 z-50 whitespace-nowrap`}
+					class={`invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity duration-150 absolute ${bubbleClass}  text-white text-xs rounded px-2 py-1 z-50 whitespace-nowrap`}
 					role="status"
 					aria-live="polite"
 				>

@@ -86,7 +86,7 @@ export default component$(() => {
 					</button>
 					<button
 						type="button"
-						class="ml-4 py-3 px-3 rounded-md flex items-center justify-center hover:bg-gray-100 "
+						class="ml-4 py-3 px-3 rounded-md flex items-center justify-center  "
 					>
 						<HeartIcon />
 						<span class="sr-only">{$localize`Add to favorites`}</span>

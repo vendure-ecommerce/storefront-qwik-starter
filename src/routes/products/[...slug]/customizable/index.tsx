@@ -14,7 +14,7 @@ import { useComputed$ } from '@builder.io/qwik';
 import ProductVariantSelector from '~/components/products/ProductVariantSelector';
 import { APP_STATE } from '~/constants';
 import { addItemToOrderMutation } from '~/providers/shop/orders/order';
-import { CUSTOMIZABLE_CLASS_DEF_TAG, DEFAULT_OPTIONS_FOR_NAME_TAG } from '~/routes/constants';
+import { CUSTOMIZABLE_CLASS_DEF_TAG } from '~/routes/constants';
 import { useFilamentColor, useFontMenu } from '~/routes/layout';
 import { getCustomizableOptionArray } from '~/utils/customizable-order';
 
@@ -42,16 +42,14 @@ export default component$(() => {
 		bottom: true,
 	});
 
-	const defaultOptionsForNameTag = useContext(DEFAULT_OPTIONS_FOR_NAME_TAG);
-
 	// Build parameters store
 	const buildParams = useStore<NameTagBuildParams>({
-		text_top: defaultOptionsForNameTag.textTop,
-		text_bottom: defaultOptionsForNameTag.textBottom,
-		font_id_top: defaultOptionsForNameTag.fontId,
-		font_id_bottom: defaultOptionsForNameTag.fontId,
-		primary_color_id: defaultOptionsForNameTag.primaryColorId,
-		base_color_id: defaultOptionsForNameTag.baseColorId,
+		text_top: '',
+		text_bottom: '',
+		font_id_top: '',
+		font_id_bottom: '',
+		primary_color_id: '',
+		base_color_id: '',
 		is_top_additive: true,
 	});
 
@@ -126,12 +124,7 @@ export default component$(() => {
 				></Price>
 				<div class="flex sm:flex-col1 align-baseline">
 					<button
-						class={{
-							'max-w-xs flex-1 transition-colors border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full':
-								true,
-							'bg-primary-600 hover:bg-primary-700': is_atc_allowed.value,
-							'cursor-not-allowed opacity-50 bg-primary-400': !is_atc_allowed.value,
-						}}
+						class="btn btn-success"
 						disabled={!is_atc_allowed.value}
 						onClick$={() => {
 							const input = {
@@ -153,7 +146,7 @@ export default component$(() => {
 					</button>
 					<button
 						type="button"
-						class="ml-4 py-3 px-3 rounded-md flex items-center justify-center hover:bg-gray-100 "
+						class="btn btn-ghost ml-4 py-3 px-3 rounded-md flex items-center justify-center "
 					>
 						<HeartIcon />
 						<span class="sr-only">{$localize`Add to favorites`}</span>
