@@ -169,7 +169,7 @@ export default component$(() => {
 			<Header />
 			<Cart />
 			<Menu />
-			<main class="pb-12 bg-gray-50">
+			<main class="pb-12">
 				<Slot />
 			</main>
 			<Footer />

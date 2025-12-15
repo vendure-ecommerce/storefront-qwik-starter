@@ -20,11 +20,11 @@ export default component$(() => {
 								<div class="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
 									<div class="flex-1 py-6 overflow-y-auto px-4 sm:px-6">
 										<div class="flex items-start justify-between">
-											<h2 class="text-lg font-medium text-gray-900">{$localize`Menu`}</h2>
+											<h2 class="text-lg font-medium text-base-content">{$localize`Menu`}</h2>
 											<div class="ml-3 h-7 flex items-center">
 												<button
 													type="button"
-													class="-m-2 p-2 text-gray-400 hover:text-gray-500"
+													class="-m-2 p-2 text-neutral hover:text-base-content"
 													onClick$={() => (appState.showMenu = false)}
 												>
 													<span class="sr-only">Close panel</span>
@@ -35,7 +35,7 @@ export default component$(() => {
 										<div class="flex flex-col pt-6">
 											{collections.map((collection) => (
 												<Link
-													class="text-lg font-medium text-gray-90 hover:text-gray-500 pt-4"
+													class="text-lg font-medium text-base-content hover:text-base-content pt-4"
 													href={`/collections/${collection.slug}`}
 													key={collection.id}
 												>

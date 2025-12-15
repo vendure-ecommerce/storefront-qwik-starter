@@ -64,7 +64,7 @@ export default component$<FormInputProps<Action<any, any, any>>>(
 		return (
 			<div class={`mb-2 ${className ?? ''}`}>
 				<div class="flex gap-4">
-					<label for={name as string} class="block text-sm font-medium text-gray-700">
+					<label for={name as string} class="block text-sm font-medium text-neutral">
 						{label}
 					</label>
 					<Slot />
@@ -76,7 +76,7 @@ export default component$<FormInputProps<Action<any, any, any>>>(
 							name={name as string}
 							defaultValue={defaultValue as string}
 							rows={6}
-							class={`block w-full border-gray-300 rounded-md shadow-sm
+							class={`block w-full border-base-200 rounded-md shadow-sm
 								 focus:ring-primary-500 focus:border-primary-500 sm:text-sm mb-2`}
 						/>
 					) : (
@@ -87,9 +87,9 @@ export default component$<FormInputProps<Action<any, any, any>>>(
 							value={defaultValue as string}
 							autoComplete={autoComplete}
 							class={`
-								block w-full border-gray-300 rounded-md shadow-sm
+								block w-full border-base-200 rounded-md shadow-sm
 								focus:ring-primary-500 focus:border-primary-500 sm:text-sm 
-								${readOnly ? 'bg-gray-100 cursor-not-allowed' : ''}
+								${readOnly ? 'bg-base-200 cursor-not-allowed' : ''}
 								${className ?? ''}`}
 							readOnly={readOnly}
 						/>
@@ -102,5 +102,5 @@ export default component$<FormInputProps<Action<any, any, any>>>(
 );
 const renderError = (errorMessage: string | undefined) => {
 	if (!errorMessage) return null;
-	return <p class="error text-xs text-red-600 mt-1 ">{errorMessage}</p>;
+	return <p class="error text-xs text-error mt-1 ">{errorMessage}</p>;
 };

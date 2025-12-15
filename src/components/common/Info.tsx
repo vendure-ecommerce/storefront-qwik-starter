@@ -14,7 +14,7 @@ export default component$<InfoProps>(({ text, placement = '-top-8 left-0', class
 	return (
 		<Tooltip text={text} bubbleClass={placement} containerClass={`inline-block ${className}`}>
 			<span
-				class="flex items-center justify-center h-5 w-5 rounded-full bg-gray-100 text-gray-700 text-xs font-semibold border border-gray-300"
+				class="flex items-center justify-center h-5 w-5 rounded-full bg-base-200 text-neutral text-xs font-semibold border border-base-200"
 				aria-hidden="true"
 			>
 				i

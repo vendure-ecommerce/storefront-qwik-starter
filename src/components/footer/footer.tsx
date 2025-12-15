@@ -24,18 +24,18 @@ export default component$(() => {
 	};
 
 	return (
-		<footer class="pt-6 border-t bg-gray-50">
+		<footer class="pt-6 border-t bg-base-200">
 			<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 ">
 				<div class="xl:grid xl:grid-cols-3 xl:gap-8">
 					<div class="grid grid-cols-2 gap-8 xl:col-span-2">
 						<div class="md:grid md:grid-cols-2 md:gap-8">
 							<div>
-								<h3 class="text-sm font-semibold text-gray-500 tracking-wider uppercase">{$localize`Shop`}</h3>
+								<h3 class="text-sm font-semibold text-neutral tracking-wider uppercase">{$localize`Shop`}</h3>
 								<ul class="mt-4 space-y-4">
 									{collections.map((collection) => (
 										<li key={collection.id}>
 											<Link
-												class="text-base text-gray-500 hover:text-gray-600"
+												class="text-base text-neutral hover:text-base-content"
 												href={`/collections/${collection.slug}`}
 												key={collection.id}
 											>
@@ -46,13 +46,13 @@ export default component$(() => {
 								</ul>
 							</div>
 							<div class="mt-12 md:mt-0">
-								<h3 class="text-sm font-semibold text-gray-500 tracking-wider uppercase">
+								<h3 class="text-sm font-semibold text-neutral tracking-wider uppercase">
 									{$localize`Support`}
 								</h3>
 								<ul class="mt-4 space-y-4">
 									{navigation.support.map((item) => (
 										<li key={item.name}>
-											<Link href={item.href} class="text-base text-gray-500 hover:text-gray-600">
+											<Link href={item.href} class="text-base text-neutral hover:text-base-content">
 												{item.name}
 											</Link>
 										</li>
@@ -62,13 +62,13 @@ export default component$(() => {
 						</div>
 						<div class="md:grid md:grid-cols-2 md:gap-8">
 							<div>
-								<h3 class="text-sm font-semibold text-gray-500 tracking-wider uppercase">
+								<h3 class="text-sm font-semibold text-neutral tracking-wider uppercase">
 									{$localize`Company`}
 								</h3>
 								<ul class="mt-4 space-y-4">
 									{navigation.company.map((item) => (
 										<li key={item.name}>
-											<Link href={item.href} class="text-base text-gray-500 hover:text-gray-600">
+											<Link href={item.href} class="text-base text-neutral hover:text-base-content">
 												{item.name}
 											</Link>
 										</li>
@@ -78,10 +78,10 @@ export default component$(() => {
 						</div>
 					</div>
 					<div class="mt-8 xl:mt-0">
-						<h3 class="text-sm font-semibold text-gray-500 tracking-wider uppercase">
+						<h3 class="text-sm font-semibold text-neutral tracking-wider uppercase">
 							{$localize`Subscribe to our newsletter`}
 						</h3>
-						<p class="mt-4 text-base text-gray-500">
+						<p class="mt-4 text-base text-neutral">
 							{$localize`Be the first to know about exclusive offers & deals.`}
 						</p>
 						<div class="mt-4 sm:flex sm:max-w-md">
@@ -106,7 +106,7 @@ export default component$(() => {
 				</div>
 				<div class="mt-8 border-t pt-8">
 					<Link
-						class="flex items-center space-x-4 font-medium text-gray-500 hover:text-gray-700"
+						class="flex items-center space-x-4 font-medium text-neutral hover:text-base-content"
 						target="_blank"
 						href="https://github.com/vendure-ecommerce/storefront-qwik-starter"
 					>
