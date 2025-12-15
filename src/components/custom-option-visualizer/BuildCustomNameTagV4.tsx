@@ -140,7 +140,7 @@ export default component$(
 
 		return (
 			<>
-				<div>
+				<div class="bg-base-100 w-fit">
 					<div
 						class={`border-2 rounded-lg h-auto p-0 w-fit`}
 						// style={{ width: `${canvas_width_px}px` }}

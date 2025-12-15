@@ -29,7 +29,7 @@ export default component$(
 		return (
 			<>
 				<div
-					class={`bg-base-100 h-fit ${concatenate_canvas_element_id ? 'hidden' : ''}`}
+					class={`h-fit ${concatenate_canvas_element_id ? 'hidden' : ''}`}
 					style={{ width: `${canvas_width_px}px` }}
 				>
 					<canvas
