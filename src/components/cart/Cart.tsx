@@ -22,11 +22,11 @@ export default component$(() => {
 								<div class="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
 									<div class="flex-1 py-6 overflow-y-auto px-4 sm:px-6">
 										<div class="flex items-start justify-between">
-											<h2 class="text-lg font-medium text-gray-900">{$localize`Shopping cart`}</h2>
+											<h2 class="text-lg font-medium ">{$localize`Shopping cart`}</h2>
 											<div class="ml-3 h-7 flex items-center">
 												<button
 													type="button"
-													class="-m-2 p-2 text-gray-400 hover:text-gray-500"
+													class="-m-2 p-2 "
 													onClick$={() => (appState.showCart = !appState.showCart)}
 												>
 													<span class="sr-only">Close panel</span>
@@ -38,7 +38,7 @@ export default component$(() => {
 											{!!appState.activeOrder && appState.activeOrder.totalQuantity ? (
 												<CartContents />
 											) : (
-												<div class="flex items-center justify-center h-48 text-xl text-gray-400">
+												<div class="flex items-center justify-center h-48 text-xl ">
 													{$localize`Your cart is empty`}
 												</div>
 											)}
@@ -46,13 +46,13 @@ export default component$(() => {
 									</div>
 									{appState.activeOrder?.totalQuantity && isInEditableUrl && (
 										<div class="border-t border-gray-200 py-6 px-4 sm:px-6">
-											<div class="flex justify-between text-base font-medium text-gray-900">
+											<div class="flex justify-between text-base font-medium ">
 												<p>{$localize`Subtotal`}</p>
 												<p>
 													<CartPrice field={'subTotalWithTax'} order={appState.activeOrder} />
 												</p>
 											</div>
-											<p class="mt-0.5 text-sm text-gray-500">
+											<p class="mt-0.5 text-sm ">
 												{$localize`Shipping will be calculated at checkout.`}
 											</p>
 											<div class="mt-6">

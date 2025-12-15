@@ -11,7 +11,7 @@ export const SpinnerWaitingAnimation = component$<{ forcedClass?: string }>(({ f
 			height="24"
 			viewBox="0 0 24 24"
 			xmlns="http://www.w3.org/2000/svg"
-			class={forcedClass || 'h-5 w-5 text-gray-700'}
+			class={forcedClass || 'h-5 w-5 '}
 		>
 			<style>
 				{`

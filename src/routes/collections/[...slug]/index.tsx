@@ -97,7 +97,7 @@ export default component$(() => {
 			}}
 		>
 			<div class="flex justify-between items-center">
-				<h2 class="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
+				<h2 class="text-3xl sm:text-5xl font-light tracking-tight my-8">
 					{collectionSignal.value.name}
 				</h2>
 				<div>
@@ -114,7 +114,7 @@ export default component$(() => {
 				<Breadcrumbs items={collectionSignal.value.breadcrumbs || []}></Breadcrumbs>
 				{!!collectionSignal.value.children?.length && (
 					<div class="max-w-2xl mx-auto py-16 sm:py-16 lg:max-w-none border-b mb-16">
-						<h2 class="text-2xl font-light text-gray-900">Collections</h2>
+						<h2 class="text-2xl font-light ">Collections</h2>
 						<div class="mt-6 grid max-w-xs sm:max-w-none mx-auto sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
 							{collectionSignal.value.children.map((child) => (
 								<CollectionCard key={child.id} collection={child}></CollectionCard>

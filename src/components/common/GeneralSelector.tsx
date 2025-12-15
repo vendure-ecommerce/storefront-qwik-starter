@@ -39,7 +39,7 @@ export default component$<GeneralSelectorProps>(
 		return (
 			<select
 				value={selectedValue.value}
-				class={`border rounded-md text-sm font-medium text-gray-500 gap-2 py-0 h-6 ${className || ''}`}
+				class={`border rounded-md text-sm font-medium gap-2 py-0 h-6 ${className || ''}`}
 				onChange$={async (e) => {
 					selectedValue.value = (e.target as HTMLSelectElement).value;
 					if (onChange$) await onChange$();

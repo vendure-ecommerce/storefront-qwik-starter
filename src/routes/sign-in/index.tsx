@@ -31,7 +31,7 @@ export default component$(() => {
 	return (
 		<div class="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
 			<div class="sm:mx-auto sm:w-full sm:max-w-md">
-				<h2 class="mt-6 text-center text-3xl text-gray-900">{$localize`Sign in to your account`}</h2>
+				<h2 class="mt-6 text-center text-3xl ">{$localize`Sign in to your account`}</h2>
 			</div>
 
 			<div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -46,7 +46,7 @@ export default component$(() => {
 						class="space-y-6"
 					>
 						<div>
-							<label class="block text-sm font-medium text-gray-700">{$localize`Email address`}</label>
+							<label class="block text-sm font-medium ">{$localize`Email address`}</label>
 							<div class="mt-1">
 								<input
 									type="email"
@@ -72,7 +72,7 @@ export default component$(() => {
 									onChange$={(_, el) => (rememberMe.value = el.checked)}
 									class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
 								/>
-								<label class="ml-2 block text-sm text-gray-900">{$localize`Remember me`}</label>
+								<label class="ml-2 block text-sm ">{$localize`Remember me`}</label>
 							</div>
 
 							<div class="text-sm">
@@ -118,12 +118,12 @@ export default component$(() => {
 						<div class="w-full border-t border-gray-300"></div>
 					</div>
 					<div class="relative flex justify-center text-sm">
-						<span class="px-2 bg-white text-gray-500">{$localize`Or`}</span>
+						<span class="px-2 bg-white ">{$localize`Or`}</span>
 					</div>
 				</div>
 				<div class="mt-4">
 					<div class="space-y-4">
-						<p class="mt-1 text-center text-sm text-gray-600">
+						<p class="mt-1 text-center text-sm ">
 							<Link href="/sign-up" class="font-medium text-primary-600 hover:text-primary-500">
 								{$localize`Register a new account`}
 							</Link>

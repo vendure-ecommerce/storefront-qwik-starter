@@ -40,11 +40,11 @@ export default component$(
 					alt={`Image of: ${productName}`}
 				/>
 				<div class="h-2" />
-				<div class="text-sm text-gray-700">{productName}</div>
+				<div class="text-sm ">{productName}</div>
 				<Price
 					priceWithTax={priceWithTax}
 					currencyCode={currencyCode}
-					forcedClass="text-sm font-medium text-gray-900"
+					forcedClass="text-sm font-medium "
 				/>
 				{reviewStat && (
 					<ReviewRatingStars rating={reviewStat.rating} reviewCount={reviewStat.reviewCount} />

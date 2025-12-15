@@ -1,11 +1,11 @@
 import { component$, Signal, Slot, useSignal } from '@builder.io/qwik';
-import { DocumentHead, routeLoader$ } from '@builder.io/qwik-city';
+import { routeLoader$ } from '@builder.io/qwik-city';
 import { Image } from 'qwik-image';
 import Breadcrumbs from '~/components/breadcrumbs/Breadcrumbs';
 import TopReviewsV2 from '~/components/reviews/DisplayReviews';
 import ReviewStats from '~/components/reviews/ReviewStats';
 import { getProductBySlug } from '~/providers/shop/products/products';
-import { cleanUpParams, generateDocumentHead, isEnvVariableEnabled } from '~/utils';
+import { cleanUpParams, isEnvVariableEnabled } from '~/utils';
 
 export const useProductLoader = routeLoader$(async ({ params }) => {
 	const { slug } = cleanUpParams(params);
@@ -36,7 +36,7 @@ export default component$(() => {
 			)} */}
 			<div class="max-w-6xl mx-auto px-4 py-10">
 				<div>
-					<h2 class="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
+					<h2 class="text-3xl sm:text-5xl font-light tracking-tight my-8">
 						{productSignal.value.name}
 					</h2>
 					<Breadcrumbs
@@ -84,10 +84,7 @@ export default component$(() => {
 						<div class="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
 							<div class="">
 								<h3 class="sr-only">Description</h3>
-								<div
-									class="text-base text-gray-700"
-									dangerouslySetInnerHTML={productSignal.value.description}
-								/>
+								<div class="text-base " dangerouslySetInnerHTML={productSignal.value.description} />
 							</div>
 
 							<>
@@ -95,8 +92,8 @@ export default component$(() => {
 							</>
 
 							<section class="mt-12 pt-12 border-t text-xs">
-								<h3 class="text-gray-600 font-bold mb-2">{$localize`Shipping & Returns`}</h3>
-								<div class="text-gray-500 space-y-1">
+								<h3 class="font-bold mb-2">{$localize`Shipping & Returns`}</h3>
+								<div class="space-y-1">
 									<p>
 										{$localize`Standard shipping: 3 - 5 working days. Express shipping: 1 - 3 working days.`}
 									</p>
@@ -137,12 +134,12 @@ export default component$(() => {
 	);
 });
 
-export const head: DocumentHead = ({ resolveValue, url }) => {
-	const product = resolveValue(useProductLoader);
-	return generateDocumentHead(
-		url.href,
-		product.name,
-		product.description,
-		product.featuredAsset?.preview
-	);
-};
+// export const head: DocumentHead = ({ resolveValue, url }) => {
+// 	const product = resolveValue(useProductLoader);
+// 	return generateDocumentHead(
+// 		url.href,
+// 		product.name,
+// 		product.description,
+// 		product.featuredAsset?.preview
+// 	);
+// };

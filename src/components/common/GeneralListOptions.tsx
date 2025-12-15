@@ -23,7 +23,7 @@ export default component$<GeneralListOptionsProps>(
 					<div class="flex flex-col sm:flex-row gap-6">
 						{ListOptions.map((option) => (
 							<div class="flex items-center gap-2" key={option.label}>
-								<label class="text-sm font-medium text-gray-500 whitespace-nowrap flex items-center gap-2">
+								<label class="text-sm font-medium whitespace-nowrap flex items-center gap-2">
 									<span>{option.label}:</span>
 									<GeneralSelector
 										options={option.selections}

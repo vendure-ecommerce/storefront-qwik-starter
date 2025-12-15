@@ -11,7 +11,7 @@ export const TabsContainer = component$(() => {
 	return (
 		<>
 			<div class="border-b border-gray-200 mt-4">
-				<ul class="flex justify-center sm:grid-0 sm:flex sm:flex-wrap -mb-px text-sm font-medium text-center text-gray-500">
+				<ul class="flex justify-center sm:grid-0 sm:flex sm:flex-wrap -mb-px text-sm font-medium text-center ">
 					<Tab
 						Icon={UserCircleIcon}
 						text="Account details"

@@ -125,7 +125,7 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 
 				<button
 					type="button"
-					class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 group"
+					class="absolute inset-y-0 right-0 pr-3 flex items-center group"
 					onClick$={() => {
 						isPasswordVisible.value = !isPasswordVisible.value;
 					}}

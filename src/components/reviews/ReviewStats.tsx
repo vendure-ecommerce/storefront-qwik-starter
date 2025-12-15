@@ -23,16 +23,16 @@ export default component$<ReviewStatsProps>(({ productId, reviewCount, averageRa
 
 	return (
 		<div class="border-gray-200">
-			<h3 class="text-lg font-medium text-gray-900 mb-4">{$localize`Product Rating`}</h3>
+			<h3 class="text-lg font-medium mb-4">{$localize`Product Rating`}</h3>
 			{/* Summary Stats */}
 			<div class="flex flex-col items-center gap-8 mb-8">
 				{/* Average Rating */}
 				<div class="flex flex-col items-center">
-					<div class="text-4xl font-bold text-gray-900">{averageRating.toFixed(1)}</div>
+					<div class="text-4xl font-bold ">{averageRating.toFixed(1)}</div>
 					<div class="flex items-center gap-1 mt-1">
 						<ReviewRatingStars rating={averageRating} />
 					</div>
-					<div class="text-sm text-gray-500 mt-1">
+					<div class="text-sm mt-1">
 						{reviewCount} {$localize`reviews`}
 					</div>
 				</div>
@@ -49,7 +49,7 @@ export default component$<ReviewStatsProps>(({ productId, reviewCount, averageRa
 							return (
 								<div key={rating} class="flex items-center gap-2 mb-3">
 									{/* Rating Label */}
-									<div class="w-12 text-sm text-gray-600 text-right">
+									<div class="w-12 text-sm text-right">
 										{rating} <span class="text-xs">★</span>
 									</div>
 
@@ -62,7 +62,7 @@ export default component$<ReviewStatsProps>(({ productId, reviewCount, averageRa
 									</div>
 
 									{/* Frequency Count */}
-									<div class="w-12 text-sm text-gray-600 text-right">{percentage.toFixed(0)}%</div>
+									<div class="w-12 text-sm text-right">{percentage.toFixed(0)}%</div>
 								</div>
 							);
 						})}

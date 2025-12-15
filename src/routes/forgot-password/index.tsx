@@ -24,7 +24,7 @@ export default component$(() => {
 					)}
 					<div class="space-y-6">
 						<div>
-							<label class="block text-sm font-medium text-gray-700">Email</label>
+							<label class="block text-sm font-medium ">Email</label>
 							<div class="mt-1">
 								<input
 									type="email"

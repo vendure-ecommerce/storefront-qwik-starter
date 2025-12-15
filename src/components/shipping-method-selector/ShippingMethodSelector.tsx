@@ -31,7 +31,7 @@ export default component$<Props>(({ appState }) => {
 
 	return (
 		<div>
-			<label class="text-lg font-medium text-gray-900">{$localize`Delivery method`}</label>
+			<label class="text-lg font-medium ">{$localize`Delivery method`}</label>
 			<div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
 				{state.methods.map((method, index) => (
 					<div
@@ -41,8 +41,8 @@ export default component$<Props>(({ appState }) => {
 					>
 						<span class="flex-1 flex">
 							<span class="flex flex-col">
-								<span class="block text-sm font-medium text-gray-900">{method.name}</span>
-								<span class="mt-6 text-sm font-medium text-gray-900">
+								<span class="block text-sm font-medium ">{method.name}</span>
+								<span class="mt-6 text-sm font-medium ">
 									{formatPrice(method.priceWithTax, currencyCode)}
 								</span>
 							</span>

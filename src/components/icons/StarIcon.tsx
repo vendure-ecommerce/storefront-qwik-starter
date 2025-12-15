@@ -5,9 +5,7 @@ export default component$<{ rating: number; review: Review }>(({ review, rating 
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			class={`${
-				review.rating > rating ? 'text-yellow-400' : 'text-gray-200'
-			} h-5 w-5 flex-shrink-0`}
+			class={`${review.rating > rating ? 'text-yellow-400' : ''} h-5 w-5 flex-shrink-0`}
 			fill="currentColor"
 			viewBox="0 0 24 24"
 			stroke="currentColor"

@@ -160,7 +160,7 @@ export default component$(() => {
 					<div class="max-w-3xl m-auto">
 						<div class="gap-4 grid grid-cols-1 md:grid-cols-2">
 							<div class="md:col-span-2 md:w-1/4">
-								<h3 class="text-sm text-gray-500">Title</h3>
+								<h3 class="text-sm ">Title</h3>
 								<input
 									type="text"
 									value={appState.customer?.title}
@@ -172,7 +172,7 @@ export default component$(() => {
 							</div>
 
 							<div>
-								<label html-for="firstName" class="text-sm text-gray-500">
+								<label html-for="firstName" class="text-sm ">
 									First Name
 								</label>
 								<input
@@ -187,7 +187,7 @@ export default component$(() => {
 								/>
 							</div>
 							<div>
-								<label html-for="lastName" class="text-sm text-gray-500">
+								<label html-for="lastName" class="text-sm ">
 									Last Name
 								</label>
 								<input
@@ -202,7 +202,7 @@ export default component$(() => {
 								/>
 							</div>
 							<div>
-								<h3 class="text-sm text-gray-500">E-Mail</h3>
+								<h3 class="text-sm ">E-Mail</h3>
 								<input
 									type="email"
 									value={appState.customer?.emailAddress}
@@ -216,7 +216,7 @@ export default component$(() => {
 							</div>
 
 							<div>
-								<h3 class="text-sm text-gray-500">Phone Nr.</h3>
+								<h3 class="text-sm ">Phone Nr.</h3>
 								<input
 									type="tel"
 									value={appState.customer?.phoneNumber}

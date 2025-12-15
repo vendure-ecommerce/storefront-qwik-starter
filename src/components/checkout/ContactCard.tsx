@@ -39,11 +39,11 @@ export default component$<Iprops>(({ onEditSave$ }) => {
 				<div class="w-fit bg-white shadow-lg rounded-lg overflow-hidden my-2">
 					<div class="flex items-center py-2 px-4 gap-2">
 						<div class="flex flex-col w-fit">
-							<h1 class="text-sm font-semibold text-gray-800 w-fit">
+							<h1 class="text-sm font-semibold w-fit">
 								{title || ''} {firstName} {lastName}
 							</h1>
-							<p class="py-1 text-sm text-gray-700 w-fit">{emailAddress}</p>
-							{phoneNumber && <p class="py-1 text-sm text-gray-700 w-fit">{phoneNumber}</p>}
+							<p class="py-1 text-sm w-fit">{emailAddress}</p>
+							{phoneNumber && <p class="py-1 text-sm w-fit">{phoneNumber}</p>}
 						</div>
 						{isGuest.value && (
 							<button

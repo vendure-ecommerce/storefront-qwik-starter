@@ -79,15 +79,14 @@ export const VoteButton = component$<VoteButtonProps>(
 		const isVoted = currentVerdict === true;
 		const iconColor = isVoted ? '#2563eb' : '#9ca3af';
 		const bgColor = isVoted ? 'bg-blue-100' : '';
-		const textColor = isVoted ? 'text-blue-600' : 'text-gray-500';
+		const textColor = isVoted ? 'text-blue-600' : '';
 
 		return (
 			<button
 				onClick$={onClick$}
 				disabled={isLoading}
 				class={`flex items-center gap-1 px-2 py-1 rounded transition 
-          ${bgColor} ${textColor} hover:text-gray-700
-          ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          ${bgColor} ${textColor} ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
 				aria-label="Upvote this review"
 			>
 				{isLoading ? (

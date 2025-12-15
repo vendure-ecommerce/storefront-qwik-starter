@@ -22,8 +22,8 @@ export default component$<ReviewRatingStarsProps>(({ rating, reviewCount, classN
 				}
 				const percent = (fill * 100).toFixed(2) + '%';
 				return (
-					<span key={star} class="relative inline-block w-4 h-4 text-gray-300 leading-none mr-0.5">
-						<span class="text-gray-300">★</span>
+					<span key={star} class="relative inline-block w-4 h-4 leading-none mr-0.5">
+						<span class="">★</span>
 						<span
 							class="absolute left-0 top-0 overflow-hidden whitespace-nowrap"
 							style={{ width: percent }}
@@ -34,7 +34,7 @@ export default component$<ReviewRatingStarsProps>(({ rating, reviewCount, classN
 				);
 			})}
 			{reviewCount !== undefined && reviewCount > 0 && (
-				<span class="ml-1 text-sm text-gray-700"> ({reviewCount})</span>
+				<span class="ml-1 text-sm "> ({reviewCount})</span>
 			)}
 		</span>
 	);

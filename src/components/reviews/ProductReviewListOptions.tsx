@@ -19,7 +19,7 @@ export default component$<ProductReviewListOptionsProps>(
 					{/* Page Size */}
 					<Select.Root bind:value={pageSize}>
 						<div class="flex items-center gap-2">
-							<Select.Label class="text-sm font-medium text-gray-700 whitespace-nowrap">
+							<Select.Label class="text-sm font-medium whitespace-nowrap">
 								Reviews per page:
 							</Select.Label>
 							<Select.Trigger class="border rounded-md bg-white w-8">
@@ -46,7 +46,7 @@ export default component$<ProductReviewListOptionsProps>(
 					{/* Min Rating Filter */}
 					<Select.Root bind:value={minRating}>
 						<div class="flex items-center gap-2">
-							<Select.Label class="text-sm font-medium text-gray-700 whitespace-nowrap">
+							<Select.Label class="text-sm font-medium whitespace-nowrap">
 								Minimum rating:
 							</Select.Label>
 							<Select.Trigger class="border rounded-md bg-white w-8">
@@ -80,9 +80,7 @@ export default component$<ProductReviewListOptionsProps>(
 					{/* Sort By - using sortOptionMap */}
 					<Select.Root bind:value={sortBy}>
 						<div class="flex items-center gap-2">
-							<Select.Label class="text-sm font-medium text-gray-700 whitespace-nowrap">
-								Sort by:
-							</Select.Label>
+							<Select.Label class="text-sm font-medium whitespace-nowrap">Sort by:</Select.Label>
 							<Select.Trigger class="border rounded-md bg-white w-8">
 								<LuChevronDown class="ml-2 inline-block w-4 h-4" />
 							</Select.Trigger>

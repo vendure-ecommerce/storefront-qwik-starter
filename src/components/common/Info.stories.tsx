@@ -13,5 +13,5 @@ export const Default: Story = {
 	args: {
 		text: 'This is some informational text.',
 	},
-	render: (props) => <Info {...props} />,
+	render: (props: any) => <Info {...props} />,
 };

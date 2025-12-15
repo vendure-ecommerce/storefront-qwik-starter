@@ -53,7 +53,7 @@ export default component$<Props>(
 
 				<div class="ml-4 flex-1 flex flex-col">
 					<div>
-						<div class="flex justify-between text-base font-medium text-gray-900">
+						<div class="flex justify-between text-base font-medium ">
 							<h3>
 								<Link href={slugToRoute(line.productVariant.product.slug)}>
 									{line.productVariant.product.name}
@@ -65,9 +65,7 @@ export default component$<Props>(
 								forcedClass="ml-4"
 							/>
 						</div>
-						<p class="mt-1 text-sm text-gray-500 border rounded-md p-1 w-fit">
-							{line.productVariant.name}
-						</p>
+						<p class="mt-1 text-sm border rounded-md p-1 w-fit">{line.productVariant.name}</p>
 					</div>
 					<div class="flex-1 flex items-center text-sm">
 						{!readOnly.value ? (
@@ -83,7 +81,7 @@ export default component$<Props>(
 									onChange$={(_, el) =>
 										onQuantityChange$ && onQuantityChange$!.call(undefined, line.id, +el.value)
 									}
-									class="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+									class="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								>
 									{[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
 										<option key={num} value={num} selected={line.quantity === num}>
@@ -93,7 +91,7 @@ export default component$<Props>(
 								</select>
 							</form>
 						) : (
-							<div class="text-gray-800">
+							<div class="">
 								<span class="mr-1">{$localize`Quantity`}</span>
 								<span class="font-medium">{line.quantity}</span>
 							</div>

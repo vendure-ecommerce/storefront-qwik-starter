@@ -35,19 +35,19 @@ export default component$<IProps>(({ address }) => {
 	return (
 		<div class="max-w-xs bg-white shadow-lg rounded-lg overflow-hidden my-4">
 			<div class="py-4 px-6">
-				<h1 class="text-2xl font-semibold text-gray-800">
+				<h1 class="text-2xl font-semibold ">
 					{address.fullName}{' '}
-					{address.company && <span class="py-2 text-lg text-gray-700"> - {address.company}</span>}
+					{address.company && <span class="py-2 text-lg "> - {address.company}</span>}
 				</h1>
-				<p class="py-2 text-lg text-gray-700">{address.streetLine1}</p>
-				<p class="text-lg text-gray-700">{address.streetLine2}&nbsp;</p>
-				<div class="flex items-center mt-4 text-gray-700">
+				<p class="py-2 text-lg ">{address.streetLine1}</p>
+				<p class="text-lg ">{address.streetLine2}&nbsp;</p>
+				<div class="flex items-center mt-4 ">
 					<LocationIcon />
 					<h1 class="px-2 text-sm">
 						{address.city}, {address.province}
 					</h1>
 				</div>
-				<div class="flex items-center mt-4 mb-4 text-gray-700">
+				<div class="flex items-center mt-4 mb-4 ">
 					<TelephoneIcon />
 					<h1 class="px-2 text-sm">{address.phoneNumber}</h1>
 				</div>

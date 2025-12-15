@@ -28,7 +28,7 @@ export default component$<PaymentProps>(({ onPaymentSuccess$ }) => {
 				<div key={method.code} class="flex flex-col items-center">
 					{method.code === 'dummy-payment-method' && (
 						<>
-							<p class="text-gray-600 text-sm p-6">
+							<p class="text-sm p-6">
 								{$localize`This is a dummy payment for demonstration purposes only`}
 							</p>
 							<button

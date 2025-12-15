@@ -45,7 +45,7 @@ export default component$(() => {
 					priceWithTax={selectedVariantSignal.value?.priceWithTax}
 					currencyCode={selectedVariantSignal.value?.currencyCode}
 					variantSig={selectedVariantSignal}
-					forcedClass="text-3xl text-gray-900 mr-4"
+					forcedClass="text-3xl mr-4"
 				></Price>
 				<div class="flex sm:flex-col1 align-baseline">
 					<button
@@ -86,7 +86,7 @@ export default component$(() => {
 					</button>
 					<button
 						type="button"
-						class="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500"
+						class="ml-4 py-3 px-3 rounded-md flex items-center justify-center hover:bg-gray-100 "
 					>
 						<HeartIcon />
 						<span class="sr-only">{$localize`Add to favorites`}</span>
@@ -94,7 +94,7 @@ export default component$(() => {
 				</div>
 			</div>
 			<div class="mt-2 flex items-center space-x-2">
-				<span class="text-gray-500">{selectedVariantSignal.value?.sku}</span>
+				<span class="">{selectedVariantSignal.value?.sku}</span>
 				<StockLevelLabel stockLevel={selectedVariantSignal.value?.stockLevel} />
 			</div>
 			{!!addItemToOrderErrorSignal.value && (

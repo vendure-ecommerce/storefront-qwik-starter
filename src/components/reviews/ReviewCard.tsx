@@ -54,28 +54,25 @@ export default component$<ReviewCardProps>(({ review }) => {
 			>
 				<div class="flex m-5">
 					{[1, 2, 3, 4, 5].map((rating) => (
-						<span
-							key={rating}
-							class={`${rating <= review.rating ? 'text-yellow-400' : 'text-gray-300'}`}
-						>
+						<span key={rating} class={`${rating <= review.rating ? 'text-yellow-400' : ''}`}>
 							★
 						</span>
 					))}
 				</div>
-				<p class="font-medium text-gray-900">{review.authorName}</p>
+				<p class="font-medium ">{review.authorName}</p>
 				<time
 					dateTime={review.createdAt}
-					class="ml-4 border-gray-200 pl-4 text-gray-500 lg:ml-0 lg:mt-2 lg:border-0 lg:pl-0"
+					class="ml-4 border-gray-200 pl-4 lg:ml-0 lg:mt-2 lg:border-0 lg:pl-0"
 				>
 					{formatDate(review.createdAt)}
 				</time>
 				{review.authorLocation && (
-					<span class="ml-4 border-gray-200 pl-4 text-gray-500 lg:ml-0 lg:mt-2 lg:border-0 lg:pl-0">
+					<span class="ml-4 border-gray-200 pl-4 lg:ml-0 lg:mt-2 lg:border-0 lg:pl-0">
 						{review.authorLocation}
 					</span>
 				)}
 				{review.productVariant?.name && (
-					<span class="mt-2 pl-2 pr-2 border rounded-xl bg-gray-200 border-gray-500 text-gray-500 text-xs">
+					<span class="mt-2 pl-2 pr-2 border rounded-xl bg-gray-200 border-gray-500 text-xs">
 						{review.productVariant?.name}
 					</span>
 				)}
@@ -87,17 +84,14 @@ export default component$<ReviewCardProps>(({ review }) => {
 				{/* <div class="flex items-center xl:col-span-1">
 				</div> */}
 				<div class="mt-4 lg:mt-6 xl:mt-0 xl:col-span-2">
-					<h3 class="text-sm font-medium text-gray-900">{review.summary}</h3>
-					<div class="mt-3 space-y-2 text-sm text-gray-700">
+					<h3 class="text-sm font-medium ">{review.summary}</h3>
+					<div class="mt-3 space-y-2 text-sm ">
 						<p>{review.body}</p>
 						{review.response && (
 							<div class="mt-3 p-3 bg-gray-50 border border-gray-200 rounded-lg text-xs">
-								<h2 class="text-xs font-medium text-gray-900 mr-2 mb-2">{$localize`Response`}:</h2>
+								<h2 class="text-xs font-medium mr-2 mb-2">{$localize`Response`}:</h2>
 								{review.response}
-								<time
-									dateTime={review.responseCreatedAt || undefined}
-									class="block mt-1 text-gray-500"
-								>
+								<time dateTime={review.responseCreatedAt || undefined} class="block mt-1 ">
 									{$localize`Updated at`} {formatDate(review.responseCreatedAt || undefined)}
 								</time>
 							</div>

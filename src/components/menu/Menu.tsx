@@ -14,10 +14,10 @@ export default component$(() => {
 			{appState.showMenu && (
 				<div class="fixed inset-0 overflow-hidden z-20">
 					<div class="absolute inset-0 overflow-hidden">
-						<div class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity opacity-100"></div>
+						<div class="absolute inset-0 transition-opacity opacity-100"></div>
 						<div class="fixed inset-y-0 pr-10 max-w-full flex">
 							<div class="w-screen max-w-md translate-x-0">
-								<div class="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
+								<div class="h-full flex flex-col shadow-xl overflow-y-scroll">
 									<div class="flex-1 py-6 overflow-y-auto px-4 sm:px-6">
 										<div class="flex items-start justify-between">
 											<h2 class="text-lg font-medium text-base-content">{$localize`Menu`}</h2>

@@ -37,7 +37,7 @@ export default component$<IProps>(({ order }) => {
 					/>
 				))}
 				{moreCount > 0 && (
-					<span class="absolute bottom-0 right-0 text-xs text-gray-500 bg-white bg-opacity-80 px-2 py-1 rounded">
+					<span class="absolute bottom-0 right-0 text-xs bg-white bg-opacity-80 px-2 py-1 rounded">
 						... and {moreCount} more
 					</span>
 				)}

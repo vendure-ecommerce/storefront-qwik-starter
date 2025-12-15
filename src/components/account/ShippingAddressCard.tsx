@@ -27,15 +27,13 @@ export default component$<IProps>(
 			<div class={`max-w-xs bg-white shadow-lg rounded-lg overflow-hidden my-2 ${className}`}>
 				<div class="py-2 px-4">
 					<div class="flex items-center justify-between">
-						<h1 class="text-sm font-semibold text-gray-800">
+						<h1 class="text-sm font-semibold ">
 							{address.fullName}{' '}
-							{address.company && (
-								<span class="py-2 text-sm text-gray-700"> - {address.company}</span>
-							)}
+							{address.company && <span class="py-2 text-sm "> - {address.company}</span>}
 						</h1>
 						{allowDelete && address.id && (
 							<button
-								class="text-gray-400 hover:text-red-600 rounded ml-2"
+								class="hover:text-red-600 rounded ml-2"
 								title="Delete address"
 								aria-label="Delete address"
 								type="button"
@@ -51,15 +49,15 @@ export default component$<IProps>(
 							</button>
 						)}
 					</div>
-					<p class="py-1 text-sm text-gray-700">{address.streetLine1}</p>
-					{address.streetLine2 && <p class="text-sm text-gray-700">{address.streetLine2}&nbsp;</p>}
-					<div class="flex items-center mt-1 text-gray-700">
+					<p class="py-1 text-sm ">{address.streetLine1}</p>
+					{address.streetLine2 && <p class="text-sm ">{address.streetLine2}&nbsp;</p>}
+					<div class="flex items-center mt-1 ">
 						<LocationIcon />
 						<h1 class="px-2 text-xs">
 							{address.city}, {address.province} {address.postalCode}, {address.countryCode}
 						</h1>
 					</div>
-					<div class="flex items-center mt-1 mb-1 text-gray-700">
+					<div class="flex items-center mt-1 mb-1 ">
 						<>
 							<TelephoneIcon />
 							<h1 class="px-2 text-xs">{address.phoneNumber || 'N/A'}</h1>

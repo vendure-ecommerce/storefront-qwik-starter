@@ -116,7 +116,7 @@ export default component$<ImageGalleryProps>(({ assets }) => {
 							</button>
 
 							{/* Counter */}
-							<span class="text-sm text-gray-600">
+							<span class="text-sm ">
 								{(selectedImageIndex.value ?? 0) + 1} / {assets.length}
 							</span>
 

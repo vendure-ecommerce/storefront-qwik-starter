@@ -49,7 +49,7 @@ export default component$(() => {
 
 	return appState.customer ? (
 		<div class="max-w-6xl m-auto rounded-lg p-4 space-y-4 flex justify-center">
-			<form class="bg-white shadow-lg rounded-lg w-[20rem] py-4 px-6 text-sm text-gray-500 space-y-6 mt-1 relative">
+			<form class="bg-white shadow-lg rounded-lg w-[20rem] py-4 px-6 text-sm space-y-6 mt-1 relative">
 				{successSignal.value && (
 					<div class="mb-6 bg-yellow-50 border border-yellow-400 text-yellow-800 rounded p-4 text-center text-sm">
 						<p>

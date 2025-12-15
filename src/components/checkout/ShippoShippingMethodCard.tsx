@@ -13,17 +13,17 @@ export default component$<Props>(({ shippingMethod, checked }) => {
 		<>
 			<span class="flex-1 flex">
 				<span class="flex flex-col">
-					<span class="block text-sm font-medium text-gray-900">{shippingMethod.name}</span>
+					<span class="block text-sm font-medium ">{shippingMethod.name}</span>
 
-					<span class="mt-1 text-sm font-medium text-gray-900">
+					<span class="mt-1 text-sm font-medium ">
 						{formatPrice(shippingMethod.priceWithTax, 'USD')}
 					</span>
-					<span class="block text-sm text-gray-500">
+					<span class="block text-sm ">
 						{$localize`Get it by`}{' '}
 						<span class="font-medium">{shippingMethod.metadata?.maxWaitDays}</span>{' '}
 						{$localize`Days`}
 					</span>
-					<span class="block text-xs text-gray-500">
+					<span class="block text-xs ">
 						{$localize`Shipping to Postal Code: `} {shippingMethod.metadata?.shipToPostalCode}
 					</span>
 				</span>

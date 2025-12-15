@@ -55,7 +55,7 @@ export default component$<AddressInformationProps>(({ mode = 'SHIPPING' }) => {
 							/>
 						</>
 					) : (
-						<p class="mb-4 text-sm text-gray-700">{$localize`No shipping address selected`}</p>
+						<p class="mb-4 text-sm ">{$localize`No shipping address selected`}</p>
 					)}
 					{isGuest.value && (
 						<div
@@ -82,7 +82,7 @@ export default component$<AddressInformationProps>(({ mode = 'SHIPPING' }) => {
 							}}
 						/>
 					) : (
-						<p class="text-sm text-gray-600">{$localize`Sign in to choose from saved addresses`}</p>
+						<p class="text-sm ">{$localize`Sign in to choose from saved addresses`}</p>
 					)}
 				</div>
 			</div>

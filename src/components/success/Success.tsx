@@ -9,7 +9,7 @@ export default component$<{ message: string }>(({ message }) => {
 					<CheckCircleIcon />
 				</div>
 				<div class="ml-3">
-					<h3 class="text-sm font-medium text-gray-800">{message}</h3>
+					<h3 class="text-sm font-medium ">{message}</h3>
 				</div>
 			</div>
 		</div>

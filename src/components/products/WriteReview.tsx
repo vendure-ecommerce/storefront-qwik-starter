@@ -136,7 +136,7 @@ export default component$<IProps>(({ open, productInfo, basicInfo, onSuccess$ })
 								}}
 								readOnly={true}
 							>
-								<div class="block text-xs text-gray-700 ml-4">
+								<div class="block text-xs ml-4">
 									<input
 										type="checkbox"
 										checked={hideLastName.value}
@@ -159,7 +159,7 @@ export default component$<IProps>(({ open, productInfo, basicInfo, onSuccess$ })
 								}}
 								readOnly={true}
 							>
-								<div class="block text-xs text-gray-700 ml-4">
+								<div class="block text-xs ml-4">
 									<input
 										type="checkbox"
 										checked={hideLocation.value}
@@ -189,14 +189,14 @@ export default component$<IProps>(({ open, productInfo, basicInfo, onSuccess$ })
 										>
 											<span
 												key={star}
-												class={`${star <= ratingSignal.value ? 'text-yellow-400' : 'text-gray-300'}`}
+												class={`${star <= ratingSignal.value ? 'text-yellow-400' : ''}`}
 											>
 												★
 											</span>
 										</button>
 									))}
 									<input type="hidden" name="rating" value={ratingSignal.value} />
-									<span class="ml-2 text-sm text-gray-600">{ratingSignal.value}</span>
+									<span class="ml-2 text-sm ">{ratingSignal.value}</span>
 								</div>
 							</div>
 						</div>
@@ -210,7 +210,7 @@ export default component$<IProps>(({ open, productInfo, basicInfo, onSuccess$ })
 			) : (
 				<div class="p-4">
 					<h2 class="text-lg font-medium mb-4">{$localize`Sorry! Cannot Submit Review`}</h2>
-					<p class="text-gray-700">{notAllowedReason.value}</p>
+					<p class="">{notAllowedReason.value}</p>
 					<div class="flex justify-end mt-6">
 						<HighlightedButton onClick$={() => (open.value = false)}>
 							{$localize`Close`}

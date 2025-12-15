@@ -58,7 +58,7 @@ export default component$<FormImageInputProps<Action<any, any, any>>>(
 
 		return (
 			<div class={className}>
-				<label for={name} class="block text-sm font-medium text-gray-700">
+				<label for={name} class="block text-sm font-medium ">
 					{label}
 				</label>
 				<input
@@ -69,7 +69,7 @@ export default component$<FormImageInputProps<Action<any, any, any>>>(
 					accept="image/*"
 					multiple={maxFiles > 1}
 					onChange$={handleFileChange}
-					class="mt-1 block border rounded-md p-2 w-full text-sm text-gray-500"
+					class="mt-1 block border rounded-md p-2 w-full text-sm "
 					disabled={imageFiles.value.length >= maxFiles}
 				/>
 				{warning.value && <p class="text-xs text-red-600 mt-1">{warning.value}</p>}
@@ -94,7 +94,7 @@ export default component$<FormImageInputProps<Action<any, any, any>>>(
 										<LuTrash class="inline w-4 h-4" />
 									</button>
 								</div>
-								<span class="text-xs text-gray-600 mt-1">{file.name}</span>
+								<span class="text-xs mt-1">{file.name}</span>
 							</div>
 						))}
 					</div>

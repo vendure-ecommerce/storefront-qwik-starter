@@ -4,7 +4,7 @@ export default component$(() => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			class="w-5 h-5 text-gray-300 ml-4"
+			class="w-5 h-5 ml-4"
 			fill="none"
 			viewBox="0 0 24 24"
 			stroke="currentColor"

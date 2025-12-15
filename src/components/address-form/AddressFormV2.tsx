@@ -211,7 +211,7 @@ export const AddressForm = component$<IProps>(
 							autoComplete="address-level2"
 						/>
 						<div>
-							<label html-for="countryCode" class="block text-sm font-medium text-gray-700">
+							<label html-for="countryCode" class="block text-sm font-medium ">
 								{$localize`Country`}
 							</label>
 							<div class="mt-1">
@@ -256,10 +256,7 @@ export const AddressForm = component$<IProps>(
 						{allowEditDefault && ( // this is for Guest doesn't need to set default address
 							<>
 								<div class="sm:col-span-1">
-									<label
-										html-for="defaultShippingAddress"
-										class="block text-sm font-medium text-gray-700"
-									>
+									<label html-for="defaultShippingAddress" class="block text-sm font-medium ">
 										{$localize`Default Shipping Address`}
 									</label>
 									<div class="mt-1">
@@ -273,10 +270,7 @@ export const AddressForm = component$<IProps>(
 								</div>
 
 								<div class="sm:col-span-1">
-									<label
-										html-for="defaultBillingAddress"
-										class="block text-sm font-medium text-gray-700"
-									>
+									<label html-for="defaultBillingAddress" class="block text-sm font-medium ">
 										{$localize`Default Billing Address`}
 									</label>
 									<div class="mt-1">
