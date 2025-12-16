@@ -115,7 +115,7 @@ export const GoogleSignInButton = component$((props: { googleClientId: string })
 					}
 				}}
 			></div>
-			{errorMessage.value && <div class="mt-2 text-red-600 text-sm">{errorMessage.value}</div>}
+			{errorMessage.value && <div class="text-error">{errorMessage.value}</div>}
 		</div>
 	);
 });

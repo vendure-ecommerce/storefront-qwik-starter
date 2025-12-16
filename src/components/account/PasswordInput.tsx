@@ -83,10 +83,10 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 	return (
 		<label class="fieldset">
 			<span class="label flex">{props.label}</span>
-			<div class="flex relative">
+			<div class="relative w-full">
 				<input
 					type={isPasswordVisible.value ? 'text' : 'password'}
-					class={`input
+					class={`input pr-10
 						 ${
 								props.fieldValue.value.length < 1
 									? ''
@@ -127,7 +127,7 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 				<button
 					type="button"
 					aria-label="Toggle password visibility"
-					class="btn text-base-content/60"
+					class="absolute right-2 top-1/2 -translate-y-1/2 z-20 h-5 btn btn-ghost p-1 bg-transparent text-base-content/70"
 					onClick$={() => {
 						isPasswordVisible.value = !isPasswordVisible.value;
 					}}
@@ -139,8 +139,8 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 				<div role="alert" class="alert alert-error alert-soft flex flex-col text-left">
 					{invalidateMessages?.value.map((msg) => (
 						<div key={msg} class="flex gap-2 items-start w-full">
-							<LuXCircle class="mt-1" />
-							<p class="m-0">{msg}</p>
+							<LuXCircle />
+							<p>{msg}</p>
 						</div>
 					))}
 				</div>

@@ -9,9 +9,9 @@
  * - More code is transferred to the browser than in SSR mode.
  * - Optimizer/Serialization/Deserialization code is not exercised!
  */
-import './utils/localize-shim';
 import { render, type RenderOptions } from '@builder.io/qwik';
 import Root from './root';
+import './utils/localize-shim';
 
 export default function (opts: RenderOptions) {
 	return render(document, <Root />, opts);

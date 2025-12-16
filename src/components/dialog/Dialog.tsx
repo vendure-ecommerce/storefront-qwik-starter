@@ -1,5 +1,5 @@
 import { component$, Signal, Slot } from '@builder.io/qwik';
-import CloseIcon from '../icons/CloseIcon';
+import { LuX } from '@qwikest/icons/lucide';
 
 interface DialogProps {
 	open: Signal<boolean>;
@@ -7,22 +7,19 @@ interface DialogProps {
 	id?: string;
 }
 
-export const Dialog = component$(({ open, extraClass, id }: DialogProps) => {
+export const Dialog = component$(({ open, extraClass, id = 'generic-dialog' }: DialogProps) => {
 	if (!open.value) {
 		return null; // Don't render anything if the dialog is not open
 	}
 	return (
-		<div
-			id={id}
-			class={`fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40`}
-		>
-			<div class={`bg-white rounded-lg shadow-lg p-6 min-w-[300px] relative ${extraClass ?? ''}`}>
+		<div id={id} class={`fixed inset-0 z-50 flex items-center justify-center`}>
+			<div class={`bg-base-200 rounded-lg shadow-lg p-6 min-w-80 relative ${extraClass ?? ''}`}>
 				<button
-					class="absolute top-2 right-2 "
+					class="btn btn-lg absolute top-1 right-1 bg-transparent border-transparent"
 					onClick$={() => (open.value = false)}
 					aria-label="Close"
 				>
-					<CloseIcon />
+					<LuX class="w-7 h-7" />
 				</button>
 				<Slot />
 			</div>

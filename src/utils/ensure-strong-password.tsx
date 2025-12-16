@@ -32,15 +32,22 @@ const hasSpecialChar = (password: string): IndividualPasswordValidationResult =>
 	return { isValid: true };
 };
 
-const isLongEnough = (password: string): IndividualPasswordValidationResult => {
+const isLengthPassed = (password: string): IndividualPasswordValidationResult => {
 	if (password.length < 8) {
 		return {
 			isValid: false,
 			errorMessage: 'Must be at least 8 characters long.',
 		};
 	}
+	if (password.length > 28) {
+		return {
+			isValid: false,
+			errorMessage: 'Must be at most 28 characters long.',
+		};
+	}
 	return { isValid: true };
 };
+
 const isCommonPassword = (password: string): IndividualPasswordValidationResult => {
 	if (COMMON_PASSWORDS.includes(password)) {
 		return {
@@ -89,7 +96,7 @@ export const isStrongPassword = (
 	email?: string
 ): OverallPasswordValidationResult => {
 	const validations = [
-		isLongEnough(password),
+		isLengthPassed(password),
 		hasNumber(password),
 		hasSpecialChar(password),
 		isCommonPassword(password),

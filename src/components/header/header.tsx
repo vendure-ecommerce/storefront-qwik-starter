@@ -1,7 +1,9 @@
-import { $, component$, useContext } from '@builder.io/qwik';
+import { $, component$, useContext, useSignal } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
+import { LuUser } from '@qwikest/icons/lucide';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { logoutMutation } from '~/providers/shop/account/account';
+import SignInFormDialog from '../account/SignInFormDialog/SignInFormDialog';
 import LogoutIcon from '../icons/LogoutIcon';
 import MenuIcon from '../icons/MenuIcon';
 import ShoppingBagIcon from '../icons/ShoppingBagIcon';
@@ -14,6 +16,7 @@ export default component$(() => {
 	const collections = useContext(APP_STATE).collections.filter(
 		(item) => item.parent?.name === '__root_collection__' && !!item.featuredAsset
 	);
+	const openSignInForm = useSignal(false);
 
 	const totalQuantity =
 		appState.activeOrder?.state !== 'PaymentAuthorized'
@@ -54,10 +57,13 @@ export default component$(() => {
 										</button>
 									</>
 								) : (
-									<Link href="/sign-in" class="flex items-center space-x-1 pb-1 pr-2">
-										<UserIcon />
+									<div
+										class="flex items-center space-x-1 pb-1 pr-2 mr-5 cursor-pointer gap"
+										onClick$={() => (openSignInForm.value = true)}
+									>
+										<LuUser />
 										<span class="mt-1 text-base-content">{$localize`Sign In`}</span>
-									</Link>
+									</div>
 								)}
 							</div>
 						</div>
@@ -107,6 +113,13 @@ export default component$(() => {
 					</div>
 					<ThemeController />
 				</div>
+				<SignInFormDialog
+					open={openSignInForm}
+					onSuccess$={async (customer) => {
+						appState.customer = customer;
+						alert(`Welcome back, ${customer.firstName}!`);
+					}}
+				/>
 			</header>
 		</div>
 	);

@@ -1,7 +1,7 @@
 import { Parameters } from 'storybook-framework-qwik';
 
-import '../src/utils/localize-shim';
 import '../src/global.css';
+import '../src/utils/localize-shim';
 
 export const parameters: Parameters = {
 	a11y: {
