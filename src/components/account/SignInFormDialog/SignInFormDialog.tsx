@@ -1,11 +1,12 @@
 import { $, component$, QRL, Signal, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { useNavigate } from '@builder.io/qwik-city';
 import { LuXCircle } from '@qwikest/icons/lucide';
+import GeneralInput from '~/components/common/GeneralInput';
 import { GOOGLE_CLIENT_ID } from '~/constants';
 import { loginMutation } from '~/providers/shop/account/account';
 import { ActiveCustomer } from '~/types';
+import { loadCustomerData } from '~/utils';
 import { Dialog } from '../../dialog/Dialog';
-import { EmailInput } from '../EmailInput';
 import { GoogleSignInButton } from '../GoogleSignIn';
 import { PasswordInput } from '../PasswordInput';
 
@@ -35,63 +36,56 @@ export default component$(({ open, onSuccess$ }: SignInFormDialogProps) => {
 
 	const onLogIn$ = $(async () => {
 		const { login } = await loginMutation(email.value, password.value, rememberMe.value);
-		console.log('Login response:', JSON.stringify(login, null, 2));
-		// if (login.__typename === 'CurrentUser') {
-		//   const customer = await loadCustomerData();
-		//   await onSuccess$(customer);
-		//   // open.value = false;
-		// } else {
-		//   console.error('Login error:', login.message);
-		//   logInError.value = login.message;
-		// }
+		if (login.__typename === 'CurrentUser') {
+			const customer = await loadCustomerData();
+			await onSuccess$(customer);
+			open.value = false;
+		} else {
+			console.error('Login error:', login.message);
+			logInError.value = login.message;
+		}
 	});
 
 	return (
-		<Dialog open={open} id="sign-in-form-dialog">
-			<div class="flex w-96 flex-col">
-				<form class="fieldset bg-base-100 border-base-300 rounded-box border p-4">
-					<h2 class="text-content text-2xl justify-center mb-3">
-						{$localize`Sign in to your account`}
-					</h2>
-					{logInError.value && (
-						<div role="alert" class="alert alert-error flex">
-							<LuXCircle class="w-6 h-6" />
-							<span>{logInError.value}</span>
-						</div>
-					)}
-					<EmailInput fieldValue={email} completeSignal={isEmailValid} />
+		// align the dialog panel near the top of the screen and add a top margin
+		<Dialog open={open} id="sign-in-form-dialog" extraClass="self-start mt-10">
+			<div class="flex w-80 flex-col items-start">
+				<h2 class="text-content text-2xl justify-center mb-3">
+					{$localize`Sign in to your account`}
+				</h2>
+				{logInError.value && (
+					<div role="alert" class="alert alert-error flex">
+						<LuXCircle class="w-6 h-6" />
+						<span>{logInError.value}</span>
+					</div>
+				)}
+				<GeneralInput
+					label={$localize`Email`}
+					type="email"
+					placeholder={$localize`your@email.com`}
+					fieldValue={email}
+					completeSignal={isEmailValid}
+					extraClass="w-80"
+				/>
 
-					<PasswordInput
-						label={$localize`Password`}
-						fieldValue={password}
-						completeSignal={isPassWordValid}
-						checkStrongPassword={true}
-						withoutCompleteMark={false}
-					/>
+				<PasswordInput
+					label={$localize`Password`}
+					fieldValue={password}
+					completeSignal={isPassWordValid}
+					checkStrongPassword={true}
+					withoutCompleteMark={false}
+					extraClass="w-80"
+				/>
 
-					<button
-						class="btn btn-accent mt-4"
-						// type="submit"
-						disabled={!isPassWordValid.value || !isEmailValid.value}
-						// onClick$={onLogIn$}
-						onClick$={$(async (event) => {
-							event.preventDefault();
-							console.log('Submitting login form with', {
-								email: email.value,
-								password: password.value,
-								rememberMe: rememberMe.value,
-							});
-							// await onLogIn$();
-						})}
-					>
-						{$localize`Sign in`}
-					</button>
-					<button class="btn btn-ghost mt-1" type="reset">
-						Reset
-					</button>
-				</form>
+				<button
+					class="btn btn-accent mt-4 w-full"
+					disabled={!isPassWordValid.value || !isEmailValid.value}
+					onClick$={onLogIn$}
+				>
+					{$localize`Sign in`}
+				</button>
 				<div class="divider">OR</div>
-				<div class="card bg-base-100 rounded-box grid h-fit place-items-center gap-2">
+				<div class="flex w-full flex-col items-center gap-2">
 					<button
 						class="btn btn-link"
 						onClick$={() => {

@@ -44,7 +44,7 @@ export const EmailInput = component$(({ fieldValue, completeSignal }: EmailInput
 			{fieldValue.value.length > 0 && !isValid.value && (
 				// <div class="text-error">{invalidateMessage.value}</div>
 				<div role="alert" class="alert alert-error alert-soft">
-					<span class="flex items-center gap-2">
+					<span class="flex items-center gap-2 text-xs">
 						<LuXCircle />
 						{invalidateMessage.value}
 					</span>

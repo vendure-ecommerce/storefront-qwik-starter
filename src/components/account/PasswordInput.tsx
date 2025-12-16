@@ -11,6 +11,7 @@ interface PasswordInputProps {
 	checkStrongPassword?: boolean;
 	passwordToBeRepeated?: Signal<string>; // if set, it will check if the password is repeated correctly
 	withoutCompleteMark?: boolean; // if true, it will show a check icon when the password is valid
+	extraClass?: string;
 }
 
 /**
@@ -57,6 +58,12 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 	const invalidateMessages = useSignal(['*required']);
 
 	const validatePassword = $(() => {
+		if (props.fieldValue.value.length === 0) {
+			isValid.value = false;
+			invalidateMessages.value = ['*required'];
+			props.completeSignal.value = false; // signal that the password is not valid
+			return;
+		}
 		const validationResult = isStrongPassword(props.fieldValue.value);
 		isValid.value = validationResult.isValid;
 		if (!validationResult.isValid) {
@@ -86,7 +93,7 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 			<div class="relative w-full">
 				<input
 					type={isPasswordVisible.value ? 'text' : 'password'}
-					class={`input pr-10
+					class={`input pr-10 ${props.extraClass ?? ''}
 						 ${
 								props.fieldValue.value.length < 1
 									? ''
@@ -127,7 +134,7 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 				<button
 					type="button"
 					aria-label="Toggle password visibility"
-					class="absolute right-2 top-1/2 -translate-y-1/2 z-20 h-5 btn btn-ghost p-1 bg-transparent text-base-content/70"
+					class="absolute right-2 top-1/2 -translate-y-1/2 z-5 h-5 btn btn-ghost p-1 bg-transparent text-base-content/80"
 					onClick$={() => {
 						isPasswordVisible.value = !isPasswordVisible.value;
 					}}
@@ -135,8 +142,8 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 					{isPasswordVisible.value ? <LuEyeOff class="text-xl" /> : <LuEye class="text-xl" />}
 				</button>
 			</div>
-			{!isValid.value && !props.completeSignal.value && props.fieldValue.value.length > 0 && (
-				<div role="alert" class="alert alert-error alert-soft flex flex-col text-left">
+			{!isValid.value && !props.completeSignal.value && (
+				<div role="alert" class="alert alert-error alert-soft flex flex-col text-left text-xs">
 					{invalidateMessages?.value.map((msg) => (
 						<div key={msg} class="flex gap-2 items-start w-full">
 							<LuXCircle />

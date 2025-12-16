@@ -61,7 +61,7 @@ export default component$(() => {
 										class="flex items-center space-x-1 pb-1 pr-2 mr-5 cursor-pointer gap"
 										onClick$={() => (openSignInForm.value = true)}
 									>
-										<LuUser />
+										<LuUser class="w-6 h-6" />
 										<span class="mt-1 text-base-content">{$localize`Sign In`}</span>
 									</div>
 								)}
@@ -118,7 +118,6 @@ export default component$(() => {
 				open={openSignInForm}
 				onSuccess$={async (customer) => {
 					appState.customer = customer;
-					// alert(`Welcome back, ${customer.firstName}!`);
 				}}
 			/>
 		</div>

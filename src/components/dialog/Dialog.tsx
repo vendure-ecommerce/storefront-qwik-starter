@@ -12,7 +12,7 @@ export const Dialog = component$(({ open, extraClass, id = 'generic-dialog' }: D
 		return null; // Don't render anything if the dialog is not open
 	}
 	return (
-		<div id={id} class={`fixed inset-0 z-50 flex items-center justify-center`}>
+		<div id={id} class={`fixed inset-0 z-20 flex items-center justify-center`}>
 			{/* Backdrop to dim the rest of the page */}
 			<div
 				class="absolute inset-0 bg-black/75"
