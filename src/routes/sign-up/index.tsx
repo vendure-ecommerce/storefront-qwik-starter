@@ -1,10 +1,11 @@
-import { $, component$, useComputed$, useContext, useSignal } from '@builder.io/qwik';
+import { $, component$, useComputed$, useSignal } from '@builder.io/qwik';
 import { useNavigate } from '@builder.io/qwik-city';
 import { LuXCircle } from '@qwikest/icons/lucide';
+import { GoogleSignInButton } from '~/components/account/GoogleSignIn';
 import { PasswordInput } from '~/components/account/PasswordInput';
 import SignInFormDialog from '~/components/account/SignInFormDialog/SignInFormDialog';
 import GeneralInput from '~/components/common/GeneralInput';
-import { APP_STATE } from '~/constants';
+import { GOOGLE_CLIENT_ID } from '~/constants';
 import { registerCustomerAccountMutation } from '~/providers/shop/account/account';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regular expression for email validation
@@ -24,7 +25,6 @@ export default component$(() => {
 	const successSignal = useSignal(false);
 	const error = useSignal('');
 	const openSignInForm = useSignal(false);
-	const appState = useContext(APP_STATE);
 	const navigate = useNavigate();
 
 	const registerCustomer = $(async (): Promise<void> => {
@@ -140,16 +140,26 @@ export default component$(() => {
 			</div>
 			<div class="divider">OR</div>
 			<div class="sm:mx-auto sm:w-full sm:max-w-md">
-				<p class="mt-2 text-center text-sm ">{$localize`Already have an account?`}</p>
-				<div class="text-center text-sm link" onClick$={() => (openSignInForm.value = true)}>
-					{$localize`Sign In`}
+				<p
+					class="mt-2 text-center text-sm link "
+					onClick$={() => (openSignInForm.value = true)}
+				>{$localize`Already have an account?`}</p>
+
+				<div class="flex justify-center mt-4">
+					<GoogleSignInButton
+						googleClientId={GOOGLE_CLIENT_ID}
+						buttonId="google-signin-btn-from-sign-up-page"
+						onSuccess$={async () => {
+							navigate('/account');
+						}}
+					/>
 				</div>
 			</div>
 
 			<SignInFormDialog
 				open={openSignInForm}
-				onSuccess$={async (customer) => {
-					appState.customer = customer;
+				googleSignInBtnId="google-signin-btn-from-dialog-from-sign-up-page"
+				onSuccess$={async () => {
 					navigate('/account');
 				}}
 			/>

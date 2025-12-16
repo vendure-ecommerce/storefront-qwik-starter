@@ -11,95 +11,103 @@ import { PasswordInput } from '../PasswordInput';
 
 interface SignInFormDialogProps {
 	open: Signal<boolean>;
+	googleSignInBtnId?: string;
 	onSuccess$?: QRL<() => Promise<void>>;
 }
 
-export default component$(({ open, onSuccess$ }: SignInFormDialogProps) => {
-	const appState = useContext(APP_STATE);
-	const email = useSignal('');
-	const password = useSignal('');
-	const rememberMe = useSignal(true);
-	const isPassWordValid = useSignal(false);
-	const isEmailValid = useSignal(false);
-	const navigate = useNavigate();
-	const logInError = useSignal('');
+export default component$(
+	({
+		open,
+		googleSignInBtnId = 'google-signin-btn-sign-in-dialog',
+		onSuccess$,
+	}: SignInFormDialogProps) => {
+		const appState = useContext(APP_STATE);
+		const email = useSignal('');
+		const password = useSignal('');
+		const rememberMe = useSignal(true);
+		const isPassWordValid = useSignal(false);
+		const isEmailValid = useSignal(false);
+		const navigate = useNavigate();
+		const logInError = useSignal('');
 
-	const onLogIn$ = $(async () => {
-		const { login } = await loginMutation(email.value, password.value, rememberMe.value);
-		if (login.__typename === 'CurrentUser') {
-			const customer = await loadCustomerData();
-			appState.customer = customer;
-			if (onSuccess$) {
-				await onSuccess$();
+		const onLogIn$ = $(async () => {
+			const { login } = await loginMutation(email.value, password.value, rememberMe.value);
+			if (login.__typename === 'CurrentUser') {
+				const customer = await loadCustomerData();
+				appState.customer = customer;
+				if (onSuccess$) {
+					await onSuccess$();
+				}
+
+				open.value = false;
+			} else {
+				console.error('Login error:', login.message);
+				logInError.value = login.message;
 			}
+		});
 
-			open.value = false;
-		} else {
-			console.error('Login error:', login.message);
-			logInError.value = login.message;
-		}
-	});
-
-	return (
-		// align the dialog panel near the top of the screen and add a top margin
-		<Dialog open={open} id="sign-in-form-dialog" extraClass="self-start mt-10">
-			<div class="flex flex-col items-start">
-				<h2 class="text-content text-2xl justify-center mb-3">
-					{$localize`Sign in to your account`}
-				</h2>
-				{logInError.value && (
-					<div role="alert" class="alert alert-error flex">
-						<LuXCircle class="w-6 h-6" />
-						<span>{logInError.value}</span>
-					</div>
-				)}
-				<GeneralInput
-					label={$localize`Email`}
-					type="email"
-					placeholder={$localize`your@email.com`}
-					fieldValue={email}
-					completeSignal={isEmailValid}
-					extraClass="w-80"
-				/>
-
-				<PasswordInput
-					label={$localize`Password`}
-					fieldValue={password}
-					completeSignal={isPassWordValid}
-					checkStrongPassword={true}
-					withoutCompleteMark={false}
-					extraClass="w-80"
-				/>
-
-				<button
-					class="btn btn-accent mt-4 w-full"
-					disabled={!isPassWordValid.value || !isEmailValid.value}
-					onClick$={onLogIn$}
-				>
-					{$localize`Sign in`}
-				</button>
-				<div class="divider">OR</div>
-				<div class="flex w-full flex-col items-center gap-2">
-					<button
-						class="btn btn-link"
-						onClick$={() => {
-							navigate('/sign-up');
-							open.value = false;
-						}}
-					>
-						{$localize`Create an account`}
-					</button>
-					<GoogleSignInButton
-						googleClientId={GOOGLE_CLIENT_ID}
-						onSuccess$={async () => {
-							if (onSuccess$) {
-								await onSuccess$();
-							}
-							open.value = false;
-						}}
+		return (
+			// align the dialog panel near the top of the screen and add a top margin
+			<Dialog open={open} id="sign-in-form-dialog" extraClass="self-start mt-10">
+				<div class="flex flex-col items-start">
+					<h2 class="text-content text-2xl justify-center mb-3">
+						{$localize`Sign in to your account`}
+					</h2>
+					{logInError.value && (
+						<div role="alert" class="alert alert-error flex">
+							<LuXCircle class="w-6 h-6" />
+							<span>{logInError.value}</span>
+						</div>
+					)}
+					<GeneralInput
+						label={$localize`Email`}
+						type="email"
+						placeholder={$localize`your@email.com`}
+						fieldValue={email}
+						completeSignal={isEmailValid}
+						extraClass="w-80"
 					/>
+
+					<PasswordInput
+						label={$localize`Password`}
+						fieldValue={password}
+						completeSignal={isPassWordValid}
+						checkStrongPassword={true}
+						withoutCompleteMark={false}
+						extraClass="w-80"
+					/>
+
+					<button
+						class="btn btn-accent mt-4 w-full"
+						disabled={!isPassWordValid.value || !isEmailValid.value}
+						onClick$={onLogIn$}
+					>
+						{$localize`Sign in`}
+					</button>
+					<div class="divider">OR</div>
+					<div class="flex w-full flex-col items-center gap-2">
+						<button
+							class="btn btn-link"
+							onClick$={() => {
+								navigate('/sign-up');
+								open.value = false;
+							}}
+						>
+							{$localize`Create an account`}
+						</button>
+						<GoogleSignInButton
+							googleClientId={GOOGLE_CLIENT_ID}
+							buttonId={googleSignInBtnId}
+							onSuccess$={async () => {
+								if (onSuccess$) {
+									await onSuccess$();
+								}
+								open.value = false;
+							}}
+						/>
+					</div>
 				</div>
-			</div>
-		</Dialog>
-	);
-});
+			</Dialog>
+		);
+	}
+);

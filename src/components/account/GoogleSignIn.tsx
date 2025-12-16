@@ -1,11 +1,17 @@
-import { $, component$, QRL, useContext, useOnDocument, useSignal } from '@builder.io/qwik';
+import { $, component$, QRL, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import { useNavigate } from '@builder.io/qwik-city';
 import { APP_STATE } from '~/constants';
 import { authenticateMutation } from '~/providers/shop/account/account';
 import { loadCustomerData } from '~/utils';
 
+/**
+ * Props for GoogleSignInButton component
+ * Note the buttonId prop to specify the container div ID for rendering the button.
+ * If you are calling this component from different places, make sure to provide unique buttonId values.
+ */
 interface Iprop {
 	googleClientId: string;
+	buttonId: string;
 	onSuccess$?: QRL<() => Promise<void>>;
 }
 
@@ -42,7 +48,10 @@ export const GoogleSignInButton = component$((props: Iprop) => {
 
 		if (result.__typename === 'CurrentUser') {
 			const customer = await loadCustomerData();
-			appState.customer = customer;
+			// Update appState only if context is available (not in Storybook/test)
+			if (appState) {
+				appState.customer = customer;
+			}
 			isLoading.value = false;
 			if (props.onSuccess$) {
 				await props.onSuccess$();
@@ -67,43 +76,31 @@ export const GoogleSignInButton = component$((props: Iprop) => {
 
 	// useVisibleTask will run on the browser after rendering, as we need to do DOM manipulation.
 	// This is runs on the client only, and will not block rendering.
+	// useVisibleTask is more reliable than DOMContentLoaded for Storybook and SSR environments.
 	// see https://qwik.dev/docs/components/tasks/#usevisibletask
-	// https://qwik.dev/docs/guides/best-practices/#register-dom-events-with-useon-useonwindow-or-useondocument
-	// useOnDocument is used to register the event listener on the document, which is considered better than useVisibleTask for this case.
-	useOnDocument(
-		'DOMContentLoaded',
-		$(() => {
-			// Check if the Google Identity Services library is already loaded
-			// Reference: https://developers.google.com/identity/gsi/web/reference/js-reference
-			const googleInstance = (window as any).google;
-			if (!googleInstance?.accounts?.id) {
-				const script = document.createElement('script');
-				script.src = 'https://accounts.google.com/gsi/client';
-				script.async = true;
-				script.onload = () => {
-					// Initialize Google Identity Services after the script is loaded
-					const newGoogleInstance = (window as any).google;
-					initAndRenderGoogleSignInButton(
-						'google-signin-button',
-						googleSignInInitOptions,
-						newGoogleInstance
-					);
-				};
-				document.head.appendChild(script);
-			} else {
-				initAndRenderGoogleSignInButton(
-					'google-signin-button',
-					googleSignInInitOptions,
-					googleInstance
-				);
-			}
-		})
-	);
+	useVisibleTask$(() => {
+		// Check if the Google Identity Services library is already loaded
+		// Reference: https://developers.google.com/identity/gsi/web/reference/js-reference
+		const googleInstance = (window as any).google;
+		if (!googleInstance?.accounts?.id) {
+			const script = document.createElement('script');
+			script.src = 'https://accounts.google.com/gsi/client';
+			script.async = true;
+			script.onload = () => {
+				// Initialize Google Identity Services after the script is loaded
+				const newGoogleInstance = (window as any).google;
+				initAndRenderGoogleSignInButton(props.buttonId, googleSignInInitOptions, newGoogleInstance);
+			};
+			document.head.appendChild(script);
+		} else {
+			initAndRenderGoogleSignInButton(props.buttonId, googleSignInInitOptions, googleInstance);
+		}
+	});
 
 	return (
 		<>
 			<div
-				id="google-signin-button"
+				id={props.buttonId}
 				// class="flex justify-center bg-transparent rounded-md"
 				onClick$={() => {
 					if (!isLoading.value) {
