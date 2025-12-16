@@ -97,7 +97,7 @@ export default component$(() => {
 					</div>
 					<div class="indicator">
 						{totalQuantity && (
-							<span class="indicator-item badge badge-primary">{totalQuantity}</span>
+							<span class="indicator-item badge badge-primary badge-xs">{totalQuantity}</span>
 						)}
 						<button
 							name="Cart"
