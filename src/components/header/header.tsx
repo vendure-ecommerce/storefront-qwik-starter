@@ -1,12 +1,11 @@
 import { $, component$, useContext, useSignal } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
-import { LuUser } from '@qwikest/icons/lucide';
+import { LuShoppingCart, LuUser } from '@qwikest/icons/lucide';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
 import { logoutMutation } from '~/providers/shop/account/account';
 import SignInFormDialog from '../account/SignInFormDialog/SignInFormDialog';
 import LogoutIcon from '../icons/LogoutIcon';
 import MenuIcon from '../icons/MenuIcon';
-import ShoppingBagIcon from '../icons/ShoppingBagIcon';
 import UserIcon from '../icons/UserIcon';
 import SearchBar from '../search-bar/SearchBar';
 import ThemeController from '../theme-controller/ThemeController';
@@ -96,19 +95,17 @@ export default component$(() => {
 					<div class="flex-1 block md:pr-8">
 						<SearchBar />
 					</div>
-					<div class="">
+					<div class="indicator">
+						{totalQuantity && (
+							<span class="indicator-item badge badge-primary">{totalQuantity}</span>
+						)}
 						<button
 							name="Cart"
 							aria-label={`${totalQuantity} items in cart`}
 							class="btn btn-md relative w-9 h-9 p-1"
 							onClick$={() => (appState.showCart = !appState.showCart)}
 						>
-							<ShoppingBagIcon />
-							{totalQuantity ? (
-								<div class="absolute rounded-full -top-2 -right-2 w-6 h-6">{totalQuantity}</div>
-							) : (
-								''
-							)}
+							<LuShoppingCart class="w-6 h-6" />
 						</button>
 					</div>
 					<ThemeController />

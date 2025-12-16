@@ -59,9 +59,9 @@ export default component$(() => {
 
 	return (
 		<div>
-			<div class="min-h-[24rem] max-w-6xl m-auto rounded-lg p-4 space-y-4 ">
+			<div class="min-h-96 max-w-6xl m-auto rounded-lg p-4 space-y-4 ">
 				<div class="flex flex-col justify-center items-center">
-					<div class="relative flex flex-col items-center rounded-[20px] w-[400px] mx-auto p-4 bg-white bg-clip-border shadow-xl hover:shadow-2xl">
+					<div class="relative flex flex-col items-center rounded-[20px] w-100 mx-auto p-4 bg-white bg-clip-border shadow-xl hover:shadow-2xl">
 						<div class="relative flex h-32 w-full justify-center rounded-xl bg-cover">
 							<Image
 								layout="fullWidth"
@@ -69,7 +69,7 @@ export default component$(() => {
 								class="absolute flex h-32 w-full justify-center rounded-xl bg-cover"
 								alt="background"
 							/>
-							<div class="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400">
+							<div class="absolute -bottom-12 flex w-24 h-24 items-center justify-center rounded-full border-4">
 								<Image
 									layout="fullWidth"
 									class="h-full w-full rounded-full"
@@ -117,7 +117,7 @@ export default component$(() => {
 					</div>
 				</div>
 			</div>
-			<div class="min-h-[24rem] rounded-lg p-4 space-y-4">
+			<div class="min-h-96 rounded-lg p-4 space-y-4">
 				<Modal
 					open={showModal.value}
 					title="Confirm E-Mail address change"
@@ -209,7 +209,7 @@ export default component$(() => {
 											newEmail.value = el.value;
 										}
 									}}
-									class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+									class="block w-full rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
 
@@ -221,7 +221,7 @@ export default component$(() => {
 									onChange$={(_, el) => {
 										update.customer.phoneNumber = el.value;
 									}}
-									class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+									class="block w-full rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
 								/>
 							</div>
 						</div>
