@@ -1,11 +1,9 @@
 import { $, component$, useComputed$, useSignal } from '@builder.io/qwik';
 import { useNavigate } from '@builder.io/qwik-city';
 import { LuXCircle } from '@qwikest/icons/lucide';
-import { GoogleSignInButton } from '~/components/account/GoogleSignIn';
 import { PasswordInput } from '~/components/account/PasswordInput';
 import SignInFormDialog from '~/components/account/SignInFormDialog/SignInFormDialog';
 import GeneralInput from '~/components/common/GeneralInput';
-import { GOOGLE_CLIENT_ID } from '~/constants';
 import { registerCustomerAccountMutation } from '~/providers/shop/account/account';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regular expression for email validation
@@ -144,16 +142,6 @@ export default component$(() => {
 					class="mt-2 text-center text-sm link "
 					onClick$={() => (openSignInForm.value = true)}
 				>{$localize`Already have an account?`}</p>
-
-				<div class="flex justify-center mt-4">
-					<GoogleSignInButton
-						googleClientId={GOOGLE_CLIENT_ID}
-						buttonId="google-signin-btn-from-sign-up-page"
-						onSuccess$={async () => {
-							navigate('/account');
-						}}
-					/>
-				</div>
 			</div>
 
 			<SignInFormDialog

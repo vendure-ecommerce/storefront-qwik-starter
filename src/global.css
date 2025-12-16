@@ -4,6 +4,7 @@
 
 @import 'tailwindcss';
 
+/* Remember to also change the ThemeConfroller.tsx, if you added new theme here */
 @plugin 'daisyui' {
 	themes:
 		nord --default,
@@ -19,6 +20,7 @@
 		forest,
 		luxury,
 		coffee dim,
+		dim,
 		night,
 		caramellatte,
 		lemonade;
