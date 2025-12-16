@@ -61,14 +61,10 @@ export default component$(() => {
 	return (
 		<div class="flex flex-col justify-center py-6 sm:px-6 lg:px-8 md:w-96 lg:w-1/2 mx-auto">
 			<div class="sm:mx-auto sm:w-full sm:max-w-md">
-				<h2 class="mt-6 text-center text-3xl ">Create a new account</h2>
-				<p class="mt-2 text-center text-sm ">Or </p>
-				<div class="text-center text-sm link" onClick$={() => (openSignInForm.value = true)}>
-					login to your existing account
-				</div>
+				<h2 class="mt-6 text-center text-3xl ">{$localize`Create a new account`}</h2>
 			</div>
 
-			<div class="mt-2 sm:mx-auto sm:w-full sm:max-w-md">
+			<div class="mt-1 sm:mx-auto sm:w-full sm:max-w-md">
 				<div class=" py-8 px-4 shadow sm:rounded-lg sm:px-10">
 					{successSignal.value && (
 						<div class="mb-6 border bg-success text-success-content rounded p-4 text-center text-sm">
@@ -111,22 +107,22 @@ export default component$(() => {
 							/>
 						</div>
 
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-							<PasswordInput
-								label="Password"
-								fieldValue={password}
-								completeSignal={isPasswordValid}
-								incompleteSignal={isConfirmPasswordValid}
-								checkStrongPassword={true}
-							/>
+						<PasswordInput
+							label="Password"
+							fieldValue={password}
+							completeSignal={isPasswordValid}
+							incompleteSignal={isConfirmPasswordValid}
+							checkStrongPassword={true}
+							extraClass="w-full"
+						/>
 
-							<PasswordInput
-								label="Repeat Password"
-								fieldValue={confirmPassword}
-								completeSignal={isConfirmPasswordValid}
-								passwordToBeRepeated={password}
-							/>
-						</div>
+						<PasswordInput
+							label="Repeat Password"
+							fieldValue={confirmPassword}
+							completeSignal={isConfirmPasswordValid}
+							passwordToBeRepeated={password}
+							extraClass="w-full"
+						/>
 
 						<div>
 							<button
@@ -142,6 +138,14 @@ export default component$(() => {
 					</div>
 				</div>
 			</div>
+			<div class="divider">OR</div>
+			<div class="sm:mx-auto sm:w-full sm:max-w-md">
+				<p class="mt-2 text-center text-sm ">{$localize`Already have an account?`}</p>
+				<div class="text-center text-sm link" onClick$={() => (openSignInForm.value = true)}>
+					{$localize`Sign In`}
+				</div>
+			</div>
+
 			<SignInFormDialog
 				open={openSignInForm}
 				onSuccess$={async (customer) => {

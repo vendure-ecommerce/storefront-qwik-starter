@@ -1,10 +1,9 @@
-import { $, component$, QRL, Signal, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { $, component$, QRL, Signal, useContext, useSignal } from '@builder.io/qwik';
 import { useNavigate } from '@builder.io/qwik-city';
 import { LuXCircle } from '@qwikest/icons/lucide';
 import GeneralInput from '~/components/common/GeneralInput';
-import { GOOGLE_CLIENT_ID } from '~/constants';
+import { APP_STATE, GOOGLE_CLIENT_ID } from '~/constants';
 import { loginMutation } from '~/providers/shop/account/account';
-import { ActiveCustomer } from '~/types';
 import { loadCustomerData } from '~/utils';
 import { Dialog } from '../../dialog/Dialog';
 import { GoogleSignInButton } from '../GoogleSignIn';
@@ -12,10 +11,11 @@ import { PasswordInput } from '../PasswordInput';
 
 interface SignInFormDialogProps {
 	open: Signal<boolean>;
-	onSuccess$: QRL<(customer: ActiveCustomer) => Promise<void>>;
+	onSuccess$?: QRL<() => Promise<void>>;
 }
 
 export default component$(({ open, onSuccess$ }: SignInFormDialogProps) => {
+	const appState = useContext(APP_STATE);
 	const email = useSignal('');
 	const password = useSignal('');
 	const rememberMe = useSignal(true);
@@ -24,21 +24,15 @@ export default component$(({ open, onSuccess$ }: SignInFormDialogProps) => {
 	const navigate = useNavigate();
 	const logInError = useSignal('');
 
-	useVisibleTask$(({ track }) => {
-		track(() => open.value);
-		// Clear form when dialog is opened
-		if (open.value) {
-			console.log('dialog opened, clearing form');
-		} else {
-			console.log('dialog closed');
-		}
-	});
-
 	const onLogIn$ = $(async () => {
 		const { login } = await loginMutation(email.value, password.value, rememberMe.value);
 		if (login.__typename === 'CurrentUser') {
 			const customer = await loadCustomerData();
-			await onSuccess$(customer);
+			appState.customer = customer;
+			if (onSuccess$) {
+				await onSuccess$();
+			}
+
 			open.value = false;
 		} else {
 			console.error('Login error:', login.message);
@@ -49,7 +43,7 @@ export default component$(({ open, onSuccess$ }: SignInFormDialogProps) => {
 	return (
 		// align the dialog panel near the top of the screen and add a top margin
 		<Dialog open={open} id="sign-in-form-dialog" extraClass="self-start mt-10">
-			<div class="flex w-80 flex-col items-start">
+			<div class="flex flex-col items-start">
 				<h2 class="text-content text-2xl justify-center mb-3">
 					{$localize`Sign in to your account`}
 				</h2>
@@ -95,7 +89,15 @@ export default component$(({ open, onSuccess$ }: SignInFormDialogProps) => {
 					>
 						{$localize`Create an account`}
 					</button>
-					<GoogleSignInButton googleClientId={GOOGLE_CLIENT_ID} />
+					<GoogleSignInButton
+						googleClientId={GOOGLE_CLIENT_ID}
+						onSuccess$={async () => {
+							if (onSuccess$) {
+								await onSuccess$();
+							}
+							open.value = false;
+						}}
+					/>
 				</div>
 			</div>
 		</Dialog>

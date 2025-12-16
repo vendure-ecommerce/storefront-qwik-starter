@@ -114,12 +114,7 @@ export default component$(() => {
 					<ThemeController />
 				</div>
 			</header>
-			<SignInFormDialog
-				open={openSignInForm}
-				onSuccess$={async (customer) => {
-					appState.customer = customer;
-				}}
-			/>
+			<SignInFormDialog open={openSignInForm} />
 		</div>
 	);
 });

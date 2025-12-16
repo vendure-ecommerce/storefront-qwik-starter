@@ -21,7 +21,7 @@ export const Dialog = component$(({ open, extraClass, id = 'generic-dialog' }: D
 			/>
 			{/* Dialog panel (above the backdrop) */}
 			<div
-				class={`bg-base-200 rounded-lg shadow-lg p-6 min-w-80 relative z-10 ${extraClass ?? ''}`}
+				class={`bg-base-200 rounded-lg shadow-lg p-6 relative z-10 ${extraClass ?? ''}`}
 				role="dialog"
 				aria-modal="true"
 			>
@@ -32,7 +32,9 @@ export const Dialog = component$(({ open, extraClass, id = 'generic-dialog' }: D
 				>
 					<LuX class="w-7 h-7" />
 				</button>
-				<Slot />
+				<div class="m-3 p-5 bg-base-300 rounded-lg">
+					<Slot />
+				</div>
 			</div>
 		</div>
 	);

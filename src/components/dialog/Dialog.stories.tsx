@@ -22,7 +22,7 @@ export const Default: Story = {
 						Open dialog
 					</button>
 					<Dialog open={open} extraClass="bg-base-100">
-						<div style={{ minWidth: 320 }}>
+						<div>
 							<h3 class="text-lg font-medium mb-4">Dialog title</h3>
 							<p class="mb-4">This is an example dialog. You can close it using the X button.</p>
 							<div class="flex justify-end gap-2">

@@ -1,6 +1,13 @@
-import { $, component$, useOnDocument, useSignal } from '@builder.io/qwik';
+import { $, component$, QRL, useContext, useOnDocument, useSignal } from '@builder.io/qwik';
 import { useNavigate } from '@builder.io/qwik-city';
+import { APP_STATE } from '~/constants';
 import { authenticateMutation } from '~/providers/shop/account/account';
+import { loadCustomerData } from '~/utils';
+
+interface Iprop {
+	googleClientId: string;
+	onSuccess$?: QRL<() => Promise<void>>;
+}
 
 /**
  * GoogleSignInButton component
@@ -13,7 +20,9 @@ import { authenticateMutation } from '~/providers/shop/account/account';
  * However you can define it in `.env` with key `VITE_GOOGLE_CLIENT_ID` (Note VITE_ prefix is required for Vite to expose it to the client-side code),
  * Then edit `src/env.ts` and `src/constants.ts` so you can use it in your app.
  */
-export const GoogleSignInButton = component$((props: { googleClientId: string }) => {
+export const GoogleSignInButton = component$((props: Iprop) => {
+	const appState = useContext(APP_STATE);
+
 	const navigate = useNavigate();
 	const isLoading = useSignal(false);
 	const errorMessage = useSignal('');
@@ -30,13 +39,22 @@ export const GoogleSignInButton = component$((props: { googleClientId: string })
 		// to accept Google tokens (or exchange them) instead of relying on
 		// this shape.
 		const result = await authenticateMutation({ google: { token: response.credential } } as any);
-		if (result.__typename !== 'CurrentUser') {
+
+		if (result.__typename === 'CurrentUser') {
+			const customer = await loadCustomerData();
+			appState.customer = customer;
+			isLoading.value = false;
+			if (props.onSuccess$) {
+				await props.onSuccess$();
+			} else {
+				navigate('/account');
+			}
+			return;
+		} else {
 			errorMessage.value = `Google Sign-In failed: ${result.message}`;
 			isLoading.value = false;
 			return;
 		}
-		isLoading.value = false;
-		navigate('/account');
 	});
 
 	const googleSignInInitOptions = {
@@ -57,65 +75,78 @@ export const GoogleSignInButton = component$((props: { googleClientId: string })
 		$(() => {
 			// Check if the Google Identity Services library is already loaded
 			// Reference: https://developers.google.com/identity/gsi/web/reference/js-reference
-			const g = (window as any).google;
-			if (!g?.accounts?.id) {
+			const googleInstance = (window as any).google;
+			if (!googleInstance?.accounts?.id) {
 				const script = document.createElement('script');
 				script.src = 'https://accounts.google.com/gsi/client';
 				script.async = true;
 				script.onload = () => {
 					// Initialize Google Identity Services after the script is loaded
-					const gg = (window as any).google;
-					gg.accounts.id.initialize(googleSignInInitOptions);
-
-					// Render the Google Sign-In button
-					const buttonContainer = document.getElementById('google-signin-button');
-					if (buttonContainer) {
-						gg.accounts.id.renderButton(buttonContainer, {
-							theme: 'outline',
-							size: 'large',
-							type: 'standard',
-						});
-					}
+					const newGoogleInstance = (window as any).google;
+					initAndRenderGoogleSignInButton(
+						'google-signin-button',
+						googleSignInInitOptions,
+						newGoogleInstance
+					);
 				};
 				document.head.appendChild(script);
 			} else {
-				// Initialize Google Identity Services if the library is already loaded
-				g.accounts.id.initialize(googleSignInInitOptions);
-
-				// Render the Google Sign-In button
-				const buttonContainer = document.getElementById('google-signin-button');
-				if (buttonContainer) {
-					g.accounts.id.renderButton(buttonContainer, {
-						theme: 'outline',
-						size: 'large',
-						type: 'standard',
-					});
-				}
+				initAndRenderGoogleSignInButton(
+					'google-signin-button',
+					googleSignInInitOptions,
+					googleInstance
+				);
 			}
 		})
 	);
 
 	return (
-		<div class="bg-transparent rounded-md h-fit p-2">
+		<>
 			<div
 				id="google-signin-button"
-				class="flex justify-center bg-transparent rounded-md"
+				// class="flex justify-center bg-transparent rounded-md"
 				onClick$={() => {
 					if (!isLoading.value) {
 						isLoading.value = true;
-						const gg = (window as any).google;
+						const google = (window as any).google;
 						if (
-							gg &&
-							gg.accounts &&
-							gg.accounts.id &&
-							typeof gg.accounts.id.prompt === 'function'
+							google &&
+							google.accounts &&
+							google.accounts.id &&
+							typeof google.accounts.id.prompt === 'function'
 						) {
-							gg.accounts.id.prompt();
+							google.accounts.id.prompt();
 						}
 					}
 				}}
 			></div>
 			{errorMessage.value && <div class="text-error">{errorMessage.value}</div>}
-		</div>
+		</>
 	);
 });
+
+/**
+ * The rendering of the Google Sign-In button
+ * Reference: https://developers.google.com/identity/gsi/web/reference/js-reference#GsiButtonConfiguration
+ * @param containerId
+ * @param googleSignInInitOptions
+ * @param googleInstance
+ */
+const initAndRenderGoogleSignInButton = (
+	containerId: string,
+	googleSignInInitOptions: any,
+	googleInstance: any
+) => {
+	// Reference: https://developers.google.com/identity/gsi/web/reference/js-reference
+	googleInstance.accounts.id.initialize(googleSignInInitOptions);
+
+	// Render the Google Sign-In button
+	const buttonContainer = document.getElementById(containerId);
+	if (buttonContainer) {
+		googleInstance.accounts.id.renderButton(buttonContainer, {
+			theme: 'filled_blue',
+			size: 'large',
+			type: 'standard',
+		});
+	}
+};
