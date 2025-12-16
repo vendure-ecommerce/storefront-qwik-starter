@@ -1,5 +1,5 @@
 import { component$ } from '@builder.io/qwik';
-import { Link } from '@builder.io/qwik-city';
+import { LuLink } from '@qwikest/icons/lucide';
 import { Order } from '~/generated/graphql';
 import { formatDateTime } from '~/utils';
 
@@ -17,13 +17,24 @@ export default component$<Props>(({ order }) => {
 						<span class="font-semibold">{order?.code}</span>
 					</div>
 					<div class="flex items-center gap-x-2">
-						{$localize`Placed on`}
+						{$localize`Placed on:`}
 						<span class="font-semibold">{formatDateTime(order?.createdAt)}</span>
 					</div>
 
 					<div class="flex items-center gap-x-2">
 						{$localize`Status:`}
-						<span class="font-semibold bg-white border  rounded-lg px-2 py-1">{order?.state}</span>
+						{/* order state can be Pending, Shipped, Delivered */}
+						<div
+							class={`badge 
+							${order?.state === 'Pending' ? 'badge-secondary' : ''}
+							${order?.state === 'Shipped' ? 'badge-info' : ''}
+							${order?.state === 'Delivered' ? 'badge-success' : ''}
+							${order?.state === 'Cancelled' ? 'badge-error' : ''}
+							${order?.state === 'Returned' ? 'badge-warning' : ''}
+							`}
+						>
+							{order?.state}
+						</div>
 					</div>
 
 					<div class="flex items-center gap-x-2">
@@ -33,15 +44,17 @@ export default component$<Props>(({ order }) => {
 								{order.fulfillments.map((fulfillment, idx) => {
 									const url = fulfillment?.customFields?.trackingUrl;
 									return url ? (
-										<Link
+										<a
 											key={fulfillment?.id ?? idx}
 											href={url}
 											target="_blank"
 											rel="noopener noreferrer"
-											class="underline"
+											class="link"
+											aria-label={$localize`Open tracking URL in new tab`}
+											title={url}
 										>
-											{url}
-										</Link>
+											<LuLink class="w-4 h-4" />
+										</a>
 									) : (
 										<span key={fulfillment?.id ?? idx} class="font-semibold">
 											{$localize`Not provided`}

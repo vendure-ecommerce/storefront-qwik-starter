@@ -59,7 +59,7 @@ export default component$(() => {
 						{store.order && (
 							<>
 								<CartContents order={store.order} allowReview={allowReviewSignal.value} />
-								<CartTotals order={store.order} readOnly={useSignal(true)} />
+								<CartTotals order={store.order} readOnly={{ value: true }} />
 							</>
 						)}
 					</SectionWithLabel>
@@ -67,6 +67,6 @@ export default component$(() => {
 			</div>
 		</div>
 	) : (
-		<div class="h-[100vh]" />
+		<div class="h-screen" />
 	);
 });

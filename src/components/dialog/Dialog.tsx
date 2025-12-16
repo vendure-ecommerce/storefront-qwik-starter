@@ -15,7 +15,7 @@ export const Dialog = component$(({ open, extraClass, id = 'generic-dialog' }: D
 		<div id={id} class={`fixed inset-0 z-20 flex items-center justify-center`}>
 			{/* Backdrop to dim the rest of the page */}
 			<div
-				class="absolute inset-0 bg-black/75"
+				class="absolute inset-0 bg-black/80"
 				onClick$={() => (open.value = false)}
 				aria-hidden="true"
 			/>

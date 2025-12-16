@@ -1,7 +1,6 @@
-import { component$, useContextProvider, useSignal } from '@builder.io/qwik';
+import { component$, useSignal } from '@builder.io/qwik';
 import { QwikCityMockProvider } from '@builder.io/qwik-city';
 import type { Meta, StoryObj } from 'storybook-framework-qwik';
-import { APP_STATE } from '~/constants';
 import { ActiveCustomer, AppState } from '~/types';
 import SignInFormDialog from './SignInFormDialog';
 
@@ -34,7 +33,7 @@ export default meta;
 export const Default: Story = {
 	render: () => {
 		const Demo = component$(() => {
-			useContextProvider(APP_STATE, mockAppState);
+			// useContextProvider(APP_STATE, mockAppState);
 			const open = useSignal(true);
 
 			// Mock Google Sign-In library in Storybook to prevent script loading issues

@@ -1,13 +1,14 @@
 import { component$, QRL, useSignal } from '@builder.io/qwik';
-import Tooltip from '~/components/tooltip/Tooltip';
+import {
+	LuCreditCard,
+	LuMapPin,
+	LuPenLine,
+	LuPhone,
+	LuTrash,
+	LuTruck,
+} from '@qwikest/icons/lucide';
 import { ShippingAddress } from '~/types';
 import { AddressForm } from '../address-form/AddressFormV2';
-import BillingAddressIcon from '../icons/BillingAddressIcon';
-import LocationIcon from '../icons/LocationIcon';
-import PencilEditIcon from '../icons/PencilEditIcon';
-import ShippingAddressIcon from '../icons/ShippingAddressIcon';
-import TelephoneIcon from '../icons/TelephoneIcon';
-import TrashCanIcon from '../icons/TrashCanIcon';
 
 type IProps = {
 	address: ShippingAddress;
@@ -24,18 +25,18 @@ export default component$<IProps>(
 		const openEditForm = useSignal(false);
 
 		return (
-			<div class={`max-w-xs bg-white shadow-lg rounded-lg overflow-hidden my-2 ${className}`}>
-				<div class="py-2 px-4">
+			<div class={`card shadow-sm ${className}`}>
+				<div class="card-body card-border shadow-lg">
 					<div class="flex items-center justify-between">
-						<h1 class="text-sm font-semibold ">
+						<h2 class="text-sm font-semibold ">
 							{address.fullName}{' '}
 							{address.company && <span class="py-2 text-sm "> - {address.company}</span>}
-						</h1>
+						</h2>
 						{allowDelete && address.id && (
 							<button
-								class="hover:text-red-600 rounded ml-2"
-								title="Delete address"
-								aria-label="Delete address"
+								class="btn btn-soft btn-md btn-error"
+								title={$localize`Delete Address`}
+								aria-label={$localize`Delete Address`}
 								type="button"
 								onClick$={() => {
 									if (onDelete$ && address.id) {
@@ -45,50 +46,50 @@ export default component$<IProps>(
 									}
 								}}
 							>
-								<TrashCanIcon />
+								<LuTrash class="w-4 h-4" />
 							</button>
 						)}
 					</div>
+					{showDefault && (address.defaultShippingAddress || address.defaultBillingAddress) && (
+						<div class="flex text-xs gap-3">
+							{address.defaultShippingAddress && (
+								<div class="tooltip" data-tip={$localize`Default shipping address`}>
+									<LuTruck class="w-4 h-4" />
+								</div>
+							)}
+							{address.defaultBillingAddress && (
+								<div class="tooltip" data-tip={$localize`Default billing address`}>
+									<LuCreditCard class="w-4 h-4" />
+								</div>
+							)}
+						</div>
+					)}
 					<p class="py-1 text-sm ">{address.streetLine1}</p>
 					{address.streetLine2 && <p class="text-sm ">{address.streetLine2}&nbsp;</p>}
 					<div class="flex items-center mt-1 ">
-						<LocationIcon />
+						<LuMapPin class="w-4 h-4" />
 						<h1 class="px-2 text-xs">
 							{address.city}, {address.province} {address.postalCode}, {address.countryCode}
 						</h1>
 					</div>
 					<div class="flex items-center mt-1 mb-1 ">
 						<>
-							<TelephoneIcon />
+							<LuPhone class="w-4 h-4" />
 							<h1 class="px-2 text-xs">{address.phoneNumber || 'N/A'}</h1>
 						</>
 						<div class="flex-1" />
 						{allowEdit && (
 							<button
-								class="mr-1 rounded "
+								class="btn btn-soft btn-md"
+								title={$localize`Edit Address`}
 								onClick$={() => {
 									openEditForm.value = true;
 								}}
 							>
-								<PencilEditIcon />
+								<LuPenLine class="w-4 h-4" />
 							</button>
 						)}
 					</div>
-
-					{showDefault && (address.defaultShippingAddress || address.defaultBillingAddress) && (
-						<div class="flex text-xs mt-4">
-							{address.defaultShippingAddress && (
-								<Tooltip text={$localize`Default shipping address`}>
-									<ShippingAddressIcon aria-hidden="true" />
-								</Tooltip>
-							)}
-							{address.defaultBillingAddress && (
-								<Tooltip text={$localize`Default billing address`}>
-									<BillingAddressIcon aria-hidden="true" />
-								</Tooltip>
-							)}
-						</div>
-					)}
 				</div>
 				<AddressForm open={openEditForm} prefilledAddress={address} onForward$={onEditSaved$} />
 			</div>

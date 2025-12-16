@@ -9,7 +9,7 @@ import CartPrice from './CartPrice';
 
 export default component$<{
 	order?: Order;
-	readOnly?: Signal<boolean>;
+	readOnly?: Signal<boolean> | { value: boolean };
 }>(({ order, readOnly = useSignal<boolean>(false) }) => {
 	const appState = useContext(APP_STATE);
 	const removeCoupon = $(async (couponCode: string) => {
