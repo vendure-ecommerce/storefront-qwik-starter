@@ -82,7 +82,7 @@ export const PasswordInput = component$((props: PasswordInputProps) => {
 
 	return (
 		<label class="fieldset">
-			<span class="label flex">{props.label}</span>
+			<label class="label flex">{props.label}</label>
 			<div class="relative w-full">
 				<input
 					type={isPasswordVisible.value ? 'text' : 'password'}

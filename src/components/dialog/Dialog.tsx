@@ -13,7 +13,18 @@ export const Dialog = component$(({ open, extraClass, id = 'generic-dialog' }: D
 	}
 	return (
 		<div id={id} class={`fixed inset-0 z-50 flex items-center justify-center`}>
-			<div class={`bg-base-200 rounded-lg shadow-lg p-6 min-w-80 relative ${extraClass ?? ''}`}>
+			{/* Backdrop to dim the rest of the page */}
+			<div
+				class="absolute inset-0 bg-black/75"
+				onClick$={() => (open.value = false)}
+				aria-hidden="true"
+			/>
+			{/* Dialog panel (above the backdrop) */}
+			<div
+				class={`bg-base-200 rounded-lg shadow-lg p-6 min-w-80 relative z-10 ${extraClass ?? ''}`}
+				role="dialog"
+				aria-modal="true"
+			>
 				<button
 					class="btn btn-lg absolute top-1 right-1 bg-transparent border-transparent"
 					onClick$={() => (open.value = false)}

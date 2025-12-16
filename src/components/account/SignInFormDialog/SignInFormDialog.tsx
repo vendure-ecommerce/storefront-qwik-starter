@@ -48,7 +48,7 @@ export default component$(({ open, onSuccess$ }: SignInFormDialogProps) => {
 
 	return (
 		<Dialog open={open} id="sign-in-form-dialog">
-			<div class="flex w-72 flex-col">
+			<div class="flex w-96 flex-col">
 				<form class="fieldset bg-base-100 border-base-300 rounded-box border p-4">
 					<h2 class="text-content text-2xl justify-center mb-3">
 						{$localize`Sign in to your account`}
@@ -91,7 +91,7 @@ export default component$(({ open, onSuccess$ }: SignInFormDialogProps) => {
 					</button>
 				</form>
 				<div class="divider">OR</div>
-				<div class="card bg-base-100 rounded-box grid h-20 place-items-center">
+				<div class="card bg-base-100 rounded-box grid h-fit place-items-center gap-2">
 					<button
 						class="btn btn-link"
 						onClick$={() => {

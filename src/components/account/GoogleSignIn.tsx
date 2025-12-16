@@ -96,10 +96,10 @@ export const GoogleSignInButton = component$((props: { googleClientId: string })
 	);
 
 	return (
-		<div>
+		<div class="bg-base-100 rounded-md h-fit p-2">
 			<div
 				id="google-signin-button"
-				class="flex justify-center"
+				class="flex justify-center bg-base-100 rounded-md"
 				onClick$={() => {
 					if (!isLoading.value) {
 						isLoading.value = true;

@@ -113,14 +113,14 @@ export default component$(() => {
 					</div>
 					<ThemeController />
 				</div>
-				<SignInFormDialog
-					open={openSignInForm}
-					onSuccess$={async (customer) => {
-						appState.customer = customer;
-						alert(`Welcome back, ${customer.firstName}!`);
-					}}
-				/>
 			</header>
+			<SignInFormDialog
+				open={openSignInForm}
+				onSuccess$={async (customer) => {
+					appState.customer = customer;
+					// alert(`Welcome back, ${customer.firstName}!`);
+				}}
+			/>
 		</div>
 	);
 });
