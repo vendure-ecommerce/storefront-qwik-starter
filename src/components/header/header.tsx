@@ -1,4 +1,4 @@
-import { $, component$, useContext, useSignal } from '@builder.io/qwik';
+import { $, component$, Signal, useContext, useSignal } from '@builder.io/qwik';
 import { Link } from '@builder.io/qwik-city';
 import { LuShoppingCart, LuUser } from '@qwikest/icons/lucide';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID } from '~/constants';
@@ -10,7 +10,11 @@ import UserIcon from '../icons/UserIcon';
 import SearchBar from '../search-bar/SearchBar';
 import ThemeController from '../theme-controller/ThemeController';
 
-export default component$(() => {
+interface Iprops {
+	cartDrawerToggle: Signal<boolean>;
+}
+
+export default component$(({ cartDrawerToggle }: Iprops) => {
 	const appState = useContext(APP_STATE);
 	const collections = useContext(APP_STATE).collections.filter(
 		(item) => item.parent?.name === '__root_collection__' && !!item.featuredAsset
@@ -103,7 +107,7 @@ export default component$(() => {
 							name="Cart"
 							aria-label={`${totalQuantity} items in cart`}
 							class="btn btn-md relative w-9 h-9 p-1"
-							onClick$={() => (appState.showCart = !appState.showCart)}
+							onClick$={() => (cartDrawerToggle.value = true)}
 						>
 							<LuShoppingCart class="w-6 h-6" />
 						</button>

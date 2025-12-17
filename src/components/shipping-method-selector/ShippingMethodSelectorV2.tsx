@@ -19,7 +19,7 @@ import ShippoShippingMethodCard from '../checkout/ShippoShippingMethodCard';
 import AnimatedSpinnerIcon from '../icons/AnimatedSpinnerIcon';
 
 interface IProps {
-	reCalculateShipping$: Signal<boolean>;
+	reCalculateShipping: Signal<boolean>;
 	errorMessage: Signal<string | null>;
 }
 
@@ -32,7 +32,7 @@ interface IProps {
  * 2. that will call order-calculator and update the shippingWithTax
  * with the cheapest shipping method eligible. (see https://github.com/vendure-ecommerce/vendure/blob/1bb9cf8ca1584bce026ccc82f33f866b766ef47d/packages/core/src/service/helpers/order-calculator/order-calculator.ts#L332)
  */
-export default component$<IProps>(({ reCalculateShipping$, errorMessage }) => {
+export default component$<IProps>(({ reCalculateShipping, errorMessage }) => {
 	const appState = useContext(APP_STATE);
 	const selecting = useSignal(false);
 
@@ -48,8 +48,8 @@ export default component$<IProps>(({ reCalculateShipping$, errorMessage }) => {
 
 	useVisibleTask$(async (task) => {
 		// This task will re-run whenever reCalculateShipping$.value changes
-		task.track(() => reCalculateShipping$.value);
-		if (reCalculateShipping$.value) {
+		task.track(() => reCalculateShipping.value);
+		if (reCalculateShipping.value) {
 			console.warn('reCalculateShipping$ is true, fetching shipping methods...');
 			try {
 				state.methods = await getEligibleShippingMethodsQuery();
@@ -60,7 +60,7 @@ export default component$<IProps>(({ reCalculateShipping$, errorMessage }) => {
 				errorMessage.value = 'Failed to fetch shipping methods: ' + (error as Error).message;
 			}
 		}
-		reCalculateShipping$.value = false;
+		reCalculateShipping.value = false;
 	});
 
 	useVisibleTask$(async (task) => {
@@ -92,13 +92,13 @@ export default component$<IProps>(({ reCalculateShipping$, errorMessage }) => {
 
 	return (
 		<div>
-			{reCalculateShipping$.value && (
+			{reCalculateShipping.value && (
 				<div>
 					<AnimatedSpinnerIcon forcedClass="h-5 w-5 mt-4" />
 				</div>
 			)}
 
-			{!reCalculateShipping$.value && (
+			{!reCalculateShipping.value && (
 				<div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
 					{state.methods.map((method, index) => (
 						<div

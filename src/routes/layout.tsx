@@ -4,11 +4,14 @@ import {
 	component$,
 	useContextProvider,
 	useOn,
+	useSignal,
 	useStore,
 	useVisibleTask$,
 } from '@builder.io/qwik';
 import { RequestHandler, routeLoader$ } from '@builder.io/qwik-city';
 import { ImageTransformerProps, useImageProvider } from 'qwik-image';
+import CartV2 from '~/components/cart/CartV2';
+import Drawer from '~/components/drawer/Drawer';
 import Menu from '~/components/menu/Menu';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, IMAGE_RESOLUTIONS } from '~/constants';
 import { Order } from '~/generated/graphql';
@@ -21,18 +24,12 @@ import {
 } from '~/providers/shop/orders/customizable-order';
 import { getActiveOrderQuery } from '~/providers/shop/orders/order';
 import { ActiveCustomer, AppState } from '~/types';
-import { getDefaultCustomNameTagOptions, getGoogleFontLink, loadCustomerData } from '~/utils';
+import { getGoogleFontLink, loadCustomerData } from '~/utils';
 import { parseCustomizableClassDef } from '~/utils/customizable-order';
 import { extractLang } from '~/utils/i18n';
-import Cart from '../components/cart/Cart';
 import Footer from '../components/footer/footer';
 import Header from '../components/header/header';
-import {
-	CUSTOMIZABLE_CLASS_DEF_TAG,
-	CustomizableClassDefTag,
-	DEFAULT_OPTIONS_FOR_NAME_TAG,
-	DefaultOptionsForNameTag,
-} from './constants';
+import { CUSTOMIZABLE_CLASS_DEF_TAG, CustomizableClassDefTag, EXTRA_DATA } from './constants';
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
 	cacheControl({ staleWhileRevalidate: 60 * 60 * 24 * 7, maxAge: 5 });
@@ -62,6 +59,8 @@ export const useCustomizableClassDef = routeLoader$(async () => {
 });
 
 export default component$(() => {
+	const drawerToggle = useSignal(false);
+
 	const imageTransformer$ = $(({ src, width, height }: ImageTransformerProps): string => {
 		return `${src}?w=${width}&h=${height}&format=webp`;
 	});
@@ -113,14 +112,15 @@ export default component$(() => {
 
 	const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
 	const FontMenuSignal = useFontMenu(); // Load the Font_Menu from db
-	const CustomizableClassDefSignal = useCustomizableClassDef(); // Load the Customizable_Class_Def from db
-
-	const defaultOptionsForNameTag = useStore<DefaultOptionsForNameTag>(() => {
-		return getDefaultCustomNameTagOptions(FontMenuSignal.value, FilamentColorSignal.value);
+	const extraData = useStore<EXTRA_DATA>(() => {
+		return {
+			fontMenus: FontMenuSignal.value,
+			filamentColors: FilamentColorSignal.value,
+		};
 	});
+	useContextProvider(EXTRA_DATA, extraData);
 
-	useContextProvider(DEFAULT_OPTIONS_FOR_NAME_TAG, defaultOptionsForNameTag);
-
+	const CustomizableClassDefSignal = useCustomizableClassDef(); // Load the Customizable_Class_Def from db
 	const customizableClassDefTag = useStore<CustomizableClassDefTag[]>(() => {
 		return parseCustomizableClassDef(CustomizableClassDefSignal.value);
 	});
@@ -165,14 +165,20 @@ export default component$(() => {
 	);
 
 	return (
-		<div>
-			<Header />
-			<Cart />
-			<Menu />
-			<main class="pb-12">
-				<Slot />
-			</main>
-			<Footer />
-		</div>
+		<Drawer clickedSignal={drawerToggle} sliderElementId="cart-slider">
+			<>
+				<Header cartDrawerToggle={drawerToggle} />
+				<Menu />
+				<main class="pb-12">
+					<Slot />
+				</main>
+				<Footer />
+			</>
+
+			{/* Cart Slider */}
+			<div q:slot="cart-slider">
+				<CartV2 cartDrawerToggle={drawerToggle} />
+			</div>
+		</Drawer>
 	);
 });

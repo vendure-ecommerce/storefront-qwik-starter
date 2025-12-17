@@ -45,7 +45,6 @@ export default component$(
 		const top_canvas_id = 'canvas_top';
 		const bottom_canvas_id = 'canvas_bottom';
 
-		// const defaultOptionsForNameTag = useContext(DEFAULT_OPTIONS_FOR_NAME_TAG);
 		const defaultOptionsForNameTag = {
 			primaryColorId: filamentColors[0].id,
 			baseColorId: filamentColors[1].id,

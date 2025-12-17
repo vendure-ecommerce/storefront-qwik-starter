@@ -1,6 +1,5 @@
-import { $, component$, useContextProvider } from '@builder.io/qwik';
+import { $ } from '@builder.io/qwik';
 import type { Meta, StoryObj } from 'storybook-framework-qwik';
-import { DEFAULT_OPTIONS_FOR_NAME_TAG } from '~/routes/constants';
 import BuildCustomNameTag from './BuildCustomNameTagV4';
 
 const sampleFilamentColors = [
@@ -65,16 +64,6 @@ export const Default: Story = {
 		const handleAtcEligibility = $((allowed: boolean, reason: string) => {
 			// eslint-disable-next-line no-console
 			console.log('onAtcEligibility$', { allowed, reason });
-		});
-		const Wrapper = component$((props: any) => {
-			useContextProvider(DEFAULT_OPTIONS_FOR_NAME_TAG, {
-				primaryColorId: sampleFilamentColors[0].id,
-				baseColorId: sampleFilamentColors[1].id,
-				fontId: sampleFontMenus[0].id,
-				textTop: 'Hello',
-				textBottom: 'World',
-			});
-			return <div style={{ padding: 16 }}>{props.children}</div>;
 		});
 
 		return (

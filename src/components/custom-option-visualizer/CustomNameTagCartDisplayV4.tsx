@@ -1,11 +1,10 @@
-import { component$, ReadonlySignal, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { component$, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { EXTRA_DATA } from '~/routes/constants';
 import { genHash, getCustomizableOption } from '~/utils/customizable-order';
 import BuildCanvases from './BuildCanvases';
 import { BuildPlateVisualizerV4 } from './CustomVisualizerV4';
 
 interface CustomNameTagCartDisplayProps {
-	filamentColorSignal: ReadonlySignal<any>;
-	fontMenuSignal: ReadonlySignal<any>;
 	customizableOptionJson: string;
 	classDef: { field: string; type: string }[];
 	concatenate_canvas_element_id?: string;
@@ -13,12 +12,12 @@ interface CustomNameTagCartDisplayProps {
 
 export default component$(
 	({
-		filamentColorSignal,
-		fontMenuSignal,
 		customizableOptionJson,
 		classDef,
 		concatenate_canvas_element_id,
 	}: CustomNameTagCartDisplayProps) => {
+		const { filamentColors, fontMenus } = useContext(EXTRA_DATA);
+
 		const uniqueId = concatenate_canvas_element_id || genHash(customizableOptionJson);
 		const top_canvas_id = `top-${uniqueId}`;
 		const bottom_canvas_id = `btm-${uniqueId}`;
@@ -46,8 +45,8 @@ export default component$(
 		useVisibleTask$(() => {
 			if (canvas_top.value && canvas_bottom.value) {
 				const buildResult = BuildPlateVisualizerV4({
-					font_menu: fontMenuSignal.value,
-					filament_color: filamentColorSignal.value,
+					font_menu: fontMenus,
+					filament_color: filamentColors,
 					buildParams: {
 						text_top: customNameTag.textTop,
 						text_bottom: customNameTag.textBottom,

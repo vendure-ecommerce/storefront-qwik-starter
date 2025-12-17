@@ -13,7 +13,6 @@ import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
 
 import { adjustOrderLineMutation, removeOrderLineMutation } from '~/providers/shop/orders/order';
-import { useFilamentColor, useFontMenu } from '~/routes/layout';
 import { isCheckoutPage } from '~/utils';
 import LineItemCard from './LineItemCard';
 
@@ -23,6 +22,7 @@ interface IProps {
 	readyToProceedSignal?: Signal<boolean>;
 	readOnly?: Signal<boolean>;
 	allowReview?: boolean;
+	cartDrawerToggle?: Signal<boolean>;
 }
 /**
  * - If `order` prop is provided, the component is in read-only mode.
@@ -41,7 +41,8 @@ export default component$<IProps>(
 		readyToProceedSignal = useSignal(true),
 		readOnly = useSignal(false),
 		allowReview = false,
-	}) => {
+		cartDrawerToggle,
+	}: IProps) => {
 		const navigate = useNavigate();
 		const location = useLocation();
 		const appState = useContext(APP_STATE);
@@ -51,8 +52,6 @@ export default component$<IProps>(
 			errorCode: '',
 			message: '',
 		});
-		const FilamentColorSignal = useFilamentColor(); // Load the Filament_Color from db
-		const FontMenuSignal = useFontMenu();
 
 		// If order is passed as prop, it's in read-only mode
 		if (order) {
@@ -90,43 +89,45 @@ export default component$<IProps>(
 
 		return (
 			<div class="flow-root">
-				<ul class="-my-6 divide-y divide-gray-200">
+				<ul class="-my-6 divide-y divide-content-secondary/10">
 					{rowsSignal.value.map((line) => (
-						<LineItemCard
-							key={line.id}
-							line={line}
-							currencyCode={currencyCode}
-							readOnly={readOnly}
-							allowReview={allowReview}
-							notReviewableReasonFixed={
-								variantsWithReviewStatus.find(
-									(v) => v.variantId === line.productVariant.id && !v.canReview
-								)?.notReviewableReason || undefined
-							}
-							reviewLocation={reviewLocation}
-							filamentColorSignal={FilamentColorSignal}
-							fontMenuSignal={FontMenuSignal}
-							onQuantityChange$={async (id, value) => {
-								currentOrderLineSignal.value = { id, value };
-							}}
-							onRemove$={async (id) => {
-								const res = await removeOrderLineMutation(id);
-								if (res) {
-									appState.activeOrder = res;
+						<li>
+							<LineItemCard
+								key={line.id}
+								line={line}
+								currencyCode={currencyCode}
+								readOnly={readOnly}
+								allowReview={allowReview}
+								notReviewableReasonFixed={
+									variantsWithReviewStatus.find(
+										(v) => v.variantId === line.productVariant.id && !v.canReview
+									)?.notReviewableReason || undefined
 								}
-								if (
-									appState.activeOrder?.lines?.length === 0 &&
-									isCheckoutPage(location.url.toString())
-								) {
-									appState.showCart = false;
-									navigate(`/`);
-								}
-							}}
-						/>
+								reviewLocation={reviewLocation}
+								onQuantityChange$={async (id, value) => {
+									currentOrderLineSignal.value = { id, value };
+								}}
+								onRemove$={async (id) => {
+									const res = await removeOrderLineMutation(id);
+									if (res) {
+										appState.activeOrder = res;
+									}
+									if (
+										appState.activeOrder?.lines?.length === 0 &&
+										isCheckoutPage(location.url.toString())
+									) {
+										if (cartDrawerToggle) {
+											cartDrawerToggle.value = true;
+										}
+										navigate(`/`);
+									}
+								}}
+							/>
+						</li>
 					))}
 				</ul>
 				{adjustOrderLineFailedSignal.errorCode && (
-					<div class="mt-4 p-4 bg-red-100 text-red-800 rounded">
+					<div class="mt-4 p-4 bg-warning text-warning-content rounded">
 						<strong class="font-bold">Error: </strong>
 						<span>{adjustOrderLineFailedSignal.message}</span>
 						{/* refresh page button */}

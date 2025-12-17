@@ -7,12 +7,10 @@ import { genCustomizableOptionJsonHash } from '~/utils/customizable-order';
 import CustomNameTagCartDisplayV4 from '../custom-option-visualizer/CustomNameTagCartDisplayV4';
 
 interface ItemPreviewProps {
-	filamentColorSignal: any; // Replace 'any' with the actual type if available
-	fontMenuSignal: any; // Replace 'any' with the actual type if available
 	line: OrderLine; // Replace 'any' with the actual type of 'line' if available
 }
 
-export default component$(({ filamentColorSignal, fontMenuSignal, line }: ItemPreviewProps) => {
+export default component$(({ line }: ItemPreviewProps) => {
 	const slug = line.productVariant.product.slug;
 
 	const customizableEntityName = slugToCustomizableClass(slug);
@@ -24,8 +22,6 @@ export default component$(({ filamentColorSignal, fontMenuSignal, line }: ItemPr
 			{/* <p> {line.customFields?.customVariant.id} </p> */}
 			{customizableClassName === CustomizableClassName.CustomNameTag && (
 				<CustomNameTagCartDisplayV4
-					filamentColorSignal={filamentColorSignal}
-					fontMenuSignal={fontMenuSignal}
 					customizableOptionJson={line.customFields?.customizableOptionJson ?? '[]'}
 					concatenate_canvas_element_id={genCustomizableOptionJsonHash(line)}
 					classDef={

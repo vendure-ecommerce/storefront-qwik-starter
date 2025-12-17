@@ -7,13 +7,7 @@ import Price from '../products/Price';
 import WriteReview from '../products/WriteReview';
 import ItemPreview from './ItemPreview';
 
-// signals expected by ItemPreview (passed through from parent)
-type Signals = {
-	filamentColorSignal?: Signal<any>;
-	fontMenuSignal?: Signal<any>;
-};
-
-interface Props extends Signals {
+interface Props {
 	line: OrderLine;
 	currencyCode: string;
 	readOnly: Signal<boolean>;
@@ -31,8 +25,6 @@ export default component$<Props>(
 		readOnly,
 		onQuantityChange$,
 		onRemove$,
-		filamentColorSignal,
-		fontMenuSignal,
 		allowReview = false,
 		notReviewableReasonFixed,
 		reviewLocation = '',
@@ -44,11 +36,7 @@ export default component$<Props>(
 		return (
 			<li key={line.id} class="py-6 flex">
 				<div class="flex-shrink-0 w-24 h-24 border  rounded-md overflow-hidden flex justify-center items-center">
-					<ItemPreview
-						filamentColorSignal={filamentColorSignal}
-						fontMenuSignal={fontMenuSignal}
-						line={line}
-					/>
+					<ItemPreview line={line} />
 				</div>
 
 				<div class="ml-4 flex-1 flex flex-col">

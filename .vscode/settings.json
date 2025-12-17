@@ -11,4 +11,19 @@
   "cSpell.words": [
     "Braintree"
   ],
+  "emmet.excludeLanguages": [
+    "javascript",
+    "typescript",
+    "typescriptreact"
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.preferences.jsxAttributeCompletionStyle": "auto",
+  "files.exclude": {
+    "**/.eslintcache": true
+  },
+  "[typescriptreact]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    }
+  }
 }

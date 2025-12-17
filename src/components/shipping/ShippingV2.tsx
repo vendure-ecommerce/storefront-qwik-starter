@@ -120,7 +120,7 @@ export default component$<IProps>(
 
 				<SectionWithLabel label={$localize`Delivery method`} topBorder={true}>
 					<ShippingMethodSelectorV2
-						reCalculateShipping$={reCalculateShipping}
+						reCalculateShipping={reCalculateShipping}
 						errorMessage={errorMessage}
 					/>
 				</SectionWithLabel>

@@ -8,16 +8,7 @@ import {
 import { ENV_VARIABLES } from '~/env';
 import { SearchResponse } from '~/generated/graphql';
 import { getActiveCustomerQuery } from '~/providers/shop/customer/customer';
-import {
-	DEFAULT_BASE_COLOR_NAME,
-	DEFAULT_FONT_NAME,
-	DEFAULT_PRIMARY_COLOR_NAME,
-	DEFAULT_TEXT_BOTTOM,
-	DEFAULT_TEXT_TOP,
-	DefaultOptionsForNameTag,
-	FILAMENT_COLOR,
-	FONT_MENU,
-} from '~/routes/constants';
+import { FONT_MENU } from '~/routes/constants';
 import { ActiveCustomer, AppState, FacetWithValues, ShippingAddress } from '~/types';
 
 export const getRandomInt = (max: number) => Math.floor(Math.random() * max);
@@ -233,30 +224,6 @@ export const getGoogleFontLink = (fontMenuItems: FONT_MENU[]): string => {
 		.map((font) => font.name.split(' (')[0].replace(/ /g, '+'))
 		.join('&family='); // join the font family with &family=
 	return `https://fonts.googleapis.com/css2?family=${fontFamilies}&display=swap`;
-};
-
-export const getDefaultCustomNameTagOptions = (
-	fontMenu: FONT_MENU[],
-	filamentColor: FILAMENT_COLOR[]
-): DefaultOptionsForNameTag => {
-	const defaultPrimaryColorId = filamentColor.find(
-		(c) => c.name === DEFAULT_PRIMARY_COLOR_NAME
-	)?.id;
-	const defaultBaseColorId = filamentColor.find((c) => c.name === DEFAULT_BASE_COLOR_NAME)?.id;
-	if (!defaultPrimaryColorId || !defaultBaseColorId) {
-		throw new Error('Default colors not found in filamentColor!');
-	}
-	const defaultFontId = fontMenu.find((f) => f.name === DEFAULT_FONT_NAME)?.id;
-	if (!defaultFontId) {
-		throw new Error('Default fonts not found in fontMenuItems!');
-	}
-	return {
-		primaryColorId: defaultPrimaryColorId,
-		baseColorId: defaultBaseColorId,
-		fontId: defaultFontId,
-		textTop: DEFAULT_TEXT_TOP,
-		textBottom: DEFAULT_TEXT_BOTTOM,
-	};
 };
 
 export const isGuestCustomer = (appState: AppState): boolean => {
