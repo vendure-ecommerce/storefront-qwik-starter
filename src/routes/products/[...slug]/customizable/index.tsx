@@ -125,20 +125,10 @@ export default component$(() => {
 						class="btn btn-success"
 						disabled={!is_atc_allowed.value}
 						onClick$={() => {
-							const input = {
-								textTop: buildPlates.top ? buildParams.textTop : null,
-								textBottom: buildPlates.bottom ? buildParams.textBottom : null,
-								fontMenuIdTop: buildPlates.top ? buildParams.fontMenuIdTop : null,
-								fontMenuIdBottom: buildPlates.bottom ? buildParams.fontMenuIdBottom : null,
-								filamentColorIdPrimary: buildParams.filamentColorIdPrimary,
-								filamentColorIdBase: buildParams.filamentColorIdBase,
-								isTopAdditive: buildParams.isTopAdditive,
-							} as Record<string, string | number | boolean | null>;
-
-							console.log('Add to cart input:', JSON.stringify(input, null, 2));
-							const inputArr = getCustomizableOptionArray(input, currentClassDef.optionDefinition);
-
-							// Call the extracted async function
+							const inputArr = getCustomizableOptionArray(
+								buildParams,
+								currentClassDef.optionDefinition
+							);
 							handleAddToCart(inputArr, selectedVariantIdSignal.value, addItemToOrderErrorSignal);
 						}}
 					>
@@ -180,7 +170,6 @@ export default component$(() => {
 				build_plates={buildPlates}
 				canvas_width_px={250}
 				onChange$={(newBuildParams: NameTagBuildParams) => {
-					console.log('Build params changed in product page:', newBuildParams);
 					// copy incoming fields into the reactive store in-place
 					Object.assign(buildParams, newBuildParams);
 				}}

@@ -52,7 +52,7 @@ export default component$(
 			textTop: 'Hello',
 			textBottom: 'World',
 			fontMenuIdTop: fontMenus[0].id,
-			fontMenuIdBottom: fontMenus[0].id,
+			fontMenuIdBottom: fontMenus[1].id,
 		};
 
 		const buildParams = useStore<NameTagBuildParams>(defaultOptionsForNameTag);

@@ -44,24 +44,19 @@ export default component$(
 		useVisibleTask$(() => {
 			canvas_top.value = document.getElementById(top_canvas_id) as HTMLCanvasElement;
 			canvas_bottom.value = document.getElementById(bottom_canvas_id) as HTMLCanvasElement;
-		});
 
-		// Render visualization
-		useVisibleTask$(() => {
-			if (canvas_top.value && canvas_bottom.value) {
-				const buildResult = CustomVisualizer({
-					fontMenus: fontMenus,
-					filamentColors: filamentColors,
-					buildParams: customNameTag,
-					build_top_plate: build_top_plate,
-					build_bottom_plate: build_bottom_plate,
-					canvas_top: canvas_top.value,
-					canvas_bottom: canvas_bottom.value,
-					canvas_stacked: canvas_concatenated.value,
-				});
-				is_build_valid.value = buildResult.valid;
-				errorMessage.value = is_build_valid.value ? '' : 'The build is invalid.';
-			}
+			const buildResult = CustomVisualizer({
+				fontMenus: fontMenus,
+				filamentColors: filamentColors,
+				buildParams: customNameTag,
+				build_top_plate: build_top_plate,
+				build_bottom_plate: build_bottom_plate,
+				canvas_top: canvas_top.value,
+				canvas_bottom: canvas_bottom.value,
+				canvas_stacked: canvas_concatenated.value,
+			});
+			is_build_valid.value = buildResult.valid;
+			errorMessage.value = is_build_valid.value ? '' : 'The build is invalid.';
 		});
 
 		return (

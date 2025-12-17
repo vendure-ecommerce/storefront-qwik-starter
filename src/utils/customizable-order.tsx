@@ -56,7 +56,7 @@ export function getCustomizableOption(
  *
  */
 export function getCustomizableOptionArray(
-	optionObj: Record<string, string | null | number | boolean>,
+	optionObj: Record<string, any>,
 	optionDefArray: { field: string; type: string }[]
 ): (string | null | number | boolean)[] {
 	const result = optionDefArray.map((def) => optionObj[def.field]);
