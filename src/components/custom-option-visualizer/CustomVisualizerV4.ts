@@ -7,18 +7,18 @@ const TEXT_START_X = 50;
 const START_Y = 20;
 
 export interface NameTagBuildParams {
-	text_top?: string;
-	text_bottom?: string;
-	font_id_top?: string;
-	font_id_bottom?: string;
-	primary_color_id: string;
-	base_color_id: string;
-	is_top_additive: boolean;
+	textTop: string | null;
+	textBottom: string | null;
+	fontMenuIdTop: string | null;
+	fontMenuIdBottom: string | null;
+	filamentColorIdPrimary: string;
+	filamentColorIdBase: string;
+	isTopAdditive: boolean;
 }
 
 export type BuildProps = {
-	font_menu: Pick<FontMenu, 'id' | 'name' | 'additiveFontId' | 'subtractiveFontId'>[];
-	filament_color: Pick<FilamentColor, 'id' | 'name' | 'hexCode'>[];
+	fontMenus: Pick<FontMenu, 'id' | 'name' | 'additiveFontId' | 'subtractiveFontId'>[];
+	filamentColors: Pick<FilamentColor, 'id' | 'name' | 'hexCode'>[];
 	buildParams: NameTagBuildParams;
 	build_top_plate: boolean;
 	build_bottom_plate: boolean;
@@ -194,7 +194,7 @@ function draw_text(
 	ctx.stroke();
 }
 
-export function BuildPlateVisualizerV4(args: BuildProps): {
+export function CustomVisualizer(args: BuildProps): {
 	boardWidth_cm: number;
 	valid: boolean;
 } {
@@ -204,10 +204,10 @@ export function BuildPlateVisualizerV4(args: BuildProps): {
 		throw new Error('At least one plate must be built');
 	}
 
-	params.is_top_additive = params.is_top_additive ?? true;
+	params.isTopAdditive = params.isTopAdditive ?? true;
 
-	const primary_color_hex = color_id_2_hex(params.primary_color_id, args.filament_color);
-	const base_color_hex = color_id_2_hex(params.base_color_id, args.filament_color);
+	const primary_color_hex = color_id_2_hex(params.filamentColorIdPrimary, args.filamentColors);
+	const base_color_hex = color_id_2_hex(params.filamentColorIdBase, args.filamentColors);
 
 	let bbox_top: BboxInfo | undefined;
 	let ctx_t: CanvasRenderingContext2D | null | undefined;
@@ -216,34 +216,34 @@ export function BuildPlateVisualizerV4(args: BuildProps): {
 	let ctx_b: CanvasRenderingContext2D | null | undefined;
 
 	if (args.build_top_plate) {
-		if (!params.text_top || !params.font_id_top) {
+		if (!params.textTop || !params.fontMenuIdTop) {
 			throw new Error('text_top and font_id_top must be provided for the top plate.');
 		}
 		ctx_t = args.canvas_top.getContext('2d');
 		if (!ctx_t) throw new Error('Failed to get 2D context for top canvas');
 
 		const font_top = font_id_2_font_string(
-			params.font_id_top,
-			args.font_menu,
-			params.is_top_additive
+			params.fontMenuIdTop,
+			args.fontMenus,
+			params.isTopAdditive
 		);
 
-		bbox_top = getTextBoundingBox(font_top, params.text_top, ctx_t, TEXT_START_X, START_Y);
+		bbox_top = getTextBoundingBox(font_top, params.textTop, ctx_t, TEXT_START_X, START_Y);
 	}
 
 	if (args.build_bottom_plate) {
-		if (!params.text_bottom || !params.font_id_bottom) {
+		if (!params.textBottom || !params.fontMenuIdBottom) {
 			throw new Error('text_bottom and font_id_bottom must be provided for the bottom plate.');
 		}
 		ctx_b = args.canvas_bottom.getContext('2d');
 		if (!ctx_b) throw new Error('Failed to get 2D context for bottom canvas');
 
 		const font_bottom = font_id_2_font_string(
-			params.font_id_bottom,
-			args.font_menu,
+			params.fontMenuIdBottom,
+			args.fontMenus,
 			false // bottom plate is always subtractive
 		);
-		bbox_btm = getTextBoundingBox(font_bottom, params.text_bottom, ctx_b, TEXT_START_X, START_Y);
+		bbox_btm = getTextBoundingBox(font_bottom, params.textBottom, ctx_b, TEXT_START_X, START_Y);
 	}
 
 	let text_width: number;
@@ -258,20 +258,20 @@ export function BuildPlateVisualizerV4(args: BuildProps): {
 	}
 
 	// top blank plate: it can be either additive or subtractive
-	if (args.build_top_plate && args.canvas_top && ctx_t && bbox_top && params.text_top) {
+	if (args.build_top_plate && args.canvas_top && ctx_t && bbox_top && params.textTop) {
 		draw_a_blank_plate_v3(
 			args.canvas_top,
 			primary_color_hex,
 			base_color_hex,
 			ctx_t,
 			text_width,
-			!params.is_top_additive
+			!params.isTopAdditive
 		);
 
 		// draw text on the top
 		draw_text(
-			params.text_top,
-			params.is_top_additive ? primary_color_hex : base_color_hex,
+			params.textTop,
+			params.isTopAdditive ? primary_color_hex : base_color_hex,
 			ctx_t,
 			bbox_top,
 			text_width
@@ -279,7 +279,7 @@ export function BuildPlateVisualizerV4(args: BuildProps): {
 	}
 
 	// bottom blank plate: it is always subtractive
-	if (args.build_bottom_plate && args.canvas_bottom && ctx_b && bbox_btm && params.text_bottom) {
+	if (args.build_bottom_plate && args.canvas_bottom && ctx_b && bbox_btm && params.textBottom) {
 		draw_a_blank_plate_v3(
 			args.canvas_bottom,
 			primary_color_hex,
@@ -290,7 +290,7 @@ export function BuildPlateVisualizerV4(args: BuildProps): {
 			true
 		);
 		// draw text on the bottom
-		draw_text(params.text_bottom, base_color_hex, ctx_b, bbox_btm, text_width, true);
+		draw_text(params.textBottom, base_color_hex, ctx_b, bbox_btm, text_width, true);
 	}
 
 	const boardWidth =

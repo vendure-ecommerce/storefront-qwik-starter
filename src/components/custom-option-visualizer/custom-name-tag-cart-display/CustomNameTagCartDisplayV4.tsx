@@ -1,22 +1,28 @@
 import { component$, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
-import { EXTRA_DATA } from '~/routes/constants';
+import { CUSTOMIZABLE_CLASS_DEF_TAG, EXTRA_DATA } from '~/routes/constants';
+import { CustomizableClassName } from '~/utils';
 import { genHash, getCustomizableOption } from '~/utils/customizable-order';
-import BuildCanvases from './BuildCanvases';
-import { BuildPlateVisualizerV4 } from './CustomVisualizerV4';
+import BuildCanvases from '../BuildCanvases';
+import { CustomVisualizer, NameTagBuildParams } from '../CustomVisualizerV4';
 
 interface CustomNameTagCartDisplayProps {
 	customizableOptionJson: string;
-	classDef: { field: string; type: string }[];
 	concatenate_canvas_element_id?: string;
 }
 
 export default component$(
-	({
-		customizableOptionJson,
-		classDef,
-		concatenate_canvas_element_id,
-	}: CustomNameTagCartDisplayProps) => {
+	({ customizableOptionJson, concatenate_canvas_element_id }: CustomNameTagCartDisplayProps) => {
 		const { filamentColors, fontMenus } = useContext(EXTRA_DATA);
+
+		const customizableClassDef = useContext(CUSTOMIZABLE_CLASS_DEF_TAG);
+		const classDef =
+			customizableClassDef.find((def) => def.name === CustomizableClassName.CustomNameTag)
+				?.optionDefinition ?? [];
+
+		const customNameTag = getCustomizableOption(
+			JSON.parse(customizableOptionJson),
+			classDef
+		) as NameTagBuildParams;
 
 		const uniqueId = concatenate_canvas_element_id || genHash(customizableOptionJson);
 		const top_canvas_id = `top-${uniqueId}`;
@@ -30,7 +36,6 @@ export default component$(
 		const canvas_concatenated = useSignal<HTMLCanvasElement>(null as unknown as HTMLCanvasElement);
 
 		// Parse customizable options
-		const customNameTag = getCustomizableOption(JSON.parse(customizableOptionJson), classDef);
 
 		const build_top_plate = !!customNameTag.textTop;
 		const build_bottom_plate = !!customNameTag.textBottom;
@@ -44,18 +49,10 @@ export default component$(
 		// Render visualization
 		useVisibleTask$(() => {
 			if (canvas_top.value && canvas_bottom.value) {
-				const buildResult = BuildPlateVisualizerV4({
-					font_menu: fontMenus,
-					filament_color: filamentColors,
-					buildParams: {
-						text_top: customNameTag.textTop,
-						text_bottom: customNameTag.textBottom,
-						font_id_top: customNameTag.fontMenuIdTop,
-						font_id_bottom: customNameTag.fontMenuIdBottom,
-						primary_color_id: customNameTag.filamentColorIdPrimary,
-						base_color_id: customNameTag.filamentColorIdBase,
-						is_top_additive: customNameTag.isTopAdditive,
-					},
+				const buildResult = CustomVisualizer({
+					fontMenus: fontMenus,
+					filamentColors: filamentColors,
+					buildParams: customNameTag,
 					build_top_plate: build_top_plate,
 					build_bottom_plate: build_bottom_plate,
 					canvas_top: canvas_top.value,

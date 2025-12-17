@@ -4,7 +4,7 @@ import { OrderLine } from '~/generated/graphql';
 import { CUSTOMIZABLE_CLASS_DEF_TAG } from '~/routes/constants';
 import { CustomizableClassName, slugToCustomizableClass } from '~/utils';
 import { genCustomizableOptionJsonHash } from '~/utils/customizable-order';
-import CustomNameTagCartDisplayV4 from '../custom-option-visualizer/CustomNameTagCartDisplayV4';
+import CustomNameTagCartDisplayV4 from '../custom-option-visualizer/custom-name-tag-cart-display/CustomNameTagCartDisplayV4';
 
 interface ItemPreviewProps {
 	line: OrderLine; // Replace 'any' with the actual type of 'line' if available
@@ -24,10 +24,6 @@ export default component$(({ line }: ItemPreviewProps) => {
 				<CustomNameTagCartDisplayV4
 					customizableOptionJson={line.customFields?.customizableOptionJson ?? '[]'}
 					concatenate_canvas_element_id={genCustomizableOptionJsonHash(line)}
-					classDef={
-						customizableClassDef.find((def) => def.name === customizableClassName)
-							?.optionDefinition ?? []
-					}
 				/>
 			)}
 

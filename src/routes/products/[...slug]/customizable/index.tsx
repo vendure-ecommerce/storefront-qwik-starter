@@ -44,13 +44,13 @@ export default component$(() => {
 
 	// Build parameters store
 	const buildParams = useStore<NameTagBuildParams>({
-		text_top: '',
-		text_bottom: '',
-		font_id_top: '',
-		font_id_bottom: '',
-		primary_color_id: '',
-		base_color_id: '',
-		is_top_additive: true,
+		textTop: '',
+		textBottom: '',
+		fontMenuIdTop: '',
+		fontMenuIdBottom: '',
+		filamentColorIdPrimary: '',
+		filamentColorIdBase: '',
+		isTopAdditive: true,
 	});
 
 	useVisibleTask$(({ track }) => {
@@ -108,8 +108,6 @@ export default component$(() => {
 				console.error('Error adding to cart:', error);
 				addItemToOrderErrorSignal.value = 'Failed to add item to cart';
 			}
-
-			console.log(JSON.stringify(appState.activeOrder.lines, null, 2));
 		}
 	);
 
@@ -128,14 +126,16 @@ export default component$(() => {
 						disabled={!is_atc_allowed.value}
 						onClick$={() => {
 							const input = {
-								textTop: buildPlates.top ? buildParams.text_top : null,
-								textBottom: buildPlates.bottom ? buildParams.text_bottom : null,
-								fontMenuIdTop: buildPlates.top ? buildParams.font_id_top : null,
-								fontMenuIdBottom: buildPlates.bottom ? buildParams.font_id_bottom : null,
-								filamentColorIdPrimary: buildParams.primary_color_id,
-								filamentColorIdBase: buildParams.base_color_id,
-								isTopAdditive: buildParams.is_top_additive,
+								textTop: buildPlates.top ? buildParams.textTop : null,
+								textBottom: buildPlates.bottom ? buildParams.textBottom : null,
+								fontMenuIdTop: buildPlates.top ? buildParams.fontMenuIdTop : null,
+								fontMenuIdBottom: buildPlates.bottom ? buildParams.fontMenuIdBottom : null,
+								filamentColorIdPrimary: buildParams.filamentColorIdPrimary,
+								filamentColorIdBase: buildParams.filamentColorIdBase,
+								isTopAdditive: buildParams.isTopAdditive,
 							} as Record<string, string | number | boolean | null>;
+
+							console.log('Add to cart input:', JSON.stringify(input, null, 2));
 							const inputArr = getCustomizableOptionArray(input, currentClassDef.optionDefinition);
 
 							// Call the extracted async function
@@ -179,8 +179,10 @@ export default component$(() => {
 				})}
 				build_plates={buildPlates}
 				canvas_width_px={250}
-				onChange$={(buildParams: NameTagBuildParams) => {
-					buildParams = buildParams;
+				onChange$={(newBuildParams: NameTagBuildParams) => {
+					console.log('Build params changed in product page:', newBuildParams);
+					// copy incoming fields into the reactive store in-place
+					Object.assign(buildParams, newBuildParams);
 				}}
 			/>
 		</>

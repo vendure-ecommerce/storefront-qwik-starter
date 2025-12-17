@@ -60,7 +60,11 @@ type Story = StoryObj<any>;
 export default meta;
 
 export const Default: Story = {
-	render: () => {
+	args: {
+		build_top_plate: true,
+		build_bottom_plate: true,
+	},
+	render: (args) => {
 		const handleAtcEligibility = $((allowed: boolean, reason: string) => {
 			// eslint-disable-next-line no-console
 			console.log('onAtcEligibility$', { allowed, reason });
@@ -72,7 +76,7 @@ export const Default: Story = {
 					filamentColors={sampleFilamentColors as any}
 					fontMenus={sampleFontMenus as any}
 					onAtcEligibility$={handleAtcEligibility as any}
-					build_plates={{ top: true, bottom: true }}
+					build_plates={{ top: args.build_top_plate, bottom: args.build_bottom_plate }}
 					canvas_width_px={300}
 					onChange$={$((buildParams) => {
 						console.log('Build params changed:', buildParams);

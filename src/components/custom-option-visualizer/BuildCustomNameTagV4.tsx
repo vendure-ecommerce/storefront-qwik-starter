@@ -12,7 +12,7 @@ import DarkModeIcon from '~/components/icons/DarkModeIcon';
 import { FilamentColor, FontMenu } from '~/generated/graphql-shop';
 import BuildCanvases from './BuildCanvases';
 import { CONSTRAINTS } from './constants';
-import { BuildPlateVisualizerV4, NameTagBuildParams } from './CustomVisualizerV4';
+import { CustomVisualizer, NameTagBuildParams } from './CustomVisualizerV4';
 
 type PartialFilamentColor = Pick<
 	FilamentColor,
@@ -46,29 +46,21 @@ export default component$(
 		const bottom_canvas_id = 'canvas_bottom';
 
 		const defaultOptionsForNameTag = {
-			primaryColorId: filamentColors[0].id,
-			baseColorId: filamentColors[1].id,
+			filamentColorIdPrimary: filamentColors[0].id,
+			filamentColorIdBase: filamentColors[1].id,
 			isTopAdditive: true,
 			textTop: 'Hello',
 			textBottom: 'World',
-			fontIdTop: fontMenus[0].id,
-			fontIdBottom: fontMenus[0].id,
+			fontMenuIdTop: fontMenus[0].id,
+			fontMenuIdBottom: fontMenus[0].id,
 		};
 
-		const buildParams = useStore<NameTagBuildParams>({
-			text_top: defaultOptionsForNameTag.textTop,
-			text_bottom: defaultOptionsForNameTag.textBottom,
-			font_id_top: defaultOptionsForNameTag.fontIdTop,
-			font_id_bottom: defaultOptionsForNameTag.fontIdBottom,
-			primary_color_id: defaultOptionsForNameTag.primaryColorId,
-			base_color_id: defaultOptionsForNameTag.baseColorId,
-			is_top_additive: defaultOptionsForNameTag.isTopAdditive,
-		});
+		const buildParams = useStore<NameTagBuildParams>(defaultOptionsForNameTag);
 		const is_top_text_valid = useSignal<boolean>(true);
 		const is_bottom_text_valid = useSignal<boolean>(true);
 		const is_build_valid = useSignal<boolean>(true);
 		const is_primary_and_base_color_different = useComputed$(() => {
-			return buildParams.primary_color_id !== buildParams.base_color_id;
+			return buildParams.filamentColorIdPrimary !== buildParams.filamentColorIdBase;
 		});
 		const boardWidth_cm = useSignal<number>(0);
 		const canvas_top = useSignal<HTMLCanvasElement>(null as unknown as HTMLCanvasElement);
@@ -81,20 +73,20 @@ export default component$(
 
 		useVisibleTask$(({ track }) => {
 			track(() => [
-				buildParams.base_color_id,
-				buildParams.primary_color_id,
-				buildParams.is_top_additive,
-				buildParams.text_top,
-				buildParams.text_bottom,
-				buildParams.font_id_top,
-				buildParams.font_id_bottom,
+				buildParams.filamentColorIdBase,
+				buildParams.filamentColorIdPrimary,
+				buildParams.isTopAdditive,
+				buildParams.textTop,
+				buildParams.textBottom,
+				buildParams.fontMenuIdTop,
+				buildParams.fontMenuIdBottom,
 				build_plates.top,
 				build_plates.bottom,
 			]);
 			if (canvas_top.value && canvas_bottom.value) {
-				const buildResult = BuildPlateVisualizerV4({
-					font_menu: fontMenus,
-					filament_color: filamentColors,
+				const buildResult = CustomVisualizer({
+					fontMenus: fontMenus,
+					filamentColors: filamentColors,
 					buildParams: buildParams,
 					build_top_plate: build_plates.top,
 					build_bottom_plate: build_plates.bottom,
@@ -103,7 +95,13 @@ export default component$(
 				});
 				boardWidth_cm.value = buildResult.boardWidth_cm;
 				is_build_valid.value = buildResult.valid;
-				onChange$(buildParams);
+				onChange$({
+					...buildParams,
+					textTop: build_plates.top ? buildParams.textTop : null,
+					textBottom: build_plates.bottom ? buildParams.textBottom : null,
+					fontMenuIdTop: build_plates.top ? buildParams.fontMenuIdTop : null,
+					fontMenuIdBottom: build_plates.bottom ? buildParams.fontMenuIdBottom : null,
+				});
 			}
 		});
 
@@ -148,19 +146,19 @@ export default component$(
 							<ColorSelector
 								fieldTitle="Primary Color"
 								colorOptions={filamentColors}
-								defaultColorId={defaultOptionsForNameTag.primaryColorId}
+								defaultColorId={defaultOptionsForNameTag.filamentColorIdPrimary}
 								isBackgroundColor={false}
 								onChange$={(newColorId: string) => {
-									buildParams.primary_color_id = newColorId;
+									buildParams.filamentColorIdPrimary = newColorId;
 								}}
 							/>
 							<ColorSelector
 								fieldTitle="Base Color"
 								colorOptions={filamentColors}
-								defaultColorId={defaultOptionsForNameTag.baseColorId}
+								defaultColorId={defaultOptionsForNameTag.filamentColorIdBase}
 								isBackgroundColor={true}
 								onChange$={(newColorId: string) => {
-									buildParams.base_color_id = newColorId;
+									buildParams.filamentColorIdBase = newColorId;
 								}}
 							/>
 							{build_plates.top && (
@@ -168,7 +166,7 @@ export default component$(
 									title="Change Top Plate style"
 									class="btn btn-ghost btn-sm ml-2"
 									onClick$={() => {
-										buildParams.is_top_additive = !buildParams.is_top_additive;
+										buildParams.isTopAdditive = !buildParams.isTopAdditive;
 									}}
 								>
 									<DarkModeIcon />
@@ -203,10 +201,10 @@ export default component$(
 									<TextWithFontInput
 										fontMenu={fontMenus}
 										defaultText={defaultOptionsForNameTag.textTop}
-										defaultFontId={defaultOptionsForNameTag.fontIdTop}
+										defaultFontId={defaultOptionsForNameTag.fontMenuIdTop}
 										onChange$={(newText: string, newFontId: string) => {
-											buildParams.text_top = newText;
-											buildParams.font_id_top = newFontId;
+											buildParams.textTop = newText;
+											buildParams.fontMenuIdTop = newFontId;
 										}}
 										onEligibilityChange$={(allowed: boolean) => {
 											is_top_text_valid.value = allowed;
@@ -217,10 +215,10 @@ export default component$(
 									<TextWithFontInput
 										fontMenu={fontMenus}
 										defaultText={defaultOptionsForNameTag.textBottom}
-										defaultFontId={defaultOptionsForNameTag.fontIdBottom}
+										defaultFontId={defaultOptionsForNameTag.fontMenuIdBottom}
 										onChange$={(newText: string, newFontId: string) => {
-											buildParams.text_bottom = newText;
-											buildParams.font_id_bottom = newFontId;
+											buildParams.textBottom = newText;
+											buildParams.fontMenuIdBottom = newFontId;
 										}}
 										onEligibilityChange$={(allowed: boolean) => {
 											is_bottom_text_valid.value = allowed;
