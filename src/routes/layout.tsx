@@ -8,7 +8,7 @@ import {
 	useStore,
 	useVisibleTask$,
 } from '@builder.io/qwik';
-import { RequestHandler, routeLoader$ } from '@builder.io/qwik-city';
+import { DocumentHead, RequestHandler, routeLoader$ } from '@builder.io/qwik-city';
 import { ImageTransformerProps, useImageProvider } from 'qwik-image';
 import CartV2 from '~/components/cart/CartV2';
 import Drawer from '~/components/drawer/Drawer';
@@ -135,14 +135,14 @@ export default component$(() => {
 		const activeOrder = await getActiveOrderQuery();
 		if (activeOrder) state.activeOrder = activeOrder;
 
-		const fontLink = getGoogleFontLink(FontMenuSignal.value);
-		const existingLink = document.querySelector(`link[href="${fontLink}"]`);
-		if (!existingLink) {
-			const linkElement = document.createElement('link');
-			linkElement.rel = 'stylesheet';
-			linkElement.href = fontLink;
-			document.head.appendChild(linkElement);
-		}
+		// const fontLink = getGoogleFontLink(FontMenuSignal.value);
+		// const existingLink = document.querySelector(`link[href="${fontLink}"]`);
+		// if (!existingLink) {
+		// 	const linkElement = document.createElement('link');
+		// 	linkElement.rel = 'stylesheet';
+		// 	linkElement.href = fontLink;
+		// 	document.head.appendChild(linkElement);
+		// }
 	});
 
 	useVisibleTask$(({ track }) => {
@@ -182,3 +182,24 @@ export default component$(() => {
 		</Drawer>
 	);
 });
+
+export const head: DocumentHead = ({ resolveValue, params }) => {
+	const fontMenus = resolveValue(useFontMenu);
+	const fontLink = getGoogleFontLink(fontMenus);
+	return {
+		title: 'Dilinook - Your Custom 3D Printing Marketplace',
+		meta: [
+			{
+				name: 'description',
+				content:
+					'Dilinook is your go-to marketplace for custom 3D printed name tags and accessories. Explore our wide range of customizable options and find the perfect fit for your style!',
+			},
+		],
+		links: [
+			{
+				rel: 'stylesheet',
+				href: fontLink,
+			},
+		],
+	};
+};
