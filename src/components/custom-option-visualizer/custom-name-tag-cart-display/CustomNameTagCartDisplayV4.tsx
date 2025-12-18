@@ -75,11 +75,7 @@ export default component$(
 					concatenate_canvas_element_id={uniqueId}
 					canvas_width_px={100}
 				/>
-				{errorMessage.value && (
-					<p class="mt-2 text-sm text-red-600" id="email-error">
-						{errorMessage.value}
-					</p>
-				)}
+				{errorMessage.value && <p class="mt-2 text-sm text-error">{errorMessage.value}</p>}
 			</>
 		);
 	}

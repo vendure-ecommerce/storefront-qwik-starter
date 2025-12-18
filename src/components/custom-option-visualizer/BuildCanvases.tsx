@@ -18,7 +18,7 @@ export default component$(
 		topCanvasInfo,
 		bottomCanvasInfo,
 		concatenate_canvas_element_id,
-		canvas_width_px = 250,
+		canvas_width_px,
 	}: BuildCanvasesProps) => {
 		useVisibleTask$(() => {
 			if (concatenate_canvas_element_id) {
@@ -35,7 +35,8 @@ export default component$(
 					<canvas
 						ref={topCanvasInfo.canvasRef}
 						id={topCanvasInfo.id}
-						class={`${topCanvasInfo.skip ? 'hidden' : 'block'}`}
+						class={`
+							${topCanvasInfo.skip ? 'hidden' : 'block'}`}
 						style={{
 							width: `${canvas_width_px}px`,
 							height: '100%',
@@ -44,10 +45,11 @@ export default component$(
 					<canvas
 						ref={bottomCanvasInfo.canvasRef}
 						id={bottomCanvasInfo.id}
-						class={`${bottomCanvasInfo.skip ? 'hidden' : 'block'}`}
+						class={`
+							${bottomCanvasInfo.skip ? 'hidden' : 'block'}`}
 						style={{
-							width: `${canvas_width_px}px`,
-							height: '100%',
+							width: canvas_width_px ? `${canvas_width_px}px` : 'auto',
+							height: canvas_width_px ? '100%' : 'auto',
 						}}
 					/>
 					<Slot />

@@ -1,5 +1,6 @@
 import { $, component$, QRL, Signal, useSignal } from '@builder.io/qwik';
-import { Link } from '@builder.io/qwik-city';
+import { Link, useNavigate } from '@builder.io/qwik-city';
+import { LuTrash } from '@qwikest/icons/lucide';
 import { OrderLine } from '~/generated/graphql';
 import { slugToRoute } from '~/utils';
 import Info from '../common/Info';
@@ -32,32 +33,36 @@ export default component$<Props>(
 		const justReviewed = useSignal<boolean>(false);
 		const linePriceWithTax = line.linePriceWithTax;
 		const openReviewSignal = useSignal<boolean>(false);
+		const navigate = useNavigate();
 
 		return (
-			<li key={line.id} class="py-6 flex">
-				<div class="flex-shrink-0 w-24 h-24 border  rounded-md overflow-hidden flex justify-center items-center">
-					<ItemPreview line={line} />
-				</div>
+			<li key={line.id} class="py-4 flex">
+				<div
+					class="flex flex-row w-full"
+					onClick$={() => navigate(slugToRoute(line.productVariant.product.slug))}
+				>
+					<div class="shrink-0 w-24 h-24 border rounded-md overflow-hidden flex justify-center items-center">
+						<ItemPreview line={line} />
+					</div>
 
-				<div class="ml-4 flex-1 flex flex-col">
-					<div>
-						<div class="flex justify-between text-base font-medium ">
-							<h3>
-								<Link href={slugToRoute(line.productVariant.product.slug)}>
-									{line.productVariant.product.name}
-								</Link>
-							</h3>
+					<div class="ml-4 flex-1 flex flex-col">
+						<div>
+							<div class="flex justify-between text-base font-medium ">
+								<div class="text-md">{line.productVariant.product.name}</div>
+							</div>
+							<p class="mt-1 text-xs border rounded-md p-1 w-fit">{line.productVariant.name}</p>
 							<Price
 								priceWithTax={linePriceWithTax}
 								currencyCode={currencyCode}
-								forcedClass="ml-4"
+								// forcedClass="ml-2"
 							/>
 						</div>
-						<p class="mt-1 text-sm border rounded-md p-1 w-fit">{line.productVariant.name}</p>
 					</div>
+				</div>
+				<div class="ml-4 flex flex-col items-start">
 					<div class="flex-1 flex items-center text-sm">
 						{!readOnly.value ? (
-							<form>
+							<>
 								<label html-for={`quantity-${line.id}`} class="mr-2">
 									{$localize`Quantity`}
 								</label>
@@ -69,7 +74,7 @@ export default component$<Props>(
 									onChange$={(_, el) =>
 										onQuantityChange$ && onQuantityChange$!.call(undefined, line.id, +el.value)
 									}
-									class="max-w-full rounded-md border  py-1.5 text-base leading-5 font-medium text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+									class="select select-xs"
 								>
 									{[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
 										<option key={num} value={num} selected={line.quantity === num}>
@@ -77,32 +82,30 @@ export default component$<Props>(
 										</option>
 									))}
 								</select>
-							</form>
+							</>
 						) : (
-							<div class="">
+							<div class="flex items-center">
 								<span class="mr-1">{$localize`Quantity`}</span>
 								<span class="font-medium">{line.quantity}</span>
 							</div>
 						)}
-						<div class="flex-1"></div>
+
 						{!readOnly.value && (
-							<div class="flex">
-								<button
-									value={line.id}
-									class="font-medium text-primary-600 hover:text-primary-500"
-									onClick$={async () => onRemove$ && onRemove$!.call(undefined, line.id)}
-								>
-									{$localize`Remove`}
-								</button>
-							</div>
+							<button
+								value={line.id}
+								class="btn btn-ghost btn-sm ml-4"
+								onClick$={async () => onRemove$ && onRemove$!.call(undefined, line.id)}
+							>
+								<LuTrash class="w-4 h-4" />
+							</button>
 						)}
 						{allowReview && (
 							<div class="flex m-2">
 								<Link
 									href="#"
 									class={`text-primary-600 underline px-2 py-1 
-										${notReviewableReasonFixed || justReviewed.value ? 'opacity-50 cursor-not-allowed' : ''}
-										`}
+											${notReviewableReasonFixed || justReviewed.value ? 'opacity-50 cursor-not-allowed' : ''}
+											`}
 									onClick$={(e) => {
 										e.preventDefault();
 										if (notReviewableReasonFixed || justReviewed.value) {
