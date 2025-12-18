@@ -10,7 +10,7 @@ import {
 } from '@builder.io/qwik';
 import { DocumentHead, RequestHandler, routeLoader$ } from '@builder.io/qwik-city';
 import { ImageTransformerProps, useImageProvider } from 'qwik-image';
-import CartV2 from '~/components/cart/CartV2';
+import Cart from '~/components/cart/Cart';
 import Drawer from '~/components/drawer/Drawer';
 import Menu from '~/components/menu/Menu';
 import { APP_STATE, CUSTOMER_NOT_DEFINED_ID, IMAGE_RESOLUTIONS } from '~/constants';
@@ -177,7 +177,7 @@ export default component$(() => {
 
 			{/* Cart Slider */}
 			<div q:slot="cart-slider">
-				<CartV2 cartDrawerToggle={drawerToggle} />
+				<Cart cartDrawerToggle={drawerToggle} />
 			</div>
 		</Drawer>
 	);

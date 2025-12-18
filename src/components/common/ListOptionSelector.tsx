@@ -22,7 +22,7 @@ export type GeneralSelectOption = {
 	};
 };
 
-interface GeneralSelectorProps {
+interface ListOptionSelectorProps {
 	options: GeneralSelectOption;
 	selectedValue: Signal<string>;
 	onChange$?: QRL<() => void>;
@@ -34,7 +34,7 @@ interface GeneralSelectorProps {
  * A small wrapper around a native <select> that binds to a Qwik Signal
  * and optionally invokes an onChange$ QRL after updates.
  */
-export default component$<GeneralSelectorProps>(
+export default component$<ListOptionSelectorProps>(
 	({ options, selectedValue, onChange$, className }) => {
 		return (
 			<select

@@ -1,6 +1,6 @@
 import { $, component$, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import OrderCard from '~/components/account/OrderCard';
-import GeneralListOptions, { GeneralListOptionType } from '~/components/common/GeneralListOptions';
+import GeneralListOptions, { ListOptionType } from '~/components/common/GeneralListOptions';
 import AnimatedSpinnerIcon from '~/components/icons/AnimatedSpinnerIcon';
 import { APP_STATE } from '~/constants';
 import { Customer, Order, SortOrder } from '~/generated/graphql';
@@ -62,7 +62,7 @@ export default component$(() => {
 	const page = useSignal<number>(1);
 	const totalItems = useSignal<number | null>(null);
 
-	const listOptions: GeneralListOptionType[] = [
+	const listOptions: ListOptionType[] = [
 		{
 			label: 'Sort by',
 			selections: orderHistorySortOptionMap,

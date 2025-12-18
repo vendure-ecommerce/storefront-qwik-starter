@@ -1,14 +1,14 @@
 import { component$, QRL, Signal, Slot } from '@builder.io/qwik';
 import { LuMoveLeft, LuMoveRight } from '@qwikest/icons/lucide';
-import GeneralSelector, { GeneralSelectOption } from './GeneralSelector';
+import GeneralSelector, { GeneralSelectOption } from './ListOptionSelector';
 
 interface GeneralListOptionsProps {
-	ListOptions: GeneralListOptionType[];
+	ListOptions: ListOptionType[];
 	page: Signal<number>;
 	totalItems: Signal<number | null>;
 	pageSize?: number;
 }
-export type GeneralListOptionType = {
+export type ListOptionType = {
 	label: string;
 	selections: GeneralSelectOption;
 	selectedValue: Signal<string>;

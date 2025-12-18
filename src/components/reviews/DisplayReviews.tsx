@@ -2,7 +2,7 @@ import { $, component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import GeneralListOptions from '~/components/common/GeneralListOptions';
 import { SortOrder } from '~/generated/graphql-shop';
 import { getProductReviewsQuery } from '~/providers/shop/orders/review';
-import { GeneralSelectOption } from '../common/GeneralSelector';
+import { GeneralSelectOption } from '../common/ListOptionSelector';
 import { SpinnerWaitingAnimation } from '../icons/SpinnerWaitingAnimation';
 import ReviewCard, { ReviewItem } from './ReviewCard';
 
