@@ -1,17 +1,16 @@
 import { component$ } from '@builder.io/qwik';
-import XCircleIcon from '../icons/XCircleIcon';
+import { LuXCircle } from '@qwikest/icons/lucide';
 
-export default component$<{ message: string }>(({ message }) => {
+interface IProps {
+	message: string;
+	onClose$?: () => void;
+}
+
+export default component$<IProps>(({ message, onClose$ }: IProps) => {
 	return (
-		<div class="rounded-md bg-red-50 p-4">
-			<div class="flex">
-				<div class="flex-shrink-0">
-					<XCircleIcon />
-				</div>
-				<div class="ml-3">
-					<h3 class="text-sm font-medium text-red-800">{message}</h3>
-				</div>
-			</div>
+		<div role="alert" class="alert alert-error flex" onClick$={onClose$}>
+			<LuXCircle class="w-6 h-6" />
+			<span>{message}</span>
 		</div>
 	);
 });

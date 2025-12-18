@@ -41,7 +41,7 @@ export default component$<AddressInformationProps>(({ mode = 'SHIPPING' }) => {
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 				{/* Left panel: current shipping address or button to add */}
 
-				<div class="bg-white rounded p-4">
+				<div class="rounded-xl p-4">
 					{currentShipping.value.streetLine1 ? (
 						<>
 							<ShippingAddressCard
@@ -73,7 +73,7 @@ export default component$<AddressInformationProps>(({ mode = 'SHIPPING' }) => {
 				</div>
 
 				{/* Right panel: address selector for non-guests */}
-				<div class="bg-white rounded p-4">
+				<div class="bg-base-200 rounded-xl p-4">
 					{!isGuest.value ? (
 						<AddressSelector
 							onSelectAddress$={async (address) => {

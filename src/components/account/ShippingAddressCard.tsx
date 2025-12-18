@@ -25,7 +25,7 @@ export default component$<IProps>(
 		const openEditForm = useSignal(false);
 
 		return (
-			<div class={`card shadow-sm ${className}`}>
+			<div class={`card card-xs shadow-sm ${className}`}>
 				<div class="card-body card-border shadow-lg">
 					<div class="flex items-center justify-between">
 						<h2 class="text-sm font-semibold ">
@@ -34,7 +34,7 @@ export default component$<IProps>(
 						</h2>
 						{allowDelete && address.id && (
 							<button
-								class="btn btn-soft btn-md btn-error"
+								class="btn btn-soft btn-xs btn-error"
 								title={$localize`Delete Address`}
 								aria-label={$localize`Delete Address`}
 								type="button"
@@ -64,8 +64,8 @@ export default component$<IProps>(
 							)}
 						</div>
 					)}
-					<p class="py-1 text-sm ">{address.streetLine1}</p>
-					{address.streetLine2 && <p class="text-sm ">{address.streetLine2}&nbsp;</p>}
+					<p class="py-1 text-xs ">{address.streetLine1}</p>
+					{address.streetLine2 && <p class="text-xs ">{address.streetLine2}&nbsp;</p>}
 					<div class="flex items-center mt-1 ">
 						<LuMapPin class="w-4 h-4" />
 						<h1 class="px-2 text-xs">
@@ -80,7 +80,7 @@ export default component$<IProps>(
 						<div class="flex-1" />
 						{allowEdit && (
 							<button
-								class="btn btn-soft btn-md"
+								class="btn btn-soft btn-xs btn-primary"
 								title={$localize`Edit Address`}
 								onClick$={() => {
 									openEditForm.value = true;

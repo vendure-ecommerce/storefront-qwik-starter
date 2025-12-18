@@ -103,7 +103,7 @@ export default component$<IProps>(({ reCalculateShipping, errorMessage }) => {
 					{state.methods.map((method, index) => (
 						<div
 							key={method.id}
-							class={`relative bg-white border rounded-lg shadow-sm p-4 flex cursor-pointer focus:outline-none${selecting.value ? ' opacity-50 pointer-events-none' : ''}`}
+							class={`relative rounded-lg shadow-sm p-4 flex cursor-pointer focus:outline-none${selecting.value ? ' opacity-50 pointer-events-none' : ''}`}
 							onClick$={() => {
 								if (selecting.value) return;
 								state.selectedMethodId = state.methods[index].id;

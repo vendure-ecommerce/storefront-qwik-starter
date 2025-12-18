@@ -36,7 +36,7 @@ export default component$<Iprops>(({ onEditSave$ }) => {
 	return (
 		<>
 			{emailAddress && firstName && lastName ? (
-				<div class="w-fit bg-white shadow-lg rounded-lg overflow-hidden my-2">
+				<div class="bg-base-300 w-fit shadow-lg rounded-lg overflow-hidden my-2">
 					<div class="flex items-center py-2 px-4 gap-2">
 						<div class="flex flex-col w-fit">
 							<h1 class="text-sm font-semibold w-fit">
@@ -47,7 +47,7 @@ export default component$<Iprops>(({ onEditSave$ }) => {
 						</div>
 						{isGuest.value && (
 							<button
-								class="text-sm text-primary-600 hover:text-primary-800"
+								class="btn btn-accent btn-md"
 								onClick$={async () => {
 									openContactForm.value = true;
 								}}

@@ -20,13 +20,13 @@ export default component$<{
 	});
 
 	return (
-		<dl class="border-t mt-6 border-base-200 py-6 space-y-6">
+		<dl class="border-t mt-6 py-6 space-y-6">
 			{order?.discounts.map((d) => (
 				<div key={d.description} class="flex items-center justify-between">
 					<div class="text-sm">
-						Coupon: <span class="font-medium text-primary-600">{d.description}</span>
+						Coupon: <span class="font-medium">{d.description}</span>
 					</div>
-					<div class="text-sm font-medium text-primary-600">
+					<div class="text-sm font-medium">
 						{formatPrice(d.amountWithTax, order?.currencyCode || 'USD')}
 					</div>
 				</div>

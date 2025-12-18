@@ -50,7 +50,7 @@ export default component$(() => {
 	});
 
 	return (
-		<div class="bg-gray-50 pb-48">
+		<div class="pb-4">
 			<div
 				class={`${
 					state.step === 'CONFIRMATION' ? 'lg:max-w-3xl mx-auto' : 'lg:max-w-7xl'

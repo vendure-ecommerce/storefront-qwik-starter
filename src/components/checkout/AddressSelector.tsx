@@ -51,7 +51,7 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 				<div class="flex items-center justify-center gap-2">
 					<button
 						type="button"
-						class="flex items-center text-blue-500 text-sm"
+						class="btn btn-ghost flex items-center text-sm"
 						onClick$={() => (open.value = !open.value)}
 						aria-expanded={open.value}
 						aria-haspopup="listbox"
@@ -63,16 +63,16 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 
 				<div class="flex items-center justify-center gap-2">
 					<div
-						class={`${open.value ? 'block' : 'hidden'} mt-2 z-10 w-80 max-w-md rounded shadow-lg bg-white border`}
+						class={`${open.value ? 'block' : 'hidden'} mt-2 z-10 w-80 max-w-md rounded shadow-lg bg-base-200 border`}
 					>
 						<ul class="max-h-80 overflow-y-auto p-2" role="listbox">
 							{addressBook.value.map((address) => (
-								<li key={address.id} class="mb-0.5">
+								<li key={address.id} class="mb-1">
 									<div class="flex items-center">
 										<input
 											type="radio"
 											name="shippingAddress"
-											class="m-1 mr-2"
+											class="radio-md m-2"
 											checked={selectedId.value === address.id}
 											onChange$={async () => {
 												selectedId.value = address.id || '';
@@ -81,7 +81,12 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 											}}
 										/>
 										<div
-											class={`${selectedId.value === address.id ? 'border-2 border-blue-500' : 'border border-transparent'} flex-1 p-1 hover:border-blue-300 transition cursor-pointer`}
+											class={`${
+												selectedId.value === address.id
+													? 'border-2 border-content-primary bg-secondary'
+													: 'border border-transparent'
+											} 
+												flex-1 p-1 hover:border-content transition cursor-pointer`}
 										>
 											<div class="p-1">
 												<ShippingAddressCard
@@ -115,10 +120,10 @@ export default component$<AddressSelectorProps>(({ onSelectAddress$ }) => {
 								</li>
 							))}
 							{/* A button to add a new address */}
-							<li>
+							<li class="mt-2">
 								<button
 									type="button"
-									class="flex items-center p-2 text-blue-500"
+									class="btn btn-accent"
 									onClick$={() => (editNewAddress.value = true)}
 								>
 									<PlusIcon />

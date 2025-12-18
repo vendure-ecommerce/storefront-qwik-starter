@@ -1,5 +1,5 @@
 import { component$, Signal, useContext } from '@builder.io/qwik';
-import { Link, useLocation } from '@builder.io/qwik-city';
+import { useLocation, useNavigate } from '@builder.io/qwik-city';
 import { LuX } from '@qwikest/icons/lucide';
 import { APP_STATE } from '~/constants';
 import { isCheckoutPage } from '~/utils';
@@ -14,6 +14,7 @@ export default component$(({ cartDrawerToggle }: IProps) => {
 	const location = useLocation();
 	const appState = useContext(APP_STATE);
 	const isInEditableUrl = !isCheckoutPage(location.url.toString());
+	const navigate = useNavigate();
 
 	return (
 		<>
@@ -42,22 +43,25 @@ export default component$(({ cartDrawerToggle }: IProps) => {
 				</div>
 			</div>
 			{appState.activeOrder?.totalQuantity && isInEditableUrl && (
-				<div class="border-t py-6 px-4 sm:px-6">
-					<div class="flex justify-between text-base font-medium ">
+				<div class="py-6 px-4 sm:px-6">
+					<div class="flex justify-between text-base font-medium">
 						<p>{$localize`Subtotal`}</p>
 						<p>
 							<CartPrice field={'subTotalWithTax'} order={appState.activeOrder} />
 						</p>
 					</div>
-					<p class="mt-0.5 text-sm ">{$localize`Shipping will be calculated at checkout.`}</p>
+					<p class="text-xs">{$localize`Shipping will be calculated at checkout.`}</p>
+
 					<div class="mt-6">
-						<Link
-							href="/checkout/"
-							class="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700 w-full"
-							onClick$={() => (cartDrawerToggle.value = true)}
+						<button
+							class="btn btn-accent btn-md"
+							onClick$={() => {
+								navigate('/checkout/');
+								cartDrawerToggle.value = true;
+							}}
 						>
 							{$localize`Checkout`}
-						</Link>
+						</button>
 					</div>
 				</div>
 			)}

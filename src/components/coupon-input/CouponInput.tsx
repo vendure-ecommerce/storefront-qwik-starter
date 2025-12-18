@@ -3,7 +3,6 @@ import { APP_STATE } from '~/constants';
 import { Order } from '~/generated/graphql';
 import { applyCouponCodeMutation } from '~/providers/shop/orders/order';
 import Alert from '../alert/Alert';
-import { HighlightedButton } from '../buttons/HighlightedButton';
 import Success from '../success/Success';
 
 export default component$(() => {
@@ -29,7 +28,15 @@ export default component$(() => {
 
 	return (
 		<>
-			{!!errorSignal.value && <Alert message={errorSignal.value} />}
+			{!!errorSignal.value && (
+				<Alert
+					message={errorSignal.value}
+					onClose$={() => {
+						errorSignal.value = '';
+						couponCodeSignal.value = '';
+					}}
+				/>
+			)}
 			{!!successSignal.value && <Success message={successSignal.value} />}
 			<div class="w-full py-2 mb-4">
 				<form preventdefault:submit onSubmit$={() => applyCoupon()}>
@@ -39,10 +46,12 @@ export default component$(() => {
 							placeholder={$localize`Enter a coupon code`}
 							value={couponCodeSignal.value}
 							onInput$={(_, el) => (couponCodeSignal.value = el.value)}
-							class="block w-full  rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+							class="input"
 							required
 						/>
-						<HighlightedButton>{$localize`Apply`}</HighlightedButton>
+						<button type="submit" class="btn btn-primary">
+							{$localize`Apply`}
+						</button>
 					</div>
 				</form>
 			</div>
