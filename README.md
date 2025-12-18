@@ -1,5 +1,10 @@
 # Vendure Qwik Storefront Starter️
 
+
+> [!NOTE]
+> This project is **community-maintained**. For a storefront starter maintained by the Vendure team, see the [Next.js Starter](https://github.com/vendure-ecommerce/nextjs-starter-vendure)
+
+
 An e-commerce storefront for [Vendure](https://www.vendure.io) built with [Qwik](https://qwik.builder.io/) & [Qwik City](https://qwik.builder.io/qwikcity/overview).
 
 👉 [qwik-storefront.vendure.io](https://qwik-storefront.vendure.io)
