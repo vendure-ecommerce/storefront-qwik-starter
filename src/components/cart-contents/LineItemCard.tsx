@@ -3,7 +3,7 @@ import { Link, useNavigate } from '@builder.io/qwik-city';
 import { LuTrash } from '@qwikest/icons/lucide';
 import { OrderLine } from '~/generated/graphql';
 import { slugToRoute } from '~/utils';
-import Info from '../common/Info';
+import Info from '../common/Info/Info';
 import Price from '../products/Price';
 import WriteReview from '../products/WriteReview';
 import ItemPreview from './ItemPreview';

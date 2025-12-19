@@ -21,7 +21,7 @@ import { HighlightedButton } from '../buttons/HighlightedButton';
 import AddressInformation from '../checkout/AddressInformation';
 import ContactCard from '../checkout/ContactCard';
 import { parseToShippingAddress } from '../common/address';
-import Info from '../common/Info';
+import Info from '../common/Info/Info';
 import SectionWithLabel from '../common/SectionWithLabel';
 import LockClosedIcon from '../icons/LockClosedIcon';
 import ShippingMethodSelectorV2 from '../shipping-method-selector/ShippingMethodSelectorV2';

@@ -77,6 +77,7 @@ export default component$<AddressInformationProps>(({ mode = 'SHIPPING' }) => {
 					{!isGuest.value ? (
 						<AddressSelector
 							onSelectAddress$={async (address) => {
+								c;
 								// set as current shipping address and ensure in addressBook
 								appState.shippingAddress = address;
 							}}

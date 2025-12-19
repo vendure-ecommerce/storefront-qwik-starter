@@ -1,5 +1,6 @@
 import { component$, Slot } from '@builder.io/qwik';
 import { Action } from '@builder.io/qwik-city';
+import { LuMail, LuPhone } from '@qwikest/icons/lucide';
 
 interface FormInputProps<T extends Action<any, any, any>> {
 	name: string;
@@ -8,7 +9,7 @@ interface FormInputProps<T extends Action<any, any, any>> {
 	autoComplete?: string;
 	defaults?: any;
 	className?: string;
-	as?: 'input' | 'textarea';
+	as?: 'text' | 'textarea' | 'email' | 'tel';
 	readOnly?: boolean;
 }
 
@@ -53,7 +54,16 @@ interface FormInputProps<T extends Action<any, any, any>> {
  *   );
  */
 export default component$<FormInputProps<Action<any, any, any>>>(
-	({ name, label, formAction, autoComplete, defaults, className, as, readOnly = false }) => {
+	({
+		name,
+		label,
+		formAction,
+		autoComplete,
+		defaults,
+		className,
+		as = 'text',
+		readOnly = false,
+	}) => {
 		const fieldErrors = formAction.value?.fieldErrors as
 			| Record<string, string | undefined>
 			| undefined;
@@ -64,7 +74,7 @@ export default component$<FormInputProps<Action<any, any, any>>>(
 		return (
 			<div class={`mb-2 ${className ?? ''}`}>
 				<div class="flex gap-4">
-					<label for={name as string} class="block text-sm font-medium text-neutral">
+					<label for={name as string} class="block text-sm font-medium">
 						{label}
 					</label>
 					<Slot />
@@ -76,23 +86,25 @@ export default component$<FormInputProps<Action<any, any, any>>>(
 							name={name as string}
 							defaultValue={defaultValue as string}
 							rows={6}
-							class={`block w-full border-base-200 rounded-md shadow-sm
-								 focus:ring-primary-500 focus:border-primary-500 sm:text-sm mb-2`}
+							class={`textarea`}
 						/>
 					) : (
-						<input
-							type="text"
-							id={name as string}
-							name={name as string}
-							value={defaultValue as string}
-							autoComplete={autoComplete}
-							class={`
-								block w-full border-base-200 rounded-md shadow-sm
-								focus:ring-primary-500 focus:border-primary-500 sm:text-sm 
-								${readOnly ? 'bg-base-200 cursor-not-allowed' : ''}
-								${className ?? ''}`}
-							readOnly={readOnly}
-						/>
+						<label class="input">
+							{as === 'email' && <LuMail class="w-5 h-5" />}
+							{as === 'tel' && <LuPhone class="w-5 h-5" />}
+							<input
+								type={as}
+								id={name as string}
+								name={name as string}
+								value={defaultValue as string}
+								autoComplete={autoComplete}
+								class={`
+									input
+									${readOnly ? 'cursor-not-allowed' : ''}
+									${className ?? ''}`}
+								readOnly={readOnly}
+							/>
+						</label>
 					)}
 				</div>
 				{error && renderError(error)}

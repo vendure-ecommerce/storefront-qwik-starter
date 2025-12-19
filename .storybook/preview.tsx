@@ -1,6 +1,7 @@
 import { Decorator, Parameters } from 'storybook-framework-qwik';
 
 import { component$, useContextProvider } from '@builder.io/qwik';
+import { QwikCityMockProvider } from '@builder.io/qwik-city';
 import { Country } from '~/generated/graphql';
 import { APP_STATE } from '../src/constants';
 import '../src/global.css';
@@ -33,9 +34,11 @@ const mockAppState: AppState = {
 	showMenu: false,
 	customer: {
 		id: 'mock-customer-id',
-		firstName: 'John',
-		lastName: 'Doe',
-		emailAddress: 'john@example.com',
+		title: 'Mr.',
+		firstName: 'Customer',
+		lastName: 'NotGuest',
+		emailAddress: 'guest@example.com',
+		phoneNumber: '555-0100',
 	} as ActiveCustomer,
 	shippingAddress: {} as any,
 	availableCountries: [{ code: 'US' }, { code: 'CA' }] as Country[],
@@ -52,4 +55,7 @@ const WithAppState = component$<{ story: any }>(({ story }) => {
 	return <>{story}</>;
 });
 
-export const decorators: Decorator[] = [(Story) => <WithAppState story={<Story />} />];
+export const decorators: Decorator[] = [
+	(Story) => <WithAppState story={<Story />} />,
+	(Story) => <QwikCityMockProvider>{<Story />}</QwikCityMockProvider>,
+];

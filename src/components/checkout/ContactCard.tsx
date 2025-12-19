@@ -1,10 +1,8 @@
 import { component$, QRL, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { LuMail, LuPencilLine, LuPhone, LuPlus } from '@qwikest/icons/lucide';
 import { APP_STATE } from '~/constants';
 import { ActiveCustomer } from '~/types';
 import { isGuestCustomer } from '~/utils';
-import { HighlightedButton } from '../buttons/HighlightedButton';
-import PencilEditIcon from '../icons/PencilEditIcon';
-import PlusIcon from '../icons/PlusIcon';
 import ContactForm from './ContactForm';
 
 interface Iprops {
@@ -36,37 +34,46 @@ export default component$<Iprops>(({ onEditSave$ }) => {
 	return (
 		<>
 			{emailAddress && firstName && lastName ? (
-				<div class="bg-base-300 w-fit shadow-lg rounded-lg overflow-hidden my-2">
-					<div class="flex items-center py-2 px-4 gap-2">
-						<div class="flex flex-col w-fit">
-							<h1 class="text-sm font-semibold w-fit">
+				<div class="card border card-sm">
+					<div class="card-body">
+						<div class="flex gap-2">
+							<h1 class="card-title">
 								{title || ''} {firstName} {lastName}
 							</h1>
-							<p class="py-1 text-sm w-fit">{emailAddress}</p>
-							{phoneNumber && <p class="py-1 text-sm w-fit">{phoneNumber}</p>}
+							{isGuest.value && (
+								<button
+									class="btn btn-accent btn-soft btn-sm"
+									onClick$={async () => {
+										openContactForm.value = true;
+									}}
+								>
+									<LuPencilLine class="h-5 w-5" />
+								</button>
+							)}
 						</div>
-						{isGuest.value && (
-							<button
-								class="btn btn-accent btn-md"
-								onClick$={async () => {
-									openContactForm.value = true;
-								}}
-							>
-								<PencilEditIcon forcedClass="h-5 w-5" />
-							</button>
+						<div class="flex gap-2 items-center">
+							<LuMail />
+							{emailAddress}
+						</div>
+
+						{phoneNumber && (
+							<div class="flex gap-2 items-center">
+								<LuPhone />
+								{phoneNumber}
+							</div>
 						)}
 					</div>
 				</div>
 			) : (
-				<HighlightedButton
+				<button
+					class="btn btn-accent btn-md flex items-center"
 					type="button"
 					onClick$={async () => {
 						openContactForm.value = true;
 					}}
-					extraClass="m-2"
 				>
-					<PlusIcon /> {$localize`Contact information`}
-				</HighlightedButton>
+					<LuPlus /> {$localize`Contact information`}
+				</button>
 			)}
 			<ContactForm
 				open={openContactForm}

@@ -1,18 +1,16 @@
-import type { Signal } from '@builder.io/qwik';
-import { $, component$, useSignal } from '@builder.io/qwik';
-import { LuXCircle } from '@qwikest/icons/lucide';
+import { $, component$, Signal, Slot, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { LuMail, LuPhone } from '@qwikest/icons/lucide';
 
 interface GeneralInputProps {
 	label: string;
-	type: 'email' | 'text';
+	type?: 'email' | 'text' | 'tel';
 	fieldValue: Signal<string>;
-	completeSignal?: Signal<boolean>; // external signal to indicate if the email is valid
-	pattern?: RegExp; // optional pattern for validation
-	placeholder?: string;
+	completeSignal?: Signal<boolean>;
 	extraClass?: string;
+	required?: boolean;
+	inputProps?: Pick<JSX.IntrinsicElements['input'], 'placeholder' | 'autoComplete' | 'pattern'>;
+	// other custom props...
 }
-
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default component$(
 	({
@@ -20,62 +18,47 @@ export default component$(
 		type,
 		fieldValue,
 		completeSignal,
-		pattern,
-		placeholder,
 		extraClass,
+		required = true,
+		inputProps,
 	}: GeneralInputProps) => {
 		// Note the default pattern checks for non-empty input
-		const isValid = useSignal(false);
-		const invalidateMessage = useSignal('*required');
-		let patternFinal = pattern;
-		let placeholderFinal = placeholder;
-		if (type === 'email') {
-			patternFinal = pattern || emailRegex;
-			placeholderFinal = placeholder || 'your@email.com';
-		} else {
-			patternFinal = pattern || /.+/; // basic non-empty pattern
-		}
+		// const isValid = useSignal<boolean>(!required || fieldValue.value.length > 0);
+		const invalidateMessage = useSignal<string>('');
 
-		const validate = $((regexPattern: RegExp) => {
-			if (fieldValue.value.length === 0) {
-				isValid.value = false;
-				invalidateMessage.value = '*required';
-			} else if (!regexPattern.test(fieldValue.value)) {
-				isValid.value = false;
-				invalidateMessage.value = `invalid ${label} format`;
-			} else {
-				isValid.value = true;
-				invalidateMessage.value = '';
-			}
-			if (completeSignal) {
-				completeSignal.value = isValid.value;
+		useVisibleTask$(({ track }) => {
+			track(() => fieldValue.value);
+			if (document.getElementById(`input-${label}`)) {
+				const inputEl = document.getElementById(`input-${label}`) as HTMLInputElement;
+				invalidateMessage.value = inputEl.validationMessage;
+				if (completeSignal) {
+					completeSignal.value = inputEl.checkValidity();
+				}
 			}
 		});
 
 		return (
-			<fieldset class="fieldset">
-				<label class="label">{label}</label>
-				<input
-					class={`input ${extraClass ?? ''}  
-          ${fieldValue.value.length < 1 ? '' : isValid.value ? 'input-success' : 'input-error'}`}
-					type={type}
-					required
-					placeholder={placeholderFinal}
-					value={fieldValue.value}
-					onInput$={$((_, el) => {
-						fieldValue.value = el.value;
-						validate(patternFinal); // basic non-empty validation for text
-					})}
-				/>
-				{!isValid.value && (
-					// <div class="text-error">{invalidateMessage.value}</div>
-					<div role="alert" class="alert alert-error alert-soft">
-						<span class="flex items-center gap-2 text-xs">
-							<LuXCircle />
-							{invalidateMessage.value}
-						</span>
-					</div>
-				)}
+			<fieldset class={`fieldset ${extraClass ?? ''}`}>
+				<legend class="fieldset-legend">{label}</legend>
+				<label class={`input validator ${required && 'input-primary'}`}>
+					{type === 'email' && <LuMail class="w-5 h-5 opacity-50" />}
+					{type === 'tel' && <LuPhone class="w-5 h-5 opacity-50" />}
+					<Slot name="icon" />
+					<input
+						id={`input-${label}`}
+						type={type}
+						required={required}
+						value={fieldValue.value}
+						onInput$={$((_, el) => {
+							fieldValue.value = el.value;
+						})}
+						{...inputProps}
+					/>
+					{!required && <span class="badge badge-neutral badge-xs">{$localize`Optional`}</span>}
+					<Slot name="after-input" />
+				</label>
+
+				<p class={`validator-hint hidden`}>{invalidateMessage.value}</p>
 			</fieldset>
 		);
 	}

@@ -9,7 +9,8 @@
     "titleBar.activeForeground": "#ffffff",
   },
   "cSpell.words": [
-    "Braintree"
+    "Braintree",
+    "qwik"
   ],
   "emmet.excludeLanguages": [
     "javascript",

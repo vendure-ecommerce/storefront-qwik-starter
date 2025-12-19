@@ -1,9 +1,9 @@
 import { $, component$, useContext, useSignal, useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useNavigate } from '@builder.io/qwik-city';
+import { LuCheck, LuCreditCard, LuTruck } from '@qwikest/icons/lucide';
 import CartContents from '~/components/cart-contents/CartContents';
 import CartTotals from '~/components/cart-totals/CartTotals';
 import SectionWithLabel from '~/components/common/SectionWithLabel';
-import ChevronRightIcon from '~/components/icons/ChevronRightIcon';
 import Payment from '~/components/payment/Payment';
 import Shipping from '~/components/shipping/ShippingV2';
 import { APP_STATE } from '~/constants';
@@ -20,13 +20,12 @@ export default component$(() => {
 	const orderReadOnly = useSignal(false);
 	const state = useStore<{ step: Step }>({ step: 'SHIPPING' });
 	const steps: { name: string; state: Step }[] = [
-		{ name: $localize`Shipping Checkout`, state: 'SHIPPING' },
+		{ name: $localize`Shipping`, state: 'SHIPPING' },
 		{ name: $localize`Payment`, state: 'PAYMENT' },
 		{ name: $localize`Confirmation`, state: 'CONFIRMATION' },
 	];
 
 	useVisibleTask$(async () => {
-		appState.showCart = false;
 		if (appState.activeOrder?.lines?.length === 0 || !appState.activeOrder?.id) {
 			navigate('/');
 		}
@@ -57,23 +56,29 @@ export default component$(() => {
 				} max-w-2xl mx-auto pt-8 mb-24 px-4 sm:px-6 lg:px-8 `}
 			>
 				<h2 class="sr-only">{$localize`Checkout`}</h2>
-				<nav class="hidden sm:block pb-8 mb-8 border-b">
-					<ol class="flex space-x-4 justify-center">
-						{steps.map((step, index) => (
-							<div key={index}>
-								{(isEnvVariableEnabled('VITE_SHOW_PAYMENT_STEP') || step.state !== 'PAYMENT') && (
-									<li key={step.name} class="flex items-center">
-										<span class={`${step.state === state.step ? 'text-primary-600' : ''}`}>
-											{step.name}
-										</span>
-										{index !== steps.length - 1 ? <ChevronRightIcon /> : null}
-									</li>
+				<ul class="steps flex items-center justify-center m-5">
+					{steps.map((step, index) => (
+						<li
+							class={`
+								step 
+								${index <= steps.findIndex((s) => s.state === state.step) ? 'step-primary' : ''}
+								`}
+						>
+							{/* <span class='mx-10'> {step.name} </span>
+							 */}
+							<span class="step-icon mx-10" title={step.name}>
+								{step.state === 'SHIPPING' ? (
+									<LuTruck />
+								) : step.state === 'PAYMENT' ? (
+									<LuCreditCard />
+								) : (
+									<LuCheck />
 								)}
-							</div>
-						))}
-					</ol>
-				</nav>
-				{/* <div class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16"> */}
+							</span>
+						</li>
+					))}
+				</ul>
+
 				<div
 					class={
 						state.step === 'CONFIRMATION'
