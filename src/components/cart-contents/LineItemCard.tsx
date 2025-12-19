@@ -9,7 +9,10 @@ import WriteReview from '../products/WriteReview';
 import ItemPreview from './ItemPreview';
 
 interface Props {
-	line: OrderLine;
+	line: Pick<
+		OrderLine,
+		'id' | 'quantity' | 'linePriceWithTax' | 'featuredAsset' | 'productVariant' | 'customFields'
+	>;
 	currencyCode: string;
 	readOnly: Signal<boolean>;
 	onQuantityChange$?: QRL<(id: string, value: number) => void>;
@@ -85,7 +88,7 @@ export default component$<Props>(
 							</>
 						) : (
 							<div class="flex items-center">
-								<span class="mr-1">{$localize`Quantity`}</span>
+								<span class="mr-1">{$localize`Quantity:`}</span>
 								<span class="font-medium">{line.quantity}</span>
 							</div>
 						)}

@@ -85,7 +85,9 @@ export const genHash = (string: string): string => {
 	return hash.toString();
 };
 
-export const genCustomizableOptionJsonHash = (line: OrderLine): string => {
+export const genCustomizableOptionJsonHash = (
+	line: Pick<OrderLine, 'productVariant' | 'customFields'>
+): string => {
 	if (!line.customFields?.customizableOptionJson) {
 		return '0';
 	}

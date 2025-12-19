@@ -1,5 +1,5 @@
 import { $, component$, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
-import OrderCard from '~/components/account/OrderCard';
+import OrderCard from '~/components/account/order-card/OrderCard';
 import GeneralListOptions, { ListOptionType } from '~/components/common/GeneralListOptions';
 import AnimatedSpinnerIcon from '~/components/icons/AnimatedSpinnerIcon';
 import { APP_STATE } from '~/constants';

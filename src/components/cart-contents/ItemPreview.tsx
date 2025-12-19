@@ -6,7 +6,7 @@ import { genCustomizableOptionJsonHash } from '~/utils/customizable-order';
 import CustomNameTagCartDisplayV4 from '../custom-option-visualizer/custom-name-tag-cart-display/CustomNameTagCartDisplayV4';
 
 interface ItemPreviewProps {
-	line: OrderLine; // Replace 'any' with the actual type of 'line' if available
+	line: Pick<OrderLine, 'productVariant' | 'customFields' | 'featuredAsset'>; // Replace 'any' with the actual type of 'line' if available
 }
 
 export default component$(({ line }: ItemPreviewProps) => {

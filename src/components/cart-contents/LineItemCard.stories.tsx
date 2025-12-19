@@ -40,16 +40,14 @@ export const Editable: Story = {
 			});
 
 			return (
-				<QwikCityMockProvider>
-					<LineItemCard
-						line={mockLine}
-						currencyCode="USD"
-						readOnly={readOnly}
-						onQuantityChange$={onQuantityChange$}
-						onRemove$={onRemove$}
-						allowReview={true}
-					/>
-				</QwikCityMockProvider>
+				<LineItemCard
+					line={mockLine}
+					currencyCode="USD"
+					readOnly={readOnly}
+					onQuantityChange$={onQuantityChange$}
+					onRemove$={onRemove$}
+					allowReview={true}
+				/>
 			);
 		});
 

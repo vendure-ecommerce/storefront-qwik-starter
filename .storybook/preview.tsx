@@ -1,9 +1,10 @@
+import { ImageTransformerProps, useImageProvider } from 'qwik-image';
 import { Decorator, Parameters } from 'storybook-framework-qwik';
 
-import { component$, useContextProvider } from '@builder.io/qwik';
+import { $, component$, useContextProvider } from '@builder.io/qwik';
 import { QwikCityMockProvider } from '@builder.io/qwik-city';
 import { Country } from '~/generated/graphql';
-import { APP_STATE } from '../src/constants';
+import { APP_STATE, IMAGE_RESOLUTIONS } from '../src/constants';
 import '../src/global.css';
 import { ActiveCustomer, AppState } from '../src/types';
 import '../src/utils/localize-shim';
@@ -47,11 +48,20 @@ const mockAppState: AppState = {
 };
 
 /**
- * Global decorator to provide APP_STATE context
+ * Global decorator to provide context defined in src/routes/layout.tsx
  */
 const WithAppState = component$<{ story: any }>(({ story }) => {
 	// Provide the mock APP_STATE context to all stories
 	useContextProvider(APP_STATE, mockAppState);
+	const imageTransformer$ = $(({ src, width, height }: ImageTransformerProps): string => {
+		return `${src}?w=${width}&h=${height}&format=webp`;
+	});
+
+	// Provide your default options
+	useImageProvider({
+		imageTransformer$,
+		resolutions: IMAGE_RESOLUTIONS,
+	});
 	return <>{story}</>;
 });
 
