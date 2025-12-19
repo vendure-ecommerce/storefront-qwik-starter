@@ -64,17 +64,6 @@ const mockOrder: Order = {
 			} as any,
 			linePriceWithTax: 1300,
 		} as any,
-		{
-			id: 'line-5',
-			quantity: 2,
-			featuredAsset: { preview: 'https://picsum.photos/id/241/200/300' } as any,
-			productVariant: {
-				id: 'pv-5',
-				name: 'Product 5',
-				product: { slug: 'prod-5', name: 'Product 5' },
-			} as any,
-			linePriceWithTax: 1300,
-		} as any,
 	],
 } as any;
 

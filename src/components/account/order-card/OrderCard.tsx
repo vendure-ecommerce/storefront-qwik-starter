@@ -23,7 +23,7 @@ export default component$<IProps>(({ order }) => {
 	const moreCount = images.length - shownImages.length;
 
 	return (
-		<div class="card lg:card-side bg-base-100 shadow-sm">
+		<div class="card lg:card-side bg-base-100 shadow-sm border">
 			<div class="flex items-center justify-center p-4">
 				<figure class="max-w-40">
 					<ImageTiles
@@ -35,7 +35,7 @@ export default component$<IProps>(({ order }) => {
 					/>
 				</figure>
 			</div>
-			<div class="flex">
+			<div class="flex lg:w-75 md:w-60 sm:w-40">
 				<div class="card-body">
 					<h2 class="card-title">
 						<span class="text-sm font-semibold">{formatOrderDate(order?.createdAt)}</span>
@@ -43,7 +43,7 @@ export default component$<IProps>(({ order }) => {
 					<div class="badge badge-sm badge-primary badge-outline">{order.state}</div>
 					<p>{formatPrice(order?.totalWithTax, order?.currencyCode || 'USD')}</p>
 				</div>
-				<div class="card-actions justify-center items-center mr-2">
+				<div class="card-actions justify-center items-center mr-4">
 					<button
 						class="btn btn-primary btn-sm"
 						onClick$={() => {

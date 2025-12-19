@@ -1,7 +1,6 @@
 import { $, component$, useContext, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import OrderCard from '~/components/account/order-card/OrderCard';
 import GeneralListOptions, { ListOptionType } from '~/components/common/GeneralListOptions';
-import AnimatedSpinnerIcon from '~/components/icons/AnimatedSpinnerIcon';
 import { APP_STATE } from '~/constants';
 import { Customer, Order, SortOrder } from '~/generated/graphql';
 import { getActiveCustomerOrdersQuery } from '~/providers/shop/customer/customer';
@@ -136,9 +135,9 @@ export default component$(() => {
 
 	if (isLoading.value) {
 		return (
-			<div class="h-[60vh] flex items-center justify-center">
+			<div class="h-32 flex items-center justify-center">
 				<p>Loading your orders...</p>
-				<AnimatedSpinnerIcon forcedClass="h-48 w-48" />
+				<span class="loading loading-spinner loading-xl"></span>
 			</div>
 		);
 	}
@@ -150,7 +149,7 @@ export default component$(() => {
 			totalItems={totalItems}
 			pageSize={PAGE_SIZE}
 		>
-			<div class="flex flex-wrap gap-6 justify-evenly">
+			<div class="flex flex-col flex-wrap gap-6 justify-evenly">
 				{(activeCustomerOrdersSignal.value?.orders?.items || []).map((order: Order) => (
 					<div key={order.id}>
 						<OrderCard order={order} />
@@ -159,6 +158,6 @@ export default component$(() => {
 			</div>
 		</GeneralListOptions>
 	) : (
-		<div class="h-[100vh]" />
+		<div class="h-screen" />
 	);
 });
